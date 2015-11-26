@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8"/>
+    <title>{{head_title}}</title>
+    <!--link href="{{css_path}}" rel="stylesheet" type="text/css"/-->
+    <script src="{{js_path}}"></script>
+</head>
+<body>
+<h1>{{title}}</h1>
+<button onclick="show_off()">显示/关闭巴利经文及原始译文</button>
+
+<div id="chinese">
+<div id="head" hidden="hidden">
+{{chinese_head}}
+</div>
+<div id="main">
+{{chinese_main}}
+</div>
+</div>
+
+<div id="pali" hidden="hidden">
+{{pali}}
+</div>
+
+</body>
+</html>
