@@ -1,11 +1,12 @@
 Chinese Translation of Sutta Pitaka Ebook Builder
+
 汉译经藏电子书生成器
 
-* 这是什么项目？
-这个项目的目标是把 [[http://agama.buddhason.org/][莊春江工作站]] 的汉译巴利经藏中的 相应部、长部、中部、增支部 四部经书制作成 EPUB 电子书。
+** 这是什么项目？
+这个项目的目的是把 [[http://agama.buddhason.org/][莊春江工作站]] 的汉译巴利经藏中的 相应部、长部、中部、增支部 四部经书制作成 EPUB 电子书。
 
-* 译文有错误？
-请直接到 [[http://agama.buddhason.org/][莊春江工作站]] 联系莊春江居士。
-
-* 排版有问题？
+** 对排版有建议？
 发 issue 。
+** 电子书下载地址：
+1. BitTorrent Sync:
+BXYENGQ3UTEJCD3HO63UIIGQ7HSPEB7P6
