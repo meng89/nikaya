@@ -7,5 +7,5 @@ Chinese Translation of Sutta Pitaka Ebook Builder
 ** 对排版有建议？
 发 issue 。
 ** 电子书下载地址：
-*** BitTorrent Sync:
-**** BXYENGQ3UTEJCD3HO63UIIGQ7HSPEB7P6
+   1. BitTorrent Sync:
+   * BXYENGQ3UTEJCD3HO63UIIGQ7HSPEB7P6
