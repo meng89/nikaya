@@ -1,11 +1,2 @@
-* 汉译经藏电子书生成器
-Chinese Translation of Sutta Pitaka Ebook Builder
-
-** 这是什么项目？
-这个项目的目的是把 [[http://agama.buddhason.org/][莊春江工作站]] 的汉译巴利经藏中的 相应部、长部、中部、增支部 四部经书制作成 EPUB 电子书。
-
-** 对排版有建议？
-发 issue 。
-** 电子书下载地址：
-   1. BitTorrent Sync: BXYENGQ3UTEJCD3HO63UIIGQ7HSPEB7P6
-   2. http://chenmeng.org/ctspeb/built_books/
+* 莊春江汉译经藏电子书制作器
+详细介绍请见[[http://meng89.github.io/ZhuangChunJiang-Chinese-Nikayas-EPUB-Builder/][主页]]
