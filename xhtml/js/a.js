@@ -1,9 +1,31 @@
-function show_off_pali(){
-    if (document.getElementById("show_off").childNodes[0].nodeValue == "显示巴利经文") {
-        document.getElementById("pali").removeAttribute("hidden");
-        document.getElementById("show_off").childNodes[0].nodeValue = "不显示巴利经文";
+
+var button_text = '显示/关闭巴利经文及原始译文'
+
+function is_show(){
+    if (document.getElementById('pali').getAttribute('hidden') != null) {
+        return true
     } else {
-        document.getElementById("pali").setAttribute("hidden","hidden");
-        document.getElementById("show_off").childNodes[0].nodeValue = "显示巴利经文";
+        return false
     }
 }
+
+function show_off(){
+    if (is_show) {
+        document.getElementById('pali').removeAttribute('hidden')
+        document.getElementById('head').removeAttribute('hidden')
+        is_show = false
+    } else {
+        document.getElementById('pali').setAttribute('hidden', 'hidden')
+        document.getElementById('head').setAttribute('hidden', 'hidden')
+        is_show = true
+    }
+}
+
+//function make_button(){
+//    var button = document.createElement('button')
+//    button.setAttribute('onclick', 'show_off()')
+//    var text = document.createTextNode(button_text)
+//    button.appendChild(text)
+//    var chinese_head = document.getElementById('chinese_head')
+//    chinese_head.parentNode.insertBefore(button, chinese_head)
+//}

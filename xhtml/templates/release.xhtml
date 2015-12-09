@@ -1,12 +1,41 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html
-        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Title</title>
+    <title>汉译经藏四部</title>
+    <style type="text/css">
+        table
+        {
+        border-collapse:collapse;
+        }
+
+        table, td, th
+        {
+        border:1px solid black;
+        }
+</style>
 </head>
 <body>
+<h1>莊春江汉译经藏四部电子书下载</h1>
+
+<table border="1">
+    <tr>
+        <td />
+        <td>经文修改时间</td>
+        <td>EPUB制作时间</td>
+        <td>大小</td>
+    </tr>
+    {% for item in items %}
+    <tr>
+        <td><a href="{{item.filename}}">{{item.bookname}}</a></td>
+        <td>{{item.modified}}</td>
+        <td>{{item.built_time}}</td>
+        <td>{{item.size}}</td>
+    </tr>
+    {% endfor %}
+
+</table>
+
 
 </body>
 </html>
