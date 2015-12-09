@@ -72,6 +72,7 @@ def get_pages(tree):  # private
                               'head_lines': sutra['head_lines'],
                               'main_lines': sutra['main_lines'],
                               'pali': sutra['pali'],
+                              'last_modified': sutra['last_modified'],
                               'epub_expected_path': expected_path,
                               'epub_toc': toc})
 

@@ -2,16 +2,24 @@
 
 import os
 import re
-import sys
 from urllib.parse import urlparse, urljoin
+
+import datetime
 
 import jinja2
 
 import utils
 
-sys.path.append('/media/data/mine/projects/epubuilder')
-import epubuilder
+try:
+    import epubuilder
+    import epubuilder.tools
+except ImportError:
+    import sys
+    sys.path.append('/media/data/projects/epubuilder')
+    import epubuilder
+    import epubuilder.tools
 
+homepage = 'https://meng89.github.io/ZhuangChunJiang-Chinese-Nikayas-EPUB-Builder'
 
 pin_title_when_none = '(未分品)'
 
@@ -178,7 +186,7 @@ def get_xhtml_str(template, head_title, title, head_lines, main_lines, pali, js_
     return sutra_xhtml_str
 
 
-def make(make_tree, get_pages, url, book_info, write_path):
+def make(make_tree, get_pages, url, book_info, built_books_dir):
 
     sources = get_toc(url)
     tree = make_tree(sources)
@@ -191,12 +199,22 @@ def make(make_tree, get_pages, url, book_info, write_path):
     js_path = book.add_other_file(open('xhtml/js/a.js', 'rb').read(), 'Scripts/a.js')
 
     pages = get_pages(tree)
-    template = jinja2.Template(open('xhtml/templates/sutra.xhtml', 'r').read())
+    sutra_template = jinja2.Template(open('xhtml/templates/sutra.xhtml', 'r').read())
+    introduction_template = jinja2.Template(open('xhtml/templates/说明.xhtml', 'r').read())
+
+    # 占位
+    book.set_toc(('说明',))
+
+    gmt_format = '%a, %d %b %Y %H:%M:%S GMT'
+    modified_time = None
+
+    # '%Y-%m-%d %H:%M:%S'
+
     for page in pages:
 
-        js_relative_path = book.relative_path(js_path, os.path.split(page['epub_expected_path'])[0])
+        js_relative_path = epubuilder.tools.relative_path(js_path, os.path.split(page['epub_expected_path'])[0])
 
-        sutra_xhtml_str = get_xhtml_str(template, page['head_title'], page['title'], page['head_lines'],
+        sutra_xhtml_str = get_xhtml_str(sutra_template, page['head_title'], page['title'], page['head_lines'],
                                         page['main_lines'],
                                         page['pali'], js_relative_path)
 
@@ -205,7 +223,24 @@ def make(make_tree, get_pages, url, book_info, write_path):
 
         print(book_info['title_chinese'], page['epub_toc'], page_path)
 
-    book.write(write_path)
+        cur_page_modified = datetime.datetime.strptime(page['last_modified'], gmt_format)
+
+        if modified_time:
+            modified_time = cur_page_modified if cur_page_modified > modified_time else modified_time
+        else:
+            modified_time = cur_page_modified
+
+    created_time = datetime.datetime.now()
+
+    path = book.add_page(introduction_template.render(homepage=homepage,
+                                                      modified_time=modified_time.strftime('%Y-%m-%d'),
+                                                      created_time=created_time.strftime('%Y-%m-%d %H:%M')).encode())
+    book.set_toc(('说明',), path)
+
+    filename = book_info['title_chinese'] + '.epub'
+
+    book.write('{}/{}'.format(built_books_dir, filename))
+    return filename, modified_time, created_time
 
 
 def main():
@@ -222,11 +257,20 @@ def main():
     dn_info = {'title_chinese': '長部', 'title_pali': 'Digha Nikāya', 'url': url_part + '/DN/index.htm'}
     an_info = {'title_chinese': '增支部', 'title_pali': 'Aṅguttara nikāya', 'url': url_part + '/AN/index.htm'}
 
+    items = []
     for module, n_info in ((sn, sn_info), (mn, mn_info), (dn, dn_info), (an, an_info))[:]:
-        make(module.make_tree, module.get_pages, n_info['url'], n_info,
-             '{}/{}.epub'.format(built_books_dir, n_info['title_chinese'])
-             )
+        filename, modified, built_time = make(module.make_tree, module.get_pages,
+                                              n_info['url'], n_info, built_books_dir)
 
+        item = {'filename': filename, 'bookname': n_info['title_chinese'],
+                'modified': modified.strftime('%Y-%m-%d'),
+                'built_time': built_time.strftime('%Y-%m-%d %H:%M'),
+                'size': '{:.1f}M'.format(os.path.getsize(built_books_dir+'/'+filename) / 1024 / 1024)}
+        items.append(item)
+
+    template = jinja2.Template(open('xhtml/templates/release.xhtml', 'r').read())
+    release_xhtml = template.render(items=items)
+    open(built_books_dir + '/release.xhtml', 'w').write(release_xhtml)
 
 if __name__ == '__main__':
     main()
