@@ -10,14 +10,8 @@ import jinja2
 
 import utils
 
-try:
-    import epubuilder
-    import epubuilder.tools
-except ImportError:
-    import sys
-    sys.path.append('/media/data/projects/epubuilder')
-    import epubuilder
-    import epubuilder.tools
+import epubuilder
+import epubuilder.tools
 
 homepage = 'https://meng89.github.io/ZhuangChunJiang-Chinese-Nikayas-EPUB-Builder'
 
