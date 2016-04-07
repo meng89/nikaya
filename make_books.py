@@ -1,7 +1,11 @@
 #!/bin/env python3
 
 import os
+import sys
 import re
+import threading
+import atexit
+
 from urllib.parse import urlparse, urljoin
 
 import datetime
@@ -12,6 +16,8 @@ import utils
 
 import epubuilder
 import epubuilder.tools
+
+from config import BOOKS_DIR
 
 homepage = 'https://meng89.github.io/ZhuangChunJiang-Chinese-Nikayas-EPUB-Builder'
 
@@ -237,10 +243,47 @@ def make(make_tree, get_pages, url, book_info, built_books_dir):
     return filename, modified_time, created_time
 
 
-def main():
-    built_books_dir = 'built_books/'
+class RunCccThread(threading.Thread):
+    def __init__(self, host, port):
+        super().__init__()
+        self._host = host
+        self._port = port
 
-    url_part = 'http://127.0.0.1:8866'
+    def run(self):
+        from run_ccc import app
+        app.run(host=self._host, port=self._port, debug=False)
+
+
+def is_socket_open(host, port):
+    import socket
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        s.bind((host, port))
+        s.close()
+        return True
+    except OSError:
+        return False
+
+
+def main():
+    os.makedirs(BOOKS_DIR, exist_ok=True)
+
+    _host = '127.0.0.1'
+    _port = 1080
+
+    while True:
+        if is_socket_open(_host, _port):
+            break
+        else:
+            _port += 1
+
+    run_ccc_thread = RunCccThread(_host, _port)
+    run_ccc_thread.start()
+
+    import time
+    time.sleep(3)
+
+    url_part = 'http://{}:{}'.format(_host, _port)
 
     import sn
     import mn
@@ -255,17 +298,20 @@ def main():
     items = []
     for module, n_info in ((sn, sn_info), (mn, mn_info), (dn, dn_info), (an, an_info))[:]:
         filename, modified, built_time = make(module.make_tree, module.get_pages,
-                                              n_info['url'], n_info, built_books_dir)
+                                              n_info['url'], n_info, BOOKS_DIR)
 
         item = {'filename': filename, 'bookname': n_info['title_chinese'],
                 'modified': modified.strftime('%Y-%m-%d'),
                 'built_time': built_time.strftime('%Y-%m-%d %H:%M'),
-                'size': '{:.1f}M'.format(os.path.getsize(built_books_dir+'/'+filename) / 1024 / 1024)}
+                'size': '{:.1f}M'.format(os.path.getsize(BOOKS_DIR+'/'+filename) / 1024 / 1024)}
         items.append(item)
 
     template = jinja2.Template(open('xhtml/templates/release.xhtml', 'r').read())
     release_xhtml = template.render(items=items)
-    open(built_books_dir + '/release.xhtml', 'w').write(release_xhtml)
+    open(BOOKS_DIR + '/release.xhtml', 'w').write(release_xhtml)
+
+    print('here1')
+    sys.exit()
 
 if __name__ == '__main__':
     main()

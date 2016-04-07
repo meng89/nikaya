@@ -2,3 +2,4 @@ bs4
 requests
 epubuilder
 jinja2
+flask
