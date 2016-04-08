@@ -62,4 +62,8 @@ target/
 .ipynb_checkpoints
 
 .idea/
-built_books/
+
+_built_books/
+
+ccc.rar
+ccc/

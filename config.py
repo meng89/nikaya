@@ -2,4 +2,4 @@
 CCC_DIR = '/media/data/temp/ccc'
 
 # 程序生成的epub存放目录
-BOOKS_DIR = 'built_books'
+BOOKS_DIR = '_built_books'
