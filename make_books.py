@@ -1,10 +1,8 @@
 #!/bin/env python3
 
 import os
-import sys
 import re
 import threading
-import atexit
 
 from urllib.parse import urlparse, urljoin
 
@@ -278,6 +276,7 @@ def main():
             _port += 1
 
     run_ccc_thread = RunCccThread(_host, _port)
+    run_ccc_thread.daemon = True
     run_ccc_thread.start()
 
     import time
@@ -311,7 +310,7 @@ def main():
     open(BOOKS_DIR + '/release.xhtml', 'w').write(release_xhtml)
 
     print('here1')
-    sys.exit()
+    exit()
 
 if __name__ == '__main__':
     main()
