@@ -296,18 +296,8 @@ def main():
 
     # items = []
     for module, n_info in ((sn, sn_info), (mn, mn_info), (dn, dn_info), (an, an_info))[:]:
-        filename, modified, built_time = make(module.make_tree, module.get_pages,
-                                              n_info['url'], n_info, BOOKS_DIR)
+        make(module.make_tree, module.get_pages, n_info['url'], n_info, BOOKS_DIR)
 
-    #    item = {'filename': filename, 'bookname': n_info['title_chinese'],
-    #            'modified': modified.strftime('%Y-%m-%d'),
-    #            'built_time': built_time.strftime('%Y-%m-%d %H:%M'),
-    #            'size': '{:.1f}M'.format(os.path.getsize(BOOKS_DIR+'/'+filename) / 1024 / 1024)}
-    #    items.append(item)
-
-    # template = jinja2.Template(open('xhtml/templates/release.xhtml', 'r').read())
-    # release_xhtml = template.render(items=items)
-    # open(BOOKS_DIR + '/release.xhtml', 'w').write(release_xhtml)
 
     exit()
 
