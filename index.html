@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>荘春江汉译四部经藏</title>
+</head>
+<body>
+
+<table>
+    <tr>
+        <th>文件名</th>
+        <th>大小</th>
+        <th>生成时间</th>
+    </tr>
+    {{ % for book in books % }}
+    <tr>
+        <td><a href="{{book.path}}">{{book.filename}}</a></td>
+        <td>{{book.size}}</td>
+        <td>{{book.mtime}}</td>
+    </tr>
+    {{ % endfor % }}
+
+</table>
+</body>
+</html>
