@@ -4,7 +4,7 @@
 
 ** 获取已制作好的电子书：
 
-http://chenmeng.org/nikaya_book/
+http://meng89.github.io/nikaya/
 
 ** 出现 Bug、提供各种建议：
 

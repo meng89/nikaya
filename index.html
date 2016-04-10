@@ -2,23 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>荘春江汉译四部经藏</title>
+    <title>莊春江汉译四部经藏</title>
+    <link href="http://cdn.staticfile.org/twitter-bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdn.staticfile.org/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
 </head>
 <body>
 
-<table>
+<table class="table">
     <tr>
         <th>文件名</th>
         <th>大小</th>
         <th>生成时间</th>
     </tr>
-    {{ % for book in books % }}
+    {% for book in books %}
     <tr>
         <td><a href="{{book.path}}">{{book.filename}}</a></td>
         <td>{{book.size}}</td>
         <td>{{book.mtime}}</td>
     </tr>
-    {{ % endfor % }}
+    {% endfor %}
 
 </table>
 </body>
