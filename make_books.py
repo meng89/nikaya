@@ -298,7 +298,6 @@ def main():
     for module, n_info in ((sn, sn_info), (mn, mn_info), (dn, dn_info), (an, an_info))[:]:
         make(module.make_tree, module.get_pages, n_info['url'], n_info, BOOKS_DIR)
 
-
     exit()
 
 if __name__ == '__main__':

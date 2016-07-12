@@ -20,12 +20,3 @@ function show_off(){
         is_show = true
     }
 }
-
-//function make_button(){
-//    var button = document.createElement('button')
-//    button.setAttribute('onclick', 'show_off()')
-//    var text = document.createTextNode(button_text)
-//    button.appendChild(text)
-//    var chinese_head = document.getElementById('chinese_head')
-//    chinese_head.parentNode.insertBefore(button, chinese_head)
-//}
