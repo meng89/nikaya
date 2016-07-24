@@ -20,5 +20,6 @@ def index():
 def static_file(path):
     return app.send_static_file(path)
 
-if __name__ == '__main__':
-    app.run(debug=True, port=1080, host='127.0.0.1')
+
+# if __name__ == '__main__':
+#    app.run(debug=True, port=1080, host='127.0.0.1')

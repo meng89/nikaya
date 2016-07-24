@@ -1,4 +1,4 @@
-import make_books
+import tools
 import utils
 
 
@@ -9,9 +9,9 @@ def make_tree(toc):
 
         chinese, pali, last_modified = utils.read_text(content['url'])
 
-        head_lines, main_lines = make_books.split_chinese_lines(chinese)
+        head_lines, main_lines = tools.split_chinese_lines(chinese)
 
-        info = make_books.analyse_head_lines(head_lines)
+        info = tools.analyse_head_lines(head_lines)
 
         if 'pin_title' in info.keys():
             last_pin_title = info['pin_title']

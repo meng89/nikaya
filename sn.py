@@ -1,5 +1,7 @@
-import make_books
+import tools
 import utils
+
+pin_title_when_none = '(未分品)'
 
 
 def make_tree(toc):
@@ -12,9 +14,9 @@ def make_tree(toc):
 
     for content in toc:
         chinese, pali, last_modified = utils.read_text(content['url'])
-        head_lines, main_lines = make_books.split_chinese_lines(chinese)
+        head_lines, main_lines = tools.split_chinese_lines(chinese)
 
-        info = make_books.analyse_head_lines(head_lines)
+        info = tools.analyse_head_lines(head_lines)
 
         if 'pian_title' in info.keys():
             last_pian_title = info['pian_title']
@@ -26,7 +28,7 @@ def make_tree(toc):
 
         last_pin_title = info['pin_title'] if 'pin_title' in info.keys() else last_pin_title
         if last_pin_title is None:
-            last_pin_title = make_books.pin_title_when_none
+            last_pin_title = pin_title_when_none
 
         pian = None
         if tree and tree[-1]['title'] == last_pian_title:
