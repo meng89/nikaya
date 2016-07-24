@@ -1,4 +1,4 @@
-#!/bin/env python3
+#!/usr/bin/env python3
 
 import datetime
 import threading
@@ -14,6 +14,7 @@ import utils
 from config import BOOKS_DIR
 
 from sn2 import Nikaya
+from sn2 import Sutra
 
 homepage = 'https://meng89.github.io/nikaya'
 
@@ -94,74 +95,6 @@ def get_xhtml_str(template, head_title, title, head_lines, main_lines, pali, js_
     return sutra_xhtml_str
 
 
-def make(make_tree, get_pages, book_info, built_books_dir):
-    from epubuilder.public.metas import Language, Title
-    from epubuilder.public import File
-    from epubuilder.epub3 import Section
-
-    sources = get_toc(book_info['url'])
-    tree = make_tree(sources)
-
-    book = epubuilder.epub3.Epub3()
-
-    book.metadata.append(Language('zh-TW'))
-    book.metadata.append(Title(book_info['title_chinese']))
-
-    js_path = 'Scripts/a.js'
-    book.files[js_path] = File(open('xhtml/js/a.js', 'rb').read())
-
-    pages = get_pages(tree)
-    sutra_template = jinja2.Template(open('xhtml/templates/sutra.xhtml', 'r').read())
-    introduction_template = jinja2.Template(open('xhtml/templates/说明.xhtml', 'r').read())
-
-    gmt_format = '%a, %d %b %Y %H:%M:%S GMT'
-    modified_time = None
-
-    # '%Y-%m-%d %H:%M:%S'
-
-    for page in pages:
-
-        js_relative_path = epubuilder.tools.relative_path(js_path, os.path.split(page['epub_expected_path'])[0])
-
-        sutra_xhtml_str = get_xhtml_str(sutra_template, page['head_title'], page['title'], page['head_lines'],
-                                        page['main_lines'],
-                                        page['pali'], js_relative_path)
-
-        page_path = book.add_page(sutra_xhtml_str.encode(), page['epub_expected_path'])
-        book.set_toc(page['epub_toc'], page_path)
-
-        print(book_info['title_chinese'], page['epub_toc'], page_path)
-
-        cur_page_modified = datetime.datetime.strptime(page['last_modified'], gmt_format)
-
-        if modified_time:
-            modified_time = cur_page_modified if cur_page_modified > modified_time else modified_time
-        else:
-            modified_time = cur_page_modified
-
-    created_time = datetime.datetime.now()
-
-    introduction = introduction_template.render(homepage=homepage,
-                                                modified_time=modified_time.strftime('%Y-%m-%d'),
-                                                created_time=created_time.strftime('%Y-%m-%d %H:%M'))
-    introduction_path = 'introduction.xhtml'
-    book.files[introduction_path] = File(introduction.encode())
-
-    book.toc.insert(0, Section('说明', href=introduction_path))
-
-    filename = book_info['title_chinese'] + '.epub'
-
-    book.write('{}/{}'.format(built_books_dir, filename))
-    return filename, modified_time, created_time
-
-
-from sn2 import Sutra
-
-
-
-
-
-
 def make_book(nikaya):
     """
 
@@ -171,7 +104,7 @@ def make_book(nikaya):
     """
     from epubuilder.epub3 import Epub3
     from epubuilder.public.metas import Language, Title
-    from epubuilder.public import File
+    from epubuilder.public import File, Joint
     from epubuilder.epub3 import Section
 
     book = Epub3()
@@ -185,12 +118,20 @@ def make_book(nikaya):
 
     sutra_template = jinja2.Template(open('xhtml/templates/sutra.xhtml', 'r').read())
 
-    js_relative_path = epubuilder.tools.relative_path(js_path, os.path.split('Pages/xn.x.x.xhtml')[0])
+    js_relative_path = epubuilder.tools.relative_path(js_path, 'Pages/xn.x.x.xhtml')
+
+    last_modified = None
+
+    gmt_format = '%a, %d %b %Y %H:%M:%S GMT'
 
     def add_page_make_toc(section, subs):
         for sub in subs:
 
-            s = Section(sub.title)
+            if not isinstance(sub.title, str):
+                print(sub.title)
+                exit()
+
+            s = Section(title=sub.title)
 
             if not isinstance(sub, Sutra):
                 add_page_make_toc(section=s, subs=sub.subs)
@@ -198,14 +139,26 @@ def make_book(nikaya):
             else:
                 sutra = sub
 
+                sutra_sort_name =
+
                 path = 'Pages/{}.xhtml'.format(sutra.sort_name)
                 sutra_xhtml_str = get_xhtml_str(sutra_template, sutra.serial_start, sutra.title, sutra.header_lines,
                                                 sutra.main_lines,
                                                 sutra.pali, js_relative_path)
 
                 book.files[path] = File(sutra_xhtml_str.encode())
+                book.spine.append(Joint(path))
 
                 s.href = path
+
+                sutra_modified = datetime.datetime.strptime(sutra.modified, gmt_format)
+
+                nonlocal last_modified
+                if last_modified is None:
+                    last_modified = sutra_modified
+
+                if sutra_modified > last_modified:
+                    last_modified = sutra_modified
 
             if hasattr(section, 'subs'):
                 section.subs.append(s)
@@ -216,15 +169,14 @@ def make_book(nikaya):
 
     introduction_template = jinja2.Template(open('xhtml/templates/说明.xhtml', 'r').read())
     introduction = introduction_template.render(homepage=homepage,
-                                                modified_time=modified_time.strftime('%Y-%m-%d'),
-                                                created_time=created_time.strftime('%Y-%m-%d %H:%M'))
+                                                modified_time=last_modified.strftime('%Y-%m-%d'),
+                                                created_time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M'))
     introduction_path = 'introduction.xhtml'
     book.files[introduction_path] = File(introduction.encode())
 
-    book.toc.insert(0, Section('说明', href=introduction_path))
+    book.toc.insert(0, Section(title='说明', href=introduction_path))
 
-
-    return book
+    return book, nikaya.title_zh_tw
 
 
 class RunCccThread(threading.Thread):
@@ -272,12 +224,11 @@ def main():
 
     import sn2
 
-    sn_and_ = (sn2,)
-
-    # items = []
     for module, uri in ((sn2, url_part + '/SN/index.htm'),):
         nikaya = module.get_nikaya(uri)
-        ebook = make_book(nikaya)
+        book, title_zh_tw = make_book(nikaya)
+
+        book.write('{}/{}_e3.epub'.format(BOOKS_DIR, title_zh_tw))
 
     exit()
 
