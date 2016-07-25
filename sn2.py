@@ -78,6 +78,8 @@ class Nikaya:
         self.title_zh_tw = None
         self.title_pali = None
 
+        self.abbreviation = None
+
         self.subs = []
 
     @property
@@ -89,6 +91,7 @@ class Node:
     def __init__(self):
         self.title = None
         self.serial = None
+
         self.sec_title = None
 
         self.subs = []
@@ -115,6 +118,9 @@ class Pin(Node):
 class Sutra:
     def __init__(self):
         self.title = None
+        self.sec_title = None
+
+        self.serial = None
         self.serial_start = None
         self.serial_end = None
 
@@ -129,6 +135,8 @@ class Sutra:
         self.sort_name = None
 
         self.modified = None
+
+        self.abbreviation = None
 
 
 class Info:
@@ -175,6 +183,12 @@ def analyse_header(lines):  # public
             info.pian_title = m.group(2)
             continue
 
+        m = re.match('^(因緣篇)\s*$', line)
+        if m:
+            info.pian_serial = '2'
+            info.pian_title = m.group(1)
+            continue
+
         m = re.match('^(\d+)\.?(\S+品)\s*$', line)
         if m:
             info.pin_serial = m.group(1)
@@ -198,29 +212,31 @@ def analyse_header(lines):  # public
             info.sutra_serial_start = serial[0]
             info.sutra_serial_end = serial[1]
 
-        info.sutra_title = m.group(3) or ''
+        info.sutra_title = m.group(3)
 
     # “略去”的经文
-    m = re.match('^相應部(48)相應 (83)-(114)經$', lines[-1])
+    m = re.match('^相應部(48)相應 (83)-(114)經\s*$', lines[-1])
     if m:
         info.xiangying_serial = m.group(1)
-        info.sutra_title = ''
+        info.sutra_serial_start = m.group(2)
+        info.sutra_serial_end = m.group(3)
 
-    m = re.match('^相應部(48)相應 (137)-(168)經', lines[-1])
+    m = re.match('^相應部(48)相應 (137)-(168)經\s*', lines[-1])
     if m:
         info.xiangying_serial = m.group(1)
-        info.sutra_title = ''
+        info.sutra_serial_start = m.group(2)
+        info.sutra_serial_end = m.group(3)
 
     return info
 
 
-def add_title_range(nikaya):
+def add_sec_title_range(nikaya):
     for pian in nikaya.pians:
-        pian.title += ' ({}-{})'.format(pian.xiangyings[0].serial, pian.xiangyings[-1].serial)
+        pian.sec_title = '{} ({}-{})'.format(pian.title, pian.xiangyings[0].serial, pian.xiangyings[-1].serial)
 
         for xiangying in pian.xiangyings:
             for pin in xiangying.pins:
-                pin.title += ' ({}-{})'.format(pin.sutras[0].serial_start, pin.sutras[-1].serial_end)
+                pin.sec_title = '{} ({}-{})'.format(pin.title, pin.sutras[0].serial_start, pin.sutras[-1].serial_end)
 
     return nikaya
 
@@ -230,7 +246,7 @@ def make_nikaya(sutra_urls):
     nikaya = Nikaya()
     nikaya.title_zh_tw = '相應部'
     nikaya.title_pali = 'Saṃyutta Nikāya',
-    nikaya.short_name = 'SN'
+    nikaya.abbreviation = 'SN'
 
     for url in sutra_urls:
 
@@ -274,7 +290,6 @@ def make_nikaya(sutra_urls):
 
         sutra = Sutra()
 
-        sutra.title = info.sutra_title
         sutra.serial_start = info.sutra_serial_start
         sutra.serial_end = info.sutra_serial_end
 
@@ -285,14 +300,23 @@ def make_nikaya(sutra_urls):
         sutra.modified = modified
 
         if sutra.serial_start == sutra.serial_end:
-            sutra_start_end = sutra.serial_start
+            sutra.serial = sutra.serial_start
         else:
-            sutra_start_end = '{}-{}'.format(sutra.serial_start, sutra.serial_end)
+            sutra.serial = '{}-{}'.format(sutra.serial_start, sutra.serial_end)
 
-        # print()
-        # print(info, '\n')
+        if info.sutra_title:
+            sutra.title = info.sutra_title
+        else:
+            sutra.title = ''
 
-        sutra.sort_name = 'SN.{}.{}'.format(nikaya.pians[-1].xiangyings[-1].serial, sutra_start_end)
+        if sutra.title:
+            sutra.sec_title = sutra.serial + ' ' + sutra.title
+        else:
+            sutra.sec_title = sutra.serial
+
+        sutra.abbreviation = '{}.{}.{}'.format(nikaya.abbreviation,
+                                               nikaya.pians[-1].xiangyings[-1].serial,
+                                               sutra.serial)
 
         nikaya.pians[-1].xiangyings[-1].pins[-1].sutras.append(sutra)
 
@@ -317,7 +341,7 @@ def get_nikaya(url):
 
                 for sutra in pin.sutras:
                     if not isinstance(sutra.title, str):
-                        print('error sutra:', xiangying.serial, sutra.serial_start)
+                        print('error sutra:', xiangying.serial, sutra.serial_start, sutra.serial_end, sutra.title)
 
-    nikaya = add_title_range(nikaya)
+    nikaya = add_sec_title_range(nikaya)
     return nikaya

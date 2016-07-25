@@ -4,11 +4,11 @@ import datetime
 import threading
 from urllib.parse import urlparse, urljoin
 
-import epubuilder.epub3
-import epubuilder.tools
+
 import jinja2
 import os
 import re
+import uuid
 
 import utils
 from config import BOOKS_DIR
@@ -102,10 +102,13 @@ def make_book(nikaya):
      :type nikaya: Nikaya
     :return:
     """
-    from epubuilder.epub3 import Epub3
-    from epubuilder.public.metas import Language, Title
+    from epubuilder.epub3 import Epub3, Section
+    from epubuilder.public.metas import Language, Title, Identifier
     from epubuilder.public import File, Joint
-    from epubuilder.epub3 import Section
+    from epubuilder.tools import w3c_utc_date
+    from epubuilder.epub3.metas import dcterms
+
+    import epubuilder.tools
 
     book = Epub3()
     for lang in nikaya.languages:
@@ -113,12 +116,16 @@ def make_book(nikaya):
 
     book.metadata.append(Title(nikaya.title_zh_tw))
 
+    book.metadata.append(dcterms.get('modified')(w3c_utc_date()))
+
+    book.metadata.append(Identifier('identifier_' + uuid.uuid4().hex))
+
     js_path = 'Scripts/a.js'
     book.files[js_path] = File(open('xhtml/js/a.js', 'rb').read())
 
     sutra_template = jinja2.Template(open('xhtml/templates/sutra.xhtml', 'r').read())
 
-    js_relative_path = epubuilder.tools.relative_path(js_path, 'Pages/xn.x.x.xhtml')
+    js_relative_path = epubuilder.tools.relative_path('Pages', js_path)
 
     last_modified = None
 
@@ -131,18 +138,19 @@ def make_book(nikaya):
                 print(sub.title)
                 exit()
 
-            s = Section(title=sub.title)
+            s = Section(title=sub.sec_title or sub.title)
 
             if not isinstance(sub, Sutra):
+
                 add_page_make_toc(section=s, subs=sub.subs)
 
             else:
                 sutra = sub
-
-                sutra_sort_name =
-
-                path = 'Pages/{}.xhtml'.format(sutra.sort_name)
-                sutra_xhtml_str = get_xhtml_str(sutra_template, sutra.serial_start, sutra.title, sutra.header_lines,
+                path = 'Pages/{}.xhtml'.format(sutra.abbreviation)
+                sutra_xhtml_str = get_xhtml_str(sutra_template,
+                                                sutra.abbreviation + ' ' + sutra.title,
+                                                sutra.abbreviation + ' ' + sutra.title,
+                                                sutra.header_lines,
                                                 sutra.main_lines,
                                                 sutra.pali, js_relative_path)
 
@@ -174,7 +182,8 @@ def make_book(nikaya):
     introduction_path = 'introduction.xhtml'
     book.files[introduction_path] = File(introduction.encode())
 
-    book.toc.insert(0, Section(title='说明', href=introduction_path))
+    book.toc.append(Section(title='说明', href=introduction_path))
+    book.spine.append(Joint(introduction_path))
 
     return book, nikaya.title_zh_tw
 
