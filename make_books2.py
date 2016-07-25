@@ -2,15 +2,12 @@
 
 import datetime
 import threading
-from urllib.parse import urlparse, urljoin
 
 
 import jinja2
 import os
-import re
 import uuid
 
-import utils
 from config import BOOKS_DIR
 
 from sn2 import Nikaya
@@ -19,67 +16,8 @@ from sn2 import Sutra
 homepage = 'https://meng89.github.io/nikaya'
 
 
-class Content:
-    def __init__(self):
-        self.url = None
-
-
-def get_toc(url):
-
-    father_title = None
-    father_no = None
-
-    toc = []
-
-    soup = utils.url_to_soup(url)[0]
-
-    for table in soup.find_all('table')[3:]:
-        all_a = table.find_all('a')
-
-        if len(all_a) == 1:
-            # 1.諸天相應(請點選經號進入)：
-            # 9集(請點選經號進入)：
-            m = re.match('^(\d+)\.?(\S+)\(請點選經號進入\)：$', all_a[0].text)
-            if m:
-                father_no = m.group(1)
-                father_title = m.group(2)
-            else:
-                raise Exception
-
-        elif len(all_a) > 1:
-            # 跳过目录中 相应 或 集 列表
-            if [a['href'].startswith('#') for a in all_a].count(True) == len(all_a):
-                continue
-
-            for a in all_a:
-
-                # 跳过底部 目录 链接
-                m = re.match('\d+(-\d+)?', a.text)
-                if not m:
-                    continue
-
-                content = {}
-
-                if urlparse(a['href']).netloc:
-                    sutra_url = a['href']
-                else:
-                    sutra_url = urljoin(url, a['href'])
-
-                content['url'] = sutra_url
-
-                content['sutra_no_start'] = a.text.split('-')[0]
-                content['sutra_no_end'] = a.text.split('-')[-1]
-
-                if father_no:
-                    content['father_no'] = father_no
-                if father_title:
-                    content['father_title'] = father_title
-
-                print(content)
-                toc.append(content)
-
-    exit()
-    return toc
+def translate_zh_cn(nikaya):
+    pass
 
 
 def get_xhtml_str(template, head_title, title, head_lines, main_lines, pali, js_path, css_path=None):
@@ -114,7 +52,7 @@ def make_book(nikaya):
     for lang in nikaya.languages:
         book.metadata.append(Language(lang))
 
-    book.metadata.append(Title(nikaya.title_zh_tw))
+    book.metadata.append(Title(nikaya.title_chinese))
 
     book.metadata.append(dcterms.get('modified')(w3c_utc_date()))
 
@@ -185,7 +123,7 @@ def make_book(nikaya):
     book.toc.append(Section(title='说明', href=introduction_path))
     book.spine.append(Joint(introduction_path))
 
-    return book, nikaya.title_zh_tw
+    return book, nikaya.title_chinese
 
 
 class RunCccThread(threading.Thread):

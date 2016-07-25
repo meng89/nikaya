@@ -13,11 +13,6 @@ class Link:
 
 def get_sutra_urls(nikaya_url):
 
-    father_title = None
-    father_no = None
-
-    toc = []
-
     sutra_urls = []
 
     soup = utils.url_to_soup(nikaya_url)[0]
@@ -30,8 +25,7 @@ def get_sutra_urls(nikaya_url):
             # 9集(請點選經號進入)：
             m = re.match('^(\d+)\.?(\S+)\(請點選經號進入\)：$', all_a[0].text)
             if m:
-                father_no = m.group(1)
-                father_title = m.group(2)
+                pass
             else:
                 raise Exception
 
@@ -47,8 +41,6 @@ def get_sutra_urls(nikaya_url):
                 if not m:
                     continue
 
-                content = {}
-
                 if urlparse(a['href']).netloc:
                     sutra_url = a['href']
                 else:
@@ -56,26 +48,13 @@ def get_sutra_urls(nikaya_url):
 
                 sutra_urls.append(sutra_url)
 
-                content['url'] = sutra_url
-
-                content['sutra_no_start'] = a.text.split('-')[0]
-                content['sutra_no_end'] = a.text.split('-')[-1]
-
-                if father_no:
-                    content['father_no'] = father_no
-                if father_title:
-                    content['father_title'] = father_title
-
-                toc.append(content)
-
     return sutra_urls
-    # return toc
 
 
 class Nikaya:
     def __init__(self):
         self.languages = ['zh-tw', 'pali']
-        self.title_zh_tw = None
+        self.title_chinese = None
         self.title_pali = None
 
         self.abbreviation = None
@@ -127,10 +106,6 @@ class Sutra:
         self.header_lines = None
         self.main_lines = None
         self.pali = None
-
-        self.sutra_tw = None
-        self.sutra_bali = None
-        self.sutra_cn = None
 
         self.sort_name = None
 
@@ -244,7 +219,7 @@ def add_sec_title_range(nikaya):
 def make_nikaya(sutra_urls):
 
     nikaya = Nikaya()
-    nikaya.title_zh_tw = '相應部'
+    nikaya.title_chinese = '相應部'
     nikaya.title_pali = 'Saṃyutta Nikāya',
     nikaya.abbreviation = 'SN'
 
