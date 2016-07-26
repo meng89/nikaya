@@ -3,3 +3,4 @@ requests
 epubuilder
 jinja2
 flask
+OpenCC

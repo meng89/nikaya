@@ -3,21 +3,40 @@
 import datetime
 import threading
 
+import copy
+
 
 import jinja2
 import os
 import uuid
+from opencc import convert
 
 from config import BOOKS_DIR
 
 from sn2 import Nikaya
 from sn2 import Sutra
 
-homepage = 'https://meng89.github.io/nikaya'
+HOME_PAGE = 'https://meng89.github.io/nikaya'
 
 
-def translate_zh_cn(nikaya):
-    pass
+def translate_to_zh_cn(nikaya_book):
+    """
+    :param nikaya_book:
+     :type nikaya_book: Nikaya
+    :return:
+    """
+
+    nikaya = copy.deepcopy(nikaya_book)
+
+    if nikaya.title_chinese:
+        nikaya.title_chinese = convert(nikaya.title_chinese)
+
+
+
+
+
+
+    return nikaya
 
 
 def get_xhtml_str(template, head_title, title, head_lines, main_lines, pali, js_path, css_path=None):
@@ -114,7 +133,7 @@ def make_book(nikaya):
     add_page_make_toc(book.toc, nikaya.subs)
 
     introduction_template = jinja2.Template(open('xhtml/templates/说明.xhtml', 'r').read())
-    introduction = introduction_template.render(homepage=homepage,
+    introduction = introduction_template.render(homepage=HOME_PAGE,
                                                 modified_time=last_modified.strftime('%Y-%m-%d'),
                                                 created_time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M'))
     introduction_path = 'introduction.xhtml'
@@ -123,7 +142,7 @@ def make_book(nikaya):
     book.toc.append(Section(title='说明', href=introduction_path))
     book.spine.append(Joint(introduction_path))
 
-    return book, nikaya.title_chinese
+    return book
 
 
 class RunCccThread(threading.Thread):
@@ -173,9 +192,13 @@ def main():
 
     for module, uri in ((sn2, url_part + '/SN/index.htm'),):
         nikaya = module.get_nikaya(uri)
-        book, title_zh_tw = make_book(nikaya)
 
-        book.write('{}/{}_e3.epub'.format(BOOKS_DIR, title_zh_tw))
+        book = make_book(nikaya)
+        book.write('{}/{}.epub'.format(BOOKS_DIR, nikaya.title_chinese))
+
+        book_zh_cn = translate_to_zh_cn(nikaya)
+
+        book_zh_cn.write('{}/{}_zh_cn.epub'.format(BOOKS_DIR, nikaya.title_chinese))
 
     exit()
 
