@@ -7,21 +7,29 @@
     <!--link href="{{css_path}}" rel="stylesheet" type="text/css"/-->
     <script src="{{js_path}}"></script>
 </head>
-<body>
-<h1>{{title}}</h1>
-<button onclick="show_off()">显示/关闭巴利经文及原始译文</button>
 
-<div id="chinese">
-<div id="head" hidden="hidden">
-{{chinese_head}}
-</div>
+<body>
+
+<h2>{{title}}</h2>
+
+<button onclick="show_off()">切换显示</button>
+
 <div id="main">
-{{chinese_main}}
+    {% for line in main_lines %}
+    <p>{{line}}</p>
+    {% endfor %}
 </div>
+
+<div id="chinese" hidden="hidden">
+    {% for line in chinese_lines %}
+    <p>{{line}}</p>
+    {% endfor %}
 </div>
 
 <div id="pali" hidden="hidden">
-{{pali}}
+    {% for line in pali_lines %}
+    <p>{{line}}</p>
+    {% endfor %}
 </div>
 
 </body>

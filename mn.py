@@ -1,80 +1,116 @@
-import make_books
-import tools
-import utils
+import re
 
 
-def make_tree(toc):  # private
-    tree = []
-
-    last_pian_title = None
-
-    for content in toc:
-        chinese, pali, last_modified = utils.read_text(content['url'])
-        head_lines, main_lines = tools.split_chinese_lines(chinese)
-
-        info = tools.analyse_head_lines(head_lines)
-        pian = None
-
-        last_pian_title = info['pian_title'] if 'pian_title' in info.keys() else last_pian_title
-
-        for one in tree:
-            if one['title'] == last_pian_title:
-                pian = one
-
-        if not pian:
-            pian = {'title': last_pian_title, 'pins': []}
-            tree.append(pian)
-
-        pin = None
-        if pian['pins'] and pian['pins'][-1]['title'] == info['pin_title']:
-            pin = pian['pins'][-1]
-        if not pin:
-            pin = {'title': info['pin_title'], 'sutras': []}
-            pian['pins'].append(pin)
-
-        sutra = {'no_start': content['sutra_no_start'],
-                 'no_end': content['sutra_no_end'],
-                 'title': info['sutra_title'],
-                 'head_lines': head_lines,
-                 'main_lines': main_lines,
-                 'pali': pali,
-                 'last_modified': last_modified}
-
-        pin['sutras'].append(sutra)
-
-    return tree
+from public import Nikaya, Node, Sutra
+from public import BaseInfo, PinInfo
 
 
-def get_pages(tree):  # private
+from tools import get_sutra_urls, split_chinese_lines
+from utils import read_text
 
-    pages = []
 
-    for pian in tree:
-        toc_pian_part = '{} ({}-{})'.format(pian['title'],
-                                            pian['pins'][0]['sutras'][0]['no_start'],
-                                            pian['pins'][-1]['sutras'][-1]['no_end']
-                                            )
-        for pin in pian['pins']:
-            toc_pin_part = '{} ({}-{})'.format(pin['title'],
-                                               pin['sutras'][0]['no_start'],
-                                               pin['sutras'][-1]['no_end']
-                                               )
-            for sutra in pin['sutras']:
-                full_serial = 'MN.{}'.format(sutra['no_start'])
+class _MyNikaya(Nikaya):
+    @property
+    def pins(self):
+        return self.subs
 
-                toc_sutra_part = '{} {}'.format(sutra['no_start'], sutra['title'])
 
-                expected_path = 'Sutras/{}.xhtml'.format(full_serial)
+class _Pin(Node):
+    @property
+    def sutras(self):
+        return self.subs
 
-                toc = (toc_pian_part, toc_pin_part, toc_sutra_part)
 
-                pages.append({'head_title': sutra['title'],
-                              'title': '{} {}'.format(full_serial, sutra['title']),
-                              'head_lines': sutra['head_lines'],
-                              'main_lines': sutra['main_lines'],
-                              'pali': sutra['pali'],
-                              'last_modified': sutra['last_modified'],
-                              'epub_expected_path': expected_path,
-                              'epub_toc': toc})
+class _MyInfo(BaseInfo, PinInfo):
+    def __init__(self):
+        BaseInfo.__init__(self)
+        PinInfo.__init__(self)
 
-    return pages
+
+def analyse_header(lines):  # public
+    """
+    :param lines:
+     :type lines: list
+    :return:
+    :rtype: _MyInfo
+    """
+
+    info = _MyInfo()
+
+    # 中部1經/根本法門經(根本法門品[1])(莊春江譯)
+    # 中部24經接力車經(譬喻品[3])(莊春江譯)
+    m = re.match('^\S+?(\d+)經/?(\S+經)\((\S+品)\[(\d+)\]\)\(莊春江譯\)\s*$', lines[-1])
+    if m:
+        info.sutra_serial_start = m.group(1)
+        info.sutra_serial_end = m.group(1)
+
+        info.sutra_title = m.group(2)
+
+        info.pin_title = m.group(3)
+        info.pin_serial = m.group(4)
+
+    return info
+
+
+def make_nikaya(sutra_urls):
+    nikaya = _MyNikaya()
+    nikaya.title_chinese = '中部'
+    nikaya.title_pali = 'Majjhima Nikāya',
+    nikaya.abbreviation = 'MN'
+
+    for url in sutra_urls:
+
+        chinese, pali, modified = read_text(url)
+
+        header_lines, main_lines = split_chinese_lines(chinese)
+
+        info = analyse_header(header_lines)
+
+        if info.pin_serial is not None:
+            if not nikaya.pins or nikaya.pins[-1].serial != info.pin_serial:
+
+                pin = _Pin()
+                pin.serial = info.pin_serial
+                pin.title = info.pin_title
+
+                nikaya.pins.append(pin)
+
+        sutra = Sutra()
+
+        sutra.serial_start = info.sutra_serial_start
+        sutra.serial_end = info.sutra_serial_end
+
+        sutra.pali = pali
+        sutra.chinese = chinese
+
+        sutra.main_lines = main_lines
+
+        sutra.modified = modified
+
+        sutra.serial = sutra.serial_start
+
+        sutra.title = info.sutra_title
+
+        sutra.sec_title = sutra.serial + ' ' + sutra.title
+
+        sutra.abbreviation = '{}.{}'.format(nikaya.abbreviation, sutra.serial)
+
+        nikaya.pins[-1].sutras.append(sutra)
+
+    return nikaya
+
+
+def add_sec_title_range(nikaya):
+    for pin in nikaya.pins:
+        pin.sec_title = '{} ({}-{})'.format(pin.title, pin.sutras[0].serial_start, pin.sutras[-1].serial_end)
+
+    return nikaya
+
+
+def get_nikaya(url):
+    sutra_urls = get_sutra_urls(url)
+    nikaya = make_nikaya(sutra_urls)
+
+    nikaya = add_sec_title_range(nikaya)
+
+    return nikaya

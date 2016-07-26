@@ -1,22 +1,18 @@
-
-var button_text = '显示/关闭巴利经文及原始译文'
-
-function is_show(){
-    if (document.getElementById('pali').getAttribute('hidden') != null) {
-        return true
-    } else {
-        return false
-    }
-}
-
 function show_off(){
-    if (is_show) {
+
+    if (document.getElementById('main').getAttribute('hidden') == null) {
+
+        document.getElementById('main').setAttribute('hidden', 'hidden')
+
         document.getElementById('pali').removeAttribute('hidden')
-        document.getElementById('head').removeAttribute('hidden')
-        is_show = false
+        document.getElementById('chinese').removeAttribute('hidden')
+
     } else {
+
+        document.getElementById('main').removeAttribute('hidden')
+
         document.getElementById('pali').setAttribute('hidden', 'hidden')
-        document.getElementById('head').setAttribute('hidden', 'hidden')
-        is_show = true
+        document.getElementById('chinese').setAttribute('hidden', 'hidden')
+
     }
 }
