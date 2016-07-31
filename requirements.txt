@@ -1,6 +1,6 @@
 bs4
 requests
-epubuilder
+epubuilder>=1.0.1
 jinja2
 flask
 OpenCC

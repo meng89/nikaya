@@ -57,11 +57,10 @@ def make_book(nikaya):
      :type nikaya: Nikaya
     :return:
     """
-    from epubuilder.epub3 import Epub3, Section
-    from epubuilder.public.metas import Language, Title, Identifier
-    from epubuilder.public import File, Joint
+    from epubuilder import Epub3, Section, File, Joint
+    from epubuilder.metas import Language, Title, Identifier, get_dcterm
+
     from epubuilder.tools import w3c_utc_date
-    from epubuilder.epub3.metas import dcterms
 
     import epubuilder.tools
 
@@ -71,7 +70,7 @@ def make_book(nikaya):
 
     book.metadata.append(Title(nikaya.title_chinese))
 
-    book.metadata.append(dcterms.get('modified')(w3c_utc_date()))
+    book.metadata.append(get_dcterm('modified')(w3c_utc_date()))
 
     book.metadata.append(Identifier('identifier_' + uuid.uuid4().hex))
 
