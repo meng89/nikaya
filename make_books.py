@@ -57,12 +57,10 @@ def make_book(nikaya):
      :type nikaya: Nikaya
     :return:
     """
-    from epubuilder import Epub3, Section, File, Joint
-    from epubuilder.metas import Language, Title, Identifier, get_dcterm
+    from epubaker import Epub3, Section, File, Joint
+    from epubaker.metas import Language, Title, Identifier, get_dcterm
 
-    from epubuilder.tools import w3c_utc_date
-
-    import epubuilder.tools
+    from epubaker.tools import w3c_utc_date, relative_path
 
     book = Epub3()
     for lang in nikaya.languages:
@@ -79,7 +77,7 @@ def make_book(nikaya):
 
     sutra_template = jinja2.Template(open('xhtml/templates/sutra.xhtml', 'r').read())
 
-    js_relative_path = epubuilder.tools.relative_path('Pages', js_path)
+    js_relative_path = relative_path('Pages', js_path)
 
     last_modified = None
 
