@@ -62,7 +62,7 @@ target/
 .ipynb_checkpoints
 
 .idea/
-
+venv/
 _books/
 
 ccc.rar
