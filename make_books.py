@@ -85,7 +85,6 @@ def make_book(nikaya):
 
     def add_page_make_toc(section, subs):
         for sub in subs:
-
             if not isinstance(sub.sec_title, str):
                 print(type(sub), sub.sec_title)
                 exit()
