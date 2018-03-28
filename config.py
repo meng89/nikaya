@@ -2,4 +2,4 @@
 CCC_DIR = '/media/data/temp/ccc'
 
 # 程序生成的 epub 存放目录
-BOOKS_DIR = 'gh_pages/books'
+BOOKS_DIR = '../nikaya_gp/books'

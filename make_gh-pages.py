@@ -20,4 +20,4 @@ for filename in sorted(os.listdir(config.BOOKS_DIR)):
 
 index_str = Template(open('index.html').read()).render(books=books)
 
-open('gh-pages/index.html', 'w').write(index_str)
+open('../nikaya_gp/index.html', 'w').write(index_str)
