@@ -15,55 +15,13 @@
         <th>大小</th>
         <th>生成时间</th>
     </tr>
-    
+    {% for book in books %}
     <tr>
-        <td><a href="books/中部.epub">中部.epub</a></td>
-        <td>1.1 MB</td>
-        <td>2016-07-26 23:25:05</td>
+        <td><a href="{{book.path}}">{{book.filename}}</a></td>
+        <td>{{book.size}}</td>
+        <td>{{book.mtime}}</td>
     </tr>
-    
-    <tr>
-        <td><a href="books/中部_简体.epub">中部_简体.epub</a></td>
-        <td>1.4 MB</td>
-        <td>2016-07-26 23:25:29</td>
-    </tr>
-    
-    <tr>
-        <td><a href="books/增支部.epub">增支部.epub</a></td>
-        <td>2.6 MB</td>
-        <td>2016-07-26 23:32:58</td>
-    </tr>
-    
-    <tr>
-        <td><a href="books/增支部_简体.epub">增支部_简体.epub</a></td>
-        <td>3.0 MB</td>
-        <td>2016-07-26 23:35:46</td>
-    </tr>
-    
-    <tr>
-        <td><a href="books/相應部.epub">相應部.epub</a></td>
-        <td>2.7 MB</td>
-        <td>2016-07-26 23:34:36</td>
-    </tr>
-    
-    <tr>
-        <td><a href="books/相應部_简体.epub">相應部_简体.epub</a></td>
-        <td>3.1 MB</td>
-        <td>2016-07-26 23:34:07</td>
-    </tr>
-    
-    <tr>
-        <td><a href="books/長部.epub">長部.epub</a></td>
-        <td>0.7 MB</td>
-        <td>2016-07-26 23:25:27</td>
-    </tr>
-    
-    <tr>
-        <td><a href="books/長部_简体.epub">長部_简体.epub</a></td>
-        <td>0.8 MB</td>
-        <td>2016-07-26 23:25:45</td>
-    </tr>
-    
+    {% endfor %}
 
 </table>
 </body>
