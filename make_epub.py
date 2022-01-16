@@ -103,11 +103,11 @@ def make_book(nikaya):
                                                         title=sutra.abbreviation + ' ' + sutra.title,
                                                         main_lines=sutra.main_lines,
 
-                                                        chinese_lines=[l for l in sutra.chinese.strip().splitlines()
-                                                                       if l.strip()],
+                                                        chinese_lines=[x for x in sutra.chinese.strip().splitlines()
+                                                                       if x.strip()],
 
-                                                        pali_lines=[l for l in sutra.pali.strip().splitlines()
-                                                                    if l.strip()],
+                                                        pali_lines=[x for x in sutra.pali.strip().splitlines()
+                                                                    if x.strip()],
 
                                                         js_path=js_relative_path)
 
@@ -168,10 +168,9 @@ def is_socket_open(host, port):
 
 
 def main():
-    os.makedirs(BOOKS_DIR, exist_ok=True)
 
     _host = '127.0.0.1'
-    _port = 1080
+    _port = 8088
 
     while True:
         if is_socket_open(_host, _port):
@@ -195,6 +194,8 @@ def main():
     import mn
     import dn
     import an
+
+    os.makedirs(BOOKS_DIR, exist_ok=True)
 
     for module, uri in (
             (sn, url_part + '/SN/index.htm'), (mn, url_part + '/MN/index.htm'),

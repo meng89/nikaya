@@ -8,30 +8,32 @@ import utils
 def split_chinese_lines(chinese):
     lines = chinese.strip().splitlines()
 
-    header_lines = []
-    main_lines = []
+    head_lines = []
+    body_lines = []
 
     is_sutra_name_line_passed = False
 
     for line in lines:
 
         if is_sutra_name_line_passed:
+            body_lines.append(line)
 
-            main_lines.append(line)
         else:
-            header_lines.append(line)
+            head_lines.append(line)
 
-            if re.search('\(莊春江譯\)', line):
+            if re.search(r"\(莊春江譯\)", line):
                 is_sutra_name_line_passed = True
 
-            elif re.match('相應部48相應 83-114經', line):
+            elif re.match(r"相應部48相應 83-114經", line):
                 is_sutra_name_line_passed = True
 
-    return header_lines, main_lines
+    if is_sutra_name_line_passed is not True:
+        raise Exception("解析不了: " + repr(lines))
+
+    return head_lines, body_lines
 
 
 def get_sutra_urls(nikaya_url):
-
     sutra_urls = []
 
     soup = utils.url_to_soup(nikaya_url)[0]
@@ -42,7 +44,7 @@ def get_sutra_urls(nikaya_url):
         if len(all_a) == 1:
             # 1.諸天相應(請點選經號進入)：
             # 9集(請點選經號進入)：
-            m = re.match('^(\d+)\.?(\S+)\(請點選經號進入\)：$', all_a[0].text)
+            m = re.match("^(\\d+)\\.?(\\S+)\\(請點選經號進入\\)：$", all_a[0].text)
             if m:
                 pass
             else:
@@ -56,7 +58,7 @@ def get_sutra_urls(nikaya_url):
             for a in all_a:
 
                 # 跳过底部 目录 链接
-                m = re.match('\d+(-\d+)?', a.text)
+                m = re.match("\\d+(-\\d+)?", a.text)
                 if not m:
                     continue
 

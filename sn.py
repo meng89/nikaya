@@ -1,12 +1,14 @@
 import re
 
-
 from public import BaseInfo, PianInfo, PinInfo
 from public import Nikaya, Node, Sutra
 
-
 from tools import get_sutra_urls, split_chinese_lines
-from utils import read_text
+from utils import read_sutta_page
+
+HTML_INDEX = '/SN/index.htm'
+
+data = None
 
 
 class _MyInfo(BaseInfo, PianInfo, PinInfo):
@@ -25,6 +27,16 @@ class _MyInfo(BaseInfo, PianInfo, PinInfo):
         s += 'pin      : "{}", "{}"\n'.format(self.pin_serial, self.pin_title)
         s += 'sutra    : "{}", "{}"'.format(self.sutra_serial_start, self.sutra_title)
         return s
+
+
+# "有偈篇"
+# "諸天相應" 1 必须有编号
+# "蘆葦品"
+# "暴流之渡過經" 1 必须编号
+# SN.1.1
+
+# 经太短，一个相应里的经典不应该在新页面
+# 有时某个相应经太少，没有品，相应下面就是经，不应该建立空品多折叠一下
 
 
 class MyNikaya(Nikaya):
@@ -63,30 +75,31 @@ def analyse_header(lines):  # public
 
     for line in lines[:-1]:
 
-        m = re.match('^\((\d)\)(\S+篇)\s*$', line)
+        m = re.match(r"^\((\d)\)(\S+篇)\s*$", line)
         if m:
             info.pian_serial = m.group(1)
             info.pian_title = m.group(2)
             continue
 
-        m = re.match('^(因緣篇)\s*$', line)
+        m = re.match(r"^(因緣篇)\s*$", line)
         if m:
             info.pian_serial = '2'
             info.pian_title = m.group(1)
             continue
 
-        m = re.match('^(\d+)\.?(\S+品)\s*$', line)
+        m = re.match(r"^(\d+)\.?(\S+品)\s*$", line)
         if m:
             info.pin_serial = m.group(1)
             info.pin_title = m.group(2)
             continue
 
-        m = re.match('\d+[./](?:\(\d+\))?\.?(.+相應)\s*$', line)
+        m = re.match(r"\d+[./](?:\(\d+\))?\.?(.+相應)\s*$", line)
         if m:
             info.xiangying_title = m.group(1)
             continue
 
-    m = re.match('^ *相+應部?(\d+)相應 ?第?(\d+(?:-\d+)?)經(?:/(.+?經.*?))?\((?:\S+?)相應/(?:\S+?)篇/(?:\S+?)\)', lines[-1])
+    m = re.match(r"^ *相+應部?(\d+)相應 ?第?(\d+(?:-\d+)?)經(?:/(.+?經.*?))?\((?:\S+?)相應/(?:\S+?)篇/(?:\S+?)\)",
+                 lines[-1])
     if m:
         info.xiangying_serial = m.group(1)
 
@@ -102,13 +115,13 @@ def analyse_header(lines):  # public
         info.sutra_title = m.group(3)
 
     # “略去”的经文
-    m = re.match('^相應部(48)相應 (83)-(114)經\s*$', lines[-1])
+    m = re.match(r"^相應部(48)相應 (83)-(114)經\s*$", lines[-1])
     if m:
         info.xiangying_serial = m.group(1)
         info.sutra_serial_start = m.group(2)
         info.sutra_serial_end = m.group(3)
 
-    m = re.match('^相應部(48)相應 (137)-(168)經\s*', lines[-1])
+    m = re.match(r"^相應部(48)相應 (137)-(168)經\s*", lines[-1])
     if m:
         info.xiangying_serial = m.group(1)
         info.sutra_serial_start = m.group(2)
@@ -129,7 +142,6 @@ def add_sec_title_range(nikaya):
 
 
 def make_nikaya(sutra_urls):
-
     nikaya = MyNikaya()
     nikaya.title_chinese = '相應部'
     nikaya.title_pali = 'Saṃyutta Nikāya',
@@ -137,9 +149,9 @@ def make_nikaya(sutra_urls):
 
     for url in sutra_urls:
 
-        chinese, pali, modified = read_text(url)
+        line_list, local_note_list, pali, last_modified = read_sutta_page(url)
 
-        header_lines, main_lines = split_chinese_lines(chinese)
+        header_lines, main_lines = split_chinese_lines(line_list)
 
         info = analyse_header(header_lines)
 
@@ -172,7 +184,7 @@ def make_nikaya(sutra_urls):
         if not nikaya.pians[-1].xiangyings[-1].pins:
             pin = Pin()
             pin.serial = 1
-            pin.title = '(未分品)'
+            pin.title = None
             nikaya.pians[-1].xiangyings[-1].pins.append(pin)
 
         sutra = Sutra()
@@ -181,11 +193,11 @@ def make_nikaya(sutra_urls):
         sutra.serial_end = info.sutra_serial_end
 
         sutra.pali = pali
-        sutra.chinese = chinese
+        sutra.chinese = line_list
 
         sutra.main_lines = main_lines
 
-        sutra.modified = modified
+        sutra.modified = last_modified
 
         if sutra.serial_start == sutra.serial_end:
             sutra.serial = sutra.serial_start
@@ -212,8 +224,20 @@ def make_nikaya(sutra_urls):
 
 
 def get_nikaya(url):
-    sutra_urls = get_sutra_urls(url)
+    sutra_urls = get_sutra_urls(url + HTML_INDEX)
     nikaya = make_nikaya(sutra_urls)
 
     nikaya = add_sec_title_range(nikaya)
     return nikaya
+
+
+def get_data():
+    return data
+
+
+def load_data(url):
+    global data
+    data = get_nikaya(url)
+
+
+make_latex()

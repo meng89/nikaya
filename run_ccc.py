@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
 
-import os
+import time
+import threading
 
 from flask import Flask
 
-from config import CCC_DIR
+from config import INDEX_DIR
 
-ROOT = os.path.join(CCC_DIR, 'agama/htdocs/agama')
+_is_runing = False
 
-app = Flask(__name__, static_folder=ROOT)
+_url = None
+
+app = Flask(__name__, static_folder=INDEX_DIR)
 
 
 @app.route('/')
@@ -21,5 +24,35 @@ def static_file(path):
     return app.send_static_file(path)
 
 
-if __name__ == '__main__':
-    app.run(debug=True, port=1080, host='127.0.0.1')
+class RunCccThread(threading.Thread):
+    def __init__(self, host, port):
+        super().__init__()
+        self._host = host
+        self._port = port
+
+    def run(self):
+        app.run(host=self._host, port=self._port, debug=False)
+
+
+def get_url():
+    return _url
+
+
+def is_runing():
+    return _is_runing
+
+
+def make_sure_is_runing():
+    host = "127.0.0.1"
+    port = 8080
+
+    global _is_runing
+    if not _is_runing:
+        run_ccc_thread = RunCccThread(host, port)
+        run_ccc_thread.daemon = True
+        run_ccc_thread.start()
+
+        _is_runing = True
+
+        global _url
+        _url = "http://{}:{}".format(host, port)

@@ -6,7 +6,7 @@ from public import BaseInfo, PinInfo
 
 
 from tools import get_sutra_urls, split_chinese_lines
-from utils import read_text
+from utils import read_sutta_page
 
 
 class _MyNikaya(Nikaya):
@@ -59,7 +59,7 @@ def make_nikaya(sutra_urls):
 
     for url in sutra_urls:
 
-        chinese, pali, modified = read_text(url)
+        chinese, pali, modified = read_sutta_page(url)
 
         header_lines, main_lines = split_chinese_lines(chinese)
 
