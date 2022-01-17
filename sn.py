@@ -64,12 +64,6 @@ class Pin(Node):
 
 
 def analyse_header(lines):  # public
-    """
-    :param lines:
-     :type lines: list
-    :return:
-    :rtype: _MyInfo
-    """
 
     info = _MyInfo()
 
@@ -144,7 +138,7 @@ def add_sec_title_range(nikaya):
 def make_nikaya(sutra_urls):
     nikaya = MyNikaya()
     nikaya.title_chinese = '相應部'
-    nikaya.title_pali = 'Saṃyutta Nikāya',
+    nikaya.title_pali = 'Saṃyutta Nikāya'
     nikaya.abbreviation = 'SN'
 
     for url in sutra_urls:

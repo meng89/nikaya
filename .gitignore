@@ -64,6 +64,7 @@ target/
 .idea/
 venv/
 _books/
+out/
 
 ccc.rar
 ccc/
