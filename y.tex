@@ -26,11 +26,16 @@
 \begin{document}
 
 \bookmarksetupnext{open=false}
-\addcontentsline{toc}{part}{有偈篇}
-\addcontentsline{toc}{chapter}{1 諸天相應}
-\addcontentsline{toc}{section}{蘆葦品}
 
-\addcontentsline{toc}{subsection}{1 暴流之渡過經}
+\part[sort=有]{有偈篇}
+
+\chapter{1 諸天相應}\label{ch:1-諸天相應}
+
+
+\section{蘆葦品}\label{sec:蘆葦品}
+
+% \addcontentsline{toc}{subsection}{1 暴流之渡過經}
+\subsection{1 暴流之渡過經}\label{subsec:1}
 
 像這樣被我聽聞:
 
@@ -39,7 +44,7 @@
 
 「親愛的先生！你怎樣渡過暴流呢？」
 
-「朋友！我無住立、無用力地渡過暴流。」
+「朋友！我無住立、\ref{subsec:1} 無用力地渡過暴流。」
 
 「親愛的先生！那麼，依怎樣的方式你無住立、無用力地渡過暴流呢？」
 
@@ -59,7 +64,7 @@
 \addcontentsline{toc}{part}{第二篇}
 This is Chapter 1 of Part 2
 \addcontentsline{toc}{chapter}{Chapter 1}
-And a section
+And a section \ref{sec:1}
 \addcontentsline{toc}{section}{Section 1 of chapter 1 of part 2}
 \clearpage
 This is Chapter 2 of Part 2

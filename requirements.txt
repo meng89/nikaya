@@ -4,3 +4,5 @@ epubaker
 jinja2
 flask
 OpenCC
+
+pylatex
