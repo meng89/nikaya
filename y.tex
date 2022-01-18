@@ -1,10 +1,5 @@
-%CTeX 套装最早是由中科院 Leo Wu（吴凌云）研究员开发、维护和发布的 TeX 发行版，
-%它是应当时中文配置困难的背景（CCT、CJK 等）而诞生的，而现在的中文支持技术（xeCJK等）配置已非常简单；
-%CTeX 套装自 2012 年 3 月 22 日发行 2.9.2.164 版本后，至今未更新，已不能适应当前 TeX 中文技术的发展，
-%引用 CTeX 套装的开发之一刘海洋的话：CTeX 已经完成了它的历史使命。
-
-\documentclass[a5paper,12pt]{book}
-
+\documentclass[a4paper,12pt,oneside]{book}
+\linespread{1.2}
 \usepackage{xeCJK}
 %\punctstyle{quanjiao}
 \usepackage{fontspec}
@@ -12,6 +7,7 @@
 %\usepackage[bookmarksopen,bookmarksopenlevel=5]{hyperref}
 \usepackage[open,openlevel=1]{bookmark}
 
+\usepackage{indentfirst}
 %\usepackage{xeCJK}
 \setCJKmainfont{Noto Serif CJK TC}
 \setCJKsansfont{Noto Sans CJK TC}
@@ -23,19 +19,26 @@
 %\xeCJKsetup{PunctStyle=plain}
 %\punctstyle{quanjiao}
 
-\begin{document}
+\usepackage{titlesec} %自定义多级标题格式的宏包
+%\titleformat{\part}[block]{\Huge\bfseries\centering}{}{1em}{}[]
+%\titleformat{\chapter}[block]{\huge\bfseries\centering}{}{1em}{}[]
+%\titleformat{\section}[block]{\Large\bfseries\centering}{}{1em}{}[]
+\titleformat{\subsection}[block]{\large\bfseries}{}{1em}{}[]
 
-\bookmarksetupnext{open=false}
-
-\part[sort=有]{有偈篇}
-
-\chapter{1 諸天相應}\label{ch:1-諸天相應}
-
-
-\section{蘆葦品}\label{sec:蘆葦品}
+%\addcontentsline{toc}{section}{蘆葦品}
 
 % \addcontentsline{toc}{subsection}{1 暴流之渡過經}
-\subsection{1 暴流之渡過經}\label{subsec:1}
+
+\begin{document}
+
+
+\part{有竭篇}
+
+\chapter{諸天相應}
+
+\section{蘆葦品}
+
+\subsection{暴流之渡過經}
 
 像這樣被我聽聞:
 
@@ -44,7 +47,7 @@
 
 「親愛的先生！你怎樣渡過暴流呢？」
 
-「朋友！我無住立、\ref{subsec:1} 無用力地渡過暴流。」
+「朋友！我無住立、無用力地渡過暴流。」
 
 「親愛的先生！那麼，依怎樣的方式你無住立、無用力地渡過暴流呢？」
 
@@ -56,41 +59,6 @@
 
 那位天神說這個，大師是認可者。那時，那位天神[心想]：「大師對我是認可者。」向世尊問訊，然後作右繞，接著就在那裡消失了。
 
-\addcontentsline{toc}{chapter}{Chapter 2}
-\clearpage
-
-\bookmarksetup{open=true,openlevel=0}% Only open down to chapter
-第二篇
-\addcontentsline{toc}{part}{第二篇}
-This is Chapter 1 of Part 2
-\addcontentsline{toc}{chapter}{Chapter 1}
-And a section \ref{sec:1}
-\addcontentsline{toc}{section}{Section 1 of chapter 1 of part 2}
-\clearpage
-This is Chapter 2 of Part 2
-\addcontentsline{toc}{chapter}{Chapter 2}
-\clearpage
-
-第三篇
-\bookmarksetup{open=true,openlevel=1}% Open down to section level (i.e. 1)
-\addcontentsline{toc}{part}{Part 3}
-This is Chapter 1 of Part 3
-\addcontentsline{toc}{chapter}{Chapter 1}
-\clearpage
-This is Chapter 2 of Part 3
-\addcontentsline{toc}{chapter}{Chapter 2}
-And another section
-\addcontentsline{toc}{section}{Section 1 of chapter 2 of part 3}
-\clearpage
-% Hide again in bookmarks
-\bookmarksetup{open=false}
-第四篇
-\addcontentsline{toc}{part}{Part 4}
-This is Chapter 1 of Part 4
-\addcontentsline{toc}{chapter}{Chapter 1}
-\clearpage
-This is Chapter 2 of Part 4
-\addcontentsline{toc}{chapter}{Chapter 2}
 \clearpage
 
 \end{document}
