@@ -36,7 +36,7 @@ def split_chinese_lines(chinese):
 def get_sutra_urls(nikaya_url):
     sutra_urls = []
 
-    soup = utils.url_to_soup(nikaya_url)[0]
+    soup = utils.read_url(nikaya_url)[0]
 
     for table in soup.find_all('table')[3:]:
         all_a = table.find_all('a')

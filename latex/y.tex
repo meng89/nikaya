@@ -1,0 +1,116 @@
+\documentclass[a4paper,12pt,oneside]{book}
+\linespread{1.2}
+\usepackage{hyperref}
+\usepackage{xeCJK}
+%\punctstyle{quanjiao}
+\usepackage{fontspec}
+%\usepackage[T1]{fontenc}
+%\usepackage[bookmarksopen,bookmarksopenlevel=5]{hyperref}
+\usepackage[open,openlevel=1]{bookmark}
+
+\usepackage{indentfirst}
+%\usepackage{xeCJK}
+\setCJKmainfont{Noto Serif CJK TC}
+\setCJKsansfont{Noto Sans CJK TC}
+\setCJKmonofont{Noto Sans Mono CJK TC}
+
+\XeTeXlinebreaklocale "zh"
+\XeTeXlinebreakskip = 0pt plus 1pt minus 0.1pt
+
+%\xeCJKsetup{PunctStyle=plain}
+%\punctstyle{quanjiao}
+
+\usepackage{titlesec} %自定义多级标题格式的宏包
+\titleformat{\part}[block]{\Huge\bfseries\centering}{}{1em}{}[]
+\titleformat{\chapter}[block]{\huge\bfseries\centering}{}{1em}{}[]
+\titleformat{\section}[block]{\Large\bfseries\centering}{}{1em}{}[]
+\titleformat{\subsection}[block]{\large\bfseries\centering}{}{1em}{}[]
+
+%\addcontentsline{toc}{section}{蘆葦品}
+
+% \addcontentsline{toc}{subsection}{1 暴流之渡過經}
+
+%\makeatletter
+
+%\newcommand\mysec{\@startsection {section}{1}{\z@}%
+%                                   {-3.5ex \@plus -1ex \@minus -.2ex}%
+%                                   {2.3ex \@plus.2ex}%
+%                                   {\normalfont\Large\bfseries}}
+%\makeatother
+
+% endnotes
+% pagenotes
+% biblatex
+
+\usepackage[hyperref=true,backend=biber,backref=true,style=draft]{biblatex}
+%%%\usepackage[superscript]{cite}
+\AtBeginBibliography{\small}
+\usepackage{wasysym}
+\addbibresource{global.bib}
+
+% \let\realcite\cite
+% \renewcommand*{\cite}[1]{{\footnotesize\realcite{#1}}}
+
+\newcommand{\mycite}[1]{\textsuperscript{\cite{#1}}
+
+\begin{document}
+
+
+\part{有竭篇}
+\chapter{1.諸天相應}
+\bookmarksetup{open=false}
+\bookmarksetupnext{bold=false,italic}
+\section{芦苇品}
+
+
+\subsection{1.暴流之渡過經}
+%\label{subsec:sn 1.1}
+%\hypertarget{sn 1.1}{target文字} 用来给文字定义带有名称的链接点，
+
+
+像這樣被我聽聞:\mycite{g1}
+%「如是我聞(SA/DA)；我聞如是(MA)；聞如是(AA)」，南傳作「像這樣被我聽聞」(Evaṃ me sutaṃ，逐字譯為「如是-我-聞」)，菩提比丘長老英譯為「這樣我聽到」(Thus have I heard)。「如是我聞……歡喜奉行。」的經文格式，依印順法師的考定，應該是在《增一阿含》或《增支部》成立的時代才形成的(《原始佛教聖典之集成》p.9)，南傳《相應部》多數經只簡略地指出發生地點，應該是比較早期的風貌。
+
+有一次，世尊住在舍衛城祇樹林給孤獨園。那時，在夜已深時，容色絕佳的某位天神使整個祇樹林發光後，去見世尊。
+抵達後，向世尊問訊，接著在一旁站立。在一旁站立的那位天神對世尊這麼說：
+
+「親愛的先生！你怎樣渡過暴流呢？」
+
+「朋友！我無住立、無用力地渡過暴流。」
+
+「親愛的先生！那麼，依怎樣的方式你無住立、無用力地渡過暴流呢？」
+
+「朋友！當我住立時，那時，我沈沒；朋友！當我用力時，那時，我被飄走，朋友！這樣，我無住立、無用力地渡過暴流。」
+
+「終於我確實看見，般涅槃的婆羅門：
+
+無住立、無用力地，已度脫世間中的執著。」
+
+那位天神說這個，大師是認可者。那時，那位天神[心想]：「大師對我是認可者。」向世尊問訊，然後作右繞，接著就在那裡消失了。
+
+
+
+在文档的其他地方，则可以使用命令
+%\hyperlink{sn 1.1}{hyperlink} 让另一段文字链接到指定名称的连接点。
+
+\hyperref[subsec:5.1ss]{SN 5.1}
+
+
+\bookmarksetup{open=true}
+\chapter{5.比丘尼相應}
+
+\subsection{1.阿羅毘迦經}
+\label{subsec:5.1ss}
+
+被我這麼聽聞：
+
+有一次，世尊住在舍衛城祇樹林給孤獨園。
+
+那時，阿羅毘迦比丘尼在午前時穿好衣服、取衣鉢後，為了托鉢進入舍衛城。
+
+在舍衛城為了托鉢而行後，用餐之後，已從施食返回，獨處欲求者去盲者的樹林。
+
+\clearpage
+
+\printbibliography[heading=bibliography,title=注释]
+\end{document}

@@ -42,7 +42,7 @@ class TextNeedNote(object):
 
 def read_sutta_page(url):
 
-    soup, last_modified = url_to_soup(url)
+    soup, last_modified = read_url(url)
 
     div_nikaya_tag = soup.find("div", {"class": "nikaya"})
     pali_doc = soup.find("div", {"class": "pali"})
@@ -93,8 +93,10 @@ def read_sutta_page(url):
     return line_list, local_note_list, pali_doc.text, last_modified
 
 
-def url_to_soup(url):
+def read_url(url: str) -> (bs4.BeautifulSoup, str):
     r = requests.get(url)
+    if r.status_code == 404:
+        r.raise_for_status()
     r.encoding = 'utf-8'
     last_modified = r.headers['last-modified']
     soup = bs4.BeautifulSoup(r.text, 'html5lib')
