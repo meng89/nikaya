@@ -12,6 +12,5 @@ def main():
     note.load_data(url)
 
 
-
 if __name__ == "__main__":
     main()

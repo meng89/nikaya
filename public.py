@@ -6,6 +6,8 @@ class Nikaya(object):
 
         self.abbreviation = None
 
+        self.omage_listline = None
+
         self.subs = []
 
 
@@ -28,8 +30,8 @@ class Sutta(object):
         self.serial_start = None
         self.serial_end = None
 
-        self.chinese = None
-        self.main_lines = None
+        # self.chinese = None
+        self.body_lines = None
         self.pali = None
 
         self.sort_name = None

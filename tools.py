@@ -5,7 +5,8 @@ import re
 import utils
 
 
-def split_chinese_lines(chinese):
+def _del_split_chinese_lines(chinese):
+
     lines = chinese.strip().splitlines()
 
     head_lines = []
@@ -33,7 +34,7 @@ def split_chinese_lines(chinese):
     return head_lines, body_lines
 
 
-def get_sutra_urls(nikaya_url):
+def get_sutta_urls(nikaya_url):
     sutra_urls = []
 
     soup = utils.read_url(nikaya_url)[0]
