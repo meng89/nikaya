@@ -1,7 +1,7 @@
 class Nikaya(object):
     def __init__(self):
         self.languages = ['zh-tw', 'pali']
-        self.title_chinese = None
+        self.title_st = None
         self.title_pali = None
 
         self.abbreviation = None
@@ -19,7 +19,7 @@ class Node(object):
         self.subs = []
 
 
-class Sutra(object):
+class Sutta(object):
     def __init__(self):
         self.title = None
         self.sec_title = None
@@ -41,8 +41,8 @@ class Sutra(object):
 
 class BaseInfo(object):
     def __init__(self):
-        self.sutra_serial_start = None
-        self.sutra_serial_end = None
+        self.sutta_serial_start = None
+        self.sutta_serial_end = None
         self.sutra_title = None
 
         self.modified = None

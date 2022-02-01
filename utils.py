@@ -3,41 +3,45 @@ import re
 import bs4
 import requests
 
+from pprint import pprint
+
 
 class AnalyseError(Exception):
     pass
-
 
 
 class LocalNote(object):
     """
     <span id="note1">「為了智與持念的程度」(ñāṇamattāya paṭissatimattāya)，智髻比丘長老英譯為「為僅夠的理解與深切注意」
     """
-    def __init__(self, type_, num, note):
+    def __init__(self, type_, number, note):
         self._type = type_
-        self._num = num
+        self._number = number
         self._note = note
 
     def __repr__(self):
-        return repr({"type": self._type, "No.": self._num, "text": self._note})
+        return (f'{self.__class__.__name__}('
+                f'type_={self._type!r}, '
+                f'number={self._number!r}, '
+                f'note={self._note!r})')
 
 
-class NoteTypeLocal(object):
-    pass
-class NoteTypeGlobal(object):
-    pass
-
+LOCAL = "LOCAL"
+GLOBAL = "GLOBAL"
 
 
 class TextNeedNote(object):
     """<a onmouseover="note(this,1);">像這樣被我聽聞</a>"""
-    def __init__(self, text, note_type, note_num):
+    def __init__(self, text, type_, number):
         self._text = text
-        self._note_type = note_type
-        self._note_num = note_num
+        self._type = type_
+        self._number = number
 
     def __repr__(self):
-        return repr({"text": self._text, "type": self._note_type, "No.": self._note_num})
+        return (f'{self.__class__.__name__}('
+                f'text={self._text!r}, '
+                f'type_={self._type!r}, '
+                f'number={self._number!r})')
 
 
 def read_sutta_page(url):
@@ -47,35 +51,44 @@ def read_sutta_page(url):
     div_nikaya_tag = soup.find("div", {"class": "nikaya"})
     pali_doc = soup.find("div", {"class": "pali"})
 
-    x = []
-    # input(div_nikaya_tag)
-    line_list = []
-    line = []
+    head_lines = None
+    sutta_name_line = None
+    sutta_lines = []
+    is_sutta_name_line_passed = True
+    current_line = []
     for x in div_nikaya_tag.contents:
+
         if isinstance(x, bs4.element.NavigableString):
-            line.append(x.get_text())
+            s = "".join(x.get_text().splitlines())
+            if is_sutta_name_line_passed:
+                current_line.append(s)
+            else:
+                sutta_name_line += s
+            continue
 
         if isinstance(x, bs4.element.Tag):
-            if x.name == "span" and x["class"] == "sutra_name":
-                line.append(x.get_text())
+            if x.name == "span" and x["class"] == ["sutra_name"] and sutta_name_line is None:
+                sutta_name_line = x.get_text()
+                is_sutta_name_line_passed = False
+                head_lines = sutta_lines
+                sutta_lines = []
 
             elif x.name == "br":
-                # 剔除行尾空白
-                # if len(line) > 0:
-                #   line.append(line.pop().rstrip())
-                line_list.append(line)
-                line = []
+                is_sutta_name_line_passed = True
+                if current_line:
+                    sutta_lines.append(current_line)
+                    current_line = []
 
-            elif x.name == "a" and x["onMouseover"] is not None:
-                m = re.match(r"^(note|local)\(this,(\d+)\);$", x["onMouseover"])
+            elif x.name == "a" and x["onmouseover"] is not None:
+                m = re.match(r"^(note|local)\(this,(\d+)\);$", x["onmouseover"])
                 type_ = None
                 if m.group(1) == "note":
-                    type_ = NoteTypeGlobal
+                    type_ = GLOBAL
                 elif m.group(1) == "local":
-                    type_ = NoteTypeLocal
+                    type_ = LOCAL
 
-                tnn = TextNeedNote(text=x.get_text(), note_num=x.get_text(), note_type=type_)
-                line.append(tnn)
+                tnn = TextNeedNote(text=x.get_text(), number=m.group(2), type_=type_)
+                current_line.append(tnn)
 
             # for checking
             else:
@@ -88,9 +101,17 @@ def read_sutta_page(url):
         note_docs = comp_doc.find_all("span", {"id": True})
         for x in note_docs:
             id_ = re.match(r"^note(\d+)$", x["id"]).group(1)
-            local_note_list.append(LocalNote(type_=NoteTypeLocal, num=id_, note=x.get_text()))
+            local_note_list.append(LocalNote(type_=LOCAL, number=id_, note=x.get_text()))
 
-    return line_list, local_note_list, pali_doc.text, last_modified
+    pprint(head_lines)
+    pprint(sutta_name_line)
+    pprint(sutta_lines)
+    pprint(local_note_list)
+    assert head_lines is not None
+    assert sutta_name_line is not None
+    assert len(sutta_lines) > 0
+
+    return head_lines, sutta_name_line, sutta_lines, pali_doc.text, last_modified
 
 
 def read_url(url: str) -> (bs4.BeautifulSoup, str):

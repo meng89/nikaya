@@ -1,7 +1,7 @@
 import re
 
 
-from public import Nikaya, Node, Sutra
+from public import Nikaya, Node, Sutta
 from public import BaseInfo, PinInfo
 
 
@@ -40,8 +40,8 @@ def analyse_header(lines):  # public
     # 長部14經/譬喻大經(大品[第二])(莊春江譯)
     m = re.match('^長部(\d+)經/(\S+經)\((\S+品)\[\S+\]\)\(莊春江譯\)$', lines[-1])
     if m:
-        info.sutra_serial_start = m.group(1)
-        info.sutra_serial_end = m.group(1)
+        info.sutta_serial_start = m.group(1)
+        info.sutta_serial_end = m.group(1)
 
         info.sutra_title = m.group(2)
 
@@ -53,7 +53,7 @@ def analyse_header(lines):  # public
 def make_nikaya(sutra_urls):
 
     nikaya = _MyNikaya()
-    nikaya.title_chinese = '長部'
+    nikaya.title_st = '長部'
     nikaya.title_pali = 'Digha Nikāya',
     nikaya.abbreviation = 'DN'
 
@@ -74,10 +74,10 @@ def make_nikaya(sutra_urls):
 
                 nikaya.pins.append(pin)
 
-        sutra = Sutra()
+        sutra = Sutta()
 
-        sutra.serial_start = info.sutra_serial_start
-        sutra.serial_end = info.sutra_serial_end
+        sutra.serial_start = info.sutta_serial_start
+        sutra.serial_end = info.sutta_serial_end
 
         sutra.pali = pali
         sutra.chinese = chinese

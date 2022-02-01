@@ -1,14 +1,14 @@
 import re
 
 from public import BaseInfo, PianInfo, PinInfo
-from public import Nikaya, Node, Sutra
+from public import Nikaya, Node, Sutta
 
 from tools import get_sutra_urls, split_chinese_lines
 from utils import read_sutta_page
 
-HTML_INDEX = '/SN/index.htm'
+from pylatex.utils import escape_latex
 
-data = None
+HTML_INDEX = '/SN/index.htm'
 
 
 class _MyInfo(BaseInfo, PianInfo, PinInfo):
@@ -25,7 +25,7 @@ class _MyInfo(BaseInfo, PianInfo, PinInfo):
         s += 'pian     : "{}", "{}"\n'.format(self.pian_serial, self.pian_title)
         s += 'xiangying: "{}", "{}"\n'.format(self.xiangying_serial, self.xiangying_title)
         s += 'pin      : "{}", "{}"\n'.format(self.pin_serial, self.pin_title)
-        s += 'sutra    : "{}", "{}"'.format(self.sutra_serial_start, self.sutra_title)
+        s += 'sutra    : "{}", "{}"'.format(self.sutta_serial_start, self.sutra_title)
         return s
 
 
@@ -61,6 +61,9 @@ class Pin(Node):
     @property
     def sutras(self):
         return self.subs
+
+
+_nikaya = MyNikaya()
 
 
 def analyse_header(lines):  # public
@@ -100,11 +103,11 @@ def analyse_header(lines):  # public
         serial = m.group(2).split('-')
 
         if len(serial) == 1:
-            info.sutra_serial_start = serial[0]
-            info.sutra_serial_end = serial[0]
+            info.sutta_serial_start = serial[0]
+            info.sutta_serial_end = serial[0]
         else:
-            info.sutra_serial_start = serial[0]
-            info.sutra_serial_end = serial[1]
+            info.sutta_serial_start = serial[0]
+            info.sutta_serial_end = serial[1]
 
         info.sutra_title = m.group(3)
 
@@ -112,14 +115,14 @@ def analyse_header(lines):  # public
     m = re.match(r"^相應部(48)相應 (83)-(114)經\s*$", lines[-1])
     if m:
         info.xiangying_serial = m.group(1)
-        info.sutra_serial_start = m.group(2)
-        info.sutra_serial_end = m.group(3)
+        info.sutta_serial_start = m.group(2)
+        info.sutta_serial_end = m.group(3)
 
     m = re.match(r"^相應部(48)相應 (137)-(168)經\s*", lines[-1])
     if m:
         info.xiangying_serial = m.group(1)
-        info.sutra_serial_start = m.group(2)
-        info.sutra_serial_end = m.group(3)
+        info.sutta_serial_start = m.group(2)
+        info.sutta_serial_end = m.group(3)
 
     return info
 
@@ -137,13 +140,14 @@ def add_sec_title_range(nikaya):
 
 def make_nikaya(sutra_urls):
     nikaya = MyNikaya()
-    nikaya.title_chinese = '相應部'
+    nikaya.title_st = '相應部'
     nikaya.title_pali = 'Saṃyutta Nikāya'
     nikaya.abbreviation = 'SN'
 
     for url in sutra_urls:
 
-        line_list, local_note_list, pali, last_modified = read_sutta_page(url)
+        # line_list, local_note_list, pali, last_modified = read_sutta_page(url)
+        head_lines, sutta_name_line, sutta_lines, pali_doc_text, last_modified = read_sutta_page(url)
 
         header_lines, main_lines = split_chinese_lines(line_list)
 
@@ -181,57 +185,51 @@ def make_nikaya(sutra_urls):
             pin.title = None
             nikaya.pians[-1].xiangyings[-1].pins.append(pin)
 
-        sutra = Sutra()
+        sutta = Sutta()
 
-        sutra.serial_start = info.sutra_serial_start
-        sutra.serial_end = info.sutra_serial_end
+        sutta.serial_start = info.sutta_serial_start
+        sutta.serial_end = info.sutta_serial_end
 
-        sutra.pali = pali
-        sutra.chinese = line_list
+        sutta.pali = pali
+        sutta.chinese = line_list
 
-        sutra.main_lines = main_lines
+        sutta.main_lines = main_lines
 
-        sutra.modified = last_modified
+        sutta.modified = last_modified
 
-        if sutra.serial_start == sutra.serial_end:
-            sutra.serial = sutra.serial_start
+        if sutta.serial_start == sutta.serial_end:
+            sutta.serial = sutta.serial_start
         else:
-            sutra.serial = '{}-{}'.format(sutra.serial_start, sutra.serial_end)
+            sutta.serial = '{}-{}'.format(sutta.serial_start, sutta.serial_end)
 
         if info.sutra_title:
-            sutra.title = info.sutra_title
+            sutta.title = info.sutra_title
         else:
-            sutra.title = ''
+            sutta.title = ''
 
-        if sutra.title:
-            sutra.sec_title = sutra.serial + ' ' + sutra.title
+        if sutta.title:
+            sutta.sec_title = sutta.serial + ' ' + sutta.title
         else:
-            sutra.sec_title = sutra.serial
+            sutta.sec_title = sutta.serial
 
-        sutra.abbreviation = '{}.{}.{}'.format(nikaya.abbreviation,
+        sutta.abbreviation = '{}.{}.{}'.format(nikaya.abbreviation,
                                                nikaya.pians[-1].xiangyings[-1].serial,
-                                               sutra.serial)
+                                               sutta.serial)
 
-        nikaya.pians[-1].xiangyings[-1].pins[-1].sutras.append(sutra)
+        nikaya.pians[-1].xiangyings[-1].pins[-1].sutras.append(sutta)
 
     return nikaya
 
 
-def get_nikaya(url):
+def load_nikaya(url):
+    global _nikaya
     sutra_urls = get_sutra_urls(url + HTML_INDEX)
     nikaya = make_nikaya(sutra_urls)
-
-    nikaya = add_sec_title_range(nikaya)
-    return nikaya
+    _nikaya = add_sec_title_range(nikaya)
 
 
-def get_data():
-    return data
+def to_latex(path=None, note=None, lang=None):
+    # f = open(path, "w")
+    for pian in _nikaya.pians:
+        print(pian.title)
 
-
-def load_data(url):
-    global data
-    data = get_nikaya(url)
-
-
-make_latex()

@@ -1,10 +1,12 @@
 ** 这是什么项目？
 
-这个项目的目的是把 [[http://agama.buddhason.org/][莊春江工作站]] 已有的 相应部、长部、中部、增支部 四部经书制作成 EPUB3 格式的电子书。
+这个项目的目的是把 [[http://agama.buddhason.org/][莊春江工作站]] 已有的 相应部、长部、中部、增支部 四部经书制作成 PDF 和 EPUB3 格式的电子书。
+
+当前在重构中。
 
 ** 获取已制作好的电子书：
 
-http://meng89.github.io/nikaya/
+https://meng89.github.io/nikaya/
 
 ** 出现 Bug、提供各种建议：
 

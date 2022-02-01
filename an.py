@@ -2,7 +2,7 @@ import re
 
 
 from public import BaseInfo, PinInfo
-from public import Nikaya, Node, Sutra
+from public import Nikaya, Node, Sutta
 
 
 from tools import get_sutra_urls, split_chinese_lines
@@ -21,7 +21,7 @@ class _MyInfo(BaseInfo, PinInfo):
         s = ''
         s += 'ji   : "{}", "{}"\n'.format(self.ji_serial, self.ji_title)
         s += 'pin  : "{}", "{}"\n'.format(self.pin_serial, self.pin_title)
-        s += 'sutra: "{}", "{}"'.format(self.sutra_serial_start, self.sutra_title)
+        s += 'sutra: "{}", "{}"'.format(self.sutta_serial_start, self.sutra_title)
         return s
 
 
@@ -72,11 +72,11 @@ def analyse_header(lines):  # public
         serial = m.group(2).split('-')
 
         if len(serial) == 1:
-            info.sutra_serial_start = serial[0]
-            info.sutra_serial_end = serial[0]
+            info.sutta_serial_start = serial[0]
+            info.sutta_serial_end = serial[0]
         else:
-            info.sutra_serial_start = serial[0]
-            info.sutra_serial_end = serial[1]
+            info.sutta_serial_start = serial[0]
+            info.sutta_serial_end = serial[1]
 
         info.sutra_title = m.group(3)
 
@@ -96,7 +96,7 @@ def add_sec_title_range(nikaya):
 def make_nikaya(sutra_urls):
 
     nikaya = MyNikaya()
-    nikaya.title_chinese = '增支部'
+    nikaya.title_st = '增支部'
     nikaya.title_pali = 'Aṅguttara nikāya',
     nikaya.abbreviation = 'AN'
 
@@ -123,10 +123,10 @@ def make_nikaya(sutra_urls):
 
                 nikaya.jis[-1].pins.append(pin)
 
-        sutra = Sutra()
+        sutra = Sutta()
 
-        sutra.serial_start = info.sutra_serial_start
-        sutra.serial_end = info.sutra_serial_end
+        sutra.serial_start = info.sutta_serial_start
+        sutra.serial_end = info.sutta_serial_end
 
         sutra.pali = pali
         sutra.chinese = chinese

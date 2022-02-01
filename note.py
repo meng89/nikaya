@@ -25,5 +25,3 @@ def load_data(url: str):
                     line_list.append(c.get_text())
             d[note_no] = line_list
 
-    data = d
-    print(len(data))

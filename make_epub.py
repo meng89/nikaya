@@ -13,7 +13,7 @@ from opencc import convert
 
 from config import BOOKS_DIR
 
-from public import Nikaya, Sutra
+from public import Nikaya, Sutta
 
 HOME_PAGE = 'https://meng89.github.io/nikaya'
 
@@ -27,7 +27,7 @@ def translate_to_zh_cn(nikaya_book):
 
     nikaya = copy.deepcopy(nikaya_book)
 
-    nikaya.title_chinese = convert(nikaya.title_chinese)
+    nikaya.title_st = convert(nikaya.title_st)
     nikaya.languages.append('zh-cn')
 
     def convert_tree(subs):
@@ -39,7 +39,7 @@ def translate_to_zh_cn(nikaya_book):
             if sub.sec_title is not None:
                 sub.sec_title = convert(sub.sec_title)
 
-            if isinstance(sub, Sutra):
+            if isinstance(sub, Sutta):
                 sub.main_lines = [convert(line) for line in sub.main_lines]
 
             else:
@@ -66,7 +66,7 @@ def make_book(nikaya):
     for lang in nikaya.languages:
         book.metadata.append(Language(lang))
 
-    book.metadata.append(Title(nikaya.title_chinese))
+    book.metadata.append(Title(nikaya.title_st))
 
     book.metadata.append(get_dcterm('modified')(w3c_utc_date()))
 
@@ -91,7 +91,7 @@ def make_book(nikaya):
 
             s = Section(title=sub.sec_title or sub.title)
 
-            if not isinstance(sub, Sutra):
+            if not isinstance(sub, Sutta):
 
                 add_page_make_toc(section=s, subs=sub.subs)
 
@@ -201,18 +201,18 @@ def main():
             (sn, url_part + '/SN/index.htm'), (mn, url_part + '/MN/index.htm'),
             (dn, url_part + '/DN/index.htm'), (an, url_part + '/AN/index.htm'),):
 
-        nikaya = module.get_nikaya(uri)
+        nikaya = module.load_nikaya(uri)
 
         book = make_book(nikaya)
 
         p1 = multiprocessing.Process(target=write_book,
-                                     args=(book, '{}/{}.epub'.format(BOOKS_DIR, nikaya.title_chinese))
+                                     args=(book, '{}/{}.epub'.format(BOOKS_DIR, nikaya.title_st))
                                      )
         p1.start()
 
         book_zh_cn = make_book(translate_to_zh_cn(nikaya))
         p2 = multiprocessing.Process(target=write_book,
-                                     args=(book_zh_cn, '{}/{}_简体.epub'.format(BOOKS_DIR, nikaya.title_chinese))
+                                     args=(book_zh_cn, '{}/{}_简体.epub'.format(BOOKS_DIR, nikaya.title_st))
                                      )
         p2.start()
 
