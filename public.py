@@ -7,6 +7,7 @@ class Nikaya(object):
         self.abbreviation = None
 
         self.omage_listline = None
+        self.last_modified = None
 
         self.subs = []
 
@@ -31,12 +32,14 @@ class Sutta(object):
         self.serial_end = None
 
         # self.chinese = None
-        self.body_lines = None
+        self.body_listline_list = None
         self.pali = None
+
+        self.local_note_list = None
 
         self.sort_name = None
 
-        self.modified = None
+        self.last_modified = None
 
         self.abbreviation = None
 

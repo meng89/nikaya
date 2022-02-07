@@ -1,0 +1,5 @@
+[1] Config.pm:311> INFO - This is Biber 2.16
+[1] Config.pm:314> INFO - Logfile is 'sn.blg'
+[282] biber:340> INFO - === 日 2月  6, 2022, 22:48:52
+[583] Utils.pm:411> ERROR - Cannot find 'sn.bcf'!
+[584] Biber.pm:132> INFO - ERRORS: 1

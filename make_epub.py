@@ -40,7 +40,7 @@ def translate_to_zh_cn(nikaya_book):
                 sub.sec_title = convert(sub.sec_title)
 
             if isinstance(sub, Sutta):
-                sub.body_lines = [convert(line) for line in sub.body_lines]
+                sub.body_listline_list = [convert(line) for line in sub.body_listline_list]
 
             else:
                 convert_tree(sub.subs)
@@ -101,7 +101,7 @@ def make_book(nikaya):
 
                 sutra_xhtml_str = sutra_template.render(head_title=sutra.abbreviation + ' ' + sutra.title,
                                                         title=sutra.abbreviation + ' ' + sutra.title,
-                                                        main_lines=sutra.body_lines,
+                                                        main_lines=sutra.body_listline_list,
 
                                                         chinese_lines=[x for x in sutra.chinese.strip().splitlines()
                                                                        if x.strip()],
@@ -116,7 +116,7 @@ def make_book(nikaya):
 
                 s.href = path
 
-                sutra_modified = datetime.datetime.strptime(sutra.modified, gmt_format)
+                sutra_modified = datetime.datetime.strptime(sutra.last_modified, gmt_format)
 
                 nonlocal last_modified
                 if last_modified is None:
@@ -201,7 +201,7 @@ def main():
             (sn, url_part + '/SN/index.htm'), (mn, url_part + '/MN/index.htm'),
             (dn, url_part + '/DN/index.htm'), (an, url_part + '/AN/index.htm'),):
 
-        nikaya = module.load_nikaya(uri)
+        nikaya = module.load_global(uri)
 
         book = make_book(nikaya)
 

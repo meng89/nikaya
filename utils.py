@@ -1,9 +1,19 @@
 import re
-
+import os
 import bs4
 import requests
+from urllib.parse import urlparse
 
+from dateutil.parser import parse as parsedate
+
+
+import note_thing
 from pprint import pprint
+
+
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+PICKLE_DIR = os.path.join(ROOT_DIR, "cache")
+os.makedirs(PICKLE_DIR, exist_ok=True)
 
 
 class AnalyseError(Exception):
@@ -14,6 +24,7 @@ class LocalNote(object):
     """
     <span id="note1">「為了智與持念的程度」(ñāṇamattāya paṭissatimattāya)，智髻比丘長老英譯為「為僅夠的理解與深切注意」
     """
+
     def __init__(self, type_, number, note):
         self._type = type_
         self._number = number
@@ -30,15 +41,29 @@ LOCAL = "LOCAL"
 GLOBAL = "GLOBAL"
 
 
+def _no_translate(x: str):
+    return x
+
+
+no_translate = _no_translate
+
+
 class Href(object):
     def __init__(self, text, href, target):
         self.text = text
         self.href = href
         self.target = target
 
+    def __repr__(self):
+        return (f'{self.__class__.__name__}('
+                f'text={self.text!r}, '
+                f'href={self.href!r}, '
+                f'target={self.target!r})')
+
 
 class TextNeedNote(object):
     """<a onmouseover="note(this,1);">像這樣被我聽聞</a>"""
+
     def __init__(self, text, type_, number):
         self._text = text
         self._type = type_
@@ -53,8 +78,25 @@ class TextNeedNote(object):
     def get_text(self):
         return self._text
 
+    def get_type(self):
+        return self._type
+
+    def get_number(self):
+        return self._number
+
+
+WARNING = "WARNING"
+INFO = "INFO"
+
+
+def ccc_bug(type_, url, string):
+    s = "<CCC {}>: url: {}, msg: {}".format(type_, url, string)
+    print(s)
+
 
 def read_page(url):
+    url_path = urlparse(url).path
+
     soup, last_modified = read_url(url)
 
     div_nikaya_tag = soup.find("div", {"class": "nikaya"})
@@ -65,6 +107,21 @@ def read_page(url):
     body_listline_list = []
     is_sutta_name_line_passed = True
     current_line = []
+
+    comp_doc = soup.find("div", {"class": "comp"})
+    local_listnote_list_dict = {}
+    if comp_doc is not None:
+        note_docs = comp_doc.find_all("span", {"id": True})
+        for x in note_docs:
+            key = re.match(r"^note(\d+)$", x["id"]).group(1)
+            if key in local_listnote_list_dict.keys():
+                ccc_bug(WARNING, url_path, "本地注解 KEY 冲突，key: {}, 自动加1，不知对错".format(key))
+                key = str(int(key) + 1)
+            n = note_thing.read_one_note(x.contents)
+            if n:
+                local_listnote_list_dict[key] = n
+
+    all_local_tnn_dict = {}
     for x in div_nikaya_tag.contents:
         if isinstance(x, bs4.element.NavigableString):
             s = "".join(x.get_text().splitlines())
@@ -91,14 +148,13 @@ def read_page(url):
                     current_line = []
 
             # elif x.name == "a" and x["onmouseover"] is not None:
-
             elif x.name == "a" and (_onmouseover in x.attrs.keys() or _nmouseover in x.attrs.keys()):
                 m = None
                 for xmouserver in (_onmouseover, _nmouseover):
                     if xmouserver in x.attrs.keys():
                         m = re.match(r"^(note|local)\(this,(\d+)\);$", x[xmouserver])
                         if xmouserver == "nmouseover":  # for CCC BUG
-                            print("<CCC WARNING>: url: {}; -> not onmouseover: {}".format(url, x))
+                            ccc_bug(WARNING, url_path, "not onmouseover:" + str(x))
                         break
 
                 type_ = None
@@ -108,7 +164,12 @@ def read_page(url):
                     type_ = LOCAL
 
                 tnn = TextNeedNote(text=x.get_text(), number=m.group(2), type_=type_)
-                current_line.append(tnn)
+                if type_ == LOCAL:
+                    all_local_tnn_dict[m.group(2)] = tnn
+                    if m.group(2) in local_listnote_list_dict.keys():
+                        current_line.append(tnn)
+                else:
+                    current_line.append(tnn)
 
             # for CCC 原始 BUG
             elif x.name == "span" and x["class"] == ["sutra_name"] and x.get_text() == "相應部12相應83-93經/學經等（中略）十一則":
@@ -117,18 +178,16 @@ def read_page(url):
             elif x.name == "a" and "href" in x.attrs.keys():
                 current_line.append(Href(text=x.get_text(), href=x["href"], target=x["target"]))
             elif x.name == "div" and x["style"] == "display: none":  # for CCC BUG， SN.46.43
-                print("<CCC INFO>: url: {}; -> needless tag: {}".format(url, x))
+                ccc_bug(INFO, url_path, "needless tag: " + str(x))
                 continue
             else:
                 raise Exception("不能识别的Tag: {}; URL: {}".format(x, url))
 
-    comp_doc = soup.find("div", {"class": "comp"})
-    local_note_list = []
-    if comp_doc is not None:
-        note_docs = comp_doc.find_all("span", {"id": True})
-        for x in note_docs:
-            id_ = re.match(r"^note(\d+)$", x["id"]).group(1)
-            local_note_list.append(LocalNote(type_=LOCAL, number=id_, note=x.get_text()))
+    # 检查本地注解key 是否相同：
+    no_note_keys = set(all_local_tnn_dict.keys()) - set(local_listnote_list_dict.keys())
+    if no_note_keys:
+
+        ccc_bug(WARNING, url, "丢失note：{}".format(list(no_note_keys)))
 
     assert homage_head_listline_list is not None
     assert sutta_name_line is not None
@@ -137,14 +196,8 @@ def read_page(url):
     homage_listline, head_listline_list = separate_homage(homage_head_listline_list)
     head_line_list = listline_list_to_line_list(head_listline_list)
 
-    if False:
-        pprint(homage_listline)
-        pprint(head_line_list)
-        pprint(sutta_name_line)
-        pprint(body_listline_list)
-        pprint(local_note_list)
-
-    return homage_listline, head_line_list, sutta_name_line, body_listline_list, pali_doc.text, last_modified
+    return (homage_listline, head_line_list, sutta_name_line, body_listline_list, local_listnote_list_dict,
+            pali_doc.text, last_modified)
 
 
 def separate_homage(listline_list):
@@ -163,9 +216,13 @@ def read_url(url: str) -> (bs4.BeautifulSoup, str):
     if r.status_code == 404:
         r.raise_for_status()
     r.encoding = 'utf-8'
-    last_modified = r.headers['last-modified']
+    last_modified = parsedate(r.headers['last-modified'])
     soup = bs4.BeautifulSoup(r.text, 'html5lib')
     return soup, last_modified
+
+
+def lm_to_strdate(last_modified):
+    return last_modified.strftime("%Y-%m-%d")
 
 
 def listline_list_to_line_list(lsline_list):
@@ -181,5 +238,3 @@ def listline_list_to_line_list(lsline_list):
                 raise TypeError("Something Wrong!")
         lines.append(line)
     return lines
-
-

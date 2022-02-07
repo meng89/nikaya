@@ -88,7 +88,7 @@ def add_sec_title_range(nikaya):
         ji.sec_title = '{} 集'.format(ji.serial)
 
         for pin in ji.pins:
-            pin.sec_title = '{} ({}-{})'.format(pin.title, pin.sutras[0].serial_start, pin.sutras[-1].serial_end)
+            pin.sec_title = '{} ({}-{})'.format(pin.title, pin.suttas[0].serial_start, pin.suttas[-1].serial_end)
 
     return nikaya
 
@@ -131,9 +131,9 @@ def make_nikaya(sutra_urls):
         sutra.pali = pali
         sutra.chinese = chinese
 
-        sutra.body_lines = main_lines
+        sutra.body_listline_list = main_lines
 
-        sutra.modified = modified
+        sutra.last_modified = modified
 
         if sutra.serial_start == sutra.serial_end:
             sutra.serial = sutra.serial_start
@@ -154,7 +154,7 @@ def make_nikaya(sutra_urls):
                                                nikaya.jis[-1].serial,
                                                sutra.serial)
 
-        nikaya.jis[-1].pins[-1].sutras.append(sutra)
+        nikaya.jis[-1].pins[-1].suttas.append(sutra)
 
     return nikaya
 

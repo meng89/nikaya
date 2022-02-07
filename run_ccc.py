@@ -34,7 +34,7 @@ class RunCccThread(threading.Thread):
         app.run(host=self._host, port=self._port, debug=False)
 
 
-def get_url():
+def get_domain():
     return _url
 
 

@@ -82,9 +82,9 @@ def make_nikaya(sutra_urls):
         sutra.pali = pali
         sutra.chinese = chinese
 
-        sutra.body_lines = main_lines
+        sutra.body_listline_list = main_lines
 
-        sutra.modified = modified
+        sutra.last_modified = modified
 
         sutra.serial = sutra.serial_start
 
@@ -94,14 +94,14 @@ def make_nikaya(sutra_urls):
 
         sutra.abbreviation = '{}.{}'.format(nikaya.abbreviation, sutra.serial)
 
-        nikaya.pins[-1].sutras.append(sutra)
+        nikaya.pins[-1].suttas.append(sutra)
 
     return nikaya
 
 
 def add_sec_title_range(nikaya):
     for pin in nikaya.pins:
-        pin.sec_title = '{} ({}-{})'.format(pin.title, pin.sutras[0].serial_start, pin.sutras[-1].serial_end)
+        pin.sec_title = '{} ({}-{})'.format(pin.title, pin.suttas[0].serial_start, pin.suttas[-1].serial_end)
 
     return nikaya
 

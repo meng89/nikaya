@@ -1,8 +1,10 @@
 beautifulsoup4
 requests
+python-dateutil
 epubaker
 jinja2
 flask
 OpenCC
 
 pylatex
+pybtex
