@@ -1,47 +1,52 @@
-\documentclass[twoside]{book}
-\usepackage{geometry}
-
-\usepackage{lmodern}
-\usepackage{fancyhdr}
-
-\pagestyle{fancy}                       % Sets fancy header and footer
-\fancyfoot{}                            % Delete current footer settings
-
-\title{titlea}
-\fancyhf{}
-
-\fancyhead[EL,RO]{\bfseries\thepage}    % Page number (boldface) in left on even
-% pages and right on odd pages
-\renewcommand{\chaptermark}[1]{\markboth{\MakeUppercase{\thechapter.\ #1}}{}}
+\documentclass[12pt,a4paper]{book}
+\usepackage[a4paper,width=150mm,top=25mm,bottom=25mm]{geometry}
+\usepackage{luatexja-fontspec}
+\usepackage{longtable}
+\usepackage{}
 
 
-\fancyhead[RE]{RE}     % Chapter in the right on even pages
-\fancyhead[LO]{LO}     % Section in the left on odd pages
-
-\let\headruleORIG\headrule
-\renewcommand{\headrule}{\color{black} \headruleORIG}
-\renewcommand{\headrulewidth}{1.0pt}
-\usepackage{colortbl}
-\arrayrulecolor{black}
-
-\fancypagestyle{plain}{
-\fancyhf{}
-  \fancyhead{}
-  \fancyfoot{}
-  \renewcommand{\headrulewidth}{0pt}
-}
+\setmainjfont{Noto Serif CJK TC Light}
+\setsansjfont{Noto Sans CJK TC}
 
 \begin{document}
 
-\chapter{Chapter Name}
-
-\newpage
-Hello, zero page.
-
-\section{Section Name}
-Hello, first page.
-
-\newpage
-
-Hello, second page.
+\begin{center}
+	\begin{longtable}{|l|l|l|}
+		\caption{服务模式的语义解释和案例}\\
+		\label{revenuepatternexplain}\\
+		\hline\noalign{\smallskip}
+		名称 & 语义解释 & 案例说明 \\
+		\hline
+		名称 & 语义解释 & 案例说明 \\
+		名称 & 语义解释 & 案例说明 \\
+		名称 & 语义解释 & 案例说明 \\
+		名称 & 语义解释 & 案例说明 \\
+		名称 & 语义解释 & 案例说明 \\
+		名称 & 语义解释 & 案例说明 \\
+		名称 & 语义解释 & 案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明 \\
+		名称 & 语义解释 & 案例说明 \\
+		名称 & 语义解释 & 案例说明 \\
+		名称 & 语义解释 & 案例说明 \\
+		名称 & 语义解释 & 案例说明 \\
+		名称 & 语义解释 & 案例说明 \\
+		名称 & 语义解释 & 案例说明 \\
+		名称 & 语义解释 & 案例说明 \\
+		名称 & 语义解释 & 案例说明 \\
+		名称 & 语义解释 & 案例说明 \\
+		名称 & 语义解释 & 案例说明 \\
+		名称 & 语义解释 & 案例说明 \\
+		名称 & 语义解释 & 案例说明 \\
+		名称 & 语义解释 & 案例说明 \\
+		名称 & 语义解释 & 案例说明 \\
+		名称 & 语义解释 & 案例说明 \\
+		名称 & 语义解释 & 案例说明 \\
+		名称 & 语义解释 & 案例说明 \\
+		名称 & 语义解释 & 案例说明 \\
+		名称 & 语义解释 & 案例说明 \\
+		名称 & 语义解释 & 案例说明 \\
+		名称 & 语义解释 & 案例说明 \\
+		名称 & 语义解释 & 案例说明 \\
+		\hline
+	\end{longtable}
+\end{center}
 \end{document}

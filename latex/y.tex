@@ -1,6 +1,7 @@
 % !TEX encoding = UTF-8
 % !TEX program = lualatex
 \documentclass[12pt,oneside]{book}
+\usepackage[chinese, provide=*]{babel}
 \usepackage[a4paper,width=150mm,top=25mm,bottom=25mm]{geometry}
 \usepackage{fancyhdr}
 \usepackage[x11names]{xcolor}
@@ -41,11 +42,16 @@
 \newjfontfamily{\jfontSansTC}{Noto Sans CJK TC}
 \newfontfamily{\fontSansD}{Noto Sans Display}
 
-\usepackage[hyperref=true,backend=biber,backref=true,style=draft]{biblatex}
+%\usepackage[hyperref=true,backend=biber,backref=true,style=draft]{biblatex}
+%\usepackage[backend=bibtex]{biblatex}
 %%%\usepackage[superscript]{cite}
-\AtBeginBibliography{\small}
 \usepackage{wasysym}
-\addbibresource{global.bib}
+% biber
+%\AtBeginBibliography{\small}
+%\addbibresource{global.bib}
+
+%bibtex
+
 
 % \let\realcite\cite
 % \renewcommand*{\cite}[1]{{\footnotesize\realcite{#1}}}
@@ -76,11 +82,10 @@
 \begin{titlepage}
 \begin{center}
 \null \vspace{2cm}
-{\fontsize{130}{140}\selectfont \fontSansTC 相應部}
-\\[0.5cm]
+{\fontsize{130}{140}\selectfont \jfontSansTC 相應部}
+
 {\fontsize{45}{55}\selectfont \fontSansD Saṃyutta Nikāya}
 %\HRule
-\\[1.5cm]
 
 {\Huge 傳統中文版}
 \\ \vspace{0.5em}
@@ -222,6 +227,7 @@
 
 \clearpage
 
-\printbibliography[heading=bibliography,title=注释]
+\bibliographystyle{unsrt}
+\bibliography{global}
 
 \end{document}

@@ -25,17 +25,17 @@ def build(work_dir, out_dir, tex_filename):
     if p.returncode != 0:
         print(err.decode())
 
-    #print("2. run {}".format(biber_cmd))
-    #p = subprocess.Popen(biber_cmd, cwd=work_dir, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    #out, err = p.communicate()
-    #if p.returncode != 0:
-    #    print(err.decode())
+    print("2. run {}".format(biber_cmd))
+    p = subprocess.Popen(biber_cmd, cwd=work_dir, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    out, err = p.communicate()
+    if p.returncode != 0:
+        print(err.decode())
 
-    #print("3. run {}".format(compile_cmd))
-    #p = subprocess.Popen(compile_cmd, cwd=work_dir, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    #out, err = p.communicate()
-    #if p.returncode != 0:
-    #    print(err.decode())
+    print("3. run {}".format(compile_cmd))
+    p = subprocess.Popen(compile_cmd, cwd=work_dir, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    out, err = p.communicate()
+    if p.returncode != 0:
+        print(err.decode())
 
 
 def main():

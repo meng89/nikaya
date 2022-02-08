@@ -45,7 +45,6 @@ def is_runing():
 def make_sure_is_runing():
     host = "127.0.0.1"
     port = 8080
-
     global _is_runing
     if not _is_runing:
         run_ccc_thread = RunCccThread(host, port)
@@ -56,3 +55,4 @@ def make_sure_is_runing():
 
         global _url
         _url = "http://{}:{}".format(host, port)
+    time.sleep(2)

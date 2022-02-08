@@ -18,6 +18,6 @@ for filename in sorted(os.listdir(config.BOOKS_DIR)):
 
     books.append(book)
 
-index_str = Template(open('index.html').read()).render(books=books)
+index_str = Template(open('xhtml/index.html').read()).render(books=books)
 
 open('../nikaya_gp/index.html', 'w').write(index_str)

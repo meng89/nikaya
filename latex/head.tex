@@ -1,10 +1,9 @@
 % !TEX encoding = UTF-8
 % !TEX program = lualatex
-\documentclass[a4paper,12pt,twoside,titlepage]{book}
+\documentclass[a4paper,12pt,twoside]{book}
+\usepackage[a4paper,width=150mm,top=25mm,bottom=25mm]{geometry}
+\usepackage[dvipsnames]{xcolor}
 \usepackage{fancyhdr}
-%\usepackage[a4paper,width=150mm,top=25mm,bottom=25mm]{geometry}
-\usepackage{showframe}
-\usepackage[x11names]{xcolor}
 \usepackage[
     pdfauthor={莊春江},
     pdftitle={相應部},
@@ -13,9 +12,9 @@
     %pdfproducer={https://github.com/meng89/nikaya},
     pdfcreator={https://github.com/meng89/nikaya},
     colorlinks=true,
-    linkcolor=black,
-    citecolor=teal,
-    urlcolor=orange,
+    linkcolor=Blue,
+    citecolor=Green,
+    urlcolor=Orange,
 ]{hyperref}
 
 \usepackage[doipre={doi:~}]{uri}
@@ -53,7 +52,7 @@
 
 \usepackage[hyperref=true,backend=biber,backref=true,style=draft]{biblatex}
 %%%\usepackage[superscript]{cite}
-\AtBeginBibliography{\tiny}
+\AtBeginBibliography{\small}
 \usepackage{wasysym}
 %\bibliographystyle{plain}
 %\bibliographystyle{unsrt}
@@ -62,14 +61,15 @@
 % \let\realcite\cite
 % \renewcommand*{\cite}[1]{{\footnotesize\realcite{#1}}}
 
-\newcommand{\mycite}[1]{\textsuperscript{\cite{#1}}}
+\newcommand{\mycite}[1]{\textsuperscript {\tiny{\emph{\cite{#1}}}}}
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 
 \fancypagestyle{plain}{
 \fancyhf{}
-  \fancyhead{}
-  \fancyfoot{}
-  \renewcommand{\headrulewidth}{0pt}
+\fancyhead{}
+\fancyfoot{}
+\renewcommand{\footrulewidth}{0pt}
+\renewcommand{\headrulewidth}{0pt}
 }
 % 单面 oneside
 %\fancyhf{}
@@ -81,21 +81,13 @@
 % 双面 twoside
 \renewcommand{\chaptermark}[1]{\markboth{#1}{}}
 \fancypagestyle{twoside}{
-    \fancyhf{}
-    \fancyhead[LE]{HLE} %正上左
-    \fancyhead[RE]{HRE} %正上右
-    \fancyhead[LO]{HLO} %背上左
-    \fancyhead[RO]{HRO} %背上右
-    \fancyhead[C]{FC \Huge \jfontCoverTitle \jfontCoverTitle \leftmark} %上中
+\fancyhf{}
+    \fancyhead[OC,EC]{\Large \jfontCoverTitle \jfontCoverTitle \leftmark} %上中
     \renewcommand{\headrulewidth}{0.4pt}
 
-    %\fancyfoot[LE]{請到莊春江工作站查看最新訂正版}
-    %\fancyfoot[RE]{\Large \thepage}
-    \fancyfoot[LE]{FLE}
-    \fancyfoot[RE]{FRE}
-    \fancyfoot[LO]{FLO}
-    \fancyfoot[RO]{FRO}
-    \fancyfoot[C]{FC}
+    \fancyfoot[OR,EL]{\Large \thepage}
+    \fancyfoot[OL,ER]{請到莊春江工作站查看最新訂正版}
+    \fancyfoot[OC,EC]{}
 
    \renewcommand{\footrulewidth}{0.4pt}
 }
@@ -114,6 +106,7 @@
 \renewcommand{\thepart}{}
 
 \begin{document}
+
 \begin{titlepage}
 \begin{center}
 \null \vspace{2cm}
