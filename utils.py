@@ -89,6 +89,10 @@ WARNING = "WARNING"
 INFO = "INFO"
 
 
+def make_href(s:str):
+    re.
+
+
 def ccc_bug(type_, url, string):
     s = "<CCC {}>: url: {}, msg: {}".format(type_, url, string)
     print(s)

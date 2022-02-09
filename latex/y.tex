@@ -14,7 +14,6 @@
     pdfcreator={https://github.com/meng89/nikaya},
     colorlinks=true,
     linkcolor=black,
-    citecolor=teal,
     urlcolor=orange,
 ]{hyperref}
 
@@ -42,21 +41,12 @@
 \newjfontfamily{\jfontSansTC}{Noto Sans CJK TC}
 \newfontfamily{\fontSansD}{Noto Sans Display}
 
-%\usepackage[hyperref=true,backend=biber,backref=true,style=draft]{biblatex}
-%\usepackage[backend=bibtex]{biblatex}
-%%%\usepackage[superscript]{cite}
 \usepackage{wasysym}
 % biber
 %\AtBeginBibliography{\small}
 %\addbibresource{global.bib}
 
 %bibtex
-
-
-% \let\realcite\cite
-% \renewcommand*{\cite}[1]{{\footnotesize\realcite{#1}}}
-
-\newcommand{\mycite}[1]{\textsuperscript{\cite{#1}}}
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 
 \pagestyle{fancy}
@@ -107,9 +97,9 @@
 \section{芦苇品}
 
 \subsection{1.暴流之渡過經}
-　　像這樣被我聽聞:\mycite{g1}
+　　像這樣被我聽聞:
 
-　　有一次，世尊住在舍衛城祇樹林給孤獨園。那時，在夜已深時，容色絕佳的某位天神使整個祇樹林發光後，去見世尊。
+　　有一次，\underline{世尊住在舍衛城祇樹林給孤獨園}。那時，在夜已深時，容色絕佳的某位天神使整個祇樹林發光後，去見世尊。
 抵達後，向世尊問訊，接著在一旁站立。在一旁站立的那位天神對世尊這麼說：
 
 　　「親愛的先生！你怎樣渡過暴流呢？」
@@ -130,7 +120,7 @@
 \hyperlink{sn 1.1}{https://www.google.com} 让另一段文字链接到指定名称的连接点。
 %\hyperref[subsec:5.1ss]{SN 5.1}
 
-\href{https://www.google.com}{谷歌}
+\href{https://www.google.com}{\underline{谷歌}}
 
 \subsection{2.解脫經}
 　　起源於舍衛城。
@@ -226,8 +216,4 @@
 　　世尊說這個，那些悅意的比丘歡喜世尊所說。
 
 \clearpage
-
-\bibliographystyle{unsrt}
-\bibliography{global}
-
 \end{document}

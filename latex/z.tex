@@ -1,0 +1,100 @@
+\documentclass{book}
+\usepackage{lipsum}
+\usepackage{algpseudocode}
+\usepackage{float}
+\usepackage[chapter]{algorithm}
+\usepackage[hypcap]{caption}
+\usepackage{hyperref}
+\usepackage{cleveref}
+
+\makeatletter
+\providecommand\theHALG@line{\thealgorithm.\arabic{ALG@line}}
+\makeatother
+
+\begin{document}
+\chapter{Heading}
+
+Here's the first test to line \ref{test1} of Algorithm \ref{alg1}.\\
+Here's the second test to line \ref{test2} of Algorithm \ref{alg1}.
+Here's the first test to line \ref{test21} of Algorithm \ref{alg2}.\\
+Here's the second test to line \ref{test22} of Algorithm \ref{alg2}.
+
+\begin{algorithm}[p]
+\begin{algorithmic}[1]
+  \State Statement
+    \State Statement
+    \State Statement
+    \State Statement    \label{test1}
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement    \label{test2}
+    \State Statement
+\end{algorithmic}
+\caption{Example}
+\label{alg1}
+\end{algorithm}
+
+\begin{algorithm}[p]
+\begin{algorithmic}[1]
+  \State Statement
+    \State Statement
+    \State Statement
+    \State Statement    \label{test21}
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement
+    \State Statement    \label{test22}
+    \State Statement
+\end{algorithmic}
+\caption{Example}
+\label{alg2}
+\end{algorithm}
+
+\end{document}
