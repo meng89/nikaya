@@ -1,0 +1,24 @@
+\documentclass[a4paper,12pt]{book}
+\usepackage{hyperref}
+\usepackage{lipsum}
+\makeatletter
+ \newcommand{\linkdest}[1]{\Hy@raisedlink{\hypertarget{#1}{}}}
+\makeatother
+
+\begin{document}
+  bbb \linkdest{123} bbb\\
+ \lipsum[1]
+
+ Here are targets created
+ \makeatletter
+  \Hy@raisedlink{\hypertarget{t1}{}}directly
+ \makeatother
+ and \linkdest{t2}indirectly.  Here is one created by \hypertarget{t3}{}hypertarget.
+
+ \hyperlink{t1}{Here} \hyperlink{t2}{are} \hyperlink{t3}{links}
+
+
+ \lipsum[1-10]
+ aaa \hyperlink{123} aaa
+\lipsum[1]
+\end{document}
