@@ -11,7 +11,7 @@ import os
 import uuid
 from opencc import convert
 
-from config import BOOKS_DIR
+from user_config import EPUB_DIR
 
 from public import Nikaya, Sutta
 
@@ -190,12 +190,12 @@ def main():
     def write_book(book_, path):
         book_.write(path)
 
-    import sn
+    from pyccc import sn
     import mn
     import dn
     import an
 
-    os.makedirs(BOOKS_DIR, exist_ok=True)
+    os.makedirs(EPUB_DIR, exist_ok=True)
 
     for module, uri in (
             (sn, url_part + '/SN/index.htm'), (mn, url_part + '/MN/index.htm'),
@@ -206,13 +206,13 @@ def main():
         book = make_book(nikaya)
 
         p1 = multiprocessing.Process(target=write_book,
-                                     args=(book, '{}/{}.epub'.format(BOOKS_DIR, nikaya.title_st))
+                                     args=(book, '{}/{}.epub'.format(EPUB_DIR, nikaya.title_st))
                                      )
         p1.start()
 
         book_zh_cn = make_book(translate_to_zh_cn(nikaya))
         p2 = multiprocessing.Process(target=write_book,
-                                     args=(book_zh_cn, '{}/{}_简体.epub'.format(BOOKS_DIR, nikaya.title_st))
+                                     args=(book_zh_cn, '{}/{}_简体.epub'.format(EPUB_DIR, nikaya.title_st))
                                      )
         p2.start()
 

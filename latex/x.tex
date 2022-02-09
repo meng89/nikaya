@@ -1,52 +1,33 @@
 \documentclass[12pt,a4paper]{book}
-\usepackage[a4paper,width=150mm,top=25mm,bottom=25mm]{geometry}
-\usepackage{luatexja-fontspec}
 \usepackage{longtable}
-\usepackage{}
+\usepackage{showframe}
+\usepackage{lipsum}
 
-
-\setmainjfont{Noto Serif CJK TC Light}
-\setsansjfont{Noto Sans CJK TC}
 
 \begin{document}
+\lipsum[1]
+\lipsum[1]
+\lipsum[1]
+\def\tabitem{\par \hangindent=0.9em \hangafter=1 ~}
+%\begin{table}[h]
+%\centering
+\begin{longtable}{| p{.05\textwidth} | p{.89\textwidth} |}
+\hline
+e999 & \tabitem (1) \lipsum[1]  \tabitem (2) \lipsum[1] \tabitem (3) \lipsum[1]\tabitem (4) \lipsum[1]\\ \hline
+  888   & bar \\ \hline
+foo & bar \\ \hline
+foo & bar \\ \hline
+foo & bar \\ \hline
+foo & bar \\ \hline
+foo & bar \\ \hline
+foo & bar \\ \hline
+foo & bar \\ \hline
+foo & bar \\ \hline
+foo & bar \\ \hline
+\caption{Your caption here} % needs to go inside longtable environment
+\label{tab:myfirstlongtable}
+\end{longtable}
+%\end{table}
 
-\begin{center}
-	\begin{longtable}{|l|l|l|}
-		\caption{服务模式的语义解释和案例}\\
-		\label{revenuepatternexplain}\\
-		\hline\noalign{\smallskip}
-		名称 & 语义解释 & 案例说明 \\
-		\hline
-		名称 & 语义解释 & 案例说明 \\
-		名称 & 语义解释 & 案例说明 \\
-		名称 & 语义解释 & 案例说明 \\
-		名称 & 语义解释 & 案例说明 \\
-		名称 & 语义解释 & 案例说明 \\
-		名称 & 语义解释 & 案例说明 \\
-		名称 & 语义解释 & 案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明案例说明 \\
-		名称 & 语义解释 & 案例说明 \\
-		名称 & 语义解释 & 案例说明 \\
-		名称 & 语义解释 & 案例说明 \\
-		名称 & 语义解释 & 案例说明 \\
-		名称 & 语义解释 & 案例说明 \\
-		名称 & 语义解释 & 案例说明 \\
-		名称 & 语义解释 & 案例说明 \\
-		名称 & 语义解释 & 案例说明 \\
-		名称 & 语义解释 & 案例说明 \\
-		名称 & 语义解释 & 案例说明 \\
-		名称 & 语义解释 & 案例说明 \\
-		名称 & 语义解释 & 案例说明 \\
-		名称 & 语义解释 & 案例说明 \\
-		名称 & 语义解释 & 案例说明 \\
-		名称 & 语义解释 & 案例说明 \\
-		名称 & 语义解释 & 案例说明 \\
-		名称 & 语义解释 & 案例说明 \\
-		名称 & 语义解释 & 案例说明 \\
-		名称 & 语义解释 & 案例说明 \\
-		名称 & 语义解释 & 案例说明 \\
-		名称 & 语义解释 & 案例说明 \\
-		名称 & 语义解释 & 案例说明 \\
-		\hline
-	\end{longtable}
-\end{center}
+Table \ref{tab:myfirstlongtable} shows my first longtable.
 \end{document}

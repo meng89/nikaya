@@ -2,7 +2,7 @@ from urllib.parse import urlparse, urljoin
 
 import re
 
-import utils
+from pyccc import utils
 
 
 def _del_split_chinese_lines(chinese):

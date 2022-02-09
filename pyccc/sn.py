@@ -8,7 +8,7 @@ from public import Nikaya, Node, Sutta
 
 from tools import get_sutta_urls
 
-import note_thing
+import pyccc.note
 
 import utils
 from utils import read_page
@@ -16,8 +16,6 @@ from utils import read_page
 # from jinja2 import Template
 # from mako.template import Template
 from string import Template
-
-from pprint import pprint
 
 from pylatex.utils import escape_latex as el
 
@@ -50,7 +48,7 @@ class _MyInfo(BaseInfo, PianInfo, PinInfo):
 # "暴流之渡過經" 1 必须编号
 # SN.1.1
 
-# 经太短，一个相应里的经典不应该在新页面
+# 经太短，不应该一经一页
 # 有时某个相应经太少，没有品，相应下面就是经，不应该建立空品多折叠一下
 
 
@@ -267,7 +265,7 @@ def load(domain):
 
 def to_latex(latex_io: typing.TextIO, bibtex_io: typing.TextIO, translate_fun=None):
 
-    _head_t = open(os.path.join(utils.ROOT_DIR, "latex", "head.tex"), "r").read()
+    _head_t = open(os.path.join(utils.ROOT_DIR, "../latex", "head.tex"), "r").read()
     strdate = utils.lm_to_strdate(_nikaya.last_modified)
     _head = Template(_head_t).substitute(date=strdate, bib_path="sn_tc_notes.bib")
     latex_io.write(_head)
@@ -315,13 +313,13 @@ def to_latex(latex_io: typing.TextIO, bibtex_io: typing.TextIO, translate_fun=No
                                 raise Exception("WTH?")
                         latex_io.write("\n\n")
 
-    _tail = open(os.path.join(utils.ROOT_DIR, "latex", "tail.tex"), "r").read()
+    _tail = open(os.path.join(utils.ROOT_DIR, "../latex", "tail.tex"), "r").read()
     latex_io.write(_tail)
 
     local_note_bibtex_string = notes_to_bibtex(book_local_note_dict)
     bibtex_io.write(local_note_bibtex_string)
 
-    global_note_bibtex_string = notes_to_bibtex(note_thing.get())
+    global_note_bibtex_string = notes_to_bibtex(pyccc.note.get())
     bibtex_io.write(global_note_bibtex_string)
 
 

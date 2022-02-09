@@ -1,100 +1,30 @@
-\documentclass{book}
+\documentclass[a4paper,12pt]{book}
 \usepackage{lipsum}
-\usepackage{algpseudocode}
-\usepackage{float}
-\usepackage[chapter]{algorithm}
-\usepackage[hypcap]{caption}
+\usepackage{color}
+\usepackage{graphicx}
 \usepackage{hyperref}
-\usepackage{cleveref}
+\setlength{\parindent}{0pt}
 
-\makeatletter
-\providecommand\theHALG@line{\thealgorithm.\arabic{ALG@line}}
-\makeatother
+\newcommand{\raisetarget}[2]% #1 = label, #2 = contents
+{\bgroup
+  \sbox0{#2}%
+  \raisebox{\ht0}{\hypertarget{#1}{}}\usebox0%
+\egroup}
 
 \begin{document}
-\chapter{Heading}
+\lipsum[3]
+The target is \raisetarget{target}{\textcolor{red}{here}}.
+\lipsum[3]
 
-Here's the first test to line \ref{test1} of Algorithm \ref{alg1}.\\
-Here's the second test to line \ref{test2} of Algorithm \ref{alg1}.
-Here's the first test to line \ref{test21} of Algorithm \ref{alg2}.\\
-Here's the second test to line \ref{test22} of Algorithm \ref{alg2}.
+This is a \hyperlink{target}{\textcolor{blue}{link}}.
 
-\begin{algorithm}[p]
-\begin{algorithmic}[1]
-  \State Statement
-    \State Statement
-    \State Statement
-    \State Statement    \label{test1}
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement    \label{test2}
-    \State Statement
-\end{algorithmic}
-\caption{Example}
-\label{alg1}
-\end{algorithm}
+\lipsum[3]
+\raisetarget{newtarget}{\textcolor{red}{Here}} is a new target.
+\lipsum[4]
 
-\begin{algorithm}[p]
-\begin{algorithmic}[1]
-  \State Statement
-    \State Statement
-    \State Statement
-    \State Statement    \label{test21}
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement
-    \State Statement    \label{test22}
-    \State Statement
-\end{algorithmic}
-\caption{Example}
-\label{alg2}
-\end{algorithm}
+This is a new \hyperlink{newtarget}{\textcolor{blue}{link}}.\strut% no descenders
 
+\raisetarget{anothertarget}{\includegraphics[scale=0.5]{example-image}} is a another target.
+
+This is another \hyperlink{anothertarget}{\textcolor{blue}{link}}.
 \end{document}

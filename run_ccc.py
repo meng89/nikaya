@@ -5,7 +5,7 @@ import threading
 
 from flask import Flask
 
-from config import INDEX_DIR
+from user_config import INDEX_DIR
 
 _is_runing = False
 
@@ -31,7 +31,7 @@ class RunCccThread(threading.Thread):
         self._port = port
 
     def run(self):
-        app.run(host=self._host, port=self._port, debug=False)
+        app.run(host=self._host, port=self._port, debug=False, use_reloader=False)
 
 
 def get_domain():

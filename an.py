@@ -6,7 +6,7 @@ from public import Nikaya, Node, Sutta
 
 
 from tools import get_sutta_urls, split_chinese_lines
-from utils import read_page
+from pyccc.utils import read_page
 
 
 class _MyInfo(BaseInfo, PinInfo):

@@ -6,14 +6,13 @@ from urllib.parse import urlparse
 
 from dateutil.parser import parse as parsedate
 
-
-import note_thing
-from pprint import pprint
-
+from pyccc import note
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-PICKLE_DIR = os.path.join(ROOT_DIR, "cache")
+PICKLE_DIR = os.path.join(ROOT_DIR, "../cache")
 os.makedirs(PICKLE_DIR, exist_ok=True)
+
+CCC_WEBSITE = "https://agama.buddhason.org"
 
 
 class AnalyseError(Exception):
@@ -89,10 +88,6 @@ WARNING = "WARNING"
 INFO = "INFO"
 
 
-def make_href(s:str):
-    re.
-
-
 def ccc_bug(type_, url, string):
     s = "<CCC {}>: url: {}, msg: {}".format(type_, url, string)
     print(s)
@@ -121,7 +116,7 @@ def read_page(url):
             if key in local_listnote_list_dict.keys():
                 ccc_bug(WARNING, url_path, "本地注解 KEY 冲突，key: {}, 自动加1，不知对错".format(key))
                 key = str(int(key) + 1)
-            n = note_thing.read_one_note(x.contents)
+            n = note_thing.separate(x.contents)
             if n:
                 local_listnote_list_dict[key] = n
 

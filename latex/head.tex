@@ -50,7 +50,7 @@
 
 \newfontfamily{\fontSansD}{Noto Sans}
 
-\usepackage[hyperref=true,backend=biber,backref=true,style=draft]{biblatex}
+\usepackage[hyperref=true,backend=biber,backref=true,sorting=debug,style=draft]{biblatex}
 %%%\usepackage[superscript]{cite}
 \AtBeginBibliography{\small}
 \usepackage{wasysym}
@@ -61,7 +61,7 @@
 % \let\realcite\cite
 % \renewcommand*{\cite}[1]{{\footnotesize\realcite{#1}}}
 
-\newcommand{\mycite}[1]{\textsuperscript {\tiny{\emph{\cite{#1}}}}}
+\newcommand{\mycite}[1]{\textit{\textsuperscript {\tiny{\cite{#1}}}}}
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 
 \fancypagestyle{plain}{

@@ -1,15 +1,11 @@
 #!/usr/bin/env python3
 import os
 import subprocess
-import sys
 import pathlib
 
 import run_ccc
-import sn
-import note_thing
-from pprint import pprint
+from pyccc import sn
 
-from jinja2 import Template
 import tempfile
 
 
