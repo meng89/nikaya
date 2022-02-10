@@ -1,0 +1,12 @@
+\documentclass{article}
+
+\newcommand\mysec[2][\xxx]{%
+  \def\xxx{#2}%
+  \section[#1]{#2}%
+}
+
+\begin{document}
+\tableofcontents
+\mysec{Foo}
+\mysec[Blx]{Bla bla bla}
+\end{document}

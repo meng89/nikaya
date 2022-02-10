@@ -11,7 +11,7 @@ from tools import get_sutta_urls
 import pyccc.note
 
 import utils
-from utils import read_page
+import bookref
 
 # from jinja2 import Template
 # from mako.template import Template
@@ -23,6 +23,7 @@ HTML_INDEX = '/SN/index.htm'
 
 LOCAL_NOTE_KEY_PREFIX = "e"
 
+BN = "SN"
 
 class _MyInfo(BaseInfo, PianInfo, PinInfo):
     def __init__(self):
@@ -165,7 +166,7 @@ def make_nikaya(sutta_urls):
 
     for url in sutta_urls:
         omage_listline, head_line_list, sutta_name_line, body_listline_list, local_note_dict, \
-            pali_text, last_modified = read_page(url)
+            pali_text, last_modified = pyccc.utils.read_page(url)
 
         if nikaya.last_modified is None:
             nikaya.last_modified = last_modified
@@ -250,12 +251,11 @@ def make_nikaya(sutta_urls):
 def load(domain):
     nikaya_filename = "sn_data"
     global _nikaya
-    data_path = os.path.join(utils.PICKLE_DIR, nikaya_filename)
-
+    data_path = os.path.join(utils.CACHE_DIR, nikaya_filename)
     try:
         with open(data_path, "rb") as rf:
             _nikaya = pickle.load(rf)
-    except FileNotFoundError:
+    except (FileNotFoundError, ModuleNotFoundError):
         sutra_urls = get_sutta_urls(domain + HTML_INDEX)
         nikaya = make_nikaya(sutra_urls)
         _nikaya = add_sec_title_range(nikaya)
@@ -265,7 +265,7 @@ def load(domain):
 
 def to_latex(latex_io: typing.TextIO, bibtex_io: typing.TextIO, translate_fun=None):
 
-    _head_t = open(os.path.join(utils.ROOT_DIR, "../latex", "head.tex"), "r").read()
+    _head_t = open(os.path.join(utils.PROJECT_ROOT, "latex", "head.tex"), "r").read()
     strdate = utils.lm_to_strdate(_nikaya.last_modified)
     _head = Template(_head_t).substitute(date=strdate, bib_path="sn_tc_notes.bib")
     latex_io.write(_head)
@@ -313,7 +313,7 @@ def to_latex(latex_io: typing.TextIO, bibtex_io: typing.TextIO, translate_fun=No
                                 raise Exception("WTH?")
                         latex_io.write("\n\n")
 
-    _tail = open(os.path.join(utils.ROOT_DIR, "../latex", "tail.tex"), "r").read()
+    _tail = open(os.path.join(utils.PROJECT_ROOT, "latex", "tail.tex"), "r").read()
     latex_io.write(_tail)
 
     local_note_bibtex_string = notes_to_bibtex(book_local_note_dict)
@@ -347,6 +347,8 @@ def note_to_latex(listline_list: iter, trans=None):
         for e in listline:
             if isinstance(e, str):
                 strline += el(t(e))
+            elif isinstance(e, bookref.BookRef):
+                strline += e.get_latex_str(BN)
             else:
                 assert isinstance(e, utils.Href)
                 strline += "\\href{{{}}}{{{}}}".format(e.href, el(t(e.text)))

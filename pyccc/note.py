@@ -2,8 +2,8 @@ import re
 import bs4
 import requests.exceptions
 
-import utils
-import bookref
+from . import utils
+from . import bookref
 
 _data = {}
 

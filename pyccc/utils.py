@@ -6,11 +6,11 @@ from urllib.parse import urlparse
 
 from dateutil.parser import parse as parsedate
 
-from pyccc import note
+import pyccc.note
 
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-PICKLE_DIR = os.path.join(ROOT_DIR, "../cache")
-os.makedirs(PICKLE_DIR, exist_ok=True)
+PROJECT_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+CACHE_DIR = os.path.abspath(os.path.join(PROJECT_ROOT, "cache"))
+os.makedirs(CACHE_DIR, exist_ok=True)
 
 CCC_WEBSITE = "https://agama.buddhason.org"
 
@@ -116,7 +116,7 @@ def read_page(url):
             if key in local_listnote_list_dict.keys():
                 ccc_bug(WARNING, url_path, "本地注解 KEY 冲突，key: {}, 自动加1，不知对错".format(key))
                 key = str(int(key) + 1)
-            n = note_thing.separate(x.contents)
+            n = pyccc.note.separate(x.contents)
             if n:
                 local_listnote_list_dict[key] = n
 

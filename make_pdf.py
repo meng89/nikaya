@@ -4,6 +4,7 @@ import subprocess
 import pathlib
 
 import run_ccc
+import pyccc.note
 from pyccc import sn
 
 import tempfile
@@ -38,8 +39,8 @@ def main():
     run_ccc.make_sure_is_runing()
     domain = run_ccc.get_domain()
 
-    note_thing.load_global(domain)
-    sn.load(domain)
+    pyccc.note.load_global(domain)
+    pyccc.sn.load(domain)
 
     work_td = tempfile.TemporaryDirectory()
     out_td = tempfile.TemporaryDirectory()

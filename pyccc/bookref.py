@@ -1,5 +1,5 @@
 import re
-import utils
+from . import utils
 
 P_SA = r"(SA)\.(\d+)"
 P_SN = r"(SN)\.(\d+\.\d+)"
@@ -28,12 +28,18 @@ class BookRef(object):
         return self._BN + "." + self._num
 
     def get_cccurl(self):
-        if self._pattern in [P_SA, P_MA, P_MN, P_DA, P_DN, P_UD, P_IT, P_NI,  P_AA]:
+        if self._pattern in [P_SA, P_MA, P_MN, P_DA, P_DN, P_UD, P_IT, P_NI, P_AA]:
             return "{}/{}/dm.php?keyword={}".format(utils.CCC_WEBSITE, self._BN, self._num)
         elif self._pattern in (P_SN, P_AN):
             return "{}/{}/{}.php?keyword={}".format(utils.CCC_WEBSITE, self._BN, self._BN.lower(), self._num)
         elif self._pattern in (P_MI, P_NI, P_PS):
             return "{}/{}/{}{}.htm".format(utils.CCC_WEBSITE, self._BN, self._BN, self._num)
+
+    def get_latex_str(self, bookname):
+        if bookname == self._BN:
+            return "\\inbooklink{" + self.get_text() + "}"
+        else:
+            return "\\ccclink{" + self.get_cccurl() + "}{" + self.get_text() + "}"
 
     def __repr__(self):
         return (f'{self.__class__.__name__}('
@@ -53,13 +59,13 @@ def get_bookref(y):
 def split(s):
     # "[some text SN.1.1, AN.2.1 some text]"
     list_s = []
-    i = 0
+    offset = 0
     for m in re.finditer("|".join(PATTERNS), s):
         (begin, end) = m.span()
-        list_s.append(s[i:begin])
+        list_s.append(s[offset:begin])
         list_s.append(get_bookref(s[begin:end]))
-        i = end
-    if i < len(s):
-        list_s.append(s[i:])
+        offset = end
+    if offset < len(s):
+        list_s.append(s[offset:])
 
     return list_s

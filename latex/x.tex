@@ -2,18 +2,20 @@
 \usepackage{longtable}
 \usepackage{showframe}
 \usepackage{lipsum}
-
+\usepackage{changepage}
 
 \begin{document}
-\lipsum[1]
-\lipsum[1]
-\lipsum[1]
-\def\tabitem{\par \hangindent=0.9em \hangafter=1 ~}
-%\begin{table}[h]
-%\centering
-\begin{longtable}{| p{.05\textwidth} | p{.89\textwidth} |}
+
+\begin{description}
+  \item[Definition 1] \lipsum[1] \\ \lipsum[1] \\ \lipsum[1] \\ \lipsum[1]
+\end{description}
+
+
+
+
+\begin{longtable}{|p{.05\linewidth} | p{.89\linewidth} |}
 \hline
-e999 & \tabitem (1) \lipsum[1]  \tabitem (2) \lipsum[1] \tabitem (3) \lipsum[1]\tabitem (4) \lipsum[1]\\ \hline
+e999 & \lipsum[1] \\ \hline
   888   & bar \\ \hline
 foo & bar \\ \hline
 foo & bar \\ \hline
@@ -24,10 +26,7 @@ foo & bar \\ \hline
 foo & bar \\ \hline
 foo & bar \\ \hline
 foo & bar \\ \hline
-\caption{Your caption here} % needs to go inside longtable environment
-\label{tab:myfirstlongtable}
 \end{longtable}
-%\end{table}
 
-Table \ref{tab:myfirstlongtable} shows my first longtable.
+\lipsum[5]
 \end{document}
