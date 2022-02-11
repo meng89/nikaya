@@ -3,23 +3,20 @@
 \usepackage{showframe}
 \usepackage{lipsum}
 \usepackage{changepage}
-\usepackage{luatexja-fontspec}
+%\usepackage{luatexja-fontspec}
 \usepackage{fontspec}
 
-\directlua{
-luaotfload.add_fallback
-("myfallback",
-{
-"Noto Serif:style=Light;",
-"DejaVuSans:mode=harf;script=grek;color=FF0000;",
-"cmuserif:mode=node;script=cyrl;color=00FF00;",
-"NotoSansBengali:mode=harf;script=bng2;color=0000FF;",
-"NotoColorEmoji:mode=harf;"
-}
-)
-}
+%\directlua{
+%luaotfload.add_fallback
+%("myfallback",
+%{
+%"Noto Serif:style=Light;"
+%}
+%)
+%}
 
-\setmainfont{Noto Serif CJK TC ExtraLight}[RawFeature={fallback=myfallback}]
+%[RawFeature={fallback=myfallback}]
+\setmainfont{Noto Serif CJK TC Light}
 \setsansfont{Noto Sans CJK TC Light}
 
 %\setmainjfont{Noto Serif CJK TC Light}
