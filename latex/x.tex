@@ -3,7 +3,7 @@
 \usepackage{showframe}
 \usepackage{lipsum}
 \usepackage{changepage}
-%\usepackage{luatexja-fontspec}
+\usepackage{luatexja-fontspec}
 \usepackage{fontspec}
 
 %\directlua{
@@ -16,11 +16,11 @@
 %}
 
 %[RawFeature={fallback=myfallback}]
-\setmainfont{Noto Serif CJK TC Light}
-\setsansfont{Noto Sans CJK TC Light}
+%\setmainfont{Noto Serif CJK TC ExtraLight}
+%\setsansfont{Noto Sans CJK TC Light}
 
-%\setmainjfont{Noto Serif CJK TC Light}
-%\setsansjfont{Noto Sans CJK TC}
+\setmainjfont{Noto Serif CJK TC Light}
+\setsansjfont{Noto Sans CJK TC}
 
 \usepackage{enumitem}
 
@@ -30,7 +30,10 @@
 
 \newcommand*\Descriptionlabel[1]{\hspace \labelsep  \normalfont \color{blue} \bfseries \sffamily #1}
 
-\setlist[description]{topsep=10pt, partopsep=0pt, itemsep=-6pt}
+\newenvironment{EnvNote}{}{}
+
+
+\setlist[description]{topsep=10pt, partopsep=0pt, itemsep=-5pt}
 \begin{document}
 
 \begin{Description}
@@ -41,11 +44,13 @@
   \item[Fifth]{The fifth item, etc.\ldots}
 \end{Description}
 
-
+this is FULL：，s，s，s，
+\\
+this is HALF：,s,s,s,
 
 \begin{description}
   \item[\textit{(1)}「如是我聞 (SA/DA) ;我聞如是 (MA) ;聞如是 (AA)」],南傳作「像這樣被我聽聞」 (Evaṃ
-me sutaṃ,逐字譯為「如是-我-聞」 ),菩提比丘長老英譯為「這樣我聽到」 (Thus have
+me sutaṃ,逐字譯為「如是-我-聞」 )，菩提比丘長老英譯為「這樣我聽到」 (Thus have
 I heard)。「如是我聞......歡喜奉行。」的經文格式,依印順法師的考定,應該是在《增
 一阿含》或《增支部》成立的時代才形成的 ( 《原始佛教聖典之集成》 p.9),南傳《相應
 部》多數經只簡略地指出發生地點,應該是比較早期的風貌。
