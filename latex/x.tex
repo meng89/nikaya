@@ -3,8 +3,9 @@
 \usepackage{showframe}
 \usepackage{lipsum}
 \usepackage{changepage}
-\usepackage{luatexja-fontspec}
+% \usepackage{luatexja-fontspec}
 \usepackage{fontspec}
+\usepackage{xifthen}
 
 %\directlua{
 %luaotfload.add_fallback
@@ -19,22 +20,49 @@
 %\setmainfont{Noto Serif CJK TC ExtraLight}
 %\setsansfont{Noto Sans CJK TC Light}
 
-\setmainjfont{Noto Serif CJK TC Light}
-\setsansjfont{Noto Sans CJK TC}
+\setmainfont{Noto Serif}
+\setsansfont{Noto Sans}
 
 \usepackage{enumitem}
-
 \usepackage{xcolor}
+\usepackage{textcomp}
 
-\newenvironment{Description}{\list{} {\labelwidth=0pt \itemindent-\leftmargin \let\makelabel\Descriptionlabel \itshape}}{\endlist}
+\newenvironment{Description}
+{\list{} {\labelwidth=0pt \itemindent-\leftmargin \let\makelabel\Descriptionlabel \itshape}}
+{\endlist}
 
 \newcommand*\Descriptionlabel[1]{\hspace \labelsep  \normalfont \color{blue} \bfseries \sffamily #1}
 
-\newenvironment{EnvNote}{}{}
+\newcommand{\subnote}[3][]{
+  \ifthenelse{\isempty{#1}}
+  {\item[#2] <empty> #3}
+  {\item[#2] #1 #3}
+}
+
+
+\newenvironment{EnvNote}{\begin{description}
+}{\end{description}}
+
+
+
+
+%(1)「生法」(jātidhammaṃ)，菩提比丘長老英譯為「屬於生者」(subject to birth)。
+%(2)「老法(SA/MA)；老之法(AA)」，南傳作「老法」(Jarādhammaṃ)，菩提比丘長老英譯為「屬於年老的」(subject to old age)。
+%(3)「病法」(byādhidhammo)，菩提比丘長老英譯為「屬於生病的」(subject to sickness)。
+%(4)「死法」(maraṇadhammo)，菩提比丘長老英譯為「屬於死亡」(subject to death)。
 
 
 \setlist[description]{topsep=10pt, partopsep=0pt, itemsep=-5pt}
 \begin{document}
+
+  \begin{EnvNote}
+    \subnote[(1)]{hehe}{ Hello \LaTeX} \\
+    %\subnote[sub=2, head=老法(SA/MA)；老之法(AA)]{，南傳作「老法」(Jarādhammaṃ)，菩提比丘長老英譯為「屬於年老的」(subject to old age)。}
+    %\subnote[sub=3, head=病法]{(byādhidhammo)，菩提比丘長老英譯為「屬於生病的」(subject to sickness)。}
+    %\subnote[sub=4, head=死法]{(maraṇadhammo)，菩提比丘長老英譯為「屬於死亡」(subject to death)。}
+  \end{EnvNote}
+
+
 
 \begin{Description}
   \item[First] The first item
