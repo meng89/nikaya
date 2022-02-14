@@ -25,6 +25,7 @@ LOCAL_NOTE_KEY_PREFIX = "e"
 
 BN = "SN"
 
+
 class _MyInfo(BaseInfo, PianInfo, PinInfo):
     def __init__(self):
         BaseInfo.__init__(self)
