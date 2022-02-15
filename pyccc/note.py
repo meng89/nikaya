@@ -47,8 +47,15 @@ def separate(contents):
             pass
         elif one.name == "a" and "href" in one.attrs.keys():
             assert Exception(contents)
-            cur_subnote.body.append(utils.Href(text=one.get_text(), href=one["href"], target=one["target"]))
+            # cur_subnote.body.append(utils.Href(text=one.get_text(), href=one["href"], target=one["target"]))
     return dictsubnote
+
+
+def match_sub(num, text):
+    for subnum, subnote in _data[num]:
+        if re.match(subnote.head, text) or re.match(subnote.body, text):
+            return num, subnum
+    assert Exception
 
 
 def get():

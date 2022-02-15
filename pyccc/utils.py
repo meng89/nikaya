@@ -63,16 +63,16 @@ class Href(object):
 class TextNeedNote(object):
     """<a onmouseover="note(this,1);">像這樣被我聽聞</a>"""
 
-    def __init__(self, text, type_, number):
+    def __init__(self, text, type_, key):
         self._text = text
         self._type = type_
-        self._number = number
+        self._key = key
 
     def __repr__(self):
         return (f'{self.__class__.__name__}('
                 f'text={self._text!r}, '
                 f'type_={self._type!r}, '
-                f'number={self._number!r})')
+                f'number={self._key!r})')
 
     def get_text(self):
         return self._text
@@ -81,7 +81,7 @@ class TextNeedNote(object):
         return self._type
 
     def get_number(self):
-        return self._number
+        return self._key
 
 
 WARNING = "WARNING"
@@ -98,7 +98,6 @@ def read_page(url):
 
     soup, last_modified = read_url(url)
 
-    div_nikaya_tag = soup.find("div", {"class": "nikaya"})
     pali_doc = soup.find("div", {"class": "pali"})
 
     homage_head_listline_list = None
@@ -106,9 +105,10 @@ def read_page(url):
     body_listline_list = []
     is_sutta_name_line_passed = True
     current_line = []
+    local_listnote_list_dict = {}
+    local_notes_keys = []  # 检查 bug 用
 
     comp_doc = soup.find("div", {"class": "comp"})
-    local_listnote_list_dict = {}
     if comp_doc is not None:
         note_docs = comp_doc.find_all("span", {"id": True})
         for x in note_docs:
@@ -120,7 +120,7 @@ def read_page(url):
             if n:
                 local_listnote_list_dict[key] = n
 
-    all_local_tnn_dict = {}
+    div_nikaya_tag = soup.find("div", {"class": "nikaya"})
     for x in div_nikaya_tag.contents:
         if isinstance(x, bs4.element.NavigableString):
             s = "".join(x.get_text().splitlines())
@@ -156,19 +156,19 @@ def read_page(url):
                             ccc_bug(WARNING, url_path, "not onmouseover:" + str(x))
                         break
 
-                type_ = None
                 if m.group(1) == "note":
-                    type_ = GLOBAL
-                elif m.group(1) == "local":
-                    type_ = LOCAL
+                    tnn = TextNeedNote(text=x.get_text(), key=pyccc.note.match_sub(m.group(2), x.get_text()),
+                                       type_=GLOBAL)
+                    current_line.append(tnn)
 
-                tnn = TextNeedNote(text=x.get_text(), number=m.group(2), type_=type_)
-                if type_ == LOCAL:
-                    all_local_tnn_dict[m.group(2)] = tnn
+                elif m.group(1) == "local":
+                    tnn = TextNeedNote(text=x.get_text(), key=m.group(2), type_=LOCAL)
+                    local_notes_keys[m.group(2)] = tnn
+
                     if m.group(2) in local_listnote_list_dict.keys():
                         current_line.append(tnn)
-                else:
-                    current_line.append(tnn)
+                    else:
+                        current_line.append(x.get_text())
 
             # for CCC 原始 BUG
             elif x.name == "span" and x["class"] == ["sutra_name"] and x.get_text() == "相應部12相應83-93經/學經等（中略）十一則":
@@ -183,9 +183,8 @@ def read_page(url):
                 raise Exception("不能识别的Tag: {}; URL: {}".format(x, url))
 
     # 检查本地注解key 是否相同：
-    no_note_keys = set(all_local_tnn_dict.keys()) - set(local_listnote_list_dict.keys())
+    no_note_keys = set(local_notes_keys.keys()) - set(local_listnote_list_dict.keys())
     if no_note_keys:
-
         ccc_bug(WARNING, url, "丢失note：{}".format(list(no_note_keys)))
 
     assert homage_head_listline_list is not None
