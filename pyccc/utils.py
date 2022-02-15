@@ -105,7 +105,7 @@ def read_page(url):
     body_listline_list = []
     is_sutta_name_line_passed = True
     current_line = []
-    local_listnote_list_dict = {}
+    local_dictnote_dict = {}
     local_notes_keys = []  # 检查 bug 用
 
     comp_doc = soup.find("div", {"class": "comp"})
@@ -113,12 +113,13 @@ def read_page(url):
         note_docs = comp_doc.find_all("span", {"id": True})
         for x in note_docs:
             key = re.match(r"^note(\d+)$", x["id"]).group(1)
-            if key in local_listnote_list_dict.keys():
+            if key in local_dictnote_dict.keys():
                 ccc_bug(WARNING, url_path, "本地注解 KEY 冲突，key: {}, 自动加1，不知对错".format(key))
                 key = str(int(key) + 1)
+
             n = pyccc.note.separate(x.contents)
             if n:
-                local_listnote_list_dict[key] = n
+                local_dictnote_dict[key] = n
 
     div_nikaya_tag = soup.find("div", {"class": "nikaya"})
     for x in div_nikaya_tag.contents:
@@ -157,15 +158,18 @@ def read_page(url):
                         break
 
                 if m.group(1) == "note":
-                    tnn = TextNeedNote(text=x.get_text(), key=pyccc.note.match_sub(m.group(2), x.get_text()),
+                    tnn = TextNeedNote(text=x.get_text(), key=pyccc.note.match_key(m.group(2), x.get_text()),
                                        type_=GLOBAL)
                     current_line.append(tnn)
 
                 elif m.group(1) == "local":
-                    tnn = TextNeedNote(text=x.get_text(), key=m.group(2), type_=LOCAL)
-                    local_notes_keys[m.group(2)] = tnn
 
-                    if m.group(2) in local_listnote_list_dict.keys():
+                    tnn = TextNeedNote(text=x.get_text(), key=key, type_=LOCAL)
+                    local_notes_keys.append(m.group(2))
+
+                    key = pyccc.note.match_key(m.group(2), x.get_text(), local_dictnote_dict)
+
+                    if m.group(2) in local_dictnote_dict.keys():
                         current_line.append(tnn)
                     else:
                         current_line.append(x.get_text())
@@ -183,7 +187,7 @@ def read_page(url):
                 raise Exception("不能识别的Tag: {}; URL: {}".format(x, url))
 
     # 检查本地注解key 是否相同：
-    no_note_keys = set(local_notes_keys.keys()) - set(local_listnote_list_dict.keys())
+    no_note_keys = set(local_notes_keys) - set(local_dictnote_dict.keys())
     if no_note_keys:
         ccc_bug(WARNING, url, "丢失note：{}".format(list(no_note_keys)))
 
@@ -194,7 +198,7 @@ def read_page(url):
     homage_listline, head_listline_list = separate_homage(homage_head_listline_list)
     head_line_list = listline_list_to_line_list(head_listline_list)
 
-    return (homage_listline, head_line_list, sutta_name_line, body_listline_list, local_listnote_list_dict,
+    return (homage_listline, head_line_list, sutta_name_line, body_listline_list, local_dictnote_dict,
             pali_doc.text, last_modified)
 
 

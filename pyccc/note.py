@@ -51,11 +51,16 @@ def separate(contents):
     return dictsubnote
 
 
-def match_sub(num, text):
-    for subnum, subnote in _data[num]:
+class NoteNotMatch(Exception):
+    pass
+
+
+def match_key(num, text, notes=None):
+    notes = notes or _data
+    for subnum, subnote in notes[num]:
         if re.match(subnote.head, text) or re.match(subnote.body, text):
             return num, subnum
-    assert Exception
+    assert NoteNotMatch
 
 
 def get():
