@@ -5,7 +5,7 @@ import requests.exceptions
 from . import utils
 from . import bookref
 
-_data = {}
+_global_notes = {}
 
 
 class SubNote(object):
@@ -15,7 +15,7 @@ class SubNote(object):
 
 
 def load_global(domain: str):
-    global _data
+    global _global_notes
     for i in range(100):
         try:
             soup = utils.read_url(domain + "/note/note{}.htm".format(i))[0]
@@ -24,24 +24,21 @@ def load_global(domain: str):
 
         for div in soup.find_all(name="div", attrs={"id": True}):
             note_no = re.match(r"^div(\d+)$", div["id"]).group(1)
-            _data[note_no] = separate(div.contents)
+            _global_notes[note_no] = separate(div.contents)
 
 
 def separate(contents):
     dictsubnote = {}
-    cur_subnote = None
     for one in contents:
         if isinstance(one, bs4.element.NavigableString):
             text = one.get_text()
             m = re.match(r"^「(.*?)」(.*)$", text)
             if m:
-                cur_subnote = SubNote(head=m.group(1), body=bookref.split(m.group(2)))
-                dictsubnote["1"] = cur_subnote
+                dictsubnote["1"] = SubNote(head=m.group(1), body=bookref.split(m.group(2)))
                 continue
             m = re.match(r"^\((\d)\)「(.*?)」(.*)$", text)
             if m:
-                cur_subnote = SubNote(head=m.group(2), body=bookref.split(m.group(3)))
-                dictsubnote[m.group(1)] = cur_subnote
+                dictsubnote[m.group(1)] = SubNote(head=m.group(2), body=bookref.split(m.group(3)))
                 continue
         elif one.name == "br":
             pass
@@ -56,7 +53,7 @@ class NoteNotMatch(Exception):
 
 
 def match_key(num, text, notes=None):
-    notes = notes or _data
+    notes = notes or _global_notes
     for subnum, subnote in notes[num]:
         if re.match(subnote.head, text) or re.match(subnote.body, text):
             return num, subnum
@@ -64,4 +61,4 @@ def match_key(num, text, notes=None):
 
 
 def get():
-    return _data
+    return _global_notes
