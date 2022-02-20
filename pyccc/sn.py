@@ -1,6 +1,5 @@
 import os
 import re
-import typing
 import pickle
 
 from public import BaseInfo, PianInfo, PinInfo
@@ -10,14 +9,10 @@ from tools import get_sutta_urls
 
 import pyccc.note
 
-import utils
-import bookref
+from . import utils
 
 # from jinja2 import Template
 # from mako.template import Template
-from string import Template
-
-from pylatex.utils import escape_latex as el
 
 HTML_INDEX = '/SN/index.htm'
 
@@ -166,7 +161,7 @@ def make_nikaya(sutta_urls):
     nikaya.abbreviation = 'SN'
 
     for url in sutta_urls:
-        omage_listline, head_line_list, sutta_name_line, body_listline_list, local_note_dict, \
+        omage_listline, head_line_list, sutta_name_line, body_listline_list, local_notes, \
             pali_text, last_modified = pyccc.utils.read_page(url)
 
         if nikaya.last_modified is None:
@@ -222,7 +217,7 @@ def make_nikaya(sutta_urls):
 
         sutta.body_listline_list = body_listline_list
 
-        sutta.local_note_dict = local_note_dict
+        sutta.local_notes = local_notes
 
         sutta.last_modified = last_modified
 
@@ -264,95 +259,6 @@ def load(domain):
             pickle.dump(_nikaya, wf)
 
 
-def to_latex(latex_io: typing.TextIO, bibtex_io: typing.TextIO, translate_fun=None):
-
-    _head_t = open(os.path.join(utils.PROJECT_ROOT, "latex", "head.tex"), "r").read()
-    strdate = utils.lm_to_strdate(_nikaya.last_modified)
-    _head = Template(_head_t).substitute(date=strdate, bib_path="sn_tc_notes.bib")
-    latex_io.write(_head)
-
-    book_local_note_dict = {}
-    next_local_key = 1
-    for pian in _nikaya.pians:
-        latex_io.write("\\bookmarksetup{open=true}\n")
-        latex_io.write("\\part{{{} ({}-{})}}\n".format(pian.title,
-                                                       pian.xiangyings[0].serial,
-                                                       pian.xiangyings[-1].serial))
-
-        for xiangying in pian.xiangyings:
-            latex_io.write("\\bookmarksetup{open=false}\n")
-            latex_io.write("\\chapter{{{}. {}}}\n".format(xiangying.serial, xiangying.title))
-
-            for pin in xiangying.pins:
-                if pin.title is not None:
-                    latex_io.write("\\section{{{} ({}-{})}}\n".format(pin.title,
-                                                                      pin.suttas[0].serial_start,
-                                                                      pin.suttas[-1].serial_end))
-
-                for sutta in pin.suttas:
-                    latex_io.write("\\subsection{{{}. {}}}\n".format(sutta.serial, sutta.title))
-                    for body_listline in sutta.body_listline_list:
-                        for e in body_listline:
-                            if isinstance(e, str):
-                                latex_io.write(el(e))
-                            elif isinstance(e, utils.TextNeedNote):
-                                tnd = e
-                                if tnd.get_type() == utils.GLOBAL:
-                                    note_key = tnd.get_number()
-                                else:
-                                    assert tnd.get_type() == utils.LOCAL
-                                    note_key = LOCAL_NOTE_KEY_PREFIX + str(next_local_key)
-                                    book_local_note_dict[note_key] = sutta.local_note_dict[tnd.get_number()]
-                                    next_local_key += 1
-
-                                latex_io.write("{}\\mycite{{{}}}".format(el(tnd.get_text()), note_key))
-
-                            elif isinstance(e, utils.Href):
-                                latex_io.write("\\href{{{}}}{{{}}}".format(el(e.href),
-                                                                           el(e.text)))
-                            else:
-                                raise Exception("WTH?")
-                        latex_io.write("\n\n")
-
-    _tail = open(os.path.join(utils.PROJECT_ROOT, "latex", "tail.tex"), "r").read()
-    latex_io.write(_tail)
-
-    local_note_bibtex_string = notes_to_bibtex(book_local_note_dict)
-    bibtex_io.write(local_note_bibtex_string)
-
-    global_note_bibtex_string = notes_to_bibtex(pyccc.note.get())
-    bibtex_io.write(global_note_bibtex_string)
 
 
-def notes_to_bibtex(notes):
-    from pybtex.database import BibliographyData, Entry
-    s = ""
-    for citekey, listline_list in notes.items():
-        bib_data = BibliographyData(
-            {
-                citekey: Entry("misc", [
-                    ("note", note_to_latex(listline_list))
-                ])
-            }
-        )
-        s += bib_data.to_string("bibtex")
-        s += "\n"
-    return s
 
-
-def note_to_latex(listline_list: iter, trans=None):
-    t = trans or utils.no_translate
-    elted_line = []
-    for listline in listline_list:
-        strline = ""
-        for e in listline:
-            if isinstance(e, str):
-                strline += el(t(e))
-            elif isinstance(e, bookref.BookRef):
-                strline += e.get_latex_str(BN)
-            else:
-                assert isinstance(e, utils.Href)
-                strline += "\\href{{{}}}{{{}}}".format(e.href, el(t(e.text)))
-        elted_line.append(strline)
-
-    return "\\par\n".join(elted_line)

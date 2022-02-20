@@ -2,11 +2,12 @@ import re
 import os
 import bs4
 import requests
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urljoin
 
 from dateutil.parser import parse as parsedate
 
 import pyccc.note
+import pyccc.bookref
 
 PROJECT_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 CACHE_DIR = os.path.abspath(os.path.join(PROJECT_ROOT, "cache"))
@@ -17,23 +18,6 @@ CCC_WEBSITE = "https://agama.buddhason.org"
 
 class AnalyseError(Exception):
     pass
-
-
-class LocalNote(object):
-    """
-    <span id="note1">「為了智與持念的程度」(ñāṇamattāya paṭissatimattāya)，智髻比丘長老英譯為「為僅夠的理解與深切注意」
-    """
-
-    def __init__(self, type_, number, note):
-        self._type = type_
-        self._number = number
-        self._note = note
-
-    def __repr__(self):
-        return (f'{self.__class__.__name__}('
-                f'type_={self._type!r}, '
-                f'number={self._number!r}, '
-                f'note={self._note!r})')
 
 
 LOCAL = "LOCAL"
@@ -48,19 +32,25 @@ no_translate = _no_translate
 
 
 class Href(object):
-    def __init__(self, text, href, target):
+    def __init__(self, text, href, base_url_path, target):
         self.text = text
         self.href = href
+        self.base_url_path = base_url_path
         self.target = target
 
     def __repr__(self):
         return (f'{self.__class__.__name__}('
                 f'text={self.text!r}, '
                 f'href={self.href!r}, '
+                f'base={self.base_url_path!r}, '
                 f'target={self.target!r})')
 
+    def to_latex(self):
+        url = urljoin(CCC_WEBSITE, urljoin(self.base_url_path, self.href))
+        return "\\cccref{" + url + "}{" + self.text + "}"
 
-class TextNeedNote(object):
+
+class TextWithNoteRef(object):
     """<a onmouseover="note(this,1);">像這樣被我聽聞</a>"""
 
     def __init__(self, text, type_, key):
@@ -98,6 +88,7 @@ def read_page(url):
 
     soup, last_modified = read_url(url)
 
+    # 巴利经文
     pali_doc = soup.find("div", {"class": "pali"})
 
     homage_head_listline_list = None
@@ -108,27 +99,30 @@ def read_page(url):
     local_notes = {}
     local_notes_keys = []  # 检查 bug 用
 
+    # 本地notes
     comp_doc = soup.find("div", {"class": "comp"})
     if comp_doc is not None:
         note_docs = comp_doc.find_all("span", {"id": True})
         for x in note_docs:
             key = re.match(r"^note(\d+)$", x["id"]).group(1)
-            if key in local_notes.keys():
-                ccc_bug(WARNING, url_path, "本地注解 KEY 冲突，key: {}, 自动加1，不知对错".format(key))
-                key = str(int(key) + 1)
+            # if key in local_notes.keys():
+            #    ccc_bug(WARNING, url_path, "本地注解 KEY 冲突，key: {}, 自动加1，不知对错".format(key))
+            #    key = str(int(key) + 1)
 
-            n = pyccc.note.separate(x.contents)
+            n = pyccc.note.separate(x.contents, base_url=url_path)
             if n:
                 local_notes[key] = n
 
+    # 汉译经文
     div_nikaya_tag = soup.find("div", {"class": "nikaya"})
     for x in div_nikaya_tag.contents:
         if isinstance(x, bs4.element.NavigableString):
-            s = "".join(x.get_text().splitlines())
+            # s = "".join(x.get_text().splitlines())
+            ss = pyccc.bookref.split_str(x.get_text())
             if is_sutta_name_line_passed:
-                current_line.append(s)
+                current_line.extend(ss)
             else:
-                sutta_name_line += s
+                sutta_name_line += x.get_text()
             continue
 
         if isinstance(x, bs4.element.Tag):
@@ -158,18 +152,30 @@ def read_page(url):
                         break
 
                 if m.group(1) == "note":
-                    tnn = TextNeedNote(text=x.get_text(), key=pyccc.note.match_key(m.group(2), x.get_text()),
-                                       type_=GLOBAL)
-                    current_line.append(tnn)
+                    # ccc注解关键字不同 sn0033
+                    if x.get_text() == "如法所得的":
+                        _text = "如法的如法所得"
+                    elif x.get_text() == "持最後身者":
+                        _text = "持有最後身者"
+
+                    elif x.get_text() == "已現正覺":
+                        _text = "(已)現正覺"
+                    else:
+                        _text = x.get_text()
+
+                    twnf = TextWithNoteRef(text=x.get_text(), key=pyccc.note.match_key(m.group(2), _text),
+                                           type_=GLOBAL)
+                    current_line.append(twnf)
 
                 elif m.group(1) == "local":
 
                     try:
                         key = pyccc.note.match_key(m.group(2), x.get_text(), local_notes)
-                        tnn = TextNeedNote(text=x.get_text(), key=key, type_=LOCAL)
+                        twnf = TextWithNoteRef(text=x.get_text(), key=key, type_=LOCAL)
                         local_notes_keys.append(key)
-                        current_line.append(tnn)
+                        current_line.append(twnf)
                     except pyccc.note.NoteNotMatch:
+                        ccc_bug(WARNING, url, "找不到本地注解：{}".format(m.group(2)))
                         current_line.append(x.get_text())
 
             # for CCC 原始 BUG
@@ -177,17 +183,12 @@ def read_page(url):
                 current_line.append(x.get_text())
             # for checking
             elif x.name == "a" and "href" in x.attrs.keys():
-                current_line.append(Href(text=x.get_text(), href=x["href"], target=x["target"]))
+                current_line.append(Href(text=x.get_text(), href=x["href"], base_url_path=url_path, target=x["target"]))
             elif x.name == "div" and x["style"] == "display: none":  # for CCC BUG， SN.46.43
                 ccc_bug(INFO, url_path, "needless tag: " + str(x))
                 continue
             else:
                 raise Exception("不能识别的Tag: {}; URL: {}".format(x, url))
-
-    # 检查本地注解key 是否相同：
-    no_note_keys = set(local_notes_keys) - set(local_notes.keys())
-    if no_note_keys:
-        ccc_bug(WARNING, url, "丢失note：{}".format(list(no_note_keys)))
 
     assert homage_head_listline_list is not None
     assert sutta_name_line is not None
@@ -232,7 +233,7 @@ def listline_list_to_line_list(lsline_list):
         for s in lsline:
             if isinstance(s, str):
                 line += s
-            elif isinstance(s, TextNeedNote):
+            elif isinstance(s, TextWithNoteRef):
                 line += s.get_text()
             else:
                 raise TypeError("Something Wrong!")

@@ -35,11 +35,11 @@ class BookRef(object):
         elif self._pattern in (P_MI, P_NI, P_PS):
             return "{}/{}/{}{}.htm".format(utils.CCC_WEBSITE, self._BN, self._BN, self._num)
 
-    def get_latex_str(self, bookname):
+    def to_latex(self, bookname):
         if bookname == self._BN:
-            return "\\inbooklink{" + self.get_text() + "}"
+            return "\\inbookref{" + self.get_text() + "}"
         else:
-            return "\\ccclink{" + self.get_cccurl() + "}{" + self.get_text() + "}"
+            return "\\cccref{" + self.get_cccurl() + "}{" + self.get_text() + "}"
 
     def __repr__(self):
         return (f'{self.__class__.__name__}('
@@ -56,7 +56,7 @@ def get_bookref(y):
     assert Exception
 
 
-def split(s):
+def split_str(s: str):
     # "[some text SN.1.1, AN.2.1 some text]"
     list_s = []
     offset = 0
@@ -69,3 +69,15 @@ def split(s):
         list_s.append(s[offset:])
 
     return list_s
+
+
+def join_to_latex(liststr: list, bn: str):
+    s = ""
+    for x in liststr:
+        if isinstance(x, str):
+            s += x
+        elif isinstance(x, BookRef):
+            s += x.to_latex(bn)
+        else:
+            assert Exception("What?")
+    return s

@@ -1,12 +1,14 @@
 \documentclass[a4paper,12pt]{book}
 \usepackage{hyperref}
 \usepackage{lipsum}
+
 \makeatletter
  \newcommand{\linkdest}[1]{\Hy@raisedlink{\hypertarget{#1}{}}}
 \makeatother
 
 \begin{document}
-  bbb\linkdest{123}bbb \\
+  \section{SSS}\label{sec:sn.1.1}
+  %\linkdest{note.999.1}bbb \\
  \lipsum[1]
 
  Here are targets created
@@ -19,6 +21,6 @@
 
 
  \lipsum[1-10]
- aaa \hyperlink{123} aaa
+ aaa \ref{sec:sn.1.1}{ccc}xxxx \ref
 \lipsum[1]
 \end{document}

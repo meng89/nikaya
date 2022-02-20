@@ -36,16 +36,12 @@
 
 
 \newenvironment{EnvNote}[1]{\newcommand{\notenum}{#1} \begin{description}
-
-\newcommand{\booktype}{ebook}
-\item
 }{\end{description}}
 
 
 \newcommand
 
 \newcommand{\subnote}[3][]{
-\ifc
   \ifthenelse{\isempty{#1}}
     {\item[#2]  #3}
     {\item[{\textit#1}#2] #3}

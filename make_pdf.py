@@ -3,6 +3,7 @@ import os
 import subprocess
 import pathlib
 
+import pyccc.ebook.sn_latex
 import run_ccc
 import pyccc.note
 from pyccc import sn
@@ -46,11 +47,8 @@ def main():
     out_td = tempfile.TemporaryDirectory()
     tex_filename = "sn_tc.tex"
     tex_file = open(work_td.name + "/" + tex_filename, "w")
-    bib_filename = "sn_tc_notes.bib"
-    bib_file = open(work_td.name + "/" + bib_filename, "w")
-    sn.to_latex(tex_file, bib_file)
+    pyccc.ebook.sn_latex.to_latex(tex_file)
     tex_file.close()
-    bib_file.close()
 
     def print_dir():
         print("work dir: {}".format(work_td.name))
