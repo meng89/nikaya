@@ -104,7 +104,7 @@ def read_page(url):
         note_docs = comp_doc.find_all("span", {"id": True})
         for e in note_docs:
             key = re.match(r"^note(\d+)$", e["id"]).group(1)
-            n = pyccc.note.separate(e.contents, base_url=url_path)
+            n = pyccc.note.separate(contents=e.contents, url_path=url_path, local_notes=local_notes)
             if n:
                 local_notes[key] = n
 
@@ -136,7 +136,7 @@ def read_page(url):
                 current_line.append(e.get_text())
 
             elif e.name == "a" and "onmouseover" in e.attrs.keys():
-                current_line.append(do_onmouseover(e, local_notes, url_path))
+                current_line.append(do_onmouseover(e, url_path, local_notes))
 
             # for CCC 原始 BUG
             elif e.name == "span" and e["class"] == ["sutra_name"] and e.get_text() == "相應部12相應83-93經/學經等（中略）十一則":
@@ -204,14 +204,14 @@ def do_href(e, url_path):
     return Href(text=e.get_text(), href=e["href"], base_url_path=url_path, target=e["target"])
 
 
-def do_onmouseover(e, local_notes, url):
+def do_onmouseover(e, url_path, local_notes):
     x = None
-    m = re.match(r"^(note|local)\(this,(\d+)\);$", e["onmouserver"])
+    m = re.match(r"^(note|local)\(this,(\d+)\);$", e["onmouseover"])
     if m.group(1) == "note":
         try:
             x = TextWithNoteRef(text=e.get_text(), key=pyccc.note.match_key(m.group(2), e.get_text()), type_=GLOBAL)
         except pyccc.note.NoteNotMatch:
-            ccc_bug(WARNING, url, "经文辞汇\"{}\"未匹配全局注解编号\"{}\"".format(e.get_text(), m.group(2)))
+            ccc_bug(WARNING, url_path, "辞汇 \"{}\" 未匹配全局注解编号 \"{}\"".format(e.get_text(), m.group(2)))
             x = TextWithNoteRef(text=e.get_text(), key=(m.group(2), list(pyccc.note.get().keys())[0]), type_=GLOBAL)
 
     elif m.group(1) == "local":
@@ -219,7 +219,8 @@ def do_onmouseover(e, local_notes, url):
             key = pyccc.note.match_key(m.group(2), e.get_text(), local_notes)
             x = TextWithNoteRef(text=e.get_text(), key=key, type_=LOCAL)
         except pyccc.note.NoteNotMatch:
-            ccc_bug(WARNING, url, "找不到本地注解：{}".format(m.group(2)))
-            x = e.get_text()
+            ccc_bug(WARNING, url_path, "辞汇 \"{}\" 未匹配全局注解编号 \"{}\"".format(e.get_text(), m.group(2)))
+            x = TextWithNoteRef(text=e.get_text(), key=(m.group(2), list(local_notes.keys())[0]), type_=LOCAL)
+            # x = e.get_text()
 
     return x

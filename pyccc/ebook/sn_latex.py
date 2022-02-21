@@ -6,19 +6,20 @@ from pylatex import escape_latex as el
 
 import pyccc.sn
 from pyccc import utils, bookref
-from pyccc.sn import _nikaya, LOCAL_NOTE_KEY_PREFIX, BN
+from pyccc.sn import LOCAL_NOTE_KEY_PREFIX, BN
 
 
 def to_latex(latex_io: typing.TextIO, translate_fun=None):
+    nikaya = pyccc.sn.get()
 
     _head_t = open(os.path.join(utils.PROJECT_ROOT, "latex", "head2.tex"), "r").read()
-    strdate = utils.lm_to_strdate(_nikaya.last_modified)
+    strdate = utils.lm_to_strdate(nikaya.last_modified)
     _head = Template(_head_t).substitute(date=strdate)
     latex_io.write(_head)
 
     book_local_notes = {}
     next_local_key = 1
-    for pian in _nikaya.pians:
+    for pian in nikaya.pians:
         latex_io.write("\\bookmarksetup{open=true}\n")
         latex_io.write("\\part{{{} ({}-{})}}\n".format(pian.title,
                                                        pian.xiangyings[0].serial,
@@ -79,6 +80,3 @@ def notes_to_latex(notes, latex_io: typing.TextIO, bookname, trans=None):
                                                               bookref.join_to_latex(subnote.body, bookname)))
 
         latex_io.write("\\end{EvnNote}\n")
-
-
-

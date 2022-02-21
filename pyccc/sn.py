@@ -74,6 +74,7 @@ class Pin(Node):
 
 
 _nikaya = MyNikaya()
+_is_loaded = False
 
 
 def analyse_head(lines):  # public
@@ -258,7 +259,13 @@ def load(domain):
         with open(data_path, "wb") as wf:
             pickle.dump(_nikaya, wf)
 
+    global _is_loaded
+    _is_loaded = True
 
 
-
+def get():
+    if _is_loaded:
+        return _nikaya
+    else:
+        raise Exception
 

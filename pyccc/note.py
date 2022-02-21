@@ -31,14 +31,14 @@ def load_global(domain: str):
 
         for div in soup.find_all(name="div", attrs={"id": True}):
             note_no = re.match(r"^div(\d+)$", div["id"]).group(1)
-            _global_notes[note_no] = separate(div.contents, base_url)
+            _global_notes[note_no] = separate(div.contents, base_url, {})
 
 
-def separate(contents, base_url):
+def separate(contents, url_path, local_notes):
     note = {}
     subkey = None
     subnote = SubNote(head=None, body=[])
-    listline=[]
+    listline = []
     for e in contents:
         if isinstance(e, bs4.element.NavigableString) and subnote.body == []:
             text = e.get_text()
@@ -62,8 +62,7 @@ def separate(contents, base_url):
             subnote.body.extend(bookref.split_str(e.get_text()))
 
         elif e.name == "a" and "href" in e.attrs.keys():
-            subnote.body.append(utils.Href(text=e.get_text(), href=e["href"], base_url_path=base_url,
-                                           target=e["target"]))
+            subnote.body.append(pyccc.utils.do_href(e, url_path))
 
         elif e.name == "br":
             note[subkey] = subnote
@@ -71,6 +70,7 @@ def separate(contents, base_url):
             subnote = SubNote(head=None, body=[])
 
         elif e.name == "a" and "onmouseover" in e.attrs.keys():
+            subnote.body.append(pyccc.utils.do_onmouseover(e, local_notes, url_path))
 
         else:
             raise TypeError(str(e))
