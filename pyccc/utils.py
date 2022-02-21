@@ -97,98 +97,57 @@ def read_page(url):
     is_sutta_name_line_passed = True
     current_line = []
     local_notes = {}
-    local_notes_keys = []  # 检查 bug 用
 
     # 本地notes
     comp_doc = soup.find("div", {"class": "comp"})
     if comp_doc is not None:
         note_docs = comp_doc.find_all("span", {"id": True})
-        for x in note_docs:
-            key = re.match(r"^note(\d+)$", x["id"]).group(1)
-            # if key in local_notes.keys():
-            #    ccc_bug(WARNING, url_path, "本地注解 KEY 冲突，key: {}, 自动加1，不知对错".format(key))
-            #    key = str(int(key) + 1)
-
-            n = pyccc.note.separate(x.contents, base_url=url_path)
+        for e in note_docs:
+            key = re.match(r"^note(\d+)$", e["id"]).group(1)
+            n = pyccc.note.separate(e.contents, base_url=url_path)
             if n:
                 local_notes[key] = n
 
     # 汉译经文
     div_nikaya_tag = soup.find("div", {"class": "nikaya"})
-    for x in div_nikaya_tag.contents:
-        if isinstance(x, bs4.element.NavigableString):
-            # s = "".join(x.get_text().splitlines())
-            ss = pyccc.bookref.split_str(x.get_text())
+    for e in div_nikaya_tag.contents:
+        if isinstance(e, bs4.element.NavigableString):
+            ss = pyccc.bookref.split_str(e.get_text())
             if is_sutta_name_line_passed:
                 current_line.extend(ss)
             else:
-                sutta_name_line += x.get_text()
+                sutta_name_line += e.get_text()
             continue
 
-        if isinstance(x, bs4.element.Tag):
-            _onmouseover = "onmouseover"  # for CCC BUG
-            _nmouseover = "nmouseover"  # for CCC BUG
-
-            if x.name == "span" and x["class"] == ["sutra_name"] and sutta_name_line is None:
-                sutta_name_line = x.get_text()
+        if isinstance(e, bs4.element.Tag):
+            if e.name == "span" and e["class"] == ["sutra_name"] and sutta_name_line is None:
+                sutta_name_line = e.get_text()
                 is_sutta_name_line_passed = False
                 homage_head_listline_list = body_listline_list
                 body_listline_list = []
 
-            elif x.name == "br":
+            elif e.name == "br":
                 is_sutta_name_line_passed = True
                 if current_line:
                     body_listline_list.append(current_line)
                     current_line = []
 
-            # elif x.name == "a" and x["onmouseover"] is not None:
-            elif x.name == "a" and (_onmouseover in x.attrs.keys() or _nmouseover in x.attrs.keys()):
-                m = None
-                for xmouserver in (_onmouseover, _nmouseover):
-                    if xmouserver in x.attrs.keys():
-                        m = re.match(r"^(note|local)\(this,(\d+)\);$", x[xmouserver])
-                        if xmouserver == "nmouseover":  # for CCC BUG
-                            ccc_bug(WARNING, url_path, "not onmouseover:" + str(x))
-                        break
+            elif e.name == "a" and "nmouseover" in e.attrs.keys():  # ccc bug
+                current_line.append(e.get_text())
 
-                if m.group(1) == "note":
-                    # ccc注解关键字不同 sn0033
-                    if x.get_text() == "如法所得的":
-                        _text = "如法的如法所得"
-                    elif x.get_text() == "持最後身者":
-                        _text = "持有最後身者"
-
-                    elif x.get_text() == "已現正覺":
-                        _text = "(已)現正覺"
-                    else:
-                        _text = x.get_text()
-
-                    twnf = TextWithNoteRef(text=x.get_text(), key=pyccc.note.match_key(m.group(2), _text),
-                                           type_=GLOBAL)
-                    current_line.append(twnf)
-
-                elif m.group(1) == "local":
-
-                    try:
-                        key = pyccc.note.match_key(m.group(2), x.get_text(), local_notes)
-                        twnf = TextWithNoteRef(text=x.get_text(), key=key, type_=LOCAL)
-                        local_notes_keys.append(key)
-                        current_line.append(twnf)
-                    except pyccc.note.NoteNotMatch:
-                        ccc_bug(WARNING, url, "找不到本地注解：{}".format(m.group(2)))
-                        current_line.append(x.get_text())
+            elif e.name == "a" and "onmouseover" in e.attrs.keys():
+                current_line.append(do_onmouseover(e, local_notes, url_path))
 
             # for CCC 原始 BUG
-            elif x.name == "span" and x["class"] == ["sutra_name"] and x.get_text() == "相應部12相應83-93經/學經等（中略）十一則":
-                current_line.append(x.get_text())
+            elif e.name == "span" and e["class"] == ["sutra_name"] and e.get_text() == "相應部12相應83-93經/學經等（中略）十一則":
+                current_line.append(e.get_text())
             # for checking
-            elif x.name == "a" and "href" in x.attrs.keys():
-                current_line.append(Href(text=x.get_text(), href=x["href"], base_url_path=url_path, target=x["target"]))
-            elif x.name == "div" and x["style"] == "display: none":  # for CCC BUG， SN.46.43
-                ccc_bug(INFO, url_path, "needless tag: " + str(x))
-                continue
+            elif e.name == "a" and "href" in e.attrs.keys():
+                current_line.append(do_href(e, url_path))
+            elif e.name == "div" and e["style"] == "display: none":  # for CCC BUG， SN.46.43
+                pass
             else:
-                raise Exception("不能识别的Tag: {}; URL: {}".format(x, url))
+                raise Exception("不能识别的Tag: {}; URL: {}".format(e, url))
 
     assert homage_head_listline_list is not None
     assert sutta_name_line is not None
@@ -239,3 +198,28 @@ def listline_list_to_line_list(lsline_list):
                 raise TypeError("Something Wrong!")
         lines.append(line)
     return lines
+
+
+def do_href(e, url_path):
+    return Href(text=e.get_text(), href=e["href"], base_url_path=url_path, target=e["target"])
+
+
+def do_onmouseover(e, local_notes, url):
+    x = None
+    m = re.match(r"^(note|local)\(this,(\d+)\);$", e["onmouserver"])
+    if m.group(1) == "note":
+        try:
+            x = TextWithNoteRef(text=e.get_text(), key=pyccc.note.match_key(m.group(2), e.get_text()), type_=GLOBAL)
+        except pyccc.note.NoteNotMatch:
+            ccc_bug(WARNING, url, "经文辞汇\"{}\"未匹配全局注解编号\"{}\"".format(e.get_text(), m.group(2)))
+            x = TextWithNoteRef(text=e.get_text(), key=(m.group(2), list(pyccc.note.get().keys())[0]), type_=GLOBAL)
+
+    elif m.group(1) == "local":
+        try:
+            key = pyccc.note.match_key(m.group(2), e.get_text(), local_notes)
+            x = TextWithNoteRef(text=e.get_text(), key=key, type_=LOCAL)
+        except pyccc.note.NoteNotMatch:
+            ccc_bug(WARNING, url, "找不到本地注解：{}".format(m.group(2)))
+            x = e.get_text()
+
+    return x

@@ -38,6 +38,7 @@ def separate(contents, base_url):
     note = {}
     subkey = None
     subnote = SubNote(head=None, body=[])
+    listline=[]
     for e in contents:
         if isinstance(e, bs4.element.NavigableString) and subnote.body == []:
             text = e.get_text()
@@ -61,24 +62,22 @@ def separate(contents, base_url):
             subnote.body.extend(bookref.split_str(e.get_text()))
 
         elif e.name == "a" and "href" in e.attrs.keys():
-            print("heheh\n")
-            input(subnote.body)
-            subnote.body.append(utils.Href(text=e.get_text(), href=e["href"], base=base_url, target=e["target"]))
-            input(subnote.body)
-            print("end hehe")
+            subnote.body.append(utils.Href(text=e.get_text(), href=e["href"], base_url_path=base_url,
+                                           target=e["target"]))
 
         elif e.name == "br":
             note[subkey] = subnote
             subkey = None
             subnote = SubNote(head=None, body=[])
+
+        elif e.name == "a" and "onmouseover" in e.attrs.keys():
+
         else:
-            raise TypeError
+            raise TypeError(str(e))
 
     if subnote.body:
         note[subkey] = subnote
 
-    print()
-    input(note)
     return note
 
 
@@ -98,7 +97,6 @@ def match_key(num, text, notes=None):
         if (subnote.head is not None and text in subnote.head) or _in_list(text, subnote.body):
             return num, subnum
 
-    input((num, text, _notes[num], notes))
     raise NoteNotMatch((num, text))
 
 
@@ -106,11 +104,9 @@ def _in_list(text, body):
     for e in body:
         if isinstance(e, pyccc.bookref.BookRef):
             continue
-        result = text in e
-        if result:
-            return result
-        # else: continue
-    return None
+        if text in e:
+            return True
+    return False
 
 
 def get():
