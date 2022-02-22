@@ -7,7 +7,7 @@ from pylatex import escape_latex as el
 import pyccc.sn
 import pyccc.note
 from pyccc import utils, bookref
-from pyccc.sn import LOCAL_NOTE_KEY_PREFIX, BN
+from pyccc.sn import BN
 
 
 def to_latex(latex_io: typing.TextIO, translate_fun=None):
@@ -46,50 +46,49 @@ def to_latex(latex_io: typing.TextIO, translate_fun=None):
                                 latex_io.write(el(e))
                             elif isinstance(e, utils.TextWithNoteRef):
                                 twnr = e
+                                (_notekey, subnotekey) = twnr.get_number()
                                 if twnr.get_type() == utils.GLOBAL:
-                                    (notenum, subnotenum) = twnr.get_number()
-                                    latex_dest = "note.{}.{}".format(notenum, subnotenum)
+                                    notekey = _notekey
+                                # twnr.get_type() == utils.LOCAL:
                                 else:
-                                    assert twnr.get_type() == utils.LOCAL
-                                    (notenum, subnotenum) = twnr.get_number()
-                                    note_key = LOCAL_NOTE_KEY_PREFIX + str(next_local_key)
-                                    latex_dest = "note.{}.{}".format(note_key, subnotenum)
-                                    try:
-                                        book_local_notes[note_key] = sutta.local_notes[notenum]
-                                    except KeyError:
-                                        print(pian.serial, sutta.serial_start, note_key, notenum)
-                                        exit()
+                                    notekey = str(next_local_key)
+                                    book_local_notes[notekey] = sutta.local_notes[notekey]
                                     next_local_key += 1
 
-                                latex_io.write("\\twnr{{{}}}{{{}}}".format(el(twnr.get_text()), latex_dest))
+                                latex_io.write("\\twnr"
+                                               "{" + el(twnr.get_text()) + "}"
+                                               "{" + note_label(twnr.type_, notekey, subnotekey) + "}")
 
                             elif isinstance(e, bookref.BookRef):
                                 latex_io.write(e.to_latex(BN))
 
                             elif isinstance(e, utils.Href):
-                                latex_io.write("\\href{{{}}}{{{}}}".format(el(e.href), el(e.text)))
+                                latex_io.write("\\href"
+                                               "{" + el(e.href) + "}"
+                                               "{" + el(e.text) + "}")
                             else:
-                                raise Exception("What?")
+                                raise Exception
                         latex_io.write("\n\n")
 
-    notes_to_latex(book_local_notes, latex_io, BN)
-    notes_to_latex(pyccc.note.get(), latex_io, BN)
+    notes_to_latex(pyccc.utils.LOCAL, book_local_notes, latex_io, BN)
+    notes_to_latex(pyccc.utils.GLOBAL, pyccc.note.get(), latex_io, BN)
     _tail = open(os.path.join(utils.PROJECT_ROOT, "latex", "tail.tex"), "r").read()
     latex_io.write(_tail)
 
 
-def notes_to_latex(notes, latex_io: typing.TextIO, bookname, trans=None):
+def notes_to_latex(type_, notes, latex_io: typing.TextIO, bookname, trans=None):
     t = trans or utils.no_translate
     for notekey, note in notes.items():
         latex_io.write("\\begin{EnvNote}\n")
-        for subnotesum, subnote in note.items():
-            latex_io.write("\\subnote"
-                           "{" +  + "}") # label
-            latex_io.write("  \\subnote{{{}}}{{{}}}\n".format(subnote.head,
-                                                              bookref.join_to_latex(subnote.body, bookname)))
+        for subnotekey, subnote in note.items():
+            latex_io.write("    \\subnote"
+                           "{" + note_label(type_, notekey, subnotekey) + "}" 
+                           "{" + subnotekey + "}"
+                           "{" + subnote.head + "}"
+                           "{" + bookref.join_to_latex(subnote.body, bookname) + "}")
 
         latex_io.write("\\end{EvnNote}\n")
 
 
-def label_str(type_, notekey, subnotekey):
-    return "jbm"
+def note_label(type_, notekey, subnotekey):
+    return ("" if type_ == pyccc.utils.GLOBAL else pyccc.latex.LOCAL_NOTE_KEY_PREFIX) + notekey + "." + subnotekey

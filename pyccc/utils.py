@@ -54,24 +54,24 @@ class TextWithNoteRef(object):
     """<a onmouseover="note(this,1);">像這樣被我聽聞</a>"""
 
     def __init__(self, text, type_, key):
-        self._text = text
-        self._type = type_
-        self._key = key
+        self.text = text
+        self.type_ = type_
+        self.key = key
 
     def __repr__(self):
         return (f'{self.__class__.__name__}('
-                f'text={self._text!r}, '
-                f'type_={self._type!r}, '
-                f'number={self._key!r})')
+                f'text={self.text!r}, '
+                f'type_={self.type_!r}, '
+                f'number={self.key!r})')
 
     def get_text(self):
-        return self._text
+        return self.text
 
     def get_type(self):
-        return self._type
+        return self.type_
 
     def get_number(self):
-        return self._key
+        return self.key
 
 
 WARNING = "WARNING"

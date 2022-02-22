@@ -3,7 +3,7 @@ import os
 import subprocess
 import pathlib
 
-import pyccc.ebook.sn_latex
+import pyccc.latex.sn_latex
 import run_ccc
 import pyccc.note
 from pyccc import sn
