@@ -207,20 +207,24 @@ def do_href(e, url_path):
 def do_onmouseover(e, url_path, local_notes):
     x = None
     m = re.match(r"^(note|local)\(this,(\d+)\);$", e["onmouseover"])
+    noteid = m.group(2)
     if m.group(1) == "note":
         try:
-            x = TextWithNoteRef(text=e.get_text(), key=pyccc.note.match_key(m.group(2), e.get_text()), type_=GLOBAL)
+            x = TextWithNoteRef(text=e.get_text(), key=pyccc.note.match_key(noteid, e.get_text()), type_=GLOBAL)
         except pyccc.note.NoteNotMatch:
-            ccc_bug(WARNING, url_path, "辞汇 \"{}\" 未匹配全局注解编号 \"{}\"".format(e.get_text(), m.group(2)))
-            x = TextWithNoteRef(text=e.get_text(), key=(m.group(2), list(pyccc.note.get().keys())[0]), type_=GLOBAL)
+            ccc_bug(WARNING, url_path, "辞汇 \"{}\" 未匹配全局注解编号 \"{}\"".format(e.get_text(), noteid))
+            x = TextWithNoteRef(text=e.get_text(), key=(noteid, list(pyccc.note.get()[noteid].keys())[0]), type_=GLOBAL)
 
     elif m.group(1) == "local":
         try:
-            key = pyccc.note.match_key(m.group(2), e.get_text(), local_notes)
+            key = pyccc.note.match_key(noteid, e.get_text(), local_notes)
             x = TextWithNoteRef(text=e.get_text(), key=key, type_=LOCAL)
         except pyccc.note.NoteNotMatch:
-            ccc_bug(WARNING, url_path, "辞汇 \"{}\" 未匹配全局注解编号 \"{}\"".format(e.get_text(), m.group(2)))
-            x = TextWithNoteRef(text=e.get_text(), key=(m.group(2), list(local_notes.keys())[0]), type_=LOCAL)
-            # x = e.get_text()
+            ccc_bug(WARNING, url_path, "辞汇 \"{}\" 未匹配本地注解编号 \"{}\"".format(e.get_text(), noteid))
+            try:
+                x = TextWithNoteRef(text=e.get_text(), key=(noteid, list(local_notes[noteid].keys())[0]), type_=LOCAL)
+            except KeyError:
+                ccc_bug(WARNING, url_path, "未找到本地注解编号 \"{}\"".format(noteid))
+                x = e.get_text()
 
     return x
