@@ -112,7 +112,7 @@ def read_page(url):
     div_nikaya_tag = soup.find("div", {"class": "nikaya"})
     for e in div_nikaya_tag.contents:
         if isinstance(e, bs4.element.NavigableString):
-            ss = pyccc.bookref.split_str(e.get_text())
+            ss = pyccc.bookref.split_str(e.get_text().strip("\n"))
             if is_sutta_name_line_passed:
                 current_line.extend(ss)
             else:

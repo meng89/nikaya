@@ -7,7 +7,8 @@
 \makeatother
 
 \begin{document}
-  \section{SSS}\label{sec:sn.1.1}
+  \section{SSS}
+  \label{sec:sn.1.1}
   %\linkdest{note.999.1}bbb \\
  \lipsum[1]
 
@@ -15,12 +16,14 @@
  \makeatletter
   \Hy@raisedlink{\hypertarget{t1}{}}directly
  \makeatother
- and \linkdest{t2}indirectly.  Here is one created by \hypertarget{t3}{}hypertarget.
+ andindirectly.  Here is one created by \hypertarget{t3}{}hypertarget.
 
- \hyperlink{t1}{Here} \hyperlink{t2}{are} \hyperlink{t3}{links}
+ \hyperlink{t1}{Here}\hyperlink{t.2}{are}\hyperlink{t3}{links}
 
+
+  aaa\linkdest{t.2}bbb
 
  \lipsum[1-10]
- aaa \ref{sec:sn.1.1}{ccc}xxxx \ref
+ aaa\ref{sec:sn.1.1}{ccc}xxxx
 \lipsum[1]
 \end{document}

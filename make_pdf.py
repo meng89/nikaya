@@ -3,7 +3,7 @@ import os
 import subprocess
 import pathlib
 
-import pyccc.latex.sn_latex
+import pyccc.pdf.sn_latex
 import run_ccc
 import pyccc.note
 from pyccc import sn
@@ -15,7 +15,6 @@ def build(work_dir, out_dir, tex_filename):
     os.makedirs(out_dir, exist_ok=True)
     compile_cmd = "lualatex -file-line-error -interaction=nonstopmode -synctex=1 -output-format=pdf" \
                   " -output-directory={} {}".format(out_dir, tex_filename)
-    biber_cmd = "biber {}/{}".format(out_dir, pathlib.Path(tex_filename).stem)
 
     print("1. run {}".format(compile_cmd))
     p = subprocess.Popen(compile_cmd, cwd=work_dir, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -23,13 +22,7 @@ def build(work_dir, out_dir, tex_filename):
     if p.returncode != 0:
         print(err.decode())
 
-    print("2. run {}".format(biber_cmd))
-    p = subprocess.Popen(biber_cmd, cwd=work_dir, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    out, err = p.communicate()
-    if p.returncode != 0:
-        print(err.decode())
-
-    print("3. run {}".format(compile_cmd))
+    print("2. run {}".format(compile_cmd))
     p = subprocess.Popen(compile_cmd, cwd=work_dir, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = p.communicate()
     if p.returncode != 0:
@@ -47,7 +40,7 @@ def main():
     out_td = tempfile.TemporaryDirectory()
     tex_filename = "sn_tc.tex"
     tex_file = open(work_td.name + "/" + tex_filename, "w")
-    pyccc.ebook.sn_latex.to_latex(tex_file)
+    pyccc.pdf.sn_latex.to_latex(tex_file)
     tex_file.close()
 
     def print_dir():

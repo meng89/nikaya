@@ -78,11 +78,8 @@ _is_loaded = False
 
 
 def analyse_head(lines):  # public
-
     info = _MyInfo()
-
     for line in lines:
-
         m = re.match(r"^\((\d)\)(\S+篇)\s*$", line)
         if m:
             info.pian_serial = m.group(1)

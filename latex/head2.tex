@@ -19,7 +19,7 @@
 
 \usepackage[doipre={doi:~}]{uri}
 
-\pdfgeninterwordspace
+%\pdfgeninterwordspace
 
 \title{相應部}
 \author{莊春江}
@@ -52,7 +52,6 @@
 
 \newfontfamily{\fontSansD}{Noto Sans}
 
-\usepackage[hyperref=true,backend=biber,backref=true,sorting=debug,style=draft]{biblatex}
 %%%\usepackage[superscript]{cite}
 
 %\usepackage{wasysym}
@@ -61,31 +60,26 @@
  \newcommand{\linkdest}[1]{\Hy@raisedlink{\hypertarget{#1}{}}}
 \makeatother
 
-% \let\realcite\cite
-% \renewcommand*{\cite}[1]{{\footnotesize\realcite{#1}}}
 
-\newcommand{\mycite}[1]{\textit{\textsuperscript {\tiny{\cite{#1}}}}}
+% \newcommand{\mycite}[1]{\textit{\textsuperscript {\tiny{\cite{#1}}}}}
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 
 \newcommand{\inbookref}[1]{\hyperref[subsec:#1]{#1}}
-\newcommand{\ccclink}[2]{\href{#1}{\underline{#2}}}
+\newcommand{\cccref}[2]{\href{#1}{\underline{#2}}}
 
-%
-\newenvironment{EnvNote}[1]{\newcommand{\notenum}{#1} \begin{description}
-}{\end{description}}
 
-\newcommand{\subnote}[3][]{
-  \ifthenelse{\isempty{#1}}
-    {\item[#2]  #3}
-    {\item[{\textit#1}#2] #3}
-}
+\newenvironment{EnvNote}{\begin{description}}{\end{description}}
+
+\newcommand{\subnote}[4]{\item[{\textit#2}#3]\linkdest{#1}#4}
+
+\newcommand{\twnr}[2]{\hyperlink{#2}{#1}}
 
 \fancypagestyle{plain}{
-\fancyhf{}
-\fancyhead{}
-\fancyfoot{}
-\renewcommand{\footrulewidth}{0pt}
-\renewcommand{\headrulewidth}{0pt}
+    \fancyhf{}
+    \fancyhead{}
+    \fancyfoot{}
+    \renewcommand{\footrulewidth}{0pt}
+    \renewcommand{\headrulewidth}{0pt}
 }
 
 % 单面 oneside
@@ -93,18 +87,17 @@
 
 
 \fancypagestyle{oneside}{
-fancyhf{}
-\rhead{}
-\lhead{\Large \jfontCoverTitle \jfontCoverTitle \leftmark}
-\lfoot{請到莊春江工作站查看最新訂正版}
-\rfoot{\Large \thepage}
-
+    \fancyhf{}
+    \rhead{}
+    \lhead{\Large \jfontCoverTitle \jfontCoverTitle \leftmark}
+    \lfoot{請到莊春江工作站查看最新訂正版}
+    \rfoot{\Large \thepage}
 }
 
 % 双面 twoside
 \renewcommand{\chaptermark}[1]{\markboth{#1}{}}
 \fancypagestyle{twoside}{
-fancyhf{}
+    \fancyhf{}
     \fancyhead[OC,EC]{\Large \jfontCoverTitle \jfontCoverTitle \leftmark} %上中
     \renewcommand{\headrulewidth}{0.4pt}
 
@@ -114,7 +107,8 @@ fancyhf{}
 
    \renewcommand{\footrulewidth}{0.4pt}
 }
-\pagestyle{twoside}
+
+\pagestyle{oneside}
 
 
 \titleformat{\part}[block]{\fontsize{50}{60}\selectfont \bfseries\centering \jfontTitle \fontTitle}{}{1em}{}[]
