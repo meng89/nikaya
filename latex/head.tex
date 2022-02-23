@@ -1,6 +1,6 @@
 % !TEX encoding = UTF-8
 % !TEX program = lualatex
-\documentclass[a4paper,12pt,twoside]{book}
+\documentclass[a4paper,12pt,oneside]{book}
 \usepackage[a4paper,width=150mm,top=25mm,bottom=25mm]{geometry}
 \usepackage[dvipsnames]{xcolor}
 \usepackage{fancyhdr}
@@ -18,6 +18,8 @@
 ]{hyperref}
 
 \usepackage[doipre={doi:~}]{uri}
+
+%\pdfgeninterwordspace
 
 \title{相應部}
 \author{莊春江}
@@ -50,48 +52,64 @@
 
 \newfontfamily{\fontSansD}{Noto Sans}
 
-\usepackage[hyperref=true,backend=biber,backref=true,sorting=debug,style=draft]{biblatex}
 %%%\usepackage[superscript]{cite}
-\AtBeginBibliography{\small}
-\usepackage{wasysym}
-%\bibliographystyle{plain}
-%\bibliographystyle{unsrt}
-\addbibresource{$bib_path}
 
-% \let\realcite\cite
-% \renewcommand*{\cite}[1]{{\footnotesize\realcite{#1}}}
+%\usepackage{wasysym}
 
-\newcommand{\mycite}[1]{\textit{\textsuperscript {\tiny{\cite{#1}}}}}
+\makeatletter
+ \newcommand{\linkdest}[1]{\Hy@raisedlink{\hypertarget{#1}{}}}
+\makeatother
+
+
+% \newcommand{\mycite}[1]{\textit{\textsuperscript {\tiny{\cite{#1}}}}}
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 
+\newcommand{\inbookref}[1]{\hyperref[subsec:#1]{#1}}
+\newcommand{\cccref}[2]{\href{#1}{\underline{#2}}}
+
+
+\newenvironment{EnvNote}{\begin{description} \small}{\end{description}}
+
+\newcommand{\subnote}[4]{\item[{\textit#2}#3]\linkdest{#1}#4}
+
+\newcommand{\twnr}[2]{\hyperlink{#2}{#1}}
+
 \fancypagestyle{plain}{
-\fancyhf{}
-\fancyhead{}
-\fancyfoot{}
-\renewcommand{\footrulewidth}{0pt}
-\renewcommand{\headrulewidth}{0pt}
+    \fancyhf{}
+    \fancyhead{}
+    \fancyfoot{}
+    \renewcommand{\footrulewidth}{0pt}
+    \renewcommand{\headrulewidth}{0pt}
 }
+
 % 单面 oneside
-%\fancyhf{}
-%\rhead{Overleaf}
-%\lhead{\partmark \chaptermark \sectionmark}
-%\lfoot{請到莊春江工作站查看最新訂正版}
-%\rfoot{\thepage}
+\fancypagestyle{oneside}{
+    \fancyhf{}
+    \lhead{\large \jfontCoverTitle \jfontCoverTitle \leftmark}
+    \chead{}
+    \rhead{}
+    \lfoot{\href{https://agama.buddhason.org/SN/}{請到莊春江工作站阅览最新訂正版}}
+    \cfoot{}
+    \rfoot{\large \emph{\thepage}}
+    \renewcommand{\headrulewidth}{0.4pt}
+    \renewcommand{\footrulewidth}{0.4pt}
+}
 
 % 双面 twoside
 \renewcommand{\chaptermark}[1]{\markboth{#1}{}}
 \fancypagestyle{twoside}{
-\fancyhf{}
+    \fancyhf{}
     \fancyhead[OC,EC]{\Large \jfontCoverTitle \jfontCoverTitle \leftmark} %上中
     \renewcommand{\headrulewidth}{0.4pt}
 
     \fancyfoot[OR,EL]{\Large \thepage}
-    \fancyfoot[OL,ER]{請到莊春江工作站查看最新訂正版}
+    \fancyfoot[OL,ER]{請到莊春江工作站阅览最新訂正版}
     \fancyfoot[OC,EC]{}
 
    \renewcommand{\footrulewidth}{0.4pt}
 }
-\pagestyle{twoside}
+
+\pagestyle{oneside}
 
 
 \titleformat{\part}[block]{\fontsize{50}{60}\selectfont \bfseries\centering \jfontTitle \fontTitle}{}{1em}{}[]
@@ -123,7 +141,7 @@
 
 {\Large 莊春江\ 譯}
 \\ \vspace{0.5em}
-{\Large 2021-12-31}
+{\Large $date}
 
 \end{center}
 \end{titlepage}

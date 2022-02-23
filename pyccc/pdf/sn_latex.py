@@ -7,13 +7,19 @@ from pylatex import escape_latex as el
 import pyccc.sn
 import pyccc.note
 from pyccc import utils, bookref
+from pyccc.pdf import note_label
 from pyccc.sn import BN
 
 
+def _empty_t(x):
+    return x
+
+
 def to_latex(latex_io: typing.TextIO, translate_fun=None):
+    t = _empty_t
     nikaya = pyccc.sn.get()
 
-    _head_t = open(os.path.join(utils.PROJECT_ROOT, "latex", "head2.tex"), "r").read()
+    _head_t = open(os.path.join(utils.PROJECT_ROOT, "latex", "head.tex"), "r").read()
     strdate = utils.lm_to_strdate(nikaya.last_modified)
     _head = Template(_head_t).substitute(date=strdate)
     latex_io.write(_head)
@@ -22,6 +28,11 @@ def to_latex(latex_io: typing.TextIO, translate_fun=None):
     next_local_key = 1
     for pian in nikaya.pians:
         latex_io.write("\\bookmarksetup{open=true}\n")
+        #latex_io.write("\\pian" +
+        #               "{" + pian.title + "}" +
+        #               "{" + pian.xiangyings[0].serial + "}" +
+        #               "{" + pian.xiangyings[-1].serial + "}")
+
         latex_io.write("\\part{{{} ({}-{})}}\n".format(pian.title,
                                                        pian.xiangyings[0].serial,
                                                        pian.xiangyings[-1].serial))
@@ -56,22 +67,21 @@ def to_latex(latex_io: typing.TextIO, translate_fun=None):
                                     book_local_notes[notekey] = sutta.local_notes[_notekey]
                                     next_local_key += 1
 
-                                latex_io.write("\\twnr" +
-                                               "{" + el(twnr.get_text()) + "}" +
-                                               "{" + note_label(twnr.type_, notekey, subnotekey) + "}")
+                                latex_io.write(e.to_latex(t))
 
                             elif isinstance(e, bookref.BookRef):
                                 latex_io.write(e.to_latex(BN))
 
                             elif isinstance(e, utils.Href):
-                                latex_io.write("\\href" +
-                                               "{" + el(e.href) + "}" +
-                                               "{" + el(e.text) + "}")
+                                latex_io.write(e.to_latex())
                             else:
                                 raise Exception
 
                         latex_io.write("\n\n")
                     latex_io.write("\n\n")
+    latex_io.write("\\clearpage\n")
+
+    latex_io.write("\\part{註解}\n")
 
     notes_to_latex(pyccc.utils.LOCAL, book_local_notes, latex_io, BN)
     notes_to_latex(pyccc.utils.GLOBAL, pyccc.note.get(), latex_io, BN)
@@ -91,8 +101,3 @@ def notes_to_latex(type_, notes, latex_io: typing.TextIO, bookname, trans=None):
                            "{" + bookref.join_to_latex(subnote.body, bookname) + "}\n")
 
         latex_io.write("\\end{EnvNote}\n")
-
-
-def note_label(type_, notekey, subnotekey):
-    return el(("" if type_ == pyccc.utils.GLOBAL else pyccc.pdf.LOCAL_NOTE_KEY_PREFIX) +
-              str(notekey) + "." + str(subnotekey))

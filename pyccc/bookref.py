@@ -78,6 +78,10 @@ def join_to_latex(liststr: list, bn: str):
             s += x
         elif isinstance(x, BookRef):
             s += x.to_latex(bn)
+        elif isinstance(x, utils.Href):
+            s += x.to_latex()
+        elif isinstance(x, utils.TextWithNoteRef):
+            s += x.to_latex()
         else:
-            assert Exception("What?")
+            raise Exception(type(x))
     return s

@@ -7,6 +7,7 @@ from urllib.parse import urlparse, urljoin
 from dateutil.parser import parse as parsedate
 
 import pyccc.note
+import pyccc.pdf
 import pyccc.bookref
 
 PROJECT_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
@@ -64,6 +65,11 @@ class TextWithNoteRef(object):
                 f'type_={self.type_!r}, '
                 f'number={self.key!r})')
 
+    def to_latex(self, t):
+        return ("\\twnr" +
+                "{" + t(self.get_text()) + "}" +
+                "{" + pyccc.pdf.note_label(self.type_, self.key[0], self.key[1]) + "}")
+
     def get_text(self):
         return self.text
 
@@ -83,7 +89,13 @@ def ccc_bug(type_, url, string):
     print(s)
 
 
-def read_page(url):
+def read_page(url, book_notes):
+    new_book_notes = book_notes
+    try:
+        last_key = list(book_notes.keys())[-1]
+    except IndexError:
+        last_key = 0
+
     url_path = urlparse(url).path
 
     soup, last_modified = read_url(url)
@@ -96,17 +108,20 @@ def read_page(url):
     body_listline_list = []
     is_sutta_name_line_passed = True
     current_line = []
-    local_notes = {}
+    # local_notes = {}
+
+    new_local_notes_key_point = 0
 
     # 本地notes
     comp_doc = soup.find("div", {"class": "comp"})
     if comp_doc is not None:
         note_docs = comp_doc.find_all("span", {"id": True})
         for e in note_docs:
-            key = re.match(r"^note(\d+)$", e["id"]).group(1)
-            n = pyccc.note.separate(contents=e.contents, url_path=url_path, local_notes=local_notes)
+            _key = re.match(r"^note(\d+)$", e["id"]).group(1)
+            key = last_key + int(_key)
+            n = pyccc.note.separate(contents=e.contents, url_path=url_path, local_notes=new_book_notes)
             if n:
-                local_notes[key] = n
+                new_book_notes[key] = n
 
     # 汉译经文
     div_nikaya_tag = soup.find("div", {"class": "nikaya"})
@@ -136,7 +151,7 @@ def read_page(url):
                 current_line.append(e.get_text())
 
             elif e.name == "a" and "onmouseover" in e.attrs.keys():
-                current_line.append(do_onmouseover(e, url_path, local_notes))
+                current_line.append(do_onmouseover(e, url_path, new_book_notes, last_key))
 
             # for CCC 原始 BUG
             elif e.name == "span" and e["class"] == ["sutra_name"] and e.get_text() == "相應部12相應83-93經/學經等（中略）十一則":
@@ -156,7 +171,7 @@ def read_page(url):
     homage_listline, head_listline_list = separate_homage(homage_head_listline_list)
     head_line_list = listline_list_to_line_list(head_listline_list)
 
-    return (homage_listline, head_line_list, sutta_name_line, body_listline_list, local_notes,
+    return (homage_listline, head_line_list, sutta_name_line, body_listline_list, new_book_notes,
             pali_doc.text, last_modified)
 
 
@@ -204,11 +219,12 @@ def do_href(e, url_path):
     return Href(text=e.get_text(), href=e["href"], base_url_path=url_path, target=e["target"])
 
 
-def do_onmouseover(e, url_path, local_notes):
+def do_onmouseover(e, url_path, book_notes, last_key):
     x = None
     m = re.match(r"^(note|local)\(this,(\d+)\);$", e["onmouseover"])
-    noteid = m.group(2)
+    _noteid = m.group(2)
     if m.group(1) == "note":
+        noteid = _noteid
         try:
             x = TextWithNoteRef(text=e.get_text(), key=pyccc.note.match_key(noteid, e.get_text()), type_=GLOBAL)
         except pyccc.note.NoteNotMatch:
@@ -216,13 +232,14 @@ def do_onmouseover(e, url_path, local_notes):
             x = TextWithNoteRef(text=e.get_text(), key=(noteid, list(pyccc.note.get()[noteid].keys())[0]), type_=GLOBAL)
 
     elif m.group(1) == "local":
+        noteid = last_key + int(_noteid)
         try:
-            key = pyccc.note.match_key(noteid, e.get_text(), local_notes)
+            key = pyccc.note.match_key(noteid, e.get_text(), book_notes)
             x = TextWithNoteRef(text=e.get_text(), key=key, type_=LOCAL)
         except pyccc.note.NoteNotMatch:
             ccc_bug(WARNING, url_path, "辞汇 \"{}\" 未匹配本地注解编号 \"{}\"".format(e.get_text(), noteid))
             try:
-                x = TextWithNoteRef(text=e.get_text(), key=(noteid, list(local_notes[noteid].keys())[0]), type_=LOCAL)
+                x = TextWithNoteRef(text=e.get_text(), key=(noteid, list(book_notes[noteid].keys())[0]), type_=LOCAL)
             except KeyError:
                 ccc_bug(WARNING, url_path, "未找到本地注解编号 \"{}\"".format(noteid))
                 x = e.get_text()

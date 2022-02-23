@@ -8,7 +8,7 @@ class Nikaya(object):
 
         self.omage_listline = None
         self.last_modified = None
-
+        self.book_notes = {}
         self.subs = []
 
 

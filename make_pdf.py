@@ -16,17 +16,15 @@ def build(work_dir, out_dir, tex_filename):
     compile_cmd = "lualatex -file-line-error -interaction=nonstopmode -synctex=1 -output-format=pdf" \
                   " -output-directory={} {}".format(out_dir, tex_filename)
 
-    print("1. run {}".format(compile_cmd))
-    p = subprocess.Popen(compile_cmd, cwd=work_dir, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    out, err = p.communicate()
-    if p.returncode != 0:
-        print(err.decode())
-
-    print("2. run {}".format(compile_cmd))
-    p = subprocess.Popen(compile_cmd, cwd=work_dir, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    out, err = p.communicate()
-    if p.returncode != 0:
-        print(err.decode())
+    def run():
+        print("run {}  ...".format(compile_cmd), end="")
+        p = subprocess.Popen(compile_cmd, cwd=work_dir, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        out, err = p.communicate()
+        if p.returncode != 0:
+            print(err.decode())
+        print("done!")
+    run()
+    run()
 
 
 def main():
