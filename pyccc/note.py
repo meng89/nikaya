@@ -31,10 +31,10 @@ def load_global(domain: str):
 
         for div in soup.find_all(name="div", attrs={"id": True}):
             note_no = re.match(r"^div(\d+)$", div["id"]).group(1)
-            _global_notes[note_no] = separate(div.contents, base_url, {})
+            _global_notes[note_no] = separate(div.contents, base_url, {}, 0)
 
 
-def separate(contents, url_path, local_notes):
+def separate(contents, url_path, notes, last_key):
     note = {}
     subkey = None
     subnote = SubNote(head=None, body=[])
@@ -42,13 +42,13 @@ def separate(contents, url_path, local_notes):
     for e in contents:
         if isinstance(e, bs4.element.NavigableString) and subnote.body == []:
             text = e.get_text()
-            m = re.match(r"^「(.*?)」(.*)$", text)
+            m = re.match(r"^(「.*?」)(.*)$", text)
             if m:
                 subnote.head = m.group(1)
                 subnote.body = bookref.split_str(m.group(2))
                 continue
 
-            m = re.match(r"^\((\d)\)「(.*?)」(.*)$", text)
+            m = re.match(r"^(\(\d+\))(「.*?」)(.*)$", text)
             if m:
                 subkey = m.group(1)
                 subnote.head = m.group(2)
@@ -70,7 +70,7 @@ def separate(contents, url_path, local_notes):
             subnote = SubNote(head=None, body=[])
 
         elif e.name == "a" and "onmouseover" in e.attrs.keys():
-            subnote.body.append(pyccc.utils.do_onmouseover(e, local_notes, url_path))
+            subnote.body.append(pyccc.utils.do_onmouseover(e, url_path, notes, last_key))
 
         else:
             raise TypeError(str(e))

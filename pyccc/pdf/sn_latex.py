@@ -1,6 +1,8 @@
 import os
 import typing
 from string import Template
+import tempfile
+import subprocess
 
 from pylatex import escape_latex as el
 
@@ -9,23 +11,18 @@ import pyccc.note
 from pyccc import utils, bookref
 from pyccc.pdf import note_label
 from pyccc.sn import BN
-
-
-def _empty_t(x):
-    return x
+from pyccc.trans import empty_trans
 
 
 def to_latex(latex_io: typing.TextIO, translate_fun=None):
-    t = _empty_t
+    t = empty_trans
     nikaya = pyccc.sn.get()
 
-    _head_t = open(os.path.join(utils.PROJECT_ROOT, "latex", "head.tex"), "r").read()
+    _head_t = open(os.path.join(utils.PROJECT_ROOT, "latex", "sn.tex"), "r").read()
     strdate = utils.lm_to_strdate(nikaya.last_modified)
     _head = Template(_head_t).substitute(date=strdate)
     latex_io.write(_head)
 
-    book_local_notes = {}
-    next_local_key = 1
     for pian in nikaya.pians:
         latex_io.write("\\bookmarksetup{open=true}\n")
         #latex_io.write("\\pian" +
@@ -57,16 +54,6 @@ def to_latex(latex_io: typing.TextIO, translate_fun=None):
                             if isinstance(e, str):
                                 latex_io.write(el(e))
                             elif isinstance(e, utils.TextWithNoteRef):
-                                twnr = e
-                                (_notekey, subnotekey) = twnr.get_number()
-                                if twnr.get_type() == utils.GLOBAL:
-                                    notekey = _notekey
-                                # twnr.get_type() == utils.LOCAL:
-                                else:
-                                    notekey = str(next_local_key)
-                                    book_local_notes[notekey] = sutta.local_notes[_notekey]
-                                    next_local_key += 1
-
                                 latex_io.write(e.to_latex(t))
 
                             elif isinstance(e, bookref.BookRef):
@@ -83,7 +70,7 @@ def to_latex(latex_io: typing.TextIO, translate_fun=None):
 
     latex_io.write("\\part{註解}\n")
 
-    notes_to_latex(pyccc.utils.LOCAL, book_local_notes, latex_io, BN)
+    notes_to_latex(pyccc.utils.LOCAL, nikaya.book_notes, latex_io, BN)
     notes_to_latex(pyccc.utils.GLOBAL, pyccc.note.get(), latex_io, BN)
     _tail = open(os.path.join(utils.PROJECT_ROOT, "latex", "tail.tex"), "r").read()
     latex_io.write(_tail)
@@ -101,3 +88,35 @@ def notes_to_latex(type_, notes, latex_io: typing.TextIO, bookname, trans=None):
                            "{" + bookref.join_to_latex(subnote.body, bookname) + "}\n")
 
         latex_io.write("\\end{EnvNote}\n")
+
+
+def build(work_dir, out_dir, tex_filename):
+    os.makedirs(out_dir, exist_ok=True)
+    compile_cmd = "lualatex -file-line-error -interaction=nonstopmode -synctex=1 -output-format=pdf" \
+                  " -output-directory={} {}".format(out_dir, tex_filename)
+
+    def run():
+        print("run {}  ...".format(compile_cmd), end="")
+        p = subprocess.Popen(compile_cmd, cwd=work_dir, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        out, err = p.communicate()
+        if p.returncode != 0:
+            print(err.decode())
+        print("done!")
+    run()
+    run()
+
+
+def make_keys():
+    pass
+
+
+def make(key):
+    maintex = "main.tex"
+
+    if key == "sn_tc_eb":
+        work_td = tempfile.TemporaryDirectory()
+        out_td = tempfile.TemporaryDirectory()
+        build(work_dir=work_td.name, out_dir=out_td.name, tex_filename="sn_tc.tex")
+
+        maintex_file = open(work_td.name + "/" + maintex, "w")
+

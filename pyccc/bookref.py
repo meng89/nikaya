@@ -1,5 +1,5 @@
 import re
-from . import utils
+from . import utils, trans
 
 P_SA = r"(SA)\.(\d+)"
 P_SN = r"(SN)\.(\d+\.\d+)"
@@ -71,7 +71,8 @@ def split_str(s: str):
     return list_s
 
 
-def join_to_latex(liststr: list, bn: str):
+def join_to_latex(liststr: list, bn: str, t=None):
+    t = t or trans.empty_trans
     s = ""
     for x in liststr:
         if isinstance(x, str):
@@ -81,7 +82,7 @@ def join_to_latex(liststr: list, bn: str):
         elif isinstance(x, utils.Href):
             s += x.to_latex()
         elif isinstance(x, utils.TextWithNoteRef):
-            s += x.to_latex()
+            s += x.to_latex(t)
         else:
             raise Exception(type(x))
     return s

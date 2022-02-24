@@ -119,7 +119,7 @@ def read_page(url, book_notes):
         for e in note_docs:
             _key = re.match(r"^note(\d+)$", e["id"]).group(1)
             key = last_key + int(_key)
-            n = pyccc.note.separate(contents=e.contents, url_path=url_path, local_notes=new_book_notes)
+            n = pyccc.note.separate(contents=e.contents, url_path=url_path, notes=new_book_notes, last_key=last_key)
             if n:
                 new_book_notes[key] = n
 

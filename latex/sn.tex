@@ -8,8 +8,6 @@
     pdfauthor={莊春江},
     pdftitle={相應部},
     pdfsubject={佛教},
-    %pdfkeywords={佛教 南传 上座部 三藏 经藏 巴利},
-    %pdfproducer={https://github.com/meng89/nikaya},
     pdfcreator={https://github.com/meng89/nikaya},
     colorlinks=true,
     linkcolor=Blue,
@@ -23,7 +21,7 @@
 
 \title{相應部}
 \author{莊春江}
-\date{2022-01-14}
+\date{$date}
 \linespread{1.2}
 \usepackage{fontspec}
 %\usepackage[T1]{fontenc}
@@ -41,9 +39,11 @@
 \setsansfont{Noto Sans}
 \setmonofont{Noto Sans Mono}
 
-\setmainjfont{Noto Serif CJK TC Light}
-\setsansjfont{Noto Sans CJK TC Light}
-%\newjfontfamily{\fontkai}{AR PL UKai TW}
+\newcommand{\noteserifcjk}{Noto Serif CJK TC}
+\newcommand{\notesanscjk}{Noto Sans CJK TC}
+
+\setmainjfont{\noteserifcjk Light}
+\setsansjfont{\notesanscjk Light}
 \newjfontfamily{\jfontCoverTitle}{Noto Sans CJK TC}
 \newfontfamily{\fontCoverTitle}{Noto Sans}
 
@@ -68,7 +68,7 @@
 \newcommand{\cccref}[2]{\href{#1}{\underline{#2}}}
 
 
-\newenvironment{EvnNote}{\begin{description}}{\end{description}}
+\newenvironment{EnvNote}{\begin{description} \small}{\end{description}}
 
 \newcommand{\subnote}[4]{\item[{\textit#2}#3]\linkdest{#1}#4}
 
@@ -83,15 +83,16 @@
 }
 
 % 单面 oneside
-%\fancyhf{}
-
-
 \fancypagestyle{oneside}{
     \fancyhf{}
+    \lhead{\large \jfontCoverTitle \jfontCoverTitle \leftmark}
+    \chead{}
     \rhead{}
-    \lhead{\Large \jfontCoverTitle \jfontCoverTitle \leftmark}
-    \lfoot{請到莊春江工作站查看最新訂正版}
-    \rfoot{\Large \thepage}
+    \lfoot{\href{https://agama.buddhason.org/SN/}{請到莊春江工作站阅览最新訂正版}}
+    \cfoot{}
+    \rfoot{\large \emph{\thepage}}
+    \renewcommand{\headrulewidth}{0.4pt}
+    \renewcommand{\footrulewidth}{0.4pt}
 }
 
 % 双面 twoside
@@ -102,7 +103,7 @@
     \renewcommand{\headrulewidth}{0.4pt}
 
     \fancyfoot[OR,EL]{\Large \thepage}
-    \fancyfoot[OL,ER]{請到莊春江工作站查看最新訂正版}
+    \fancyfoot[OL,ER]{請到莊春江工作站阅览最新訂正版}
     \fancyfoot[OC,EC]{}
 
    \renewcommand{\footrulewidth}{0.4pt}
@@ -140,40 +141,15 @@
 
 {\Large 莊春江\ 譯}
 \\ \vspace{0.5em}
-{\Large 2021-12-31}
+{\Large $date}
 
 \end{center}
 \end{titlepage}
 
-\bookmarksetup{open=true}
-\part{有偈篇 (1-11)}
-\bookmarksetup{open=false}
-\chapter{1. 諸天相應}
-\section{蘆葦品 (1-10)}
-\subsection{1. 暴流之渡過經}
-\label{subsec:SN.1.1}
-　　\twnr{像這樣被我聽聞}{1.None}：
-
-　　\twnr{有一次}{2.None}，{世尊}{12.None}住在舍衛城祇樹林給孤獨園。那時，在夜已深時，容色絕佳的某位天神使整個祇樹林發光後，去見世尊。抵達後，向世尊{問訊}{46.None}，接著在一旁站立。在一旁站好後，那位天神對世尊這麼說：
-
-　　「{親愛的先生}{204.None}！你怎樣渡過暴流呢？」
-
-　　「{朋友}{201.None}！我無住立、{無用力地}{x1.None}渡過暴流。」
-
-　　「親愛的先生！那麼，依怎樣的方式你無住立、無用力地渡過暴流呢？」
-
-　　「朋友！當我住立時，那時，我沈沒；朋友！當我用力時，那時，我被飄走，朋友！這樣，我無住立、無用力地渡過暴流。」
-
-　　「終於我確實看見，般涅槃的婆羅門：
-
-　　　無住立、無用力地，已度脫世間中的執著。」
-
-　　那位天神說這個，{大師}{145.None}是認可者。那時，那位天神{[}心想{]}：「大師對我是認可者。」向世尊問訊，然後{作右繞}{47.None}，接著就在那裡消失了。
-
-
-\begin{EvnNote}
-	\subnote{2.None}{\null}{一時}{，南傳作「有一次」(ekaṃ samayaṃ，逐字譯為「一-時」)，菩提比丘長老英譯為「有一次」(On one occasion)。}
-\end{EvnNote}
+\input{$main}
 
 \clearpage
+
+\input{$notes}
+
 \end{document}
