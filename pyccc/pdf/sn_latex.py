@@ -11,17 +11,18 @@ import pyccc.note
 from pyccc import utils, bookref
 from pyccc.pdf import note_label
 from pyccc.sn import BN
-from pyccc.trans import empty_trans
 
 
-def to_latex(latex_io: typing.TextIO, translate_fun=None):
-    t = empty_trans
+def write_main(main_file: typing.TextIO, t):
     nikaya = pyccc.sn.get()
-
     _head_t = open(os.path.join(utils.PROJECT_ROOT, "latex", "sn.tex"), "r").read()
     strdate = utils.lm_to_strdate(nikaya.last_modified)
     _head = Template(_head_t).substitute(date=strdate)
-    latex_io.write(_head)
+    main_file.write(_head)
+
+
+def write_suttas(latex_io: typing.TextIO, t):
+    nikaya = pyccc.sn.get()
 
     for pian in nikaya.pians:
         latex_io.write("\\bookmarksetup{open=true}\n")
@@ -66,14 +67,11 @@ def to_latex(latex_io: typing.TextIO, translate_fun=None):
 
                         latex_io.write("\n\n")
                     latex_io.write("\n\n")
-    latex_io.write("\\clearpage\n")
 
-    latex_io.write("\\part{註解}\n")
 
-    notes_to_latex(pyccc.utils.LOCAL, nikaya.book_notes, latex_io, BN)
-    notes_to_latex(pyccc.utils.GLOBAL, pyccc.note.get(), latex_io, BN)
-    _tail = open(os.path.join(utils.PROJECT_ROOT, "latex", "tail.tex"), "r").read()
-    latex_io.write(_tail)
+def write_notes(notes_file, book_notes, t):
+    notes_to_latex(pyccc.utils.LOCAL, book_notes, notes_file, BN)
+    notes_to_latex(pyccc.utils.GLOBAL, pyccc.note.get(), notes_file, BN)
 
 
 def notes_to_latex(type_, notes, latex_io: typing.TextIO, bookname, trans=None):
@@ -111,12 +109,22 @@ def make_keys():
 
 
 def make(key):
-    maintex = "main.tex"
+    main_filename = "sn.tex"
+    suttas_filename = "suttas.tex"
+    notes_filename = "notes.tex"
 
     if key == "sn_tc_eb":
+        nikaya = pyccc.sn.get()
         work_td = tempfile.TemporaryDirectory()
         out_td = tempfile.TemporaryDirectory()
         build(work_dir=work_td.name, out_dir=out_td.name, tex_filename="sn_tc.tex")
 
-        maintex_file = open(work_td.name + "/" + maintex, "w")
+        with open(work_td.name + "/" + main_filename, "w") as main_file:
+            write_main(main_file, utils.no_translate)
+
+        with open(work_td.name + "/" + suttas_filename, "w") as suttas_file:
+            write_suttas(suttas_file, utils.no_translate)
+
+        with open(work_td.name + "/" + notes_filename, "w") as notes_file:
+            write_notes(notes_file, nikaya.book_notes, utils.no_translate)
 

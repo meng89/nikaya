@@ -24,8 +24,7 @@
 \date{$date}
 \linespread{1.2}
 \usepackage{fontspec}
-%\usepackage[T1]{fontenc}
-%\usepackage[bookmarksopen,bookmarksopenlevel=5]{hyperref}
+
 \usepackage[open,openlevel=1]{bookmark}
 
 \usepackage{graphicx}
@@ -44,6 +43,7 @@
 
 \setmainjfont{\noteserifcjk Light}
 \setsansjfont{\notesanscjk Light}
+%\setmainjfont[BoldFont=HaranoAjiMincho-Bold]{HaranoAjiMincho-Regular}
 \newjfontfamily{\jfontCoverTitle}{Noto Sans CJK TC}
 \newfontfamily{\fontCoverTitle}{Noto Sans}
 
@@ -70,7 +70,7 @@
 
 \newenvironment{EnvNote}{\begin{description} \small}{\end{description}}
 
-\newcommand{\subnote}[4]{\item[{\textit#2}#3]\linkdest{#1}#4}
+\newcommand{\subnote}[4]{\item[\null]\linkdest{#1}#2#3#4}
 
 \newcommand{\twnr}[2]{\hyperlink{#2}{#1}}
 
@@ -146,9 +146,11 @@
 \end{center}
 \end{titlepage}
 
-\input{$main}
+\input{$suttas}
 
 \clearpage
+
+\part{註解}\n
 
 \input{$notes}
 
