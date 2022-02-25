@@ -1,4 +1,4 @@
 #!/usr/bin/env python3
-import pyccc.sn
 
-pyccc.sn.load()
+print("aaa", end="", flush=True)
+print("bbb")

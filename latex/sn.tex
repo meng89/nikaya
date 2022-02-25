@@ -2,7 +2,8 @@
 % !TEX program = lualatex
 \documentclass[a4paper,12pt,oneside]{book}
 \usepackage[a4paper,width=150mm,top=25mm,bottom=25mm]{geometry}
-\usepackage[dvipsnames]{xcolor}
+%\usepackage[dvipsnames]{xcolor}
+\usepackage[x11names]{xcolor}
 \usepackage{fancyhdr}
 \usepackage[
     pdfauthor={莊春江},
@@ -10,9 +11,9 @@
     pdfsubject={佛教},
     pdfcreator={https://github.com/meng89/nikaya},
     colorlinks=true,
-    linkcolor=Blue,
+    linkcolor=Blue4,
     citecolor=Green,
-    urlcolor=Orange,
+    urlcolor=Orange4,
 ]{hyperref}
 
 \usepackage[doipre={doi:~}]{uri}
@@ -34,15 +35,16 @@
 %\jfontspec 改变当前汉字字体
 \usepackage{titlesec} %自定义多级标题格式的宏包
 
-\setmainfont{Noto Serif Light}
+
+\directlua{luaotfload.add_fallback("myfallback",{"Noto Serif Tibetan Light:style=Light;"})}
+
+
+\setmainfont{Noto Serif Light}[RawFeature={fallback=myfallback}]
 \setsansfont{Noto Sans}
 \setmonofont{Noto Sans Mono}
 
-\newcommand{\noteserifcjk}{Noto Serif CJK TC}
-\newcommand{\notesanscjk}{Noto Sans CJK TC}
-
-\setmainjfont{\noteserifcjk Light}
-\setsansjfont{\notesanscjk Light}
+\setmainjfont{Noto Serif CJK TC Light}[BoldFont=Noto Serif CJK TC SemiBold]
+\setsansjfont{Noto Serif CJK TC Light}[BoldFont=Noto Sans CJK TC Medium]
 %\setmainjfont[BoldFont=HaranoAjiMincho-Bold]{HaranoAjiMincho-Regular}
 \newjfontfamily{\jfontCoverTitle}{Noto Sans CJK TC}
 \newfontfamily{\fontCoverTitle}{Noto Sans}
@@ -52,16 +54,12 @@
 
 \newfontfamily{\fontSansD}{Noto Sans}
 
-%%%\usepackage[superscript]{cite}
-
-%\usepackage{wasysym}
 
 \makeatletter
  \newcommand{\linkdest}[1]{\Hy@raisedlink{\hypertarget{#1}{}}}
 \makeatother
 
 
-% \newcommand{\mycite}[1]{\textit{\textsuperscript {\tiny{\cite{#1}}}}}
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 
 \newcommand{\inbookref}[1]{\hyperref[subsec:#1]{#1}}

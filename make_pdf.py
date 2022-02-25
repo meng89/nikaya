@@ -1,30 +1,16 @@
 #!/usr/bin/env python3
 import os
+import time
 import subprocess
 import pathlib
 
-import pyccc.pdf.sn_latex
+import pyccc.pdf.sn
 import run_ccc
+import pyccc.utils
 import pyccc.note
 from pyccc import sn
 
 import tempfile
-
-
-def build(work_dir, out_dir, tex_filename):
-    os.makedirs(out_dir, exist_ok=True)
-    compile_cmd = "lualatex -file-line-error -interaction=nonstopmode -synctex=1 -output-format=pdf" \
-                  " -output-directory={} {}".format(out_dir, tex_filename)
-
-    def run():
-        print("run {}  ...".format(compile_cmd), end="")
-        p = subprocess.Popen(compile_cmd, cwd=work_dir, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        out, err = p.communicate()
-        if p.returncode != 0:
-            print(err.decode())
-        print("done!")
-    run()
-    run()
 
 
 def main():
@@ -34,19 +20,18 @@ def main():
     pyccc.note.load_global(domain)
     pyccc.sn.load(domain)
 
-    work_td = tempfile.TemporaryDirectory()
-    out_td = tempfile.TemporaryDirectory()
-    tex_filename = "sn_tc.tex"
-    tex_file = open(work_td.name + "/" + tex_filename, "w")
-    pyccc.pdf.sn_latex.to_latex(tex_file)
-    tex_file.close()
+    temprootdir_td = tempfile.TemporaryDirectory(prefix="pyccc_")
 
-    def print_dir():
-        print("work dir: {}".format(work_td.name))
-        print("out  dir: {}".format(out_td.name))
-    print_dir()
-    build(work_dir=work_td.name, out_dir=out_td.name, tex_filename="sn_tc.tex")
-    print_dir()
+    def print_temprootdir():
+        print("temprootdir: {}".format(temprootdir_td.name))
+
+    books_dir = os.path.join(pyccc.utils.PROJECT_ROOT, "books", time.strftime("%Y-%m-%d_%H.%M.%S", time.localtime()))
+    os.makedirs(books_dir, exist_ok=True)
+
+    print_temprootdir()
+    pyccc.pdf.sn.make("sn_tc_eb", temprootdir_td.name, books_dir)
+
+    print_temprootdir()
     while input("input e and press enter to exit:").rstrip() != "e":
         pass
 
