@@ -1,0 +1,22 @@
+\setupinteraction[state=start]
+\def\sectionbookmark#1{\bookmark[section]{#1}#1}
+\def\subjectbookmark#1{\bookmark[subject]{#1}#1}
+\setuphead[section][deeptextcommand=\sectionbookmark]
+\setuphead[subject][deeptextcommand=\subjectbookmark]
+\placebookmarks[chapter,section,subject]
+\setupinteractionscreen[option=bookmark]
+
+
+\starttext
+\chapter{Chapter}
+\section{Section}
+\subject{Subject}
+\section{Another section}
+\chapter{Second Chapter}
+text
+\section{First section in second chapter}
+text
+text
+\section{Last section}
+text
+\stoptext

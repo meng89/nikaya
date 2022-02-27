@@ -1,0 +1,159 @@
+\setuppapersize [A4]
+
+\mainlanguage[cn]
+\language[cn]
+\enableregime[utf]
+\setscript[hanzi] % hyphenation
+
+\usetypescriptfile[type-imp-myfonts]
+\usetypescript[myfonts]
+\setupbodyfont[myfonts,rm,12pt]
+
+\setupinteraction[state=start]
+\setupinteraction[focus=standard] % 重要功能！添加上后才能连接到位置！
+
+
+%\setupinteractionscreen[option=bookmark]
+
+\placebookmarks[part,chapter,section,subsection,][chapter][number=no]
+\setupinteractionscreen[option=bookmark]
+\enabledirectives[references.bookmarks.preroll]
+%\define\empty{}
+
+\setuphead[part]      [number=no,alternative=middle,style=\tfd\bf\ss,placehead=yes]
+\setuphead[chapter]   [number=no,alternative=middle,style=\tfc\bf\ss,page=no]
+\setuphead[section]   [number=no,alternative=middle,style=\tfb\bf\ss]
+\setuphead[subsection][number=no,style=\tf\bf\ss,]
+
+
+
+\define[3]\pian{\part[title=#1(#2-#3)]}
+\define[2]\xiangying{\chapter[title=#1. #2]}
+\define[3]\pin{\section[title=#1(#2-#3)]}
+\define[3]\sutta{\subsection[reference=SN.\ctxlua{context(\somenamedheadnumber{chapter}{current} + 1)}.1,
+     title={\startlua if #1==#2 then context("#1") else context("#1-#2") end \stoplua}. #3]}
+
+%{\startlua context(SN.\somenamedheadnumber{chapter}{last} + 1.#1) \stoplua}
+
+\define[2]\twnr{\goto{#1}[#2]}
+\define[4]\subnote{\reference[#1]{\null} {\bf {\bf\it #2}#3}#4}
+
+\define\note{}
+
+\definestartstop
+  [Note]
+  [before=\blank\startpacked,
+   after=\stoppacked\blank]
+%\definestartstop[SubNote]
+\definedescription [SubNote]
+
+
+
+
+\startdocument
+
+\pian{有偈篇}{1}{11}
+\xiangying{1}{諸天相應}
+\pin{蘆葦品}{1}{10}
+\sutta{1}{1}{暴流之渡過經}
+　　\twnr{像這樣被我聽聞}{note.1}：\par
+　　有一次，世尊住在舍衛城祇樹林給孤獨園。那時，在夜已深時，容色絕佳的某位天神使整個祇樹林發光後，去見世尊。抵達後，向世尊問訊，接著在一旁站立。在一旁站立的那位天神對世尊說這個：\par
+　　「親愛的先生！你怎樣渡過暴流呢？」
+
+
+　　「朋友！我無住立、無用力地渡過暴流。」
+
+
+　　「親愛的先生！那麼，依怎樣的方式你無住立、無用力地渡過暴流呢？」
+
+
+　　「朋友！當我住立時，那時，我沈沒；朋友！當我用力時，那時，我被飄走，朋友！這樣，我無住立、無用力地渡過暴流。」
+
+
+　　「終於我確實看見，般涅槃的婆羅門：
+
+
+　　　無住立、無用力地，已度脫世間中的執著。」
+
+
+　　那位天神說這個，大師是認可者。那時，那位天神[心想]：「大師對我是認可者。」向世尊問訊，然後作右繞，接著就在那裡消失了。
+
+
+\sutta{2}{99}{解脫經}
+起源於舍衛城。
+那時,在夜已深時,容色絕佳的某位天神使整個祇樹林發光後,去見世尊。抵達
+後,向世尊問訊,接著在一旁站立。在一旁站好後,那位天神對世尊這麼說:
+「親愛的先生! 你知道眾生的解脫、已解脫、遠離嗎?」
+「朋友! 我知道眾生的解脫、已解脫、遠離。
+ 」
+「親愛的先生! 那麼,依怎樣的方式你知道眾生的解脫、已解脫、遠離呢?」
+「以有之歡喜的遍盡、以想與識的滅盡、以受的滅與寂靜,朋友! 這樣,我知道
+眾生的解脫、已解脫、遠離。」\par
+
+
+\subnote{note.1}{\null}{「如是我聞(SA/DA)；我聞如是(MA)；聞如是(AA)」}{，南傳作「被我這麼聽聞」(Evaṃ me sutaṃ，逐字譯為「如是-我-聞」)，
+菩提比丘長老英譯為「這樣我聽到」(Thus have I heard)。
+「如是我聞……歡喜奉行。」的經文格式，依印順法師的考定，應該是在《增一阿含》或《增支部》成立的時代才形成的(《原始佛教聖典之集成》p.9)，
+南傳《相應部》多數經只簡略地指出發生地點，應該是比較早期的風貌。}
+
+
+\page
+
+\xiangying{2}{xx相應}
+\pin{xx品}{1}{10}
+\sutta{1}{1}{xx經}
+xx xx xxx xxx xxx
+
+
+
+sfsf\goto{sn.1.1哦}[SN.1.1]
+
+\pian{第二篇}{12}{33}
+\xiangying{1}{x相應}
+\pin{x品}{1}{10}
+\sutta{1}{1}{x經}
+slfjsfsfsf
+
+
+lsfjslfj
+
+\page
+
+
+\starttext
+
+Let's test!
+
+\startNote
+\subnote{note.1}{(1)}{「如是我聞(SA/DA)；我聞如是(MA)；聞如是(AA)」}{，南傳作「被我這麼聽聞」(Evaṃ me sutaṃ，逐字譯為「如是-我-聞」)，
+菩提比丘長老英譯為「這樣我聽到」(Thus have I heard)。
+「如是我聞……歡喜奉行。」的經文格式，依印順法師的考定，應該是在《增一阿含》或《增支部》成立的時代才形成的(《原始佛教聖典之集成》p.9)，
+南傳《相應部》多數經只簡略地指出發生地點，應該是比較早期的風貌。}
+
+\subnote{note.1}
+{(2)}
+{「如是我聞(SA/DA)；我聞如是(MA)；聞如是(AA)」}
+{，南傳作「被我這麼聽聞」(Evaṃ me sutaṃ，逐字譯為「如是-我-聞」)，
+菩提比丘長老英譯為「這樣我聽到」(Thus have I heard)。
+「如是我聞……歡喜奉行。」的經文格式，依印順法師的考定，應該是在《增一阿含》或《增支部》成立的時代才形成的(《原始佛教聖典之集成》p.9)，
+南傳《相應部》多數經只簡略地指出發生地點，應該是比較早期的風貌。}
+\stopNote
+
+
+\startNote
+\subnote{note.1}{(1)}{「如是我聞(SA/DA)；我聞如是(MA)；聞如是(AA)」}{，南傳作「被我這麼聽聞」(Evaṃ me sutaṃ，逐字譯為「如是-我-聞」)，
+菩提比丘長老英譯為「這樣我聽到」(Thus have I heard)。
+「如是我聞……歡喜奉行。」的經文格式，依印順法師的考定，應該是在《增一阿含》或《增支部》成立的時代才形成的(《原始佛教聖典之集成》p.9)，
+南傳《相應部》多數經只簡略地指出發生地點，應該是比較早期的風貌。}
+
+\subnote{note.1}{(2)}{「如是我聞(SA/DA)；我聞如是(MA)；聞如是(AA)」}{，南傳作「被我這麼聽聞」(Evaṃ me sutaṃ，逐字譯為「如是-我-聞」)，
+菩提比丘長老英譯為「這樣我聽到」(Thus have I heard)。
+「如是我聞……歡喜奉行。」的經文格式，依印順法師的考定，應該是在《增一阿含》或《增支部》成立的時代才形成的(《原始佛教聖典之集成》p.9)，
+南傳《相應部》多數經只簡略地指出發生地點，應該是比較早期的風貌。}
+\stopNote
+
+
+\stoptext
+
+
+\stopdocument

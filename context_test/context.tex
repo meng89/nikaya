@@ -1,0 +1,37 @@
+\setscript[hanzi]
+\starttypescript [serif] [stfangsong]
+      \definefontsynonym [Serif] [name:stfangsong][features=chinese]
+\stoptypescript
+
+\starttypescript [stfangsong]
+      \definetypeface [stfangsong] [rm] [serif] [stfangsong] [default]
+\stoptypescript
+
+\setuppagenumber [numberconversion=cn]
+
+\definestructureconversionset [chinese] [numbers] [cn]
+
+\setupheads [sectionconversionset=chinese]
+
+\define[2]\ChineseChapter
+  {第#1章 #2}
+
+\setuphead [chapter] [command=\ChineseChapter]
+
+\setupbodyfont [stfangsong,12pt]
+
+\mainlanguage[cn]
+
+\setuppagenumbering[state=start]
+
+\starttext
+
+\startchapter[title={你好}]
+
+你好！
+
+\stopchapter
+
+\completecontent[criterium=all]
+
+\stoptext

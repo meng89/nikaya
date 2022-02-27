@@ -1,0 +1,56 @@
+\enableregime[utf]
+
+\starttypescript [serif] [xxfont]
+
+\definefontsynonym[enserif][file:../fonts/NotoSerif-Light.ttf]
+\definefontsynonym[enserifbd][file:../fonts/NotoSerif-SemiBold.ttf]
+\definefontsynonym[enserifit][file:../fonts/NotoSerif-LightItalic.ttf]
+\definefontsynonym[enserifbi][file:../fonts/NotoSerif-SemiBoldItalic.ttf]
+
+\definefontfallback[nsecjkl][file:../fonts/NotoSerifCJKtc-Light.otf][0x00400-0x2FA1F]
+\definefontfallback[nsecjkb][file:../fonts/NotoSerifCJKtc-SemiBold.otf][0x00400-0x2FA1F]
+
+\definefontsynonym[Serif][enserif][fallbacks=nsecjkl]
+\definefontsynonym[SerifBold][enserifbd][fallbacks=nsecjkb]
+\definefontsynonym[SerifItalic][enserifit][fallbacks=nsecjkl]
+\definefontsynonym[SerifBoldItalic][enserifbi][fallbacks=nsecjkb]
+
+\stoptypescript
+
+
+
+\starttypescript [sans] [yyfont]
+
+\definefontsynonym[ensans][file:../fonts/NotoSans-Light.ttf]
+\definefontsynonym[ensansbd][file:../fonts/NotoSans-SemiBold.ttf]
+\definefontsynonym[ensansob][file:../fonts/NotoSans-LightItalic.ttf]
+\definefontsynonym[ensansbo][file:../fonts/NotoSans-SemiBoldItalic.ttf]
+
+\definefontfallback[nsacjkl][file:../fonts/NotoSansCJKtc-Light.otf][0x00400-0x2FA1F]
+\definefontfallback[nsacjkb][file:../fonts/NotoSansCJKtc-Bold.otf][0x00400-0x2FA1F]
+
+\definefontsynonym[Sans][ensans][fallbacks=nsacjkl]
+\definefontsynonym[SansBold][ensansbd][fallbacks=nsacjkb]
+\definefontsynonym[SansItalic][ensansob][fallbacks=nsacjkl]
+\definefontsynonym[SansBoldItalic][ensansbo][fallbacks=nsacjkb]
+
+\stoptypescript
+
+\starttypescript [sans] [nimbus]
+  \definefontfallback[nsacjkl][file:../fonts/NotoSansCJKtc-Light.otf][0x00400-0x2FA1F]
+  \definefontfallback[nsacjkb][file:../fonts/NotoSansCJKtc-Bold.otf][0x00400-0x2FA1F]
+
+  \definefontsynonym [Sans]             [file:../fonts/NotoSans-Light.ttf] [fallbacks=nsacjkl]
+  \definefontsynonym [SansBold]         [file:../fonts/NotoSans-Light.ttf] [fallbacks=nsacjkl]
+  \definefontsynonym [SansItalic]       [file:../fonts/NotoSans-Light.ttf] [fallbacks=nsacjkl]
+  \definefontsynonym [SansSlanted]      [file:../fonts/NotoSans-Light.ttf] [fallbacks=nsacjkl]
+  \definefontsynonym [SansBoldItalic]   [file:../fonts/NotoSans-Light.ttf] [fallbacks=nsacjkl]
+  \definefontsynonym [SansBoldSlanted]  [file:../fonts/NotoSans-Light.ttf] [fallbacks=nsacjkl]
+  \definefontsynonym [SansCaps]         [file:../fonts/NotoSans-Light.ttf] [fallbacks=nsacjkl]
+\stoptypescript
+
+\starttypescript[myfonts]
+
+\definetypeface [myfonts] [rm] [serif] [xxfont]
+\definetypeface [myfonts] [ss] [sans] [yyfont]
+\stoptypescript

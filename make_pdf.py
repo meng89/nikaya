@@ -4,7 +4,7 @@ import time
 import subprocess
 import pathlib
 
-import pyccc.pdf.sn
+import pyccc.pdf.sn2pdf
 import run_ccc
 import pyccc.utils
 import pyccc.note
@@ -29,7 +29,7 @@ def main():
     os.makedirs(books_dir, exist_ok=True)
 
     print_temprootdir()
-    pyccc.pdf.sn.make("sn_tc_eb", temprootdir_td.name, books_dir)
+    pyccc.pdf.sn2pdf.make("sn_tc_eb", temprootdir_td.name, books_dir)
 
     print_temprootdir()
     while input("input e and press enter to exit:").rstrip() != "e":

@@ -1,0 +1,61 @@
+\setuppapersize [A4]
+
+\mainlanguage[cn]
+\language[cn]
+\enableregime[utf]
+\setscript[hanzi] % hyphenation
+
+\usetypescriptfile[type-imp-myfonts]
+\usetypescript[myfonts]
+\setupbodyfont[myfonts,rm,12pt]
+
+\setupinteraction[state=start]
+\setupinteraction[focus=standard] % 重要功能！添加上后才能连接到位置！
+
+
+%\setupinteractionscreen[option=bookmark]
+
+\placebookmarks[part,chapter,section,subsection,][chapter][number=no]
+\setupinteractionscreen[option=bookmark]
+\enabledirectives[references.bookmarks.preroll]
+%\define\empty{}
+
+\setuphead[part]      [number=no,alternative=middle,style=\tfd\bf\ss,placehead=yes]
+\setuphead[chapter]   [number=no,alternative=middle,style=\tfc\bf\ss,page=no]
+\setuphead[section]   [number=no,alternative=middle,style=\tfb\bf\ss]
+\setuphead[subsection][number=no,style=\tf\bf\ss,]
+
+
+
+\define[3]\pian{\part[title=#1(#2-#3)]}
+\define[2]\xiangying{\chapter[title=#1. #2]}
+\define[3]\pin{\section[title=#1(#2-#3)]}
+\define[3]\sutta{\subsection[reference=SN.\ctxlua{context(\somenamedheadnumber{chapter}{current} + 1)}.1,
+     title={\startlua if #1==#2 then context("#1") else context("#1-#2") end \stoplua}. #3]}
+
+
+\define[1]\inbookref{\goto{#1}[#1]}
+\define[2]\cccref{\goto{#2}[url(#1)]}
+\define[2]\twnr{\goto{#1}[#2]}
+
+\define[1]\noteTitle{\part[title=#1]}
+
+
+\define[4]\subnote{\textreference[#1]{#2} {\bf {\bf\it #2}#3}#4}
+
+\define\newline{\par}
+
+\definestartstop
+  [Note]
+  [before=\blank\startpacked,
+   after=\stoppacked\blank]
+
+
+\startdocument
+
+\input{suttas.tex}
+
+\noteTitle{注解}
+
+\input{notes.tex}
+\stopdocument
