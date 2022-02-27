@@ -149,4 +149,4 @@ def make(key, temprootdir, bookdir):
             write_notes(notes_file, nikaya.book_notes, utils.no_translate)
 
         build(work_dir=work_dir, out_dir=out_dir, tex_filename=main_filename)
-        shutil.move(os.path.join(out_dir, "sn.pdf"), os.path.join(bookdir, "sn_tc_eb.pdf"))
+        #shutil.move(os.path.join(out_dir, "sn.pdf"), os.path.join(bookdir, "sn_tc_eb.pdf"))
