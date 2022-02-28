@@ -9,34 +9,76 @@
 \usetypescript[myfonts]
 \setupbodyfont[myfonts,rm,12pt]
 
+\usecolors[ral]
+
 \setupinteraction[state=start]
 \setupinteraction[focus=standard] % 重要功能！添加上后才能连接到位置！
+\setupinteraction
+   [state=start,
+    color=RAL5017,
+    style=]
 
+\setupurl
+   [color=RAL8017,
+    style=]
 
 %\setupinteractionscreen[option=bookmark]
 
 \placebookmarks[part,chapter,section,subsection,][chapter][number=no]
 \setupinteractionscreen[option=bookmark]
 \enabledirectives[references.bookmarks.preroll]
-%\define\empty{}
 
-%number=no,
+
+\defineresetset[default][1,0,0][1] %% reset part,  but not chapter, section
+\setuphead[sectionresetset=default]
+
+\defineheadplacement[activityhead][vertical]#1#2{%
+  \labeltext{\currenthead}\hskip\numberheaddistance #1%
+}
+
+
+
 \setuphead[part]      [number=no,alternative=middle,style=\tfd\bf\ss,placehead=yes]
-\setuphead[chapter]   [alternative=middle,style=\tfc\bf\ss,page=no]
+
+
+%为什么有下面这一大段，是为了自定义标题格式，为了分开number和名字，为了自动给sutta加上 SN.x.x 这样的label
+\defineheadalternative
+  [centered]
+  [alternative=vertical,
+   renderingsetup=headrenderings:centered]
+\startsetups[headrenderings:centered]
+    \vbox {
+        \headsetupspacing
+        \veryraggedcenter
+        \let\\\endgraf
+        \let\crlf\endgraf
+        %\fakeheadnumbercontent
+        % \headnumbercontent -> 1.1.1 ，不喜欢这个样式
+        \begstrut
+        \somenamedheadnumber{chapter}{current}. \headtextcontent
+        \endstrut
+    }
+\stopsetups
+
+
+\setuphead[chapter]   [alternative=centered, style=\tfc\bf\ss,page=no]
 \setuphead[section]   [number=no,alternative=middle,style=\tfb\bf\ss]
 \setuphead[subsection][style=\tf\bf\ss,]
 
 
 
 \define[3]\pian{\part[title=#1(#2-#3)]}
-\define[2]\xiangying{\chapter[title=#1. #2, ownnumber=#1]}
+\define[2]\xiangying{\chapter[title=#2, bookmark=#1. #2]}
 \define[3]\pin{\section[title=#1(#2-#3)]}
 \define[3]\sutta{\subsection[reference=SN.\somenamedheadnumber{chapter}{current}.#1,
      title={\startlua if #1==#2 then context("#1") else context("#1-#2") end \stoplua}. #3]}
 
 
 \define[1]\inbookref{\goto{#1}[#1]}
-\define[2]\cccref{\goto{#2}[url(#1)]}
+
+%\define[2]\cccref{\goto{#2}[url(#1)]}
+\define[2]\cccref{\useURL[#2][#1][][#2] \from[#2]}
+
 \define[2]\twnr{\goto{#1}[#2]}
 
 \define[1]\noteTitle{\part[title=#1]}

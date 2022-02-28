@@ -62,7 +62,7 @@ def write_suttas(latex_io: typing.TextIO, t):
                                    "{" + sutta.serial_end + "}" +
                                    "{" + sutta.title + "}\n")
 
-                    latex_io.write("\n\nSN.\\somenamedheadnumber{chapter}{current}.x\n\n")
+                    #latex_io.write("\n\nSN.\\somenamedheadnumber{chapter}{current}.x\n\n")
 
                     for body_listline in sutta.body_listline_list:
                         for e in body_listline:
@@ -104,10 +104,10 @@ def notes_to_latex(type_, notes, latex_io: typing.TextIO, bookname, trans=None):
         latex_io.write("\\stopNote\n\n")
 
 
-def build(work_dir, out_dir, tex_filename):
+def build(sources_dir, out_dir, tex_filename):
     my_env = os.environ.copy()
     my_env["PATH"] = os.path.expanduser(user_config.CONTEXT_BIN_PATH) + ":" + my_env["PATH"]
-    compile_cmd = "context --path={} {}/{}".format(work_dir, work_dir, tex_filename)
+    compile_cmd = "context --path={} {}/{}".format(sources_dir, sources_dir, tex_filename)
 
     stdout_file = open(os.path.join(out_dir, "cmd_stdout"), "w")
     stderr_file = open(os.path.join(out_dir, "cmd_stderr"), "w")
@@ -135,21 +135,21 @@ def make(key, temprootdir, bookdir):
 
     if key == sn_tc_eb:
         nikaya = pyccc.sn.get()
-        work_dir = os.path.join(temprootdir, sn_tc_eb, "work")
-        os.makedirs(work_dir, exist_ok=True)
+        sources_dir = os.path.join(temprootdir, sn_tc_eb, "work")
+        os.makedirs(sources_dir, exist_ok=True)
         out_dir = os.path.join(temprootdir, sn_tc_eb, "out")
         os.makedirs(out_dir, exist_ok=True)
 
-        write_fonttex(work_dir)
+        write_fonttex(sources_dir)
 
-        with open(work_dir + "/" + main_filename, "w") as main_file:
+        with open(sources_dir + "/" + main_filename, "w") as main_file:
             write_main(main_file, utils.no_translate)
 
-        with open(work_dir + "/" + suttas_filename, "w") as suttas_file:
+        with open(sources_dir + "/" + suttas_filename, "w") as suttas_file:
             write_suttas(suttas_file, utils.no_translate)
 
-        with open(work_dir + "/" + notes_filename, "w") as notes_file:
+        with open(sources_dir + "/" + notes_filename, "w") as notes_file:
             write_notes(notes_file, nikaya.book_notes, utils.no_translate)
 
-        build(work_dir=work_dir, out_dir=out_dir, tex_filename=main_filename)
+        build(sources_dir=sources_dir, out_dir=out_dir, tex_filename=main_filename)
         #shutil.move(os.path.join(out_dir, "sn.pdf"), os.path.join(bookdir, "sn_tc_eb.pdf"))
