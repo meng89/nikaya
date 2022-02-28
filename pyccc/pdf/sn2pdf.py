@@ -62,6 +62,8 @@ def write_suttas(latex_io: typing.TextIO, t):
                                    "{" + sutta.serial_end + "}" +
                                    "{" + sutta.title + "}\n")
 
+                    latex_io.write("\n\nSN.\\somenamedheadnumber{chapter}{current}.x\n\n")
+
                     for body_listline in sutta.body_listline_list:
                         for e in body_listline:
                             if isinstance(e, str):
@@ -121,6 +123,7 @@ def build(work_dir, out_dir, tex_filename):
     _run()
     stdout_file.close()
     stderr_file.close()
+
 
 def make_keys():
     pass

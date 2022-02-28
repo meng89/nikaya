@@ -20,17 +20,18 @@
 \enabledirectives[references.bookmarks.preroll]
 %\define\empty{}
 
+%number=no,
 \setuphead[part]      [number=no,alternative=middle,style=\tfd\bf\ss,placehead=yes]
-\setuphead[chapter]   [number=no,alternative=middle,style=\tfc\bf\ss,page=no]
+\setuphead[chapter]   [alternative=middle,style=\tfc\bf\ss,page=no]
 \setuphead[section]   [number=no,alternative=middle,style=\tfb\bf\ss]
-\setuphead[subsection][number=no,style=\tf\bf\ss,]
+\setuphead[subsection][style=\tf\bf\ss,]
 
 
 
 \define[3]\pian{\part[title=#1(#2-#3)]}
-\define[2]\xiangying{\chapter[title=#1. #2]}
+\define[2]\xiangying{\chapter[title=#1. #2, ownnumber=#1]}
 \define[3]\pin{\section[title=#1(#2-#3)]}
-\define[3]\sutta{\subsection[reference=SN.\ctxlua{context(\somenamedheadnumber{chapter}{current} + 1)}.1,
+\define[3]\sutta{\subsection[reference=SN.\somenamedheadnumber{chapter}{current}.#1,
      title={\startlua if #1==#2 then context("#1") else context("#1-#2") end \stoplua}. #3]}
 
 
@@ -58,4 +59,5 @@
 \noteTitle{注解}
 
 \input{notes.tex}
+
 \stopdocument
