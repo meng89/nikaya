@@ -16,7 +16,7 @@
 \setupinteraction
    [state=start,
     color=RAL5017,
-    style=]
+    style=normal]
 
 \setupurl
    [color=RAL8017,
@@ -77,7 +77,7 @@
 \define[1]\inbookref{\goto{#1}[#1]}
 
 %\define[2]\cccref{\goto{#2}[url(#1)]}
-\define[2]\cccref{\useURL[#2][#1][][#2] \from[#2]}
+\define[2]\cccref{ \setupinteraction [color=RAL6038] \useURL[#2][#1][][#2] \from[#2] \setupinteraction [color=RAL5017]}
 
 \define[2]\twnr{\goto{#1}[#2]}
 

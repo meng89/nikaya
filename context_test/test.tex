@@ -5,29 +5,20 @@
 
 \usecolors[ral]
 
-\setupinteraction [state=start,color=blue]
-\useURL
-  [DA.2.2]
-  [http://source.contextgarden.net/tex/context/base/anch-pos.mkiv?search=from]
-  []
-  [DA.2.2]
+\setupinteraction[state=start,focus=standard]
 
-\useURL
-  [setuppositioning]
-  [http://wiki.contextgarden.net/Category:Commands]
-  [setuppositioning]
-  [\tex{setuppositioning}]
 
 \starttext
-Lookup the source code of \from[\color[RAL8017]{DA.2.2}]!
 
-Or read about the syntax of \from[setuppositioning].
-
-
-\color[RAL8017]{hehehe}
+aaa\textreference[222.\(1]{bbb}bbb
 
 
-\setupinteraction[state=start]
+
+\goto{xxx}[222.\(1]
+
+
+
+
 
 
 
