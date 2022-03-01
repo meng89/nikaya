@@ -15,12 +15,9 @@
 \setupinteraction[focus=standard] % 重要功能！添加上后才能连接到位置！
 \setupinteraction
    [state=start,
-    color=RAL5017,
     style=normal]
 
-\setupurl
-   [color=RAL8017,
-    style=]
+%\setupurl[color=RAL8017,style=normal]
 
 %\setupinteractionscreen[option=bookmark]
 
@@ -74,12 +71,12 @@
      title={\startlua if #1==#2 then context("#1") else context("#1-#2") end \stoplua}. #3]}
 
 
-\define[1]\inbookref{\goto{#1}[#1]}
+\define[1]\suttaref{\setupinteraction[color=RAL6037] \goto{#1}[#1]}
 
 %\define[2]\cccref{\goto{#2}[url(#1)]}
-\define[2]\cccref{ \setupinteraction [color=RAL6038] \useURL[#2][#1][][#2] \from[#2] \setupinteraction [color=RAL5017]}
+\define[2]\ccchref{\setupinteraction[color=RAL1007] \useURL[#2][#1][][#2] \from[#2]}
 
-\define[2]\twnr{\goto{#1}[#2]}
+\define[2]\twnr{\setupinteraction[color=RAL5019] \goto{#1}[#2]}
 
 \define[1]\noteTitle{\part[title=#1]}
 

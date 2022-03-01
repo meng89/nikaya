@@ -118,7 +118,7 @@ def build(sources_dir, out_dir, tex_filename):
                              stdout=stdout_file, stderr=stderr_file)
         out, err = p.communicate()
         if p.returncode != 0:
-            print("error:", err.decode())
+            input("command run wrong")
         print("done!")
     _run()
     stdout_file.close()

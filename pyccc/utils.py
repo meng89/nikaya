@@ -48,7 +48,7 @@ class Href(object):
 
     def to_latex(self):
         url = urljoin(CCC_WEBSITE, urljoin(self.base_url_path, self.href))
-        return "\\cccref{" + url + "}{" + self.text + "}"
+        return "\\ccchref{" + url + "}{" + self.text + "}"
 
 
 class TextWithNoteRef(object):

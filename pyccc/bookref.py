@@ -37,9 +37,9 @@ class BookRef(object):
 
     def to_latex(self, bookname):
         if bookname == self._BN:
-            return "\\inbookref{" + self.get_text() + "}"
+            return "\\suttaref{" + self.get_text() + "}"
         else:
-            return "\\cccref{" + self.get_cccurl() + "}{" + self.get_text() + "}"
+            return "\\ccchref{" + self.get_cccurl() + "}{" + self.get_text() + "}"
 
     def __repr__(self):
         return (f'{self.__class__.__name__}('
