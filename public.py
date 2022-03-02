@@ -6,7 +6,7 @@ class Nikaya(object):
 
         self.abbreviation = None
 
-        self.omage_listline = None
+        self.homage_listline = None
         self.last_modified = None
         self.book_notes = {}
         self.subs = []
