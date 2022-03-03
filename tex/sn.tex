@@ -9,7 +9,7 @@
 \usetypescript[myfonts]
 \setupbodyfont[myfonts,rm,12pt]
 
-\usecolors[ral]
+\usecolors[crayola]
 
 \setupinteraction[state=start]
 \setupinteraction[focus=standard] % 重要功能！添加上后才能连接到位置！
@@ -70,13 +70,15 @@
 \define[3]\sutta{\subsection[reference=SN.\somenamedheadnumber{chapter}{current}.#1,
      title={\startlua if #1==#2 then context("#1") else context("#1-#2") end \stoplua}. #3]}
 
+% 绿
+\define[1]\suttaref{\setupinteraction[color=ShinyShamrock] \goto{#1}[#1]}
 
-\define[1]\suttaref{\setupinteraction[color=RAL6037] \goto{#1}[#1]}
-
+% 黄
 %\define[2]\cccref{\goto{#2}[url(#1)]}
-\define[2]\ccchref{\setupinteraction[color=RAL1007] \useURL[#2][#1][][#2] \from[#2]}
+\define[2]\ccchref{\setupinteraction[color=RawSienna] \useURL[#2][#1][][#2] \from[#2]}
 
-\define[2]\twnr{\setupinteraction[color=RAL5019] \goto{#1}[#2]}
+% 蓝
+\define[2]\twnr{\setupinteraction[color=NavyBlue] \goto{#1}[#2]}
 
 \define[1]\noteTitle{\part[title=#1]}
 
