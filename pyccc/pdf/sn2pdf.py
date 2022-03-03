@@ -71,8 +71,8 @@ def write_suttas(latex_io: typing.TextIO, t):
                             elif isinstance(e, utils.TextWithNoteRef):
                                 latex_io.write(e.to_latex(t))
 
-                            elif isinstance(e, bookref.BookRef):
-                                latex_io.write(e.to_latex(BN))
+                            elif isinstance(e, bookref.SuttaRef):
+                                latex_io.write(e.to_tex(BN))
 
                             elif isinstance(e, utils.Href):
                                 latex_io.write(e.to_latex())

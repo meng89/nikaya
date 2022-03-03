@@ -1,6 +1,8 @@
 beautifulsoup4
 requests
 python-dateutil
+boltons
+
 epubaker
 jinja2
 flask

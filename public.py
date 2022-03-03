@@ -1,3 +1,6 @@
+from boltons.setutils import IndexedSet
+
+
 class Nikaya(object):
     def __init__(self):
         self.languages = ['zh-tw', 'pali']
@@ -9,6 +12,7 @@ class Nikaya(object):
         self.homage_listline = None
         self.last_modified = None
         self.book_notes = {}
+        self.local_notes = IndexedSet()
         self.subs = []
 
 

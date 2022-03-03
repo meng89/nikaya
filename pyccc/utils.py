@@ -89,12 +89,7 @@ def ccc_bug(type_, url, string):
     print(s)
 
 
-def read_page(url, book_notes):
-    new_book_notes = book_notes
-    try:
-        last_key = list(book_notes.keys())[-1]
-    except IndexError:
-        last_key = 0
+def read_page(url, local_notes):
 
     url_path = urlparse(url).path
 
@@ -109,8 +104,7 @@ def read_page(url, book_notes):
     is_sutta_name_line_passed = True
     current_line = []
     # local_notes = {}
-
-    new_local_notes_key_point = 0
+    temp_notes = {}
 
     # 本地notes
     comp_doc = soup.find("div", {"class": "comp"})
@@ -118,10 +112,9 @@ def read_page(url, book_notes):
         note_docs = comp_doc.find_all("span", {"id": True})
         for e in note_docs:
             _key = re.match(r"^note(\d+)$", e["id"]).group(1)
-            key = last_key + int(_key)
-            n = pyccc.note.separate(contents=e.contents, url_path=url_path, notes=new_book_notes, last_key=last_key)
-            if n:
-                new_book_notes[key] = n
+            note = pyccc.note.separate(contents=e.contents, url_path=url_path, temp_notes=temp_notes, local_notes=local_notes)
+            if note:
+                temp_notes[_key] = note
 
     # 汉译经文
     div_nikaya_tag = soup.find("div", {"class": "nikaya"})
@@ -151,7 +144,11 @@ def read_page(url, book_notes):
                 current_line.append(e.get_text())
 
             elif e.name == "a" and "onmouseover" in e.attrs.keys():
-                current_line.append(do_onmouseover(e, url_path, new_book_notes, last_key))
+                try:
+                    x = do_onmouseover_globalnote(e, url_path)
+                except NoteLocaltionError:
+                    x, local_notes = do_onmouseover_localnote(e, url_path, temp_notes, local_notes)
+                current_line.append(x)
 
             # for CCC 原始 BUG
             elif e.name == "span" and e["class"] == ["sutra_name"] and e.get_text() == "相應部12相應83-93經/學經等（中略）十一則":
@@ -219,9 +216,10 @@ def do_href(e, url_path):
     return Href(text=e.get_text(), href=e["href"], base_url_path=url_path, target=e["target"])
 
 
-def do_onmouseover(e, url_path, book_notes, last_key):
+def _do_onmouseover(e, url_path, book_notes, last_key):
     x = None
     m = re.match(r"^(note|local)\(this,(\d+)\);$", e["onmouseover"])
+
     _noteid = m.group(2)
     if m.group(1) == "note":
         noteid = _noteid
@@ -245,3 +243,46 @@ def do_onmouseover(e, url_path, book_notes, last_key):
                 x = e.get_text()
 
     return x
+
+
+class NoteLocaltionError(Exception):
+    pass
+
+
+def do_onmouseover_globalnote(e, url_path):
+    m = re.match(r"^note\(this,(\d+)\);$", e["onmouseover"])
+    if m:
+        key = m.group(1)
+        try:
+            sub_note_key = pyccc.note.match_key(key, e.get_text())
+
+        except pyccc.note.NoteNotMatch:
+            ccc_bug(WARNING, url_path, "辞汇 \"{}\" 未匹配全局注解编号 \"{}\"".format(e.get_text(), key))
+            sub_note_key = (key, list(pyccc.note.get()[key].keys())[0])
+
+        return TextWithNoteRef(text=e.get_text(), key=sub_note_key, type_=GLOBAL)
+    else:
+        raise NoteLocaltionError
+
+
+def do_onmouseover_localnote(e, url_path, sutta_notes, local_notes):
+    m = re.match(r"^local\(this,(\d+)\);$", e["onmouseover"])
+
+    if m:
+        key = m.group(1)
+
+        try:
+            note = sutta_notes[key]
+        except KeyError:
+            ccc_bug(WARNING, url_path, "未找到本地注解编号 \"{}\"".format(key))
+            x = e.get_text()
+        else:
+            local_notes.add(note)
+            k = local_notes.index(note)
+            # todo mathc
+            x = TextWithNoteRef(text=e.get_text(), key=k, type_=LOCAL)
+
+        return x, local_notes
+    else:
+        raise NoteLocaltionError
+

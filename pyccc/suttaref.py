@@ -18,7 +18,7 @@ P_AN = r"(AN)\.(\d+\.\d+)"
 PATTERNS = [P_SA, P_SN, P_MA, P_MN, P_DA, P_DN, P_UD, P_IT, P_MI, P_NI, P_PS, P_AA, P_AN]
 
 
-class BookRef(object):
+class SuttaRef(object):
     def __init__(self, pattern: str, bookname: str, num: str):
         self._pattern = pattern
         self._BN = bookname
@@ -35,8 +35,8 @@ class BookRef(object):
         elif self._pattern in (P_MI, P_NI, P_PS):
             return "{}/{}/{}{}.htm".format(utils.CCC_WEBSITE, self._BN, self._BN, self._num)
 
-    def to_latex(self, bookname):
-        if bookname == self._BN:
+    def to_tex(self, booknames):
+        if booknames == self._BN:
             return "\\suttaref{" + self.get_text() + "}"
         else:
             return "\\ccchref{" + self.get_cccurl() + "}{" + self.get_text() + "}"
@@ -52,7 +52,7 @@ def get_bookref(y):
     for p in PATTERNS:
         m2 = re.match("^{}$".format(p), y)
         if m2:
-            return BookRef(p, m2.group(1), m2.group(2))
+            return SuttaRef(p, m2.group(1), m2.group(2))
     assert Exception
 
 
@@ -77,8 +77,8 @@ def join_to_latex(liststr: list, bn: str, t=None):
     for x in liststr:
         if isinstance(x, str):
             s += x
-        elif isinstance(x, BookRef):
-            s += x.to_latex(bn)
+        elif isinstance(x, SuttaRef):
+            s += x.to_tex(bn)
         elif isinstance(x, utils.Href):
             s += x.to_latex()
         elif isinstance(x, utils.TextWithNoteRef):
