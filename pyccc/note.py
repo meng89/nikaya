@@ -96,15 +96,14 @@ def _do_normal_lines(contents):
         if e.name == "br":
             lines.append(listline)
         else:
-            answer, x = _do(e)
+            answer, x = _do(funs=[_do_xstr, _do_href, _do_onmouseover], e=e)
             if answer:
                 listline.extend(x)
             else:
                 raise TypeError(str(e))
 
 
-def _do(e):
-    funs = [_do_xstr, _do_href, _do_onmouseover]
+def _do(funs, e):
     for fun in funs:
         answer, x = fun(e=e, url_path=url_path, temp_notes=temp_notes, localnotes=localnotes)
         if answer:
