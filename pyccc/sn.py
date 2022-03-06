@@ -35,7 +35,7 @@ class _MyInfo(BaseInfo, PianInfo, PinInfo):
         s += 'pian     : "{}", "{}"\n'.format(self.pian_serial, self.pian_title)
         s += 'xiangying: "{}", "{}"\n'.format(self.xiangying_serial, self.xiangying_title)
         s += 'pin      : "{}", "{}"\n'.format(self.pin_serial, self.pin_title)
-        s += 'sutra    : "{}", "{}"'.format(self.sutta_serial_start, self.sutra_title)
+        s += 'sutra    : "{}", "{}"'.format(self.sutta_begin, self.sutra_title)
         return s
 
 
@@ -107,21 +107,18 @@ def analyse_head(lines):  # public
     return info
 
 
-def analyse_sutta_name_line(line):
+def analyse_sutta_info(line):
     info = _MyInfo()
-
-    m = re.match(r"^ *相+應部?(\d+)相應 ?第?(\d+(?:-\d+)?)經(?:/(.+?經.*?))?\((?:\S+?)相應/(?:\S+?)篇/(?:\S+?)\)", line)
+    m = re.match(r"^ *相+應部?(\d+)相應 ?第?(\d+(?:-\d+)?)經(?:/(.+?經.*?))?", line)
     if m:
-        # info.xiangying_serial = m.group(1)
-
         serial = m.group(2).split('-')
 
         if len(serial) == 1:
-            info.sutta_serial_start = serial[0]
-            info.sutta_serial_end = serial[0]
+            info.sutta_begin = serial[0]
+            info.sutta_end = serial[0]
         else:
-            info.sutta_serial_start = serial[0]
-            info.sutta_serial_end = serial[1]
+            info.sutta_begin = serial[0]
+            info.sutta_end = serial[1]
 
         info.sutra_title = m.group(3)
 
@@ -129,14 +126,14 @@ def analyse_sutta_name_line(line):
     m = re.match(r"^相應部(48)相應 (83)-(114)經\s*$", line)
     if m:
         # info.xiangying_serial = m.group(1)
-        info.sutta_serial_start = m.group(2)
-        info.sutta_serial_end = m.group(3)
+        info.sutta_begin = m.group(2)
+        info.sutta_end = m.group(3)
 
     m = re.match(r"^相應部(48)相應 (137)-(168)經\s*", line)
     if m:
         # info.xiangying_serial = m.group(1)
-        info.sutta_serial_start = m.group(2)
-        info.sutta_serial_end = m.group(3)
+        info.sutta_begin = m.group(2)
+        info.sutta_end = m.group(3)
 
     return info
 
@@ -147,7 +144,7 @@ def add_sec_title_range(nikaya):
 
         for xiangying in pian.xiangyings:
             for pin in xiangying.pins:
-                pin.sec_title = '{} ({}-{})'.format(pin.title, pin.suttas[0].serial_start, pin.suttas[-1].serial_end)
+                pin.sec_title = '{} ({}-{})'.format(pin.title, pin.suttas[0].begin, pin.suttas[-1].end)
 
     return nikaya
 
@@ -158,10 +155,8 @@ def make_nikaya(sutta_urls):
     nikaya.title_pali = 'Saṃyutta Nikāya'
     nikaya.abbreviation = 'SN'
     for url in sutta_urls:
-        homage_listline, head_line_list, sutta_name_line, body_listline_list, new_book_notes, \
+        homage_listline, head_line_list, sutta_name_part, translator_part, body_listline_list, \
             pali_text, last_modified = pyccc.utils.read_page(url, nikaya.local_notes)
-
-        nikaya.book_notes = new_book_notes
 
         if nikaya.last_modified is None:
             nikaya.last_modified = last_modified
@@ -172,7 +167,7 @@ def make_nikaya(sutta_urls):
             nikaya.homage_listline = homage_listline
 
         head_info = analyse_head(head_line_list)
-        sutta_info = analyse_sutta_name_line(sutta_name_line)
+        sutta_info = analyse_sutta_info(sutta_name_part)
 
         if head_info.pian_serial is not None:
             if not nikaya.subs or nikaya.subs[-1].serial != head_info.pian_serial:
@@ -208,8 +203,8 @@ def make_nikaya(sutta_urls):
 
         sutta = Sutta()
 
-        sutta.serial_start = sutta_info.sutta_serial_start
-        sutta.serial_end = sutta_info.sutta_serial_end
+        sutta.begin = sutta_info.sutta_begin
+        sutta.end = sutta_info.sutta_end
 
         sutta.pali = pali_text
         # sutta.chinese = line_list
@@ -218,10 +213,10 @@ def make_nikaya(sutta_urls):
 
         sutta.last_modified = last_modified
 
-        if sutta.serial_start == sutta.serial_end:
-            sutta.serial = sutta.serial_start
+        if sutta.begin == sutta.end:
+            sutta.serial = sutta.begin
         else:
-            sutta.serial = '{}-{}'.format(sutta.serial_start, sutta.serial_end)
+            sutta.serial = '{}-{}'.format(sutta.begin, sutta.end)
 
         if sutta_info.sutra_title:
             sutta.title = sutta_info.sutra_title
@@ -264,4 +259,3 @@ def get():
         return _nikaya
     else:
         raise Exception
-

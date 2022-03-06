@@ -40,8 +40,8 @@ def analyse_header(lines):  # public
     # 長部14經/譬喻大經(大品[第二])(莊春江譯)
     m = re.match('^長部(\d+)經/(\S+經)\((\S+品)\[\S+\]\)\(莊春江譯\)$', lines[-1])
     if m:
-        info.sutta_serial_start = m.group(1)
-        info.sutta_serial_end = m.group(1)
+        info.sutta_begin = m.group(1)
+        info.sutta_end = m.group(1)
 
         info.sutra_title = m.group(2)
 
@@ -76,8 +76,8 @@ def make_nikaya(sutra_urls):
 
         sutra = Sutta()
 
-        sutra.serial_start = info.sutta_serial_start
-        sutra.serial_end = info.sutta_serial_end
+        sutra.begin = info.sutta_begin
+        sutra.end = info.sutta_end
 
         sutra.pali = pali
         sutra.chinese = chinese
@@ -86,7 +86,7 @@ def make_nikaya(sutra_urls):
 
         sutra.last_modified = modified
 
-        sutra.serial = sutra.serial_start
+        sutra.serial = sutra.begin
 
         sutra.title = info.sutra_title
 
@@ -101,7 +101,7 @@ def make_nikaya(sutra_urls):
 
 def add_sec_title_range(nikaya):
     for pin in nikaya.pins:
-        pin.sec_title = '{} ({}-{})'.format(pin.title, pin.suttas[0].serial_start, pin.suttas[-1].serial_end)
+        pin.sec_title = '{} ({}-{})'.format(pin.title, pin.suttas[0].begin, pin.suttas[-1].end)
 
     return nikaya
 

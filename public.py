@@ -11,7 +11,6 @@ class Nikaya(object):
 
         self.homage_listline = None
         self.last_modified = None
-        self.book_notes = {}
         self.local_notes = IndexedSet()
         self.subs = []
 
@@ -32,8 +31,8 @@ class Sutta(object):
         self.sec_title = None
 
         self.serial = None
-        self.serial_start = None
-        self.serial_end = None
+        self.begin = None
+        self.end = None
 
         # self.chinese = None
         self.body_listline_list = None
@@ -50,8 +49,8 @@ class Sutta(object):
 
 class BaseInfo(object):
     def __init__(self):
-        self.sutta_serial_start = None
-        self.sutta_serial_end = None
+        self.sutta_begin = None
+        self.sutta_end = None
         self.sutra_title = None
 
         self.modified = None

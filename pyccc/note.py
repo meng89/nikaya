@@ -1,4 +1,6 @@
 import re
+from pprint import pprint
+
 import bs4
 import requests.exceptions
 
@@ -25,14 +27,15 @@ def load_global(domain: str):
     global _global_notes
     for i in range(100):
         try:
-            base_url = "/note/note{}.htm".format(i)
-            soup = utils.read_url(domain + base_url)[0]
+            url_path = "/note/note{}.htm".format(i)
+            soup = utils.read_url(domain + url_path)[0]
         except requests.exceptions.HTTPError:
             break
 
         for div in soup.find_all(name="div", attrs={"id": True}):
             note_no = re.match(r"^div(\d+)$", div["id"]).group(1)
-            _global_notes[note_no] = separate(div.contents, base_url, {}, IndexedSet())
+            # _global_notes[note_no] = separate(div.contents, base_url, {}, IndexedSet())
+            _global_notes[note_no] = _do_globalnote(list(div.contents), url_path=url_path)
 
 
 # 断言：
@@ -40,10 +43,10 @@ def load_global(domain: str):
 # global note 不会引用其它 note；
 
 
-def _do_note(contents: list):
+def _do_globalnote(contents: list, **kwargs):
     note = {}
 
-    while True:
+    while contents:
         first = contents.pop(0)
         assert isinstance(first, bs4.element.NavigableString)
         text = first.get_text()
@@ -57,22 +60,22 @@ def _do_note(contents: list):
             left = text
 
         contents.insert(0, left)
-        subnote, left = _do_subnote(contents)
+        subnote = _do_subnote(contents, **kwargs)
         note[subkey] = subnote
 
-        if not contents:
-            break
-        else:
-            first = contents.pop()
-            if first.name == "br":
-                continue
     return note
 
 
-def _do_subnote(contents: list):
+def _do_localnote(**kwargs):
+    subnote, contents = _do_subnote(**kwargs)
+    assert contents == []
+    return subnote
+
+
+def _do_subnote(contents: list, **kwargs):
     first = contents.pop(0)
-    assert isinstance(first, bs4.element.NavigableString)
-    text = first.get_text()
+    assert isinstance(first, (str, bs4.element.NavigableString))
+    text = str(first)
     m = re.match(r"^(「.*?」)(.*)$", text)
     if m:
         head = m.group(1)
@@ -83,112 +86,103 @@ def _do_subnote(contents: list):
 
     contents.insert(0, left_text)
 
-    splited, left, = _do(contents)
-    body = splited
-    return SubNote(head, body), left
+    body = _do_line(contents=contents, funs=[_do_xstr, _do_href,
+                                                        _do_onmouseover_global, _do_onmouseover_local], **kwargs)
+    return SubNote(head, body)
 
 
-def _do_normal_lines(contents):
+def _do_lines(contents, funs, **kwargs):
     lines = []
+    while contents:
+        listline, contents = _do_line(contents, funs, **kwargs)
+        lines.append(listline)
+    return lines
+
+
+def _do_line(contents, funs, **kwargs):
     listline = []
+    while contents:
+        if isinstance(contents[0], bs4.element.Tag) and contents[0].name == "br":
+            contents.pop(0)
+            break
+        # elif isinstance(contents[0], bs4.element.NavigableString) and contents[0].get_text == "\n":
+        #    contents.pop(0)
+        #    break
+        elif contents[0] == "\n":
+            contents.pop(0)
+            break
+        x = _do_e(contents.pop(0), funs, **kwargs)
+        listline.extend(x)
 
-    for e in contents:
-        if e.name == "br":
-            lines.append(listline)
-        else:
-            answer, x = _do(funs=[_do_xstr, _do_href, _do_onmouseover], e=e)
-            if answer:
-                listline.extend(x)
-            else:
-                raise TypeError(str(e))
+    return listline  # , contents
 
 
-def _do(funs, e):
+class ElementError(Exception):
+    pass
+
+
+def _do_e(e, funs, **kwargs):
     for fun in funs:
-        answer, x = fun(e=e, url_path=url_path, temp_notes=temp_notes, localnotes=localnotes)
+        answer, x = fun(e=e, **kwargs)
         if answer:
-            return answer, x
-    return False, None
+            return x
+    raise ElementError(e)
 
 
-def _do_xstr(e, args):
-    if isinstance(e, bs4.element.NavigableString):
-        return True, pyccc.suttaref.split_str(e.get_text())
-    elif isinstance(e, str):
-        return True, pyccc.suttaref.split_str(e)
+def _do_xstr(e, **kwargs):
+    if isinstance(e, (str, bs4.element.NavigableString)):
+        return True, pyccc.suttaref.split_str(str(e).strip("\n"))
     else:
         return False, e
 
 
-def _do_href(e, url_path):
+def _do_href(e, url_path, **kwargs):
     if e.name == "a" and "href" in e.attrs.keys():
-        return True, [pyccc.utils.do_href(e, url_path)]
+        return True, [pyccc.utils.Href(text=e.get_text(), href=e["href"], base_url_path=url_path, target=e["target"])]
     else:
         return False, e
 
 
-def _do_onmouseover(e, url_path, temp_notes, local_notes):
+def _do_onmouseover_global(e, url_path, **kwargs):
     if e.name == "a" and "onmouseover" in e.attrs.keys():
-        try:
-            x = pyccc.utils.do_onmouseover_globalnote(e, url_path)
-        except pyccc.utils.NoteLocaltionError:
-            x, _local_notes = pyccc.utils.do_onmouseover_localnote(e, url_path, temp_notes, local_notes)
-
-        return True, [x]
-    else:
-        return False, e
-
-
-def separate(contents, url_path, temp_notes, local_notes):
-    note = {}
-    subkey = None
-    subnote = SubNote(head=None, body=[])
-    listline = []
-    for e in contents:
-        if isinstance(e, bs4.element.NavigableString) and subnote.body == []:
-            text = e.get_text()
-            m = re.match(r"^(「.*?」)(.*)$", text)
-            if m:
-                subnote.head = m.group(1)
-                subnote.body = pyccc.suttaref.split_str(m.group(2))
-                continue
-
-            m = re.match(r"^(\(\d+\))(「.*?」)(.*)$", text)
-            if m:
-                subkey = m.group(1)
-                subnote.head = m.group(2)
-                subnote.body = pyccc.suttaref.split_str(m.group(3))
-                continue
-
-            subnote.head = None
-            subnote.body = pyccc.suttaref.split_str(text)
-
-        elif isinstance(e, bs4.element.NavigableString):
-            subnote.body.extend(pyccc.suttaref.split_str(e.get_text()))
-
-        elif e.name == "a" and "href" in e.attrs.keys():
-            subnote.body.append(pyccc.utils.do_href(e, url_path))
-
-        elif e.name == "a" and "onmouseover" in e.attrs.keys():
+        m = re.match(r"^note\(this,(\d+)\);$", e["onmouseover"])
+        if m:
+            key = m.group(1)
             try:
-                x = pyccc.utils.do_onmouseover_globalnote(e, url_path)
-            except pyccc.utils.NoteLocaltionError:
-                x, _local_notes = pyccc.utils.do_onmouseover_localnote(e, url_path, temp_notes, local_notes)
+                sub_note_key = pyccc.note.match_key(key, e.get_text())
 
-            subnote.body.append(x)
+            except pyccc.note.NoteNotMatch:
+                utils.ccc_bug(utils.WARNING, url_path, "辞汇 \"{}\" 未匹配全局注解编号 \"{}\"".format(e.get_text(), key))
+                sub_note_key = (key, list(pyccc.note.get()[key].keys())[0])
 
-        elif e.name == "br":
-            note[subkey] = subnote
-            subkey = None
-            subnote = SubNote(head=None, body=[])
+            return True, [utils.TextWithNoteRef(text=e.get_text(), key=sub_note_key, type_=utils.GLOBAL)]
+    # ccc bug
+    elif e.name == "a" and "nmouseover" in e.attrs.keys():
+        return True, [e.get_text()]
 
-        else:
-            raise TypeError(str(e))
+    return False, e
 
-    if subnote.body:
-        note[subkey] = subnote
 
-    return note
+def _do_onmouseover_local(e, url_path, sutta_temp_notes, local_notes):
+    if e.name == "a" and "onmouseover" in e.attrs.keys():
+        m = re.match(r"^local\(this,(\d+)\);$", e["onmouseover"])
+        if m:
+            key = m.group(1)
+
+            try:
+                note = sutta_temp_notes[key]
+            except KeyError:
+                utils.ccc_bug(utils.WARNING, url_path, "未找到本地注解编号 \"{}\"".format(key))
+                x = e.get_text()
+            else:
+                local_notes.add(note)
+                k = local_notes.index(note)
+                # todo mathc
+                x = utils.TextWithNoteRef(text=e.get_text(), key=k, type_=utils.LOCAL)
+
+            return True, [x]
+
+    return False, e
 
 
 class NoteNotMatch(Exception):

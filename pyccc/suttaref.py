@@ -69,20 +69,3 @@ def split_str(s: str):
         list_s.append(s[offset:])
 
     return list_s
-
-
-def join_to_latex(liststr: list, bn: str, t=None):
-    t = t or trans.empty_trans
-    s = ""
-    for x in liststr:
-        if isinstance(x, str):
-            s += x
-        elif isinstance(x, SuttaRef):
-            s += x.to_tex(bn)
-        elif isinstance(x, utils.Href):
-            s += x.to_latex()
-        elif isinstance(x, utils.TextWithNoteRef):
-            s += x.to_latex(t)
-        else:
-            raise Exception(type(x))
-    return s

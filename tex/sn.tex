@@ -78,7 +78,7 @@
 \define[2]\ccchref{\setupinteraction[color=RawSienna] \useURL[#2][#1][][#2] \from[#2]}
 
 % 蓝
-\define[2]\twnr{\setupinteraction[color=NavyBlue] \goto{#1}[#2]}
+\define[2]\twnr{\setupinteraction[color=MidnightBlue] \goto{#1}[#2]}
 
 
 \define[1]\noteTitle{\part[title=#1]}
@@ -88,18 +88,60 @@
 
 \define\newline{\par}
 
-\definestartstop
-  [Note]
-  [before=\blank\startpacked,
+\definestartstop[Note]
+  [style=\small,
+      before=\blank\startpacked,
    after=\stoppacked\blank]
 
+\definemakeup [homage] [align=middle, style=\tfd]
 
 \startdocument
+    [metadata:title={相應部},
+    metadata:subtitle={佛教},
+    metadata:author={莊春江},
+    %metadata:keywords={經藏}，
+    % metadata:producer={Latex with hyperref, or other system},
+    metadata:creator={https://github.com/meng89/nikaya/tree/dev},
 
-\input{suttas.tex}
+    metadata:date={$date}]
+
+\startstandardmakeup
+\part[title=, bookmark=封面]
+  \raggedcenter
+  \vfill
+  \blank[-3*big]
+  \definedfont[SansBold at 140pt]\setstrut \strut 相應部
+  \blank[-3*big]
+  \definedfont[SansBold at 45pt]\setstrut \strut Saṃyutta ~ Nikāya
+  \blank[3*big]
+  \definedfont[Sans at 25pt] \setstrut \strut 傳統中文版
+  \blank[18*big]
+  \definedfont[Sans at 20pt] \setstrut \strut  ~ 譯
+  \blank[-2*small]
+  \definedfont[SansBold at 21pt] \setstrut \strut $date
+
+  \vfill
+\stopstandardmakeup
+
+
+\startmakeup[homage]
+\part[title=, bookmark=禮敬]
+\vfill
+\blank[-25*big]
+$homage
+\vfill
+\stopmakeup
+
+\input{$suttas}
 
 \noteTitle{注解}
 
-\input{notes.tex}
+\input{$localnotes}
+
+\noteTitle{全局注解}
+\input{$globalnotes}
+
+\part{制作说明}
+\input{creator_note.tex}
 
 \stopdocument

@@ -47,26 +47,26 @@ def write_suttas(latex_io: typing.TextIO, t):
             for pin in xiangying.pins:
                 if pin.title is not None:
                     latex_io.write("\\section{{{} ({}-{})}}\n".format(pin.title,
-                                                                      pin.suttas[0].serial_start,
-                                                                      pin.suttas[-1].serial_end))
+                                                                      pin.suttas[0].begin,
+                                                                      pin.suttas[-1].end))
 
                 for sutta in pin.suttas:
                     latex_io.write("\\subsection{" + sutta.serial + ". " + sutta.title + "}\n")
                     latex_io.write("\\label{subsec:" + pyccc.sn.BN + "." + xiangying.serial + "." +
-                                   sutta.serial_start + "}\n")
+                                   sutta.begin + "}\n")
 
                     for body_listline in sutta.body_listline_list:
                         for e in body_listline:
                             if isinstance(e, str):
                                 latex_io.write(el(e))
                             elif isinstance(e, utils.TextWithNoteRef):
-                                latex_io.write(e.to_latex(t))
+                                latex_io.write(e.to_tex(t))
 
                             elif isinstance(e, bookref.SuttaRef):
                                 latex_io.write(e.to_tex(BN))
 
                             elif isinstance(e, utils.Href):
-                                latex_io.write(e.to_latex())
+                                latex_io.write(e.to_tex())
                             else:
                                 raise Exception
 
@@ -88,7 +88,7 @@ def notes_to_latex(type_, notes, latex_io: typing.TextIO, bookname, trans=None):
                            "{" + note_label(type_, notekey, subnotekey) + "}" +
                            "{" + (subnotekey or "\\null") + "}" +
                            "{" + (subnote.head or "\\null") + "}" +
-                           "{" + bookref.join_to_latex(subnote.body, bookname) + "}\n")
+                           "{" + bookref.join_to_tex(subnote.body, bookname) + "}\n")
 
         latex_io.write("\\end{EnvNote}\n")
 
@@ -131,7 +131,7 @@ def make(key, temprootdir, bookdir):
             write_suttas(suttas_file, utils.no_translate)
 
         with open(work_dir + "/" + notes_filename, "w") as notes_file:
-            write_notes(notes_file, nikaya.book_notes, utils.no_translate)
+            write_notes(notes_file, nikaya.local_notes, utils.no_translate)
 
         build(work_dir=work_dir, out_dir=out_dir, tex_filename=main_filename)
         shutil.move(os.path.join(out_dir, "sn.pdf"), os.path.join(bookdir, "sn_tc_eb.pdf"))

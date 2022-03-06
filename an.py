@@ -21,7 +21,7 @@ class _MyInfo(BaseInfo, PinInfo):
         s = ''
         s += 'ji   : "{}", "{}"\n'.format(self.ji_serial, self.ji_title)
         s += 'pin  : "{}", "{}"\n'.format(self.pin_serial, self.pin_title)
-        s += 'sutra: "{}", "{}"'.format(self.sutta_serial_start, self.sutra_title)
+        s += 'sutra: "{}", "{}"'.format(self.sutta_begin, self.sutra_title)
         return s
 
 
@@ -72,11 +72,11 @@ def analyse_header(lines):  # public
         serial = m.group(2).split('-')
 
         if len(serial) == 1:
-            info.sutta_serial_start = serial[0]
-            info.sutta_serial_end = serial[0]
+            info.sutta_begin = serial[0]
+            info.sutta_end = serial[0]
         else:
-            info.sutta_serial_start = serial[0]
-            info.sutta_serial_end = serial[1]
+            info.sutta_begin = serial[0]
+            info.sutta_end = serial[1]
 
         info.sutra_title = m.group(3)
 
@@ -88,7 +88,7 @@ def add_sec_title_range(nikaya):
         ji.sec_title = '{} 集'.format(ji.serial)
 
         for pin in ji.pins:
-            pin.sec_title = '{} ({}-{})'.format(pin.title, pin.suttas[0].serial_start, pin.suttas[-1].serial_end)
+            pin.sec_title = '{} ({}-{})'.format(pin.title, pin.suttas[0].begin, pin.suttas[-1].end)
 
     return nikaya
 
@@ -125,8 +125,8 @@ def make_nikaya(sutra_urls):
 
         sutra = Sutta()
 
-        sutra.serial_start = info.sutta_serial_start
-        sutra.serial_end = info.sutta_serial_end
+        sutra.begin = info.sutta_begin
+        sutra.end = info.sutta_end
 
         sutra.pali = pali
         sutra.chinese = chinese
@@ -135,10 +135,10 @@ def make_nikaya(sutra_urls):
 
         sutra.last_modified = modified
 
-        if sutra.serial_start == sutra.serial_end:
-            sutra.serial = sutra.serial_start
+        if sutra.begin == sutra.end:
+            sutra.serial = sutra.begin
         else:
-            sutra.serial = '{}-{}'.format(sutra.serial_start, sutra.serial_end)
+            sutra.serial = '{}-{}'.format(sutra.begin, sutra.end)
 
         if info.sutra_title:
             sutra.title = info.sutra_title
