@@ -1,4 +1,5 @@
 import re
+import abc
 from pprint import pprint
 
 import bs4
@@ -6,6 +7,7 @@ import requests.exceptions
 
 from boltons.setutils import IndexedSet
 
+import pyccc.pdf
 import pyccc.suttaref
 from . import utils
 
@@ -87,8 +89,36 @@ def _do_subnote(contents: list, **kwargs):
     contents.insert(0, left_text)
 
     body = _do_line(contents=contents, funs=[_do_xstr, _do_href,
-                                                        _do_onmouseover_global, _do_onmouseover_local], **kwargs)
+                                             _do_onmouseover_global, _do_onmouseover_local], **kwargs)
     return SubNote(head, body)
+
+
+def _do_subnote2(contents: list, **kwargs):
+    pass
+
+
+class NoteKey(object):
+    def __init__(self, text):
+        self.text = text
+        self._tex_cmd = "notekey"
+
+    def _contents(self):
+        return pyccc.suttaref.split_str(self.text)
+
+    def to_tex(self, bn, t):
+        return "\\" + self._tex_cmd + "{" + pyccc.pdf.join_to_tex(line=self.text, bn=bn, t=t) + "}"
+
+
+class NoteNikayaKey(NoteKey):
+    def __init__(self, text):
+        super().__init__(text)
+        self._tex_cmd = "notenikayakey"
+
+
+class NoteAgamaKey(NoteKey):
+    def __init__(self, text):
+        super().__init__(text)
+        self._tex_cmd = "noteagamakey"
 
 
 def _do_lines(contents, funs, **kwargs):

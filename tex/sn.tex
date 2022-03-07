@@ -18,12 +18,13 @@
   ]
 \setupfooter
   [text]
-  [after={\startframed[frame=off,bottomframe=on,framecolor=black,] \stopframed},
+  [before={\startframed[frame=off,bottomframe=off,topframe=on,framecolor=black,]},
+   after={\stopframed},
   ]
 \setupheadertexts[]
 \setupheadertexts[{\tf\bf\ss \somenamedheadnumber{chapter}{current}. \getmarking[chapter]}][]
 \setupfootertexts[]
-\setupfootertexts[{\ss \goto{請到莊春江工作站閱覽最新訂正版}[url(https://agama.buddhason.org/)]}][{\tfa \it \pagenumber}]
+\setupfootertexts[{\setupinteraction[color=FuzzyWuzzy] \ss \goto{請到莊春江工作站閱覽最新訂正經文}[url(https://agama.buddhason.org/)]}][{\tfa \it \pagenumber}]
 
 \setupinteraction[state=start]
 \setupinteraction[focus=standard] % 重要功能！添加上后才能连接到位置！
@@ -149,14 +150,18 @@ $homage
 
 \input{$suttas}
 
-\noteTitle{注解}
-
+\setupheadertexts[註解][]
+\noteTitle{註解}
 \input{$localnotes}
 
-\noteTitle{全局注解}
+\setupheadertexts[全局註解][]
+\noteTitle{全局註解}
 \input{$globalnotes}
 
-\part{制作说明}
+\part{阅读说明}
+\input{read_note.tex}
+
+\part{PDF 制作说明}
 \input{creator_note.tex}
 
 \stopdocument
