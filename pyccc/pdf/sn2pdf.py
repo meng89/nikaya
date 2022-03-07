@@ -15,15 +15,20 @@ from pyccc.sn import BN
 
 import user_config
 
+
 suttas_filename = "suttas.tex"
 localnotes_filename = "localnotes.tex"
 globalnotes_filename = "globalnotes.tex"
-
 fonttex_filename = "type-imp-myfonts.tex"
+creator_note_filename = "creator_note.tex"
+
+
+def tex_dir():
+    return os.path.join(utils.PROJECT_ROOT, "tex")
 
 
 def write_fontstex(work_dir):
-    fonttex = open(os.path.join(utils.PROJECT_ROOT, "tex", fonttex_filename), "r").read()
+    fonttex = open(os.path.join(tex_dir(), fonttex_filename), "r").read()
     new_fonttex = fonttex.replace("file:../fonts", "file:" + os.path.expanduser(user_config.FONTS_DIR))
     with open(os.path.join(work_dir, fonttex_filename), "w") as new_fonttex_file:
         new_fonttex_file.write(new_fonttex)
@@ -152,6 +157,8 @@ def make(key, temprootdir, bookdir):
 
         with open(sources_dir + "/" + globalnotes_filename, "w") as f:
             write_globalnotes(f, BN, utils.no_translate)
+
+        shutil.copy(os.path.join(tex_dir(), creator_note_filename), sources_dir)
 
         build(sources_dir=sources_dir, out_dir=out_dir, tex_filename=main_filename)
         # shutil.move(os.path.join(out_dir, "sn.pdf"), os.path.join(bookdir, "sn_tc_eb.pdf"))

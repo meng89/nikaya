@@ -11,6 +11,20 @@
 
 \usecolors[crayola]
 
+\setupheader
+  [text]
+  [before={\startframed[frame=off,bottomframe=on,framecolor=black,]},
+   after={\stopframed},
+  ]
+\setupfooter
+  [text]
+  [after={\startframed[frame=off,bottomframe=on,framecolor=black,] \stopframed},
+  ]
+\setupheadertexts[]
+\setupheadertexts[{\tf\bf\ss \somenamedheadnumber{chapter}{current}. \getmarking[chapter]}][]
+\setupfootertexts[]
+\setupfootertexts[{\ss \goto{請到莊春江工作站閱覽最新訂正版}[url(https://agama.buddhason.org/)]}][{\tfa \it \pagenumber}]
+
 \setupinteraction[state=start]
 \setupinteraction[focus=standard] % 重要功能！添加上后才能连接到位置！
 \setupinteraction
@@ -35,7 +49,7 @@
 
 
 
-\setuphead[part]      [number=no,alternative=middle,style=\tfd\bf\ss,placehead=yes]
+\setuphead[part]      [number=no,alternative=middle,style=\tfd\bf\ss,placehead=yes,header=empty,footer=empty]
 
 
 %为什么有下面这一大段，是为了自定义标题格式，为了分开number和名字，为了自动给sutta加上 SN.x.x 这样的label
@@ -58,7 +72,7 @@
 \stopsetups
 
 
-\setuphead[chapter]   [alternative=centered, style=\tfc\bf\ss,page=no]
+\setuphead[chapter]   [alternative=centered, style=\tfc\bf\ss,page=no,header=empty,footer=empty]
 \setuphead[section]   [number=no,alternative=middle,style=\tfb\bf\ss]
 \setuphead[subsection][style=\tf\bf\ss,]
 
@@ -95,18 +109,19 @@
 
 \definemakeup [homage] [align=middle, style=\tfd]
 
-\startdocument
-    [metadata:title={相應部},
+\setupdocument[metadata:title={相應部},
     metadata:subtitle={佛教},
-    metadata:author={莊春江},
-    %metadata:keywords={經藏}，
-    % metadata:producer={Latex with hyperref, or other system},
+    metadata:author={莊春江 ~ 譯},
     metadata:creator={https://github.com/meng89/nikaya/tree/dev},
+    metadata:date={$date}
+    metadata:keywords={經藏}]
 
-    metadata:date={$date}]
+%metadata:producer={},
+
+\startdocument
 
 \startstandardmakeup
-\part[title=, bookmark=封面]
+\part[title= ,bookmark=封面]
   \raggedcenter
   \vfill
   \blank[-3*big]
@@ -116,7 +131,7 @@
   \blank[3*big]
   \definedfont[Sans at 25pt] \setstrut \strut 傳統中文版
   \blank[18*big]
-  \definedfont[Sans at 20pt] \setstrut \strut  ~ 譯
+  \definedfont[Sans at 20pt] \setstrut \strut 莊春江 ~ 譯
   \blank[-2*small]
   \definedfont[SansBold at 21pt] \setstrut \strut $date
 
@@ -125,7 +140,7 @@
 
 
 \startmakeup[homage]
-\part[title=, bookmark=禮敬]
+\part[title= ,bookmark=禮敬]
 \vfill
 \blank[-25*big]
 $homage
