@@ -26,11 +26,16 @@
 \setupfootertexts[]
 \setupfootertexts[{\setupinteraction[color=FuzzyWuzzy] \ss \goto{請到莊春江工作站閱覽最新訂正經文}[url(https://agama.buddhason.org/)]}][{\tfa \it \pagenumber}]
 
-\setupinteraction[state=start]
+%\setupinteraction[state=start]
 \setupinteraction[focus=standard] % 重要功能！添加上后才能连接到位置！
-\setupinteraction
-   [state=start,
-    style=normal]
+\setupinteraction[state=start,style=normal]
+\setupinteraction[
+    title={相應部},
+    author={莊春江(譯)},
+    subtitle={佛教},
+    keyword={南傳佛教,尼柯耶,經藏},
+    creator={https://github.com/meng89/nikaya/tree/dev},
+]
 
 %\setupurl[color=RAL8017,style=normal]
 
@@ -88,11 +93,11 @@
      title={\startlua if #1==#2 then context("#1") else context("#1-#2") end \stoplua}. #3]}
 
 % 绿
-\define[1]\suttaref{\setupinteraction[color=ShinyShamrock]\goto{#1}[#1]}
+\define[1]\suttaref{\setupinteraction[color=PineGreen]\goto{#1}[#1]}
 
 % 黄
 %\define[2]\cccref{\goto{#2}[url(#1)]}
-\define[2]\ccchref{\setupinteraction[color=RawSienna]\useURL[#2][#1][][#2]\from[#2]}
+\define[2]\ccchref{\setupinteraction[color=FuzzyWuzzy]\goto{#1}[url(#2)]}
 
 % 蓝
 \define[2]\twnr{\setupinteraction[color=MidnightBlue]\goto{#1}[#2]}
@@ -101,8 +106,6 @@
 \define[1]\noteTitle{\part[title=#1]}
 
 
-%\define[4]\subnote{\textreference[#1]{#2} {\bf {\bf\it #2}#3}#4}
-%\define[4]\subnote{\textreference[#1]{\null} {\bf {\bf\it #2}#3}#4}
 \define[1]\subnoteref{\textreference[#1]{\null}}
 \define[1]\subnotekey{{\it #1}}
 
@@ -112,6 +115,8 @@
 
 \define\newline{\par}
 
+\definestartstop[ReadNote][style=\tfa,]
+
 \definestartstop[Note]
   [style=\small,
       before=\blank\startpacked,
@@ -120,14 +125,6 @@
 
 \definemakeup [homage] [align=middle, style=\tfd,]
 
-\setupdocument[metadata:title={相應部},
-    metadata:subtitle={佛教},
-    metadata:author={莊春江(譯)},
-    metadata:creator={https://github.com/meng89/nikaya/tree/dev},
-    metadata:date={$date}
-    metadata:keywords={經藏}]
-
-%metadata:producer={},
 
 \startdocument
 
@@ -145,7 +142,6 @@
   \definedfont[Sans at 20pt] \setstrut \strut 莊春江 ~ 譯
   \blank[-2*small]
   \definedfont[SansBold at 21pt] \setstrut \strut $date
-
   \vfill
 \stopstandardmakeup
 
@@ -154,7 +150,6 @@
 
 \startmakeup[homage]
 \bookmark[tobias]{禮敬}
-%\part[title= ,bookmark=禮敬]
 \vfill
 \blank[-25*big]
 $homage

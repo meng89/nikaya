@@ -4,14 +4,11 @@ from string import Template
 import shutil
 import subprocess
 
-from pylatex import escape_latex as el
-
 import pyccc
 import pyccc.sn
 import pyccc.note
-from pyccc import utils, suttaref
+from pyccc import utils
 from pyccc.pdf import globalnote_label, localnote_label
-from pyccc.sn import BN
 
 import user_config
 
@@ -35,9 +32,9 @@ def write_fontstex(work_dir):
         new_fonttex_file.write(new_fonttex)
 
 
-def write_main(main_file: typing.TextIO, t):
+def write_main(main_file: typing.TextIO, bns, t):
     nikaya = pyccc.sn.get()
-    homage = pyccc.pdf.join_to_tex(nikaya.homage_listline)
+    homage = pyccc.pdf.join_to_tex(nikaya.homage_listline, bns, t)
     _head_t = open(os.path.join(utils.PROJECT_ROOT, "tex", "sn.tex"), "r").read()
     strdate = utils.lm_to_strdate(nikaya.last_modified)
     _head = Template(_head_t).substitute(date=strdate, suttas=suttas_filename,
@@ -46,7 +43,7 @@ def write_main(main_file: typing.TextIO, t):
     main_file.write(_head)
 
 
-def write_suttas(latex_io: typing.TextIO, t):
+def write_suttas(latex_io: typing.TextIO, bns, t):
     nikaya = pyccc.sn.get()
 
     for pian in nikaya.pians:
@@ -73,8 +70,8 @@ def write_suttas(latex_io: typing.TextIO, t):
                                    "{" + sutta.end + "}" +
                                    "{" + sutta.title + "}\n")
 
-                    for body_listline in sutta.body_listline_list:
-                        latex_io.write(pyccc.pdf.join_to_tex(body_listline))
+                    for body_listline in sutta.body_lines:
+                        latex_io.write(pyccc.pdf.join_to_tex(body_listline, bns, t))
 
                         latex_io.write("\n\n")
                     latex_io.write("\n\n")
@@ -82,39 +79,24 @@ def write_suttas(latex_io: typing.TextIO, t):
             latex_io.write("\\page\n\n")
 
 
-def write_localnotes(latex_io: typing.TextIO, notes, bookname):
+def write_localnotes(latex_io: typing.TextIO, notes, bns, t):
     for subnote in notes:
         latex_io.write("\\startNote\n")
         latex_io.write("" +
                        "\\subnoteref{" + localnote_label(notes.index(subnote)) + "}" +
-                       pyccc.pdf.join_to_tex(subnote, bookname) + "\n")
-
-        # latex_io.write("    \\subnote" +
-        #               "{" + localnote_label(notes.index(subnote)) + "}" +
-        #               "{" + "\\null" + "}" +
-        #               "{" + (subnote.head or "\\null") + "}" +
-        #               "{" + pyccc.pdf.join_to_tex(subnote.body, bookname) + "}\n\n")
-
+                       pyccc.pdf.join_to_tex(subnote, bns, t) + "\n")
         latex_io.write("\\stopNote\n\n")
 
 
-def write_globalnotes(latex_io: typing.TextIO, bookname, trans=None):
+def write_globalnotes(latex_io: typing.TextIO, bns, t):
     notes = pyccc.note.get()
-    t = trans or utils.no_translate
     for notekey, note in notes.items():
         latex_io.write("\\startNote\n")
-        for subnotekey, subnote in note.items():
+        for subnotekey, line in note.items():
             latex_io.write("" +
                            "\\subnoteref{" + globalnote_label(notekey, subnotekey) + "}" +
                            "\\subnotekey{" + (subnotekey or "\\null") + "}" +
-                           pyccc.pdf.join_to_tex(subnote, bookname) + "\n\n")
-
-            # latex_io.write("    \\subnote" +
-            #               "{" + globalnote_label(notekey, subnotekey) + "}" +
-            #               "{" + (subnotekey or "\\null") + "}" +
-            #               "{" + (subnote.head or "\\null") + "}" +
-            #               "{" + pyccc.pdf.join_to_tex(subnote.body, bookname) + "}\n\n")
-
+                           pyccc.pdf.join_to_tex(line, bns, t) + "\n\n")
         latex_io.write("\\stopNote\n\n")
 
 
@@ -146,6 +128,8 @@ def make_keys():
 def make(key, temprootdir, bookdir):
     main_filename = "sn.tex"
     sn_tc_eb = "sn_tc_eb"
+    bns = [pyccc.sn.BN]
+    t = utils.no_translate
 
     if key == sn_tc_eb:
         nikaya = pyccc.sn.get()
@@ -157,16 +141,16 @@ def make(key, temprootdir, bookdir):
         write_fontstex(sources_dir)
 
         with open(sources_dir + "/" + main_filename, "w") as f:
-            write_main(f, utils.no_translate)
+            write_main(f, bns, t)
 
         with open(sources_dir + "/" + suttas_filename, "w") as f:
-            write_suttas(f, utils.no_translate)
+            write_suttas(f, bns, t)
 
         with open(sources_dir + "/" + localnotes_filename, "w") as f:
-            write_localnotes(f, nikaya.local_notes, BN)
+            write_localnotes(f, nikaya.local_notes, bns, t)
 
         with open(sources_dir + "/" + globalnotes_filename, "w") as f:
-            write_globalnotes(f, BN, utils.no_translate)
+            write_globalnotes(f, bns, t)
 
         shutil.copy(os.path.join(tex_dir(), read_note_filename), sources_dir)
         shutil.copy(os.path.join(tex_dir(), creator_note_filename), sources_dir)

@@ -55,7 +55,7 @@ def write_suttas(latex_io: typing.TextIO, t):
                     latex_io.write("\\label{subsec:" + pyccc.sn.BN + "." + xiangying.serial + "." +
                                    sutta.begin + "}\n")
 
-                    for body_listline in sutta.body_listline_list:
+                    for body_listline in sutta.body_lines:
                         for e in body_listline:
                             if isinstance(e, str):
                                 latex_io.write(el(e))

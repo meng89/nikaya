@@ -40,7 +40,7 @@ def translate_to_zh_cn(nikaya_book):
                 sub.sec_title = convert(sub.sec_title)
 
             if isinstance(sub, Sutta):
-                sub.body_listline_list = [convert(line) for line in sub.body_listline_list]
+                sub.body_lines = [convert(line) for line in sub.body_lines]
 
             else:
                 convert_tree(sub.subs)
@@ -101,7 +101,7 @@ def make_book(nikaya):
 
                 sutra_xhtml_str = sutra_template.render(head_title=sutra.abbreviation + ' ' + sutra.title,
                                                         title=sutra.abbreviation + ' ' + sutra.title,
-                                                        main_lines=sutra.body_listline_list,
+                                                        main_lines=sutra.body_lines,
 
                                                         chinese_lines=[x for x in sutra.chinese.strip().splitlines()
                                                                        if x.strip()],

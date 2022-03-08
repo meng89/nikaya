@@ -82,7 +82,7 @@ def make_nikaya(sutra_urls):
         sutra.pali = pali
         sutra.chinese = chinese
 
-        sutra.body_listline_list = main_lines
+        sutra.body_lines = main_lines
 
         sutra.last_modified = modified
 

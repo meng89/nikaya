@@ -51,7 +51,7 @@ class Href(object):
 
     def to_tex(self, t):
         url = urljoin(CCC_WEBSITE, urljoin(self.base_url_path, self.href))
-        return "\\ccchref{" + url + "}{" + t(self.text) + "}"
+        return "\\ccchref{" + t(self.text) + "}{" + url + "}"
 
 
 class TextWithNoteRef(object):
@@ -117,7 +117,7 @@ def _do_class_comp(comp_doc, **kwargs):
         for e in note_docs:
             _key = re.match(r"^note(\d+)$", e["id"]).group(1)
             if list(e.contents):
-                note = pyccc.note._do_subnote2(contents=list(e.contents), sutta_temp_notes=sutta_temp_notes, **kwargs)
+                note = pyccc.note._do_subnote(contents=list(e.contents), sutta_temp_notes=sutta_temp_notes, **kwargs)
                 sutta_temp_notes[_key] = note
     return sutta_temp_notes
 

@@ -35,10 +35,8 @@ class Sutta(object):
         self.end = None
 
         # self.chinese = None
-        self.body_listline_list = None
+        self.body_lines = None
         self.pali = None
-
-        self.local_note_list = None
 
         self.sort_name = None
 

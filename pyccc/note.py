@@ -64,39 +64,19 @@ def _do_globalnote(contents: list, **kwargs):
             left = text
 
         contents.insert(0, left)
-        subnote = _do_subnote2(contents, **kwargs)
+        subnote = _do_subnote(contents, **kwargs)
         note[subkey] = subnote
 
     return note
 
 
 def _do_localnote(**kwargs):
-    subnote, contents = _do_subnote2(**kwargs)
+    subnote, contents = _do_subnote(**kwargs)
     assert contents == []
     return subnote
 
 
-def ___do_subnote(contents: list, **kwargs):
-    first = contents.pop(0)
-    assert isinstance(first, (str, bs4.element.NavigableString))
-    text = str(first)
-    m = re.match(r"^(「.*?」)(.*)$", text)
-    if m:
-        head = m.group(1)
-        left_text = m.group(2)
-    else:
-        head = None
-        left_text = text
-
-    contents.insert(0, left_text)
-
-    body = _do_line(contents=contents,
-                    funs=[_do_xstr, _do_href, _do_onmouseover_global, _do_onmouseover_local],
-                    **kwargs)
-    return ___SubNote(head, body)
-
-
-def _do_subnote2(contents: list, **kwargs):
+def _do_subnote(contents: list, **kwargs):
     first = contents.pop(0)
     assert isinstance(first, (str, bs4.element.NavigableString))
     line = []
@@ -120,10 +100,6 @@ def _do_subnote2(contents: list, **kwargs):
     return line + left_line
 
 
-def _do_subnote2_left(contents: list, **kwargs):
-    pass
-
-
 class NoteKeywordDefault(object):
     def __init__(self, text):
         self.text = text
@@ -135,8 +111,8 @@ class NoteKeywordDefault(object):
     def _contents(self):
         return pyccc.suttaref.split_str(self.text)
 
-    def to_tex(self, bn, t):
-        return "\\" + self._tex_cmd + "{" + pyccc.pdf.join_to_tex(line=self._contents(), bn=bn, t=t) + "}"
+    def to_tex(self, bns, t):
+        return "\\" + self._tex_cmd + "{" + pyccc.pdf.join_to_tex(line=self._contents(), bns=bns, t=t) + "}"
 
 
 class NoteKeywordNikaya(NoteKeywordDefault):
@@ -165,16 +141,13 @@ def _do_line(contents, funs, **kwargs):
         if isinstance(contents[0], bs4.element.Tag) and contents[0].name == "br":
             contents.pop(0)
             break
-        # elif isinstance(contents[0], bs4.element.NavigableString) and contents[0].get_text == "\n":
-        #    contents.pop(0)
-        #    break
         elif contents[0] == "\n":
             contents.pop(0)
             break
         x = _do_e(contents.pop(0), funs, **kwargs)
         line.extend(x)
 
-    return line  # , contents
+    return line
 
 
 class ElementError(Exception):
@@ -279,18 +252,6 @@ def match_key(num, text, notes=None):
             return num, subnum
 
     raise NoteNotMatch((num, text))
-
-
-def ___in_list(text, subnote):
-    if text in pyccc.pdf.join_to_text(subnote):
-        return
-
-    for e in subnote:
-        if isinstance(e, pyccc.suttaref.SuttaRef):
-            continue
-        if text in e:
-            return True
-    return False
 
 
 def get():

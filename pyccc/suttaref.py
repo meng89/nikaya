@@ -1,5 +1,5 @@
 import re
-from . import utils, trans
+from . import utils
 
 P_SA = r"(SA)\.(\d+)"
 P_SN = r"(SN)\.(\d+\.\d+)"
@@ -35,11 +35,12 @@ class SuttaRef(object):
         elif self._pattern in (P_MI, P_NI, P_PS):
             return "{}/{}/{}{}.htm".format(utils.CCC_WEBSITE, self._BN, self._BN, self._num)
 
-    def to_tex(self, booknames):
-        if booknames == self._BN:
+    def to_tex(self, bns: list[str]):
+        if self._BN in bns:
             return "\\suttaref{" + self.get_text() + "}"
         else:
-            return "\\ccchref{" + self.get_cccurl() + "}{" + self.get_text() + "}"
+            return utils.Href(self.get_text(), self.get_cccurl(), utils.CCC_WEBSITE, "").to_tex(utils.no_translate)
+            # return "\\ccchref{" + self.get_text() + "}{" + self.get_cccurl() + "}"
 
     def __repr__(self):
         return (f'{self.__class__.__name__}('

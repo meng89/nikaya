@@ -155,7 +155,7 @@ def make_nikaya(sutta_urls):
     nikaya.title_pali = 'Saṃyutta Nikāya'
     nikaya.abbreviation = 'SN'
     for url in sutta_urls:
-        homage_listline, head_line_list, sutta_name_part, translator_part, body_listline_list, \
+        homage_listline, head_line_list, sutta_name_part, translator_part, lines, \
             pali_text, last_modified = pyccc.utils.read_page(url, nikaya.local_notes)
 
         if nikaya.last_modified is None:
@@ -209,7 +209,7 @@ def make_nikaya(sutta_urls):
         sutta.pali = pali_text
         # sutta.chinese = line_list
 
-        sutta.body_listline_list = body_listline_list
+        sutta.body_lines = lines
 
         sutta.last_modified = last_modified
 
