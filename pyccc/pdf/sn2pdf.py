@@ -21,6 +21,7 @@ localnotes_filename = "localnotes.tex"
 globalnotes_filename = "globalnotes.tex"
 fonttex_filename = "type-imp-myfonts.tex"
 creator_note_filename = "creator_note.tex"
+read_note_filename = "read_note.tex"
 
 
 def tex_dir():
@@ -84,11 +85,15 @@ def write_suttas(latex_io: typing.TextIO, t):
 def write_localnotes(latex_io: typing.TextIO, notes, bookname):
     for subnote in notes:
         latex_io.write("\\startNote\n")
-        latex_io.write("    \\subnote" +
-                       "{" + localnote_label(notes.index(subnote)) + "}" +
-                       "{" + "\\null" + "}" +
-                       "{" + (subnote.head or "\\null") + "}" +
-                       "{" + pyccc.pdf.join_to_tex(subnote.body, bookname) + "}\n\n")
+        latex_io.write("  \\item " +
+                       "\\subnoteref{" + localnote_label(notes.index(subnote)) + "}" +
+                       pyccc.pdf.join_to_tex(subnote, bookname) + "\n\n")
+
+        # latex_io.write("    \\subnote" +
+        #               "{" + localnote_label(notes.index(subnote)) + "}" +
+        #               "{" + "\\null" + "}" +
+        #               "{" + (subnote.head or "\\null") + "}" +
+        #               "{" + pyccc.pdf.join_to_tex(subnote.body, bookname) + "}\n\n")
 
         latex_io.write("\\stopNote\n\n")
 
@@ -99,11 +104,16 @@ def write_globalnotes(latex_io: typing.TextIO, bookname, trans=None):
     for notekey, note in notes.items():
         latex_io.write("\\startNote\n")
         for subnotekey, subnote in note.items():
-            latex_io.write("    \\subnote" +
-                           "{" + globalnote_label(notekey, subnotekey) + "}" +
-                           "{" + (subnotekey or "\\null") + "}" +
-                           "{" + (subnote.head or "\\null") + "}" +
-                           "{" + pyccc.pdf.join_to_tex(subnote.body, bookname) + "}\n\n")
+            latex_io.write("  \\item " +
+                           "\\subnoteref{" + globalnote_label(notekey, subnotekey) + "}" +
+                           "\\subnotekey{" + (subnotekey or "\\null") + "}" +
+                           pyccc.pdf.join_to_tex(subnote, bookname) + "\n\n")
+
+            # latex_io.write("    \\subnote" +
+            #               "{" + globalnote_label(notekey, subnotekey) + "}" +
+            #               "{" + (subnotekey or "\\null") + "}" +
+            #               "{" + (subnote.head or "\\null") + "}" +
+            #               "{" + pyccc.pdf.join_to_tex(subnote.body, bookname) + "}\n\n")
 
         latex_io.write("\\stopNote\n\n")
 
@@ -158,6 +168,7 @@ def make(key, temprootdir, bookdir):
         with open(sources_dir + "/" + globalnotes_filename, "w") as f:
             write_globalnotes(f, BN, utils.no_translate)
 
+        shutil.copy(os.path.join(tex_dir(), read_note_filename), sources_dir)
         shutil.copy(os.path.join(tex_dir(), creator_note_filename), sources_dir)
 
         build(sources_dir=sources_dir, out_dir=out_dir, tex_filename=main_filename)

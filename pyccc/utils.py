@@ -39,6 +39,9 @@ class Href(object):
         self.base_url_path = base_url_path
         self.target = target
 
+    def get_text(self):
+        return self.text
+
     def __repr__(self):
         return (f'{self.__class__.__name__}('
                 f'text={self.text!r}, '
@@ -114,7 +117,7 @@ def _do_class_comp(comp_doc, **kwargs):
         for e in note_docs:
             _key = re.match(r"^note(\d+)$", e["id"]).group(1)
             if list(e.contents):
-                note = pyccc.note._do_subnote(contents=list(e.contents), sutta_temp_notes=sutta_temp_notes, **kwargs)
+                note = pyccc.note._do_subnote2(contents=list(e.contents), sutta_temp_notes=sutta_temp_notes, **kwargs)
                 sutta_temp_notes[_key] = note
     return sutta_temp_notes
 

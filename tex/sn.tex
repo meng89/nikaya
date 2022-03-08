@@ -35,8 +35,10 @@
 %\setupurl[color=RAL8017,style=normal]
 
 %\setupinteractionscreen[option=bookmark]
+\definelist[tobias]
 
-\placebookmarks[part,chapter,section,subsection,][chapter][number=no]
+\placebookmarks[part,chapter,section,subsection,tobias][chapter][number=no]
+
 \setupinteractionscreen[option=bookmark]
 \enabledirectives[references.bookmarks.preroll]
 
@@ -99,7 +101,12 @@
 \define[1]\noteTitle{\part[title=#1]}
 
 
-\define[4]\subnote{\textreference[#1]{#2} {\bf {\bf\it #2}#3}#4}
+%\define[4]\subnote{\textreference[#1]{#2} {\bf {\bf\it #2}#3}#4}
+%\define[4]\subnote{\textreference[#1]{\null} {\bf {\bf\it #2}#3}#4}
+\define[1]\subnoteref{\textreference[#1]{\null}]}
+\define[1]\subnotekey{\it #1}
+\define[1]\noteagamakey{#1}
+\define[1]\notenikayakey{\bf #1}
 
 \define\newline{\par}
 
@@ -108,7 +115,8 @@
       before=\blank\startpacked,
    after=\stoppacked\blank]
 
-\definemakeup [homage] [align=middle, style=\tfd]
+
+\definemakeup [homage] [align=middle, style=\tfd,]
 
 \setupdocument[metadata:title={相應部},
     metadata:subtitle={佛教},
@@ -122,7 +130,7 @@
 \startdocument
 
 \startstandardmakeup
-\part[title= ,bookmark=封面]
+\bookmark[tobias]{封面}
   \raggedcenter
   \vfill
   \blank[-3*big]
@@ -139,9 +147,12 @@
   \vfill
 \stopstandardmakeup
 
+\part{閱讀說明}
+\input{read_note.tex}
 
 \startmakeup[homage]
-\part[title= ,bookmark=禮敬]
+\bookmark[tobias]{禮敬}
+%\part[title= ,bookmark=禮敬]
 \vfill
 \blank[-25*big]
 $homage
@@ -158,8 +169,6 @@ $homage
 \noteTitle{全局註解}
 \input{$globalnotes}
 
-\part{阅读说明}
-\input{read_note.tex}
 
 \part{PDF 制作说明}
 \input{creator_note.tex}

@@ -26,7 +26,7 @@ def main():
         print("temprootdir: {}".format(temprootdir_td.name))
 
     books_dir = os.path.join(pyccc.utils.PROJECT_ROOT, "books", time.strftime("%Y-%m-%d_%H.%M.%S", time.localtime()))
-    os.makedirs(books_dir, exist_ok=True)
+    # os.makedirs(books_dir, exist_ok=True)
 
     print_temprootdir()
     pyccc.pdf.sn2pdf.make("sn_tc_eb", temprootdir_td.name, books_dir)

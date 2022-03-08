@@ -62,19 +62,19 @@ def _do_globalnote(contents: list, **kwargs):
             left = text
 
         contents.insert(0, left)
-        subnote = _do_subnote(contents, **kwargs)
+        subnote = _do_subnote2(contents, **kwargs)
         note[subkey] = subnote
 
     return note
 
 
 def _do_localnote(**kwargs):
-    subnote, contents = _do_subnote(**kwargs)
+    subnote, contents = _do_subnote2(**kwargs)
     assert contents == []
     return subnote
 
 
-def _do_subnote(contents: list, **kwargs):
+def ___do_subnote(contents: list, **kwargs):
     first = contents.pop(0)
     assert isinstance(first, (str, bs4.element.NavigableString))
     text = str(first)
@@ -88,12 +88,32 @@ def _do_subnote(contents: list, **kwargs):
 
     contents.insert(0, left_text)
 
-    body = _do_line(contents=contents, funs=[_do_xstr, _do_href,
-                                             _do_onmouseover_global, _do_onmouseover_local], **kwargs)
+    body = _do_line(contents=contents,
+                    funs=[_do_xstr, _do_href, _do_onmouseover_global, _do_onmouseover_local],
+                    **kwargs)
     return SubNote(head, body)
 
 
 def _do_subnote2(contents: list, **kwargs):
+    first = contents.pop(0)
+    assert isinstance(first, (str, bs4.element.NavigableString))
+    line = []
+    text = str(first)
+    m = re.match(r"^(「.*?(SA|GA|MA|DA|AA).*?」)(.*)$", text)
+    if m:
+        line.append(NoteAgamaKey(m.group(1)))
+        left_text = m.group(2)
+
+    else:
+        left_text = text
+    contents.insert(0, left_text)
+    left_line = _do_line(contents=contents,
+                         funs=[_do_note_xstr, _do_href, _do_onmouseover_global, _do_onmouseover_local],
+                         ** kwargs)
+    return line + left_line
+
+
+def _do_subnote2_left(contents: list, **kwargs):
     pass
 
 
@@ -101,6 +121,9 @@ class NoteKey(object):
     def __init__(self, text):
         self.text = text
         self._tex_cmd = "notekey"
+
+    def get_text(self):
+        return self.text
 
     def _contents(self):
         return pyccc.suttaref.split_str(self.text)
@@ -130,7 +153,7 @@ def _do_lines(contents, funs, **kwargs):
 
 
 def _do_line(contents, funs, **kwargs):
-    listline = []
+    line = []
     while contents:
         if isinstance(contents[0], bs4.element.Tag) and contents[0].name == "br":
             contents.pop(0)
@@ -142,9 +165,9 @@ def _do_line(contents, funs, **kwargs):
             contents.pop(0)
             break
         x = _do_e(contents.pop(0), funs, **kwargs)
-        listline.extend(x)
+        line.extend(x)
 
-    return listline  # , contents
+    return line  # , contents
 
 
 class ElementError(Exception):
@@ -157,6 +180,19 @@ def _do_e(e, funs, **kwargs):
         if answer:
             return x
     raise ElementError(e)
+
+
+def _do_note_xstr(e, **kwargs):
+    line = []
+    if isinstance(e, (str, bs4.element.NavigableString)):
+        m = re.match(r"$(.*南傳作)(「.*?」)(.*)$", str(e).strip("\n"))
+        if m:
+            line.extend(pyccc.suttaref.split_str(m.group(1)))
+            line.append(NoteNikayaKey(m.group(2)))
+            line.extend(pyccc.suttaref.split_str(m.group(3)))
+        return True, line
+    else:
+        return False, e
 
 
 def _do_xstr(e, **kwargs):
@@ -200,7 +236,9 @@ def _do_onmouseover_local(e, url_path, sutta_temp_notes, local_notes):
             key = m.group(1)
 
             try:
-                note = sutta_temp_notes[key]
+                _note = sutta_temp_notes[key]
+                note = tuple(_note)
+                # todo
             except KeyError:
                 utils.ccc_bug(utils.WARNING, url_path, "未找到本地注解编号 \"{}\"".format(key))
                 x = e.get_text()
@@ -228,14 +266,17 @@ def match_key(num, text, notes=None):
         raise NoteNotMatch((num, text))
 
     for subnum, subnote in _notes[num].items():
-        if (subnote.head is not None and text in subnote.head) or _in_list(text, subnote.body):
+        if text in pyccc.pdf.join_to_text(subnote):
             return num, subnum
 
     raise NoteNotMatch((num, text))
 
 
-def _in_list(text, body):
-    for e in body:
+def ___in_list(text, subnote):
+    if text in pyccc.pdf.join_to_text(subnote):
+        return
+
+    for e in subnote:
         if isinstance(e, pyccc.suttaref.SuttaRef):
             continue
         if text in e:
