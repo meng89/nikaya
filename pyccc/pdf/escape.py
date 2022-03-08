@@ -1,5 +1,5 @@
 _map = [
-    ("\\", "\\textbackslash"),  # 必须第一个
+    ("\\", "\\textbackslash"),
     ("#", "\\#"),
     ("$", "\\textdollar"),
     ("%", "\\percent"),
@@ -13,8 +13,18 @@ _map = [
 ]
 
 
-def el(s: str):
-    ns = None
-    for a, b in _map:
-        ns = s.replace(a, b)
+def el(s):
+    ns = ""
+    for c in s:
+        ns += _el_char(c)
     return ns
+
+
+def _el_char(c):
+    for (a, b) in _map:
+        if c == a:
+            return "{" + b + "}"
+    return c
+
+
+print(el("sfs\\f.ht{ml#2"))
