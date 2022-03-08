@@ -2,6 +2,8 @@ import re
 import abc
 from pprint import pprint
 
+from pylatex import escape_latex as el
+
 import bs4
 import requests.exceptions
 
@@ -14,7 +16,7 @@ from . import utils
 _global_notes = {}
 
 
-class SubNote(object):
+class ___SubNote(object):
     def __init__(self, head: str or None, body: list):
         self.head = head
         self.body = body
@@ -91,7 +93,7 @@ def ___do_subnote(contents: list, **kwargs):
     body = _do_line(contents=contents,
                     funs=[_do_xstr, _do_href, _do_onmouseover_global, _do_onmouseover_local],
                     **kwargs)
-    return SubNote(head, body)
+    return ___SubNote(head, body)
 
 
 def _do_subnote2(contents: list, **kwargs):
@@ -99,17 +101,22 @@ def _do_subnote2(contents: list, **kwargs):
     assert isinstance(first, (str, bs4.element.NavigableString))
     line = []
     text = str(first)
-    m = re.match(r"^(「.*?(SA|GA|MA|DA|AA).*?」)(.*)$", text)
+    m = re.match(r"^(「.*?(?:SA|GA|MA|DA|AA).*?」)(.*)$", text)
     if m:
-        line.append(NoteAgamaKey(m.group(1)))
+        line.append(NoteKeywordAgama(m.group(1)))
         left_text = m.group(2)
-
     else:
-        left_text = text
+        m = re.match(r"^(「.*?」)(.*)$", text)
+        if m:
+            line.append(NoteKeywordDefault(m.group(1)))
+            left_text = m.group(2)
+        else:
+            left_text = text
+
     contents.insert(0, left_text)
     left_line = _do_line(contents=contents,
                          funs=[_do_note_xstr, _do_href, _do_onmouseover_global, _do_onmouseover_local],
-                         ** kwargs)
+                         **kwargs)
     return line + left_line
 
 
@@ -117,10 +124,10 @@ def _do_subnote2_left(contents: list, **kwargs):
     pass
 
 
-class NoteKey(object):
+class NoteKeywordDefault(object):
     def __init__(self, text):
         self.text = text
-        self._tex_cmd = "notekey"
+        self._tex_cmd = "notekeyworddefault"
 
     def get_text(self):
         return self.text
@@ -129,19 +136,19 @@ class NoteKey(object):
         return pyccc.suttaref.split_str(self.text)
 
     def to_tex(self, bn, t):
-        return "\\" + self._tex_cmd + "{" + pyccc.pdf.join_to_tex(line=self.text, bn=bn, t=t) + "}"
+        return "\\" + self._tex_cmd + "{" + pyccc.pdf.join_to_tex(line=self._contents(), bn=bn, t=t) + "}"
 
 
-class NoteNikayaKey(NoteKey):
+class NoteKeywordNikaya(NoteKeywordDefault):
     def __init__(self, text):
         super().__init__(text)
-        self._tex_cmd = "notenikayakey"
+        self._tex_cmd = "notekeywordnikaya"
 
 
-class NoteAgamaKey(NoteKey):
+class NoteKeywordAgama(NoteKeywordDefault):
     def __init__(self, text):
         super().__init__(text)
-        self._tex_cmd = "noteagamakey"
+        self._tex_cmd = "notekeywordagama"
 
 
 def _do_lines(contents, funs, **kwargs):
@@ -185,11 +192,13 @@ def _do_e(e, funs, **kwargs):
 def _do_note_xstr(e, **kwargs):
     line = []
     if isinstance(e, (str, bs4.element.NavigableString)):
-        m = re.match(r"$(.*南傳作)(「.*?」)(.*)$", str(e).strip("\n"))
+        m = re.match(r"^(.*南傳作)(「.*?」)(.*)$", str(e).strip("\n"))
         if m:
             line.extend(pyccc.suttaref.split_str(m.group(1)))
-            line.append(NoteNikayaKey(m.group(2)))
+            line.append(NoteKeywordNikaya(m.group(2)))
             line.extend(pyccc.suttaref.split_str(m.group(3)))
+        else:
+            line.extend(pyccc.suttaref.split_str(str(e).strip("\n")))
         return True, line
     else:
         return False, e

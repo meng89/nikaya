@@ -35,7 +35,7 @@ def join_to_tex(line: list, bn=None or str, t=None):
             s += x.to_tex(t)
         elif isinstance(x, pyccc.utils.TextWithNoteRef):
             s += x.to_tex(t)
-        elif isinstance(x, pyccc.note.NoteKey):
+        elif isinstance(x, pyccc.note.NoteKeywordDefault):
             s += x.to_tex(bn=bn, t=t)
         else:
             raise Exception(type(x))
@@ -54,7 +54,7 @@ def join_to_text(line: list, bn=None or str, t=None):
             s += x.get_text()
         elif isinstance(x, pyccc.utils.TextWithNoteRef):
             s += x.get_text()
-        elif isinstance(x, pyccc.note.NoteKey):
+        elif isinstance(x, pyccc.note.NoteKeywordDefault):
             s += x.get_text()
         else:
             raise Exception(type(x))

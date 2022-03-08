@@ -85,9 +85,9 @@ def write_suttas(latex_io: typing.TextIO, t):
 def write_localnotes(latex_io: typing.TextIO, notes, bookname):
     for subnote in notes:
         latex_io.write("\\startNote\n")
-        latex_io.write("  \\item " +
+        latex_io.write("" +
                        "\\subnoteref{" + localnote_label(notes.index(subnote)) + "}" +
-                       pyccc.pdf.join_to_tex(subnote, bookname) + "\n\n")
+                       pyccc.pdf.join_to_tex(subnote, bookname) + "\n")
 
         # latex_io.write("    \\subnote" +
         #               "{" + localnote_label(notes.index(subnote)) + "}" +
@@ -104,7 +104,7 @@ def write_globalnotes(latex_io: typing.TextIO, bookname, trans=None):
     for notekey, note in notes.items():
         latex_io.write("\\startNote\n")
         for subnotekey, subnote in note.items():
-            latex_io.write("  \\item " +
+            latex_io.write("" +
                            "\\subnoteref{" + globalnote_label(notekey, subnotekey) + "}" +
                            "\\subnotekey{" + (subnotekey or "\\null") + "}" +
                            pyccc.pdf.join_to_tex(subnote, bookname) + "\n\n")

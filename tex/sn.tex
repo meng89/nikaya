@@ -88,14 +88,14 @@
      title={\startlua if #1==#2 then context("#1") else context("#1-#2") end \stoplua}. #3]}
 
 % 绿
-\define[1]\suttaref{\setupinteraction[color=ShinyShamrock] \goto{#1}[#1]}
+\define[1]\suttaref{\setupinteraction[color=ShinyShamrock]\goto{#1}[#1]}
 
 % 黄
 %\define[2]\cccref{\goto{#2}[url(#1)]}
-\define[2]\ccchref{\setupinteraction[color=RawSienna] \useURL[#2][#1][][#2] \from[#2]}
+\define[2]\ccchref{\setupinteraction[color=RawSienna]\useURL[#2][#1][][#2]\from[#2]}
 
 % 蓝
-\define[2]\twnr{\setupinteraction[color=MidnightBlue] \goto{#1}[#2]}
+\define[2]\twnr{\setupinteraction[color=MidnightBlue]\goto{#1}[#2]}
 
 
 \define[1]\noteTitle{\part[title=#1]}
@@ -103,10 +103,12 @@
 
 %\define[4]\subnote{\textreference[#1]{#2} {\bf {\bf\it #2}#3}#4}
 %\define[4]\subnote{\textreference[#1]{\null} {\bf {\bf\it #2}#3}#4}
-\define[1]\subnoteref{\textreference[#1]{\null}]}
-\define[1]\subnotekey{\it #1}
-\define[1]\noteagamakey{#1}
-\define[1]\notenikayakey{\bf #1}
+\define[1]\subnoteref{\textreference[#1]{\null}}
+\define[1]\subnotekey{{\it #1}}
+
+\define[1]\notekeywordagama{{#1}}
+\define[1]\notekeywordnikaya{{\bf #1}}
+\define[1]\notekeyworddefault{\notekeywordnikaya{#1}}
 
 \define\newline{\par}
 
@@ -120,7 +122,7 @@
 
 \setupdocument[metadata:title={相應部},
     metadata:subtitle={佛教},
-    metadata:author={莊春江 ~ 譯},
+    metadata:author={莊春江(譯)},
     metadata:creator={https://github.com/meng89/nikaya/tree/dev},
     metadata:date={$date}
     metadata:keywords={經藏}]
