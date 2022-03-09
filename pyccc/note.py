@@ -16,17 +16,6 @@ from . import utils
 _global_notes = {}
 
 
-class ___SubNote(object):
-    def __init__(self, head: str or None, body: list):
-        self.head = head
-        self.body = body
-
-    def __repr__(self):
-        return (f'{self.__class__.__name__}('
-                f'head={self.head!r}, '
-                f'body={self.body!r})')
-
-
 def load_global(domain: str):
     global _global_notes
     for i in range(100):
