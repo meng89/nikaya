@@ -1,3 +1,7 @@
-"""
-这个包，主要是把庄春江工作站的网页数据转换成 Python 化的数据，以方便做出 epub 或 pdf 书籍
-"""
+import os
+
+CCC_WEBSITE = "https://agama.buddhason.org"
+
+TEX_DIR = PROJECT_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tex")
+
+assert os.path.isdir(TEX_DIR)

@@ -5,13 +5,16 @@ import threading
 
 from flask import Flask
 
-from user_config import INDEX_DIR
+try:
+    import user_config as uc
+except ImportError:
+    import _user_config as uc
 
 _is_runing = False
 
 _url = None
 
-app = Flask(__name__, static_folder=INDEX_DIR)
+app = Flask(__name__, static_folder=uc.INDEX_DIR)
 
 
 @app.route('/')

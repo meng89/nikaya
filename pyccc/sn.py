@@ -7,12 +7,8 @@ from public import Nikaya, Node, Sutta
 
 from tools import get_sutta_urls
 
-import pyccc.note
 
-from . import utils
-
-# from jinja2 import Template
-# from mako.template import Template
+from pyccc import page_parsing
 
 HTML_INDEX = '/SN/index.htm'
 
@@ -156,7 +152,7 @@ def make_nikaya(sutta_urls):
     nikaya.abbreviation = 'SN'
     for url in sutta_urls:
         homage_listline, head_line_list, sutta_name_part, translator_part, lines, \
-            pali_text, last_modified = pyccc.utils.read_page(url, nikaya.local_notes)
+            pali_text, last_modified = page_parsing.read_page(url, nikaya.local_notes)
 
         if nikaya.last_modified is None:
             nikaya.last_modified = last_modified
@@ -236,10 +232,10 @@ def make_nikaya(sutta_urls):
     return nikaya
 
 
-def load(domain):
+def load(domain, cache_dir):
     nikaya_filename = "sn_data"
     global _nikaya
-    data_path = os.path.join(utils.CACHE_DIR, nikaya_filename)
+    data_path = os.path.join(cache_dir, nikaya_filename)
     try:
         with open(data_path, "rb") as rf:
             _nikaya = pickle.load(rf)

@@ -2,7 +2,7 @@ from urllib.parse import urlparse, urljoin
 
 import re
 
-from pyccc import utils
+from pyccc import page_parsing
 
 
 def _del_split_chinese_lines(chinese):
@@ -37,7 +37,7 @@ def _del_split_chinese_lines(chinese):
 def get_sutta_urls(nikaya_url):
     sutra_urls = []
 
-    soup = utils.read_url(nikaya_url)[0]
+    soup = page_parsing.read_url(nikaya_url)[0]
 
     for table in soup.find_all('table')[3:]:
         all_a = table.find_all('a')

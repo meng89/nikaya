@@ -1,6 +1,9 @@
 import os.path
 
-from pyccc.utils import PROJECT_ROOT
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+CACHE_DIR = os.path.join(PROJECT_ROOT, "cache")
+os.makedirs(CACHE_DIR, exist_ok=True)
+
 
 # 莊春江工作站下载的全站打包文件(pyccc.rar)解压后的目录, 此目录下
 INDEX_DIR = "/mnt/data/Buddhism/ccc7/agama.buddhason.org/"

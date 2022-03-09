@@ -1,22 +1,12 @@
 import re
-import os
 import bs4
 import requests
-from urllib.parse import urlparse, urljoin
+from urllib.parse import urlparse
 
 from dateutil.parser import parse as parsedate
 
-import pyccc.note
-import pyccc.pdf
-import pyccc.suttaref
 
-import pyccc.pdf.escape
-
-PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-CACHE_DIR = os.path.abspath(os.path.join(PROJECT_ROOT, "cache"))
-os.makedirs(CACHE_DIR, exist_ok=True)
-
-CCC_WEBSITE = "https://agama.buddhason.org"
+from pyccc import atom, atom_note
 
 
 class AnalyseError(Exception):
@@ -32,58 +22,6 @@ def _no_translate(x: str):
 
 
 no_translate = _no_translate
-
-
-class Href(object):
-    def __init__(self, text, href, base_url_path, target):
-        self.text = text
-        self.href = href
-        self.base_url_path = base_url_path
-        self.target = target
-
-    def get_text(self):
-        return self.text
-
-    def __repr__(self):
-        return (f'{self.__class__.__name__}('
-                f'text={self.text!r}, '
-                f'href={self.href!r}, '
-                f'base={self.base_url_path!r}, '
-                f'target={self.target!r})')
-
-    def to_tex(self, t):
-        url = urljoin(CCC_WEBSITE, urljoin(self.base_url_path, self.href))
-        return "\\ccchref{" + t(self.text) + "}{" + pyccc.pdf.escape.el_url(url) + "}"
-
-
-class TextWithNoteRef(object):
-    """<a onmouseover="note(this,1);">像這樣被我聽聞</a>"""
-
-    def __init__(self, text, type_, key):
-        self.text = text
-        self.type_ = type_
-        self.key = key
-
-    def __repr__(self):
-        return (f'{self.__class__.__name__}('
-                f'text={self.text!r}, '
-                f'type_={self.type_!r}, '
-                f'number={self.key!r})')
-
-    def to_tex(self, t):
-        return "\\twnr" +\
-               "{" + t(self.get_text()) + "}" + \
-               "{" + pyccc.pdf.note_label(self.type_, self.key) + "}"
-
-    def get_text(self):
-        return self.text
-
-    def get_type(self):
-        return self.type_
-
-    def get_number(self):
-        return self.key
-
 
 WARNING = "WARNING"
 INFO = "INFO"
@@ -119,7 +57,7 @@ def _do_class_comp(comp_doc, **kwargs):
         for e in note_docs:
             _key = re.match(r"^note(\d+)$", e["id"]).group(1)
             if list(e.contents):
-                note = pyccc.note._do_subnote(contents=list(e.contents), sutta_temp_notes=sutta_temp_notes, **kwargs)
+                note = atom_note._do_subnote(contents=list(e.contents), sutta_temp_notes=sutta_temp_notes, **kwargs)
                 sutta_temp_notes[_key] = note
     return sutta_temp_notes
 
@@ -132,10 +70,10 @@ def _do_class_nikaya(contents, **kwargs):
     body_lines = []
 
     def _do_line():
-        return pyccc.note._do_line(contents=contents,
-                                   funs=[pyccc.note._do_xstr, pyccc.note._do_href,
-                                         pyccc.note._do_onmouseover_global, pyccc.note._do_onmouseover_local],
-                                   **kwargs)
+        return atom_note._do_line(contents=contents,
+                                  funs=[atom_note._do_xstr, atom_note._do_href,
+                                        atom_note._do_onmouseover_global, atom_note._do_onmouseover_local],
+                                  **kwargs)
 
     while contents:
         if contents[0].name == "span" and contents[0]["class"] == ["sutra_name"]:
@@ -201,13 +139,9 @@ def listline_list_to_line_list(lsline_list):
         for s in lsline:
             if isinstance(s, str):
                 line += s
-            elif isinstance(s, TextWithNoteRef):
+            elif isinstance(s, atom.TextWithNoteRef):
                 line += s.get_text()
             else:
                 raise TypeError("Something Wrong!")
         lines.append(line)
     return lines
-
-
-def _do_href(e, url_path):
-    return

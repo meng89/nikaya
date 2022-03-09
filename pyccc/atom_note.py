@@ -1,17 +1,13 @@
 import re
-import abc
-from pprint import pprint
-
-from pylatex import escape_latex as el
 
 import bs4
 import requests.exceptions
 
-from boltons.setutils import IndexedSet
 
-import pyccc.pdf
-import pyccc.suttaref
-from . import utils
+from pyccc import atom, pdf, atom_suttaref, page_parsing
+
+
+LOCAL_NOTE_KEY_PREFIX = "x"
 
 _global_notes = {}
 
@@ -21,7 +17,7 @@ def load_global(domain: str):
     for i in range(100):
         try:
             url_path = "/note/note{}.htm".format(i)
-            soup = utils.read_url(domain + url_path)[0]
+            soup = page_parsing.read_url(domain + url_path)[0]
         except requests.exceptions.HTTPError:
             break
 
@@ -98,10 +94,10 @@ class NoteKeywordDefault(object):
         return self.text
 
     def _contents(self):
-        return pyccc.suttaref.split_str(self.text)
+        return atom_suttaref.split_str(self.text)
 
     def to_tex(self, bns, t):
-        return "\\" + self._tex_cmd + "{" + pyccc.pdf.join_to_tex(line=self._contents(), bns=bns, t=t) + "}"
+        return "\\" + self._tex_cmd + "{" + pdf.join_to_tex(line=self._contents(), bns=bns, c=t) + "}"
 
 
 class NoteKeywordNikaya(NoteKeywordDefault):
@@ -156,11 +152,11 @@ def _do_note_xstr(e, **kwargs):
     if isinstance(e, (str, bs4.element.NavigableString)):
         m = re.match(r"^(.*南傳作)(「.*?」)(.*)$", str(e).strip("\n"))
         if m:
-            line.extend(pyccc.suttaref.split_str(m.group(1)))
+            line.extend(atom_suttaref.split_str(m.group(1)))
             line.append(NoteKeywordNikaya(m.group(2)))
-            line.extend(pyccc.suttaref.split_str(m.group(3)))
+            line.extend(atom_suttaref.split_str(m.group(3)))
         else:
-            line.extend(pyccc.suttaref.split_str(str(e).strip("\n")))
+            line.extend(atom_suttaref.split_str(str(e).strip("\n")))
         return True, line
     else:
         return False, e
@@ -168,14 +164,14 @@ def _do_note_xstr(e, **kwargs):
 
 def _do_xstr(e, **kwargs):
     if isinstance(e, (str, bs4.element.NavigableString)):
-        return True, pyccc.suttaref.split_str(str(e).strip("\n"))
+        return True, atom_suttaref.split_str(str(e).strip("\n"))
     else:
         return False, e
 
 
 def _do_href(e, url_path, **kwargs):
     if e.name == "a" and "href" in e.attrs.keys():
-        return True, [pyccc.utils.Href(text=e.get_text(), href=e["href"], base_url_path=url_path, target=e["target"])]
+        return True, [atom.Href(text=e.get_text(), href=e["href"], base_url_path=url_path, target=e["target"])]
     else:
         return False, e
 
@@ -186,13 +182,13 @@ def _do_onmouseover_global(e, url_path, **kwargs):
         if m:
             key = m.group(1)
             try:
-                sub_note_key = pyccc.note.match_key(key, e.get_text())
+                sub_note_key = match_key(key, e.get_text())
 
-            except pyccc.note.NoteNotMatch:
-                utils.ccc_bug(utils.WARNING, url_path, "辞汇 \"{}\" 未匹配全局注解编号 \"{}\"".format(e.get_text(), key))
-                sub_note_key = (key, list(pyccc.note.get()[key].keys())[0])
+            except NoteNotMatch:
+                page_parsing.ccc_bug(page_parsing.WARNING, url_path, "辞汇 \"{}\" 未匹配全局注解编号 \"{}\"".format(e.get_text(), key))
+                sub_note_key = (key, list(get()[key].keys())[0])
 
-            return True, [utils.TextWithNoteRef(text=e.get_text(), key=sub_note_key, type_=utils.GLOBAL)]
+            return True, [atom.TextWithNoteRef(text=e.get_text(), key=sub_note_key, type_=page_parsing.GLOBAL)]
     # ccc bug
     elif e.name == "a" and "nmouseover" in e.attrs.keys():
         return True, [e.get_text()]
@@ -211,13 +207,13 @@ def _do_onmouseover_local(e, url_path, sutta_temp_notes, local_notes):
                 note = tuple(_note)
                 # todo
             except KeyError:
-                utils.ccc_bug(utils.WARNING, url_path, "未找到本地注解编号 \"{}\"".format(key))
+                page_parsing.ccc_bug(page_parsing.WARNING, url_path, "未找到本地注解编号 \"{}\"".format(key))
                 x = e.get_text()
             else:
                 local_notes.add(note)
                 k = local_notes.index(note)
                 # todo mathc
-                x = utils.TextWithNoteRef(text=e.get_text(), key=k, type_=utils.LOCAL)
+                x = atom.TextWithNoteRef(text=e.get_text(), key=k, type_=page_parsing.LOCAL)
 
             return True, [x]
 
@@ -237,7 +233,7 @@ def match_key(num, text, notes=None):
         raise NoteNotMatch((num, text))
 
     for subnum, subnote in _notes[num].items():
-        if text in pyccc.pdf.join_to_text(subnote):
+        if text in pdf.join_to_text(subnote):
             return num, subnum
 
     raise NoteNotMatch((num, text))
@@ -245,3 +241,18 @@ def match_key(num, text, notes=None):
 
 def get():
     return _global_notes
+
+
+def note_label(type_, key):
+    if type_ == page_parsing.GLOBAL:
+        return globalnote_label(key[0], key[1])
+    else:
+        return localnote_label(key)
+
+
+def globalnote_label(notekey, subnotekey):
+    return str(notekey) + "." + str(subnotekey).replace("(", "").replace(")", "")
+
+
+def localnote_label(key):
+    return LOCAL_NOTE_KEY_PREFIX + str(key)

@@ -1,5 +1,7 @@
 import re
-from . import utils
+
+import pyccc
+from pyccc import atom, lang_convert
 
 P_SA = r"(SA)\.(\d+)"
 P_SN = r"(SN)\.(\d+\.\d+)"
@@ -29,18 +31,17 @@ class SuttaRef(object):
 
     def get_cccurl(self):
         if self._pattern in [P_SA, P_MA, P_MN, P_DA, P_DN, P_UD, P_IT, P_NI, P_AA]:
-            return "{}/{}/dm.php?keyword={}".format(utils.CCC_WEBSITE, self._BN, self._num)
+            return "{}/{}/dm.php?keyword={}".format(pyccc.CCC_WEBSITE, self._BN, self._num)
         elif self._pattern in (P_SN, P_AN):
-            return "{}/{}/{}.php?keyword={}".format(utils.CCC_WEBSITE, self._BN, self._BN.lower(), self._num)
+            return "{}/{}/{}.php?keyword={}".format(pyccc.CCC_WEBSITE, self._BN, self._BN.lower(), self._num)
         elif self._pattern in (P_MI, P_NI, P_PS):
-            return "{}/{}/{}{}.htm".format(utils.CCC_WEBSITE, self._BN, self._BN, self._num)
+            return "{}/{}/{}{}.htm".format(pyccc.CCC_WEBSITE, self._BN, self._BN, self._num)
 
     def to_tex(self, bns: list[str]):
         if self._BN in bns:
             return "\\suttaref{" + self.get_text() + "}"
         else:
-            return utils.Href(self.get_text(), self.get_cccurl(), utils.CCC_WEBSITE, "").to_tex(utils.no_translate)
-            # return "\\ccchref{" + self.get_text() + "}{" + self.get_cccurl() + "}"
+            return pyccc.atom.Href(self.get_text(), self.get_cccurl(), pyccc.CCC_WEBSITE, "").to_tex(lang_convert.do_nothing)
 
     def __repr__(self):
         return (f'{self.__class__.__name__}('
@@ -49,7 +50,7 @@ class SuttaRef(object):
                 f'num={self._num!r})')
 
 
-def get_bookref(y):
+def get_suttaref(y):
     for p in PATTERNS:
         m2 = re.match("^{}$".format(p), y)
         if m2:
@@ -64,7 +65,7 @@ def split_str(s: str):
     for m in re.finditer("|".join(PATTERNS), s):
         (begin, end) = m.span()
         list_s.append(s[offset:begin])
-        list_s.append(get_bookref(s[begin:end]))
+        list_s.append(get_suttaref(s[begin:end]))
         offset = end
     if offset < len(s):
         list_s.append(s[offset:])
