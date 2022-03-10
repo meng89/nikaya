@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from pyccc.lang_convert import convert
+from pyccc.lang_convert import convert2sc
 s = """
 
 對那位世尊、阿羅漢、遍正覺者禮敬
@@ -25,5 +25,5 @@ s = """　　「終於我確實看見，般涅槃的婆羅門：
 　　　無住立、無用力地，已度脫世間中的執著。」"""
 
 print(repr(s))
-print(repr(convert(s)))
+print(repr(convert2sc(s)))
 

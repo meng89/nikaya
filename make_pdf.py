@@ -5,7 +5,8 @@ import tempfile
 import subprocess
 import pathlib
 
-import pyccc.pdf.sn2pdf
+import pyccc.pdf
+import pyccc.pdf.sneb2pdf
 import run_ccc
 
 from pyccc import sn, atom_note
@@ -33,7 +34,8 @@ def main():
     # os.makedirs(books_dir, exist_ok=True)
 
     print_temprootdir()
-    pyccc.pdf.sn2pdf.make("sn_tc_eb", temprootdir_td.name, uc.CONTEXT_BIN_PATH, uc.FONTS_DIR, books_dir)
+    pyccc.pdf.sneb2pdf.make(pyccc.pdf.SC, temprootdir_td.name, uc.CONTEXT_BIN_PATH, uc.FONTS_DIR, books_dir)
+    pyccc.pdf.sneb2pdf.make(pyccc.pdf.TC, temprootdir_td.name, uc.CONTEXT_BIN_PATH, uc.FONTS_DIR, books_dir)
 
     print_temprootdir()
     while input("input e and press enter to exit:").rstrip() != "e":

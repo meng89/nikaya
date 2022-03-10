@@ -1,11 +1,8 @@
 import opencc
 
 
-def _do_nothing(x):
+def do_nothing(x):
     return x
-
-
-do_nothing = _do_nothing
 
 
 _table = [
@@ -16,11 +13,14 @@ _table = [
 ]
 
 
-def convert(s):
+def convert2sc(s):
     converter = opencc.OpenCC('tw2sp.json')
-    _sc_s = converter.convert(s)
+    return converter.convert(s)
+
+
+def convert_all(s):
     new_sc_s = ""
-    for c in _sc_s:
+    for c in convert2sc(s):
         new_sc_s += _convert_punctuation(c)
     return new_sc_s
 
@@ -30,4 +30,3 @@ def _convert_punctuation(c):
         if tp == c:
             return sp
     return c
-

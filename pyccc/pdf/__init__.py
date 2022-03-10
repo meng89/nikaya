@@ -65,3 +65,5 @@ def join_to_text(line: list, c=None):
     return c(s)
 
 
+TC = "tc"
+SC = "sc"

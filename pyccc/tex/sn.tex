@@ -24,7 +24,9 @@
 \setupheadertexts[]
 \setupheadertexts[{\tf\bf\ss \somenamedheadnumber{chapter}{current}. \getmarking[chapter]}][]
 \setupfootertexts[]
-\setupfootertexts[{\setupinteraction[color=FuzzyWuzzy] \ss \goto{請到莊春江工作站閱覽最新訂正經文}[url(https://agama.buddhason.org/)]}][{\tfa \it \pagenumber}]
+\setupfootertexts[{\setupinteraction[color=FuzzyWuzzy] \ss
+  \goto{\doifmodeelse{sc}{请到莊春江工作站阅读最新修订经文}{請到莊春江工作站閱讀最新訂正經文}}
+  [url(https://agama.buddhason.org/)]}][{\tfa \it \pagenumber}]
 
 %\setupinteraction[state=start]
 \setupinteraction[focus=standard] % 重要功能！添加上后才能连接到位置！
@@ -36,6 +38,14 @@
     keyword={南傳佛教,尼柯耶,經藏},
     creator={https://github.com/meng89/nikaya/tree/dev},
 ]
+\startmode [sc]
+  \setupinteraction[
+    title={相应部},
+    author={莊春江(译)},
+    subtitle={佛教},
+    keyword={南传佛教,尼柯耶,经藏},
+  ]
+\stopmode
 
 %\setupurl[color=RAL8017,style=normal]
 
@@ -133,13 +143,13 @@
   \raggedcenter
   \vfill
   \blank[-3*big]
-  \definedfont[SansBold at 140pt]\setstrut \strut 相應部
+  \definedfont[SansBold at 140pt]\setstrut \strut \doifmodeelse{sc}{相应部}{相應部}
   \blank[-3*big]
   \definedfont[SansBold at 45pt]\setstrut \strut Saṃyutta ~ Nikāya
   \blank[3*big]
-  \definedfont[Sans at 25pt] \setstrut \strut 傳統中文版
+  \definedfont[Sans at 25pt] \setstrut \strut \doifmodeelse{sc}{机转简体版本}{傳統中文版}
   \blank[18*big]
-  \definedfont[Sans at 20pt] \setstrut \strut 莊春江 ~ 譯
+  \definedfont[Sans at 20pt] \setstrut \strut 莊春江 ~ \doifmodeelse{sc}{译}{譯}
   \blank[-2*small]
   \definedfont[SansBold at 21pt] \setstrut \strut $date
   \vfill
@@ -157,6 +167,7 @@ $homage
 \stopmakeup
 
 \input{$suttas}
+\page
 
 \setupheadertexts[註解][]
 \noteTitle{註解}

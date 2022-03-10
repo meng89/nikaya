@@ -25,9 +25,9 @@ def write_fontstex(work_dir, fonts_dir):
         new_fonttex_file.write(new_fonttex)
 
 
-def write_main(main_file: typing.TextIO, bns, t):
+def write_main(main_file: typing.TextIO, bns, c):
     nikaya = sn.get()
-    homage = pdf.join_to_tex(nikaya.homage_listline, bns, t)
+    homage = pdf.join_to_tex(nikaya.homage_listline, bns, c)
     _head_t = open(os.path.join(pyccc.TEX_DIR, "sn.tex"), "r").read()
     strdate = page_parsing.lm_to_strdate(nikaya.last_modified)
     _head = Template(_head_t).substitute(date=strdate, suttas=suttas_filename,
@@ -36,24 +36,24 @@ def write_main(main_file: typing.TextIO, bns, t):
     main_file.write(_head)
 
 
-def write_suttas(latex_io: typing.TextIO, bns, t):
+def write_suttas(latex_io: typing.TextIO, bns, c):
     nikaya = sn.get()
 
     for pian in nikaya.pians:
         latex_io.write("\\pian" +
-                       "{" + pian.title + "}" +
+                       "{" + c(pian.title) + "}" +
                        "{" + pian.xiangyings[0].serial + "}" +
                        "{" + pian.xiangyings[-1].serial + "}\n")
 
         for xiangying in pian.xiangyings:
             latex_io.write("\\xiangying" +
                            "{" + xiangying.serial + "}" +
-                           "{" + xiangying.title + "}\n")
+                           "{" + c(xiangying.title) + "}\n")
 
             for pin in xiangying.pins:
                 if pin.title is not None:
                     latex_io.write("\\pin" +
-                                   "{" + pin.title + "}" +
+                                   "{" + c(pin.title) + "}" +
                                    "{" + pin.suttas[0].begin + "}" +
                                    "{" + pin.suttas[-1].end + "}\n")
 
@@ -61,10 +61,10 @@ def write_suttas(latex_io: typing.TextIO, bns, t):
                     latex_io.write("\\sutta" +
                                    "{" + sutta.begin + "}" +
                                    "{" + sutta.end + "}" +
-                                   "{" + sutta.title + "}\n")
+                                   "{" + c(sutta.title) + "}\n")
 
                     for body_listline in sutta.body_lines:
-                        latex_io.write(pdf.join_to_tex(body_listline, bns, t))
+                        latex_io.write(pdf.join_to_tex(body_listline, bns, c))
 
                         latex_io.write("\n\n")
                     latex_io.write("\n\n")
@@ -72,16 +72,16 @@ def write_suttas(latex_io: typing.TextIO, bns, t):
             latex_io.write("\\page\n\n")
 
 
-def write_localnotes(latex_io: typing.TextIO, notes, bns, t):
+def write_localnotes(latex_io: typing.TextIO, notes, bns, c):
     for subnote in notes:
         latex_io.write("\\startNote\n")
         latex_io.write("" +
                        "\\subnoteref{" + atom_note.localnote_label(notes.index(subnote)) + "}" +
-                       pdf.join_to_tex(subnote, bns, t) + "\n")
+                       pdf.join_to_tex(subnote, bns, c) + "\n")
         latex_io.write("\\stopNote\n\n")
 
 
-def write_globalnotes(latex_io: typing.TextIO, bns, t):
+def write_globalnotes(latex_io: typing.TextIO, bns, c):
     notes = atom_note.get()
     for notekey, note in notes.items():
         latex_io.write("\\startNote\n")
@@ -89,14 +89,14 @@ def write_globalnotes(latex_io: typing.TextIO, bns, t):
             latex_io.write("" +
                            "\\subnoteref{" + atom_note.globalnote_label(notekey, subnotekey) + "}" +
                            "\\subnotekey{" + (subnotekey or "\\null") + "}" +
-                           pdf.join_to_tex(line, bns, t) + "\n\n")
+                           pdf.join_to_tex(line, bns, c) + "\n\n")
         latex_io.write("\\stopNote\n\n")
 
 
-def build(sources_dir, out_dir, tex_filename, context_bin_path):
+def build(sources_dir, out_dir, tex_filename, context_bin_path, lang):
     my_env = os.environ.copy()
     my_env["PATH"] = os.path.expanduser(context_bin_path) + ":" + my_env["PATH"]
-    compile_cmd = "context --path={} {}/{}".format(sources_dir, sources_dir, tex_filename)
+    compile_cmd = "context --path={} {}/{} --mode={}".format(sources_dir, sources_dir, tex_filename, lang)
 
     stdout_file = open(os.path.join(out_dir, "cmd_stdout"), "w")
     stderr_file = open(os.path.join(out_dir, "cmd_stderr"), "w")
@@ -118,17 +118,23 @@ def make_keys():
     pass
 
 
-def make(key, temprootdir, context_bin_path, fonts_dir, bookdir):
+def make(lang, temprootdir, context_bin_path, fonts_dir, bookdir):
+
     main_filename = "sn.tex"
     sn_tc_eb = "sn_tc_eb"
     bns = [sn.BN]
-    c = lang_convert.do_nothing
+    if lang == pyccc.pdf.TC:
+        c = lang_convert.do_nothing
+    else:  # lang == pyccc.pdf.SC:
+        c = lang_convert.convert2sc
 
-    if key == sn_tc_eb:
+    mytemprootdir = os.path.join(temprootdir, "sn_" + lang)
+
+    if True:
         nikaya = sn.get()
-        sources_dir = os.path.join(temprootdir, sn_tc_eb, "work")
+        sources_dir = os.path.join(mytemprootdir, "work")
         os.makedirs(sources_dir, exist_ok=True)
-        out_dir = os.path.join(temprootdir, sn_tc_eb, "out")
+        out_dir = os.path.join(mytemprootdir, "out")
         os.makedirs(out_dir, exist_ok=True)
 
         write_fontstex(sources_dir, fonts_dir)
@@ -148,5 +154,6 @@ def make(key, temprootdir, context_bin_path, fonts_dir, bookdir):
         shutil.copy(os.path.join(pyccc.TEX_DIR, read_note_filename), sources_dir)
         shutil.copy(os.path.join(pyccc.TEX_DIR, creator_note_filename), sources_dir)
 
-        build(sources_dir=sources_dir, out_dir=out_dir, tex_filename=main_filename, context_bin_path=context_bin_path)
+        build(sources_dir=sources_dir, out_dir=out_dir, tex_filename=main_filename,
+              context_bin_path=context_bin_path, lang=lang)
         # shutil.move(os.path.join(out_dir, "sn.pdf"), os.path.join(bookdir, "sn_tc_eb.pdf"))

@@ -1,16 +1,8 @@
 \setuppapersize [A8]
 
-\mainlanguage[cn]
-\language[cn]
-\enableregime[utf]
-\setscript[hanzi] % hyphenation
-
-\usetypescriptfile[type-imp-myfonts]
-\usetypescript[myfonts]
-\setupbodyfont[myfonts,rm,12pt]
+\setupinteraction[state=start,focus=standard] % 重要功能！添加上后才能连接到位置！
 
 \starttext
-
-呵呵
-
+sfsfsfsf
+\goto{\doifmodeelse {sc}{SC}{TC} }[url(https:/www.google.com)]
 \stoptext

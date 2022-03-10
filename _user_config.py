@@ -1,3 +1,5 @@
+# 如果只是想自己制作电子书而不是开发此程序的话，需复制这个文件为 user_config.py，再修改复制后的文件。
+
 import os.path
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -5,12 +7,14 @@ CACHE_DIR = os.path.join(PROJECT_ROOT, "cache")
 os.makedirs(CACHE_DIR, exist_ok=True)
 
 
-# 莊春江工作站下载的全站打包文件(pyccc.rar)解压后的目录, 此目录下
+# 莊春江工作站目录
 INDEX_DIR = "/mnt/data/Buddhism/ccc7/agama.buddhason.org/"
 
-# 程序生成的 epub 存放目录
-BOOKS_DIR = "../books"
-
+# 字体文件目录
 FONTS_DIR = os.path.join(PROJECT_ROOT, "fonts")
 
+# ConTeXt 目录
 CONTEXT_BIN_PATH = "~/context-lmtx/tex/texmf-linux-64/bin"
+
+# 电子书存放目录
+BOOKS_DIR = os.path.join(PROJECT_ROOT, "fonts")
