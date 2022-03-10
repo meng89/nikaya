@@ -8,7 +8,7 @@ import subprocess
 import pyccc
 from pyccc import atom_note, page_parsing, sn, pdf, lang_convert
 
-
+main_filename = "sn.tex"
 suttas_filename = "suttas.tex"
 localnotes_filename = "localnotes.tex"
 globalnotes_filename = "globalnotes.tex"
@@ -74,23 +74,24 @@ def write_suttas(latex_io: typing.TextIO, bns, c):
 
 def write_localnotes(latex_io: typing.TextIO, notes, bns, c):
     for subnote in notes:
-        latex_io.write("\\startNote\n")
-        latex_io.write("" +
+        latex_io.write("\\startitemgroup[noteitems]\n")
+        latex_io.write("\\item " +
                        "\\subnoteref{" + atom_note.localnote_label(notes.index(subnote)) + "}" +
                        pdf.join_to_tex(subnote, bns, c) + "\n")
-        latex_io.write("\\stopNote\n\n")
+        latex_io.write("\\stopitemgroup\n\n")
 
 
 def write_globalnotes(latex_io: typing.TextIO, bns, c):
     notes = atom_note.get()
     for notekey, note in notes.items():
-        latex_io.write("\\startNote\n")
+        # latex_io.write("\\startNote\n")
+        latex_io.write("\\startitemgroup[noteitems]\n")
         for subnotekey, line in note.items():
-            latex_io.write("" +
+            latex_io.write("\\item " +
                            "\\subnoteref{" + atom_note.globalnote_label(notekey, subnotekey) + "}" +
                            "\\subnotekey{" + (subnotekey or "\\null") + "}" +
-                           pdf.join_to_tex(line, bns, c) + "\n\n")
-        latex_io.write("\\stopNote\n\n")
+                           pdf.join_to_tex(line, bns, c) + "\n")
+        latex_io.write("\\stopitemgroup\n\n")
 
 
 def build(sources_dir, out_dir, tex_filename, context_bin_path, lang):
@@ -119,9 +120,6 @@ def make_keys():
 
 
 def make(lang, temprootdir, context_bin_path, fonts_dir, bookdir):
-
-    main_filename = "sn.tex"
-    sn_tc_eb = "sn_tc_eb"
     bns = [sn.BN]
     if lang == pyccc.pdf.TC:
         c = lang_convert.do_nothing
