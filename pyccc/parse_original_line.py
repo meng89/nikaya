@@ -4,7 +4,10 @@ import bs4
 def _do_line2(olines, funs, **kwargs):
     line = []
     for oe in olines:
-        line.extend(_do_e(oe, funs, **kwargs))
+        try:
+            line.extend(_do_e(oe, funs, **kwargs))
+        except TypeError:
+            raise Exception((type(oe),oe))
     return line
 
 

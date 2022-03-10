@@ -23,7 +23,7 @@ def load_global(domain: str):
         for div in soup.find_all(name="div", attrs={"id": True}):
             note_no = re.match(r"^div(\d+)$", div["id"]).group(1)
             # _global_notes[note_no] = separate(div.contents, base_url, {}, IndexedSet())
-            _global_notes[note_no] = _do_globalnote(list(div.contents), url_path=url_path)
+            _global_notes[note_no] = _do_globalnote2(list(div.contents), url_path=url_path)
 
 
 # 断言：
@@ -31,11 +31,11 @@ def load_global(domain: str):
 # global note 不会引用其它 note；
 
 
-def contents2lines(contents: list, **kwargs):
+def contents2lines(contents: list):
     lines = []
     line = []
     for e in contents:
-        if isinstance(contents[0], bs4.element.Tag) and contents[0].name == "br":
+        if isinstance(e, bs4.element.Tag) and e.name == "br":
             lines.append(line)
             line = []
         else:
@@ -45,10 +45,11 @@ def contents2lines(contents: list, **kwargs):
     return lines
 
 
-def _do_globalnote2(lines):
+def _do_globalnote2(contents, **kwargs):
+    lines = contents2lines(contents)
     parsed_lines = []
     for line in lines:
-        parsed_lines.append(_do_subnote2(line))
+        parsed_lines.append(_do_subnote2(line, **kwargs))
     return parsed_lines
 
 
@@ -58,7 +59,8 @@ def _do_subnote2(ori_line, **kwargs):
     assert isinstance(first, (str, bs4.element.NavigableString))
     m = re.match(r"^(?P<subkey>\(\d+\))?(:?(?P<agama>「.*?(?:SA|GA|MA|DA|AA).*?」)|(?P<nikaya>「.+?」))(?P<left>.*)$",
                  str(first))
-    assert m
+    if not m:
+        raise Exception((type(first), first))
     if m.group("subkey"):
         line.append(m.group("subkey"))
     if m.group("agama"):
@@ -68,8 +70,8 @@ def _do_subnote2(ori_line, **kwargs):
     if m.group("left"):
         ori_line.insert(0, m.group("left"))
 
-    line.extend(_do_line2(contents=ori_line,
-                          funs=[_do_note_xstr, _do_href, _do_onmouseover_global, _do_onmouseover_local],
+    line.extend(_do_line2(olines=ori_line,
+                          funs=[_do_note_xstr2, _do_href, _do_onmouseover_global, _do_onmouseover_local],
                           **kwargs))
     return line
 
@@ -164,7 +166,7 @@ def ___do_lines(contents, funs, **kwargs):
 
 def _do_note_xstr2(e, **kwargs):
     if isinstance(e, (str, bs4.element.NavigableString)):
-        return True, parse_note.split_str(e)
+        return True, parse_note.split_str(str(e).strip("\n"))
     else:
         return False, None
 
