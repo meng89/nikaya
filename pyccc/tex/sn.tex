@@ -132,8 +132,10 @@
       before=\blank\startpacked,
    after=\stoppacked\blank]
 
-\defineitemgroup[noteitems]
-\setupitemgroup [noteitems] [each] [packed,][style=\tfx,]
+
+\definesymbol [none] []
+\defineitemgroup [noteitems]
+\setupitemgroup [noteitems][each] [packed] [distance=-10em,symbol=none,inner={\switchtobodyfont[10pt]}]
 
 
 \definemakeup [homage] [align=middle, style=\tfd,]

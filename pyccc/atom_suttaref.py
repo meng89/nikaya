@@ -55,10 +55,10 @@ def get_suttaref(y):
         m2 = re.match("^{}$".format(p), y)
         if m2:
             return SuttaRef(p, m2.group(1), m2.group(2))
-    assert Exception
+    raise Exception
 
 
-def split_str(s: str):
+def parse(s: str):
     # "[some text SN.1.1, AN.2.1 some text]"
     list_s = []
     offset = 0

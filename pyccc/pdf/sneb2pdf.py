@@ -36,7 +36,7 @@ def write_main(main_file: typing.TextIO, bns, c):
     main_file.write(_head)
 
 
-def write_suttas(latex_io: typing.TextIO, bns, c):
+def write_suttas(latex_io: typing.TextIO, bns, c, test=False):
     nikaya = sn.get()
 
     for pian in nikaya.pians:
@@ -68,14 +68,20 @@ def write_suttas(latex_io: typing.TextIO, bns, c):
 
                         latex_io.write("\n\n")
                     latex_io.write("\n\n")
+                    if test:
+                        break
                 latex_io.write("\n\n")
+                if test:
+                    break
             latex_io.write("\\page\n\n")
+            if test:
+                break
 
 
 def write_localnotes(latex_io: typing.TextIO, notes, bns, c):
     for subnote in notes:
         latex_io.write("\\startitemgroup[noteitems]\n")
-        latex_io.write("\\item " +
+        latex_io.write("\\item" +
                        "\\subnoteref{" + atom_note.localnote_label(notes.index(subnote)) + "}" +
                        pdf.join_to_tex(subnote, bns, c) + "\n")
         latex_io.write("\\stopitemgroup\n\n")
@@ -87,7 +93,7 @@ def write_globalnotes(latex_io: typing.TextIO, bns, c):
         # latex_io.write("\\startNote\n")
         latex_io.write("\\startitemgroup[noteitems]\n")
         for subnotekey, line in note.items():
-            latex_io.write("\\item " +
+            latex_io.write("\\item" +
                            "\\subnoteref{" + atom_note.globalnote_label(notekey, subnotekey) + "}" +
                            "\\subnotekey{" + (subnotekey or "\\null") + "}" +
                            pdf.join_to_tex(line, bns, c) + "\n")
@@ -141,7 +147,7 @@ def make(lang, temprootdir, context_bin_path, fonts_dir, bookdir):
             write_main(f, bns, c)
 
         with open(sources_dir + "/" + suttas_filename, "w") as f:
-            write_suttas(f, bns, c)
+            write_suttas(f, bns, c, True)
 
         with open(sources_dir + "/" + localnotes_filename, "w") as f:
             write_localnotes(f, nikaya.local_notes, bns, c)

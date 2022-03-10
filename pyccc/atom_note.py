@@ -3,9 +3,8 @@ import re
 import bs4
 import requests.exceptions
 
-
-from pyccc import atom, pdf, atom_suttaref, page_parsing
-
+from pyccc import atom, pdf, atom_suttaref, page_parsing, parse_note
+from pyccc.parse_original_line import _do_line2, _do_line
 
 LOCAL_NOTE_KEY_PREFIX = "x"
 
@@ -30,6 +29,49 @@ def load_global(domain: str):
 # 断言：
 # local note 没有 sub note；
 # global note 不会引用其它 note；
+
+
+def contents2lines(contents: list, **kwargs):
+    lines = []
+    line = []
+    for e in contents:
+        if isinstance(contents[0], bs4.element.Tag) and contents[0].name == "br":
+            lines.append(line)
+            line = []
+        else:
+            line.append(e)
+    if line:
+        lines.append(line)
+    return lines
+
+
+def _do_globalnote2(lines):
+    parsed_lines = []
+    for line in lines:
+        parsed_lines.append(_do_subnote2(line))
+    return parsed_lines
+
+
+def _do_subnote2(ori_line, **kwargs):
+    line = []
+    first = ori_line.pop(0)
+    assert isinstance(first, (str, bs4.element.NavigableString))
+    m = re.match(r"^(?P<subkey>\(\d+\))?(:?(?P<agama>「.*?(?:SA|GA|MA|DA|AA).*?」)|(?P<nikaya>「.+?」))(?P<left>.*)$",
+                 str(first))
+    assert m
+    if m.group("subkey"):
+        line.append(m.group("subkey"))
+    if m.group("agama"):
+        line.append(m.group("agama"))  # todo
+    if m.group("nikaya"):
+        line.append(m.group("nikaya"))  # todo
+    if m.group("left"):
+        ori_line.insert(0, m.group("left"))
+
+    line.extend(_do_line2(contents=ori_line,
+                          funs=[_do_note_xstr, _do_href, _do_onmouseover_global, _do_onmouseover_local],
+                          **kwargs))
+    return line
 
 
 def _do_globalnote(contents: list, **kwargs):
@@ -80,7 +122,7 @@ def _do_subnote(contents: list, **kwargs):
 
     contents.insert(0, left_text)
     left_line = _do_line(contents=contents,
-                         funs=[_do_note_xstr, _do_href, _do_onmouseover_global, _do_onmouseover_local],
+                         funs=[_do_note_xstr2, _do_href, _do_onmouseover_global, _do_onmouseover_local],
                          **kwargs)
     return line + left_line
 
@@ -94,7 +136,7 @@ class NoteKeywordDefault(object):
         return self.text
 
     def _contents(self):
-        return atom_suttaref.split_str(self.text)
+        return atom_suttaref.parse(self.text)
 
     def to_tex(self, bns, t):
         return "\\" + self._tex_cmd + "{" + pdf.join_to_tex(line=self._contents(), bns=bns, c=t) + "}"
@@ -112,7 +154,7 @@ class NoteKeywordAgama(NoteKeywordDefault):
         self._tex_cmd = "notekeywordagama"
 
 
-def _do_lines(contents, funs, **kwargs):
+def ___do_lines(contents, funs, **kwargs):
     lines = []
     while contents:
         listline, contents = _do_line(contents, funs, **kwargs)
@@ -120,31 +162,11 @@ def _do_lines(contents, funs, **kwargs):
     return lines
 
 
-def _do_line(contents, funs, **kwargs):
-    line = []
-    while contents:
-        if isinstance(contents[0], bs4.element.Tag) and contents[0].name == "br":
-            contents.pop(0)
-            break
-        elif contents[0] == "\n":
-            contents.pop(0)
-            break
-        x = _do_e(contents.pop(0), funs, **kwargs)
-        line.extend(x)
-
-    return line
-
-
-class ElementError(Exception):
-    pass
-
-
-def _do_e(e, funs, **kwargs):
-    for fun in funs:
-        answer, x = fun(e=e, **kwargs)
-        if answer:
-            return x
-    raise ElementError(e)
+def _do_note_xstr2(e, **kwargs):
+    if isinstance(e, (str, bs4.element.NavigableString)):
+        return True, parse_note.split_str(e)
+    else:
+        return False, None
 
 
 def _do_note_xstr(e, **kwargs):
@@ -152,11 +174,12 @@ def _do_note_xstr(e, **kwargs):
     if isinstance(e, (str, bs4.element.NavigableString)):
         m = re.match(r"^(.*南傳作)(「.*?」)(.*)$", str(e).strip("\n"))
         if m:
-            line.extend(atom_suttaref.split_str(m.group(1)))
+            line.extend(atom_suttaref.parse(m.group(1)))
             line.append(NoteKeywordNikaya(m.group(2)))
-            line.extend(atom_suttaref.split_str(m.group(3)))
+            line.extend(atom_suttaref.parse(m.group(3)))
+
         else:
-            line.extend(atom_suttaref.split_str(str(e).strip("\n")))
+            line.extend(atom_suttaref.parse(str(e).strip("\n")))
         return True, line
     else:
         return False, e
@@ -164,7 +187,7 @@ def _do_note_xstr(e, **kwargs):
 
 def _do_xstr(e, **kwargs):
     if isinstance(e, (str, bs4.element.NavigableString)):
-        return True, atom_suttaref.split_str(str(e).strip("\n"))
+        return True, atom_suttaref.parse(str(e).strip("\n"))
     else:
         return False, e
 
@@ -185,7 +208,8 @@ def _do_onmouseover_global(e, url_path, **kwargs):
                 sub_note_key = match_key(key, e.get_text())
 
             except NoteNotMatch:
-                page_parsing.ccc_bug(page_parsing.WARNING, url_path, "辞汇 \"{}\" 未匹配全局注解编号 \"{}\"".format(e.get_text(), key))
+                page_parsing.ccc_bug(page_parsing.WARNING, url_path,
+                                     "辞汇 \"{}\" 未匹配全局注解编号 \"{}\"".format(e.get_text(), key))
                 sub_note_key = (key, list(get()[key].keys())[0])
 
             return True, [atom.TextWithNoteRef(text=e.get_text(), key=sub_note_key, type_=page_parsing.GLOBAL)]

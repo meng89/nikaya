@@ -5,7 +5,7 @@ from urllib.parse import urlparse
 
 from dateutil.parser import parse as parsedate
 
-
+import pyccc.parse_original_line
 from pyccc import atom, atom_note
 
 
@@ -70,10 +70,10 @@ def _do_class_nikaya(contents, **kwargs):
     body_lines = []
 
     def _do_line():
-        return atom_note._do_line(contents=contents,
-                                  funs=[atom_note._do_xstr, atom_note._do_href,
+        return pyccc.parse_original_line._do_line(contents=contents,
+                                                  funs=[atom_note._do_xstr, atom_note._do_href,
                                         atom_note._do_onmouseover_global, atom_note._do_onmouseover_local],
-                                  **kwargs)
+                                                  **kwargs)
 
     while contents:
         if contents[0].name == "span" and contents[0]["class"] == ["sutra_name"]:
