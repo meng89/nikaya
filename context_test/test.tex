@@ -1,25 +1,30 @@
-\setupinteraction [state=start]
+\setupinteraction[state=start]
+\setupinteractionscreen[option=bookmark]
+\placebookmarks[Marks,Markss][Marks,Marks2][force=yes]
 
-\setupcolors      [state=start]
-\setupurl         [color=blue]
+\definehead
+  [Marks]
+  [subject]
+  [placehead=empty,
+   before={},
+   after={}]
 
-\usecolors[ral]
-
-\setupinteraction[state=start,focus=standard]
+\definehead
+  [Markss]
+  [chapter]
+  [placehead=empty,
+   before={},
+   after={}]
 
 
 \starttext
 
-aaa\textreference[222.\(1]{bbb}bbb
+  \Marks[title={Bookmark one}]
+  \input tufte
+  \Markss[title={Markss Bookmark one}]
+  \page
 
-
-
-\goto{xxx}[222.\(1]
-
-
-
-
-
-
+  \Marks[title={Bookmark two}]
+  \input knuth
 
 \stoptext

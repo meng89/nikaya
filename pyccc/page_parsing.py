@@ -74,11 +74,11 @@ def _do_class_nikaya(contents, **kwargs):
     translator_part = None
     body_lines = []
 
-    def _do_line(olines):
-        return pyccc.parse_original_line._do_line2(olines=olines,
-                                                  funs=[atom_note._do_xstr2, atom_note._do_href,
+    def _do_line(_oline):
+        return pyccc.parse_original_line._do_line2(oline=_oline,
+                                                   funs=[atom_note._do_xstr2, atom_note._do_href,
                                         atom_note._do_onmouseover_global, atom_note._do_onmouseover_local],
-                                                  **kwargs)
+                                                   **kwargs)
     while contents:
         e = contents.pop(0)
         if e.name == "span" and e["class"] == ["sutra_name"]:
@@ -89,6 +89,10 @@ def _do_class_nikaya(contents, **kwargs):
             homage_and_head_oline = []
         else:
             homage_and_head_oline.append(e)
+    if homage_and_head_oline:
+        homage_and_head_olines.append(homage_and_head_oline)
+
+    homage_and_head_lines = [_do_line(_oline) for _oline in homage_and_head_olines]
 
     e2 = contents.pop(0)
     assert isinstance(e2, bs4.element.NavigableString)
@@ -108,9 +112,8 @@ def _do_class_nikaya(contents, **kwargs):
 
     contents = _new_contents
 
-    body_lines = []
     for oline in atom_note.contents2lines(contents):
-        body_lines.append(oline)
+        body_lines.append(_do_line(oline))
 
     return homage_and_head_lines, sutta_name_part, translator_part, body_lines
 

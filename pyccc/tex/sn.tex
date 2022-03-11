@@ -11,6 +11,9 @@
 
 \usecolors[crayola]
 
+
+%%%%%%%%%%%%
+% 页脚页眉
 \setupheader
   [text]
   [before={\startframed[frame=off,bottomframe=on,framecolor=black,]},
@@ -27,8 +30,12 @@
 \setupfootertexts[{\setupinteraction[color=FuzzyWuzzy] \ss
   \goto{\doifmodeelse{sc}{请到莊春江工作站阅读最新修订经文}{請到莊春江工作站閱讀最新訂正經文}}
   [url(https://agama.buddhason.org/)]}][{\tfa \it \pagenumber}]
+% 页脚页眉
+%%%%%%%%%%%
 
-%\setupinteraction[state=start]
+
+%%%%%%%%%%%%%%%
+% PDF 属性信息
 \setupinteraction[focus=standard] % 重要功能！添加上后才能连接到位置！
 \setupinteraction[state=start,style=normal]
 \setupinteraction[
@@ -46,10 +53,12 @@
     keyword={南传佛教,尼柯耶,经藏},
   ]
 \stopmode
+% PDF 属性信息
+%%%%%%%%%%%%%%%
 
-%\setupurl[color=RAL8017,style=normal]
 
-%\setupinteractionscreen[option=bookmark]
+%%%%%%%%%%%%
+% PDF书签
 \definelist[tobias]
 
 \placebookmarks[part,chapter,section,subsection,tobias][chapter][number=no]
@@ -64,7 +73,8 @@
 \defineheadplacement[activityhead][vertical]#1#2{%
   \labeltext{\currenthead}\hskip\numberheaddistance #1%
 }
-
+% PDF书签
+%%%%%%%%%%%
 
 
 \setuphead[part]      [number=no,alternative=middle,style=\tfd\bf\ss,placehead=yes,header=empty,footer=empty]
@@ -102,13 +112,11 @@
 \define[3]\sutta{\subsection[reference=SN.\somenamedheadnumber{chapter}{current}.#1,
      title={\startlua if #1==#2 then context("#1") else context("#1-#2") end \stoplua}. #3]}
 
+
 % 绿
 \define[1]\suttaref{\setupinteraction[color=PineGreen]\goto{#1}[#1]}
-
 % 黄
-%\define[2]\cccref{\goto{#2}[url(#1)]}
 \define[2]\ccchref{\setupinteraction[color=FuzzyWuzzy]\goto{#1}[url(#2)]}
-
 % 蓝
 \define[2]\twnr{\setupinteraction[color=MidnightBlue]\goto{#1}[#2]}
 
@@ -117,11 +125,19 @@
 
 
 \define[1]\subnoteref{\textreference[#1]{\null}}
-\define[1]\subnotekey{{\it #1}}
 
-\define[1]\notekeywordagama{{#1}}
-\define[1]\notekeywordnikaya{{\bf #1}}
-\define[1]\notekeyworddefault{\notekeywordnikaya{#1}}
+%%%%%%%
+%
+\define[1]\NoteSubKeyHead{{\it #1}}
+\define[1]\NoteKeywordAgamaHead{{#1}}
+\define[1]\NoteKeywordNikayaHead{{#1}}
+
+\define[1]\NoteSubEntryKey{{\sl #1}}
+\define[1]\NoteKeywordAgama{{#1}}
+\define[1]\NoteKeywordNikaya{{#1}}
+\define[1]\NoteKeywordBhikkhuBodhi{{#1}}
+\define[1]\NoteKeywordBhikkhuNanamoli{{#1}}
+
 
 \define\newline{\par}
 
@@ -140,8 +156,18 @@
 
 \definemakeup [homage] [align=middle, style=\tfd,]
 
+%%%%%%
+% 附录
+\definehead
+  [appendix]
+  [part]
+  [placehead=empty,
+   before={},
+   after={}]
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \startdocument
+
 
 \startstandardmakeup
 \bookmark[tobias]{封面}
@@ -160,8 +186,10 @@
   \vfill
 \stopstandardmakeup
 
+
 \part{閱讀說明}
 \input{read_note.tex}
+
 
 \startmakeup[homage]
 \bookmark[tobias]{禮敬}
@@ -171,9 +199,12 @@ $homage
 \vfill
 \stopmakeup
 
+
 \input{$suttas}
 \page
 
+
+% 附录一：注解
 \setupheadertexts[註解][]
 \noteTitle{註解}
 \input{$localnotes}
@@ -182,6 +213,8 @@ $homage
 \noteTitle{全局註解}
 \input{$globalnotes}
 
+% 附录二：巴利经文
+% todo
 
 \part{PDF 制作说明}
 \input{creator_note.tex}

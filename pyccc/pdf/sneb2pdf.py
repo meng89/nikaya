@@ -92,11 +92,12 @@ def write_globalnotes(latex_io: typing.TextIO, bns, c):
     for notekey, note in notes.items():
         # latex_io.write("\\startNote\n")
         latex_io.write("\\startitemgroup[noteitems]\n")
-        for subnotekey, line in note.items():
+
+        #for subnotekey, line in note.items():
+        for index in range(len(note)):
             latex_io.write("\\item" +
-                           "\\subnoteref{" + atom_note.globalnote_label(notekey, subnotekey) + "}" +
-                           "\\subnotekey{" + (subnotekey or "\\null") + "}" +
-                           pdf.join_to_tex(line, bns, c) + "\n")
+                           "\\subnoteref{" + atom_note.globalnote_label(notekey, index) + "}" +
+                           pdf.join_to_tex(note[index], bns, c) + "\n")
         latex_io.write("\\stopitemgroup\n\n")
 
 

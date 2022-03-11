@@ -61,10 +61,10 @@ def join_to_tex(line: list, bns: list[str], c=None):
             s += x.to_tex(c)
         elif isinstance(x, atom.TextWithNoteRef):
             s += x.to_tex(c)
-        elif isinstance(x, parse_note.NoteKeywordDefault):
+        elif isinstance(x, parse_note.NoteTagBase):
             s += x.to_tex(bns=bns, c=c)
         else:
-            raise Exception(type(x))
+            raise Exception((type(x), x))
     return s
 
 
@@ -80,9 +80,7 @@ def join_to_text(line: list, c=None):
             s += x.get_text()
         elif isinstance(x, atom.TextWithNoteRef):
             s += x.get_text()
-        elif isinstance(x, parse_note.NoteKeywordDefault):
-            s += x.get_text()
-        elif isinstance(x, parse_note.NoteSubKey):
+        elif isinstance(x, parse_note.NoteTagBase):
             s += x.get_text()
         else:
             raise Exception(type(x))
