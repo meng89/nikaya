@@ -14,6 +14,9 @@ class NoteSubKey(object):
     def __init__(self, text):
         self.text = text
 
+    def get_text(self):
+        return self.text
+
     def __repr__(self):
         return (f'{self.__class__.__name__}('
                 f'text={self.text!r})')

@@ -57,52 +57,60 @@ def _do_class_comp(comp_doc, **kwargs):
         for e in note_docs:
             _key = re.match(r"^note(\d+)$", e["id"]).group(1)
             if list(e.contents):
-                note = atom_note._do_subnote(contents=list(e.contents), sutta_temp_notes=sutta_temp_notes, **kwargs)
-                sutta_temp_notes[_key] = note
+                for ori_line in atom_note.contents2lines(e.contents):
+                    note = atom_note._do_subnote2(ori_line=ori_line, sutta_temp_notes=sutta_temp_notes, **kwargs)
+                    sutta_temp_notes[_key] = note
     return sutta_temp_notes
 
 
 def _do_class_nikaya(contents, **kwargs):
     # is_sutta_name_line_passed = False
+    homage_and_head_oline = []
+    homage_and_head_olines = []
+
     homage_and_head_lines = []
+
     sutta_name_part = None
     translator_part = None
     body_lines = []
 
-    def _do_line():
-        return pyccc.parse_original_line._do_line(contents=contents,
-                                                  funs=[atom_note._do_xstr, atom_note._do_href,
+    def _do_line(olines):
+        return pyccc.parse_original_line._do_line2(olines=olines,
+                                                  funs=[atom_note._do_xstr2, atom_note._do_href,
                                         atom_note._do_onmouseover_global, atom_note._do_onmouseover_local],
                                                   **kwargs)
-
     while contents:
-        if contents[0].name == "span" and contents[0]["class"] == ["sutra_name"]:
-            e = contents.pop(0)
-            sutta_name_part = e.get_text().strip("\n")
-            _line = _do_line()
-            if _line:
-                assert len(_line) == 1
-                translator_part = _line[0]
+        e = contents.pop(0)
+        if e.name == "span" and e["class"] == ["sutra_name"]:
+            sutta_name_part = e.get_text()
             break
+        elif isinstance(e, bs4.element.Tag) and e.name == "br":
+            homage_and_head_olines.append(homage_and_head_oline)
+            homage_and_head_oline = []
         else:
-            line = _do_line()
-            if line:
-                homage_and_head_lines.append(line)
+            homage_and_head_oline.append(e)
 
-    contents = [e for e in contents if not (isinstance(e, bs4.element.Tag) and e.name == "div")]
-    while contents:
-        if contents[0].name == "div" and contents[0]["style"] == "display: none":
-            contents.pop(0)
-            continue
-        elif contents[0].name == "span" and contents[0]["class"] == ["sutra_name"] \
-                and contents[0].get_text() == "相應部12相應83-93經/學經等（中略）十一則":
-            e = contents.pop(0)
-            body_lines.append(e.get_text())
-            continue
+    e2 = contents.pop(0)
+    assert isinstance(e2, bs4.element.NavigableString)
+    translator_part = e2.get_text().strip("\n")
+    _br = contents.pop(0)
+    assert (isinstance(_br, bs4.element.Tag) and _br.name == "br")
 
-        line = _do_line()
-        if line:
-            body_lines.append(line)
+    _new_contents = []
+    for e in contents:
+        if e.name == "div" and e["style"] == "display: none":
+            continue
+        elif e.name == "span" and e["class"] == ["sutra_name"] \
+                and e.get_text() == "相應部12相應83-93經/學經等（中略）十一則":
+            _new_contents.append(e.get_text())
+        else:
+            _new_contents.append(e)
+
+    contents = _new_contents
+
+    body_lines = []
+    for oline in atom_note.contents2lines(contents):
+        body_lines.append(oline)
 
     return homage_and_head_lines, sutta_name_part, translator_part, body_lines
 

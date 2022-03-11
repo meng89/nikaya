@@ -50,7 +50,7 @@ class SuttaRef(object):
                 f'num={self._num!r})')
 
 
-def get_suttaref(y):
+def _get_suttaref(y):
     for p in PATTERNS:
         m2 = re.match("^{}$".format(p), y)
         if m2:
@@ -65,7 +65,7 @@ def parse(s: str):
     for m in re.finditer("|".join(PATTERNS), s):
         (begin, end) = m.span()
         list_s.append(s[offset:begin])
-        list_s.append(get_suttaref(s[begin:end]))
+        list_s.append(_get_suttaref(s[begin:end]))
         offset = end
     if offset < len(s):
         list_s.append(s[offset:])

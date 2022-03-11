@@ -59,17 +59,17 @@ def _do_subnote2(ori_line, **kwargs):
     assert isinstance(first, (str, bs4.element.NavigableString))
     m = re.match(r"^(?P<subkey>\(\d+\))?(:?(?P<agama>「.*?(?:SA|GA|MA|DA|AA).*?」)|(?P<nikaya>「.+?」))(?P<left>.*)$",
                  str(first))
-    if not m:
-        raise Exception((type(first), first))
-    if m.group("subkey"):
-        line.append(m.group("subkey"))
-    if m.group("agama"):
-        line.append(m.group("agama"))  # todo
-    if m.group("nikaya"):
-        line.append(m.group("nikaya"))  # todo
-    if m.group("left"):
-        ori_line.insert(0, m.group("left"))
-
+    if m:
+        if m.group("subkey"):
+            line.append(m.group("subkey"))
+        if m.group("agama"):
+            line.append(m.group("agama"))  # todo
+        if m.group("nikaya"):
+            line.append(m.group("nikaya"))  # todo
+        if m.group("left"):
+            ori_line.insert(0, m.group("left"))
+    else:  # 此為「攝頌」...
+        ori_line.insert(0, first)
     line.extend(_do_line2(olines=ori_line,
                           funs=[_do_note_xstr2, _do_href, _do_onmouseover_global, _do_onmouseover_local],
                           **kwargs))
@@ -129,7 +129,7 @@ def _do_subnote(contents: list, **kwargs):
     return line + left_line
 
 
-class NoteKeywordDefault(object):
+class _NoteKeywordDefault(object):
     def __init__(self, text):
         self.text = text
         self._tex_cmd = "notekeyworddefault"
@@ -141,16 +141,16 @@ class NoteKeywordDefault(object):
         return atom_suttaref.parse(self.text)
 
     def to_tex(self, bns, t):
-        return "\\" + self._tex_cmd + "{" + pdf.join_to_tex(line=self._contents(), bns=bns, c=t) + "}"
+        return "\\" + self._tex_cmd + "{" + pdf.join_to_tex(line=[self.text], bns=bns, c=t) + "}"
 
 
-class NoteKeywordNikaya(NoteKeywordDefault):
+class _NoteKeywordNikaya(_NoteKeywordDefault):
     def __init__(self, text):
         super().__init__(text)
         self._tex_cmd = "notekeywordnikaya"
 
 
-class NoteKeywordAgama(NoteKeywordDefault):
+class _NoteKeywordAgama(_NoteKeywordDefault):
     def __init__(self, text):
         super().__init__(text)
         self._tex_cmd = "notekeywordagama"
@@ -187,7 +187,14 @@ def _do_note_xstr(e, **kwargs):
         return False, e
 
 
-def _do_xstr(e, **kwargs):
+def _do_xstr2(e, **kwargs):
+    if isinstance(e, (str, bs4.element.NavigableString)):
+        return True, [e.strip("\n")]
+    else:
+        return False, e
+
+
+def __do_xstr(e, **kwargs):
     if isinstance(e, (str, bs4.element.NavigableString)):
         return True, atom_suttaref.parse(str(e).strip("\n"))
     else:
@@ -207,12 +214,12 @@ def _do_onmouseover_global(e, url_path, **kwargs):
         if m:
             key = m.group(1)
             try:
-                sub_note_key = match_key(key, e.get_text())
+                sub_note_key = key_hit(key, e.get_text())
 
             except NoteNotMatch:
                 page_parsing.ccc_bug(page_parsing.WARNING, url_path,
                                      "辞汇 \"{}\" 未匹配全局注解编号 \"{}\"".format(e.get_text(), key))
-                sub_note_key = (key, list(get()[key].keys())[0])
+                sub_note_key = (key, 0)
 
             return True, [atom.TextWithNoteRef(text=e.get_text(), key=sub_note_key, type_=page_parsing.GLOBAL)]
     # ccc bug
@@ -248,6 +255,20 @@ def _do_onmouseover_local(e, url_path, sutta_temp_notes, local_notes):
 
 class NoteNotMatch(Exception):
     pass
+
+
+def key_hit(num, text, notes=None):
+    if notes is None:
+        _notes = _global_notes
+    else:
+        _notes = notes
+    if num not in _notes.keys():
+        raise NoteNotMatch((num, text))
+
+    for index in range(len(_notes[num])):
+        if text in pdf.join_to_text(_notes[num][index]):
+            return num, index
+    raise NoteNotMatch((num, text))
 
 
 def match_key(num, text, notes=None):

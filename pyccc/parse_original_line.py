@@ -7,7 +7,7 @@ def _do_line2(olines, funs, **kwargs):
         try:
             line.extend(_do_e(oe, funs, **kwargs))
         except TypeError:
-            raise Exception((type(oe),oe))
+            raise Exception((type(oe), oe))
     return line
 
 

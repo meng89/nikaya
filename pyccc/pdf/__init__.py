@@ -1,6 +1,6 @@
 from pylatex import escape_latex as el
 
-from pyccc import atom, atom_suttaref, atom_note, page_parsing
+from pyccc import atom, atom_suttaref, atom_note, page_parsing, parse_note
 
 _url_table = [
     ("%", "\\letterpercent"),
@@ -61,8 +61,8 @@ def join_to_tex(line: list, bns: list[str], c=None):
             s += x.to_tex(c)
         elif isinstance(x, atom.TextWithNoteRef):
             s += x.to_tex(c)
-        elif isinstance(x, atom_note.NoteKeywordDefault):
-            s += x.to_tex(bns=bns, t=c)
+        elif isinstance(x, parse_note.NoteKeywordDefault):
+            s += x.to_tex(bns=bns, c=c)
         else:
             raise Exception(type(x))
     return s
@@ -80,7 +80,9 @@ def join_to_text(line: list, c=None):
             s += x.get_text()
         elif isinstance(x, atom.TextWithNoteRef):
             s += x.get_text()
-        elif isinstance(x, atom_note.NoteKeywordDefault):
+        elif isinstance(x, parse_note.NoteKeywordDefault):
+            s += x.get_text()
+        elif isinstance(x, parse_note.NoteSubKey):
             s += x.get_text()
         else:
             raise Exception(type(x))
