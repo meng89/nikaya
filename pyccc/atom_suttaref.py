@@ -21,10 +21,17 @@ PATTERNS = [P_SA, P_SN, P_MA, P_MN, P_DA, P_DN, P_UD, P_IT, P_MI, P_NI, P_PS, P_
 
 
 class SuttaRef(object):
-    def __init__(self, pattern: str, bookname: str, num: str):
-        self._pattern = pattern
-        self._BN = bookname
-        self._num = num
+    def __init__(self, text):
+        self.text = text
+        m = None
+        for p in PATTERNS:
+            m = re.match("^{}$".format(p), text)
+            if m:
+                self._pattern = p
+                self._BN = m.group(1)
+                self._num = m.group(2)
+                break
+        assert m
 
     def get_text(self):
         return self._BN + "." + self._num
@@ -43,19 +50,12 @@ class SuttaRef(object):
         else:
             return pyccc.atom.Href(self.get_text(), self.get_cccurl(), pyccc.CCC_WEBSITE, "").to_tex(lang_convert.do_nothing)
 
+    def to_tex_suttatitle(self, title):
+        return "\\goto{" + title + "}[(" + self.get_cccurl() + ")]"
+
     def __repr__(self):
         return (f'{self.__class__.__name__}('
-                f'pattern={self._pattern!r}, '
-                f'bookname={self._BN!r}, '
-                f'num={self._num!r})')
-
-
-def _get_suttaref(y):
-    for p in PATTERNS:
-        m2 = re.match("^{}$".format(p), y)
-        if m2:
-            return SuttaRef(p, m2.group(1), m2.group(2))
-    raise Exception
+                f'text={self._num!r})')
 
 
 def parse(s: str):
@@ -65,7 +65,7 @@ def parse(s: str):
     for m in re.finditer("|".join(PATTERNS), s):
         (begin, end) = m.span()
         list_s.append(s[offset:begin])
-        list_s.append(_get_suttaref(s[begin:end]))
+        list_s.append(SuttaRef(s[begin:end]))
         offset = end
     if offset < len(s):
         list_s.append(s[offset:])

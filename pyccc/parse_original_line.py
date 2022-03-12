@@ -1,7 +1,7 @@
 import bs4
 
 
-def _do_line2(oline, funs, **kwargs):
+def do_line(oline, funs, **kwargs):
     line = []
     for oe in oline:
         try:

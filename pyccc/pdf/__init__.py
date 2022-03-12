@@ -28,24 +28,6 @@ def _el_char(c, table):
     return c
 
 
-def ___join_to_tex(line: list, bns: list[str], c=None):
-    s = ""
-    for x in line:
-        if isinstance(x, str):
-            s += el(c(x))
-        elif isinstance(x, atom_suttaref.SuttaRef):
-            s += x.to_tex(bns=bns)
-        elif isinstance(x, atom.Href):
-            s += x.to_tex(c)
-        elif isinstance(x, atom.TextWithNoteRef):
-            s += x.to_tex(c)
-        elif isinstance(x, atom_note.NoteKeywordDefault):
-            s += x.to_tex(bns=bns, t=c)
-        else:
-            raise Exception(type(x))
-    return s
-
-
 def join_to_tex(line: list, bns: list[str], c=None):
     s = ""
     for x in line:

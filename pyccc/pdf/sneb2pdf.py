@@ -6,7 +6,7 @@ import subprocess
 
 
 import pyccc
-from pyccc import atom_note, page_parsing, sn, pdf, lang_convert
+from pyccc import atom_note, atom_suttaref, page_parsing, sn, pdf, lang_convert
 
 main_filename = "sn.tex"
 suttas_filename = "suttas.tex"
@@ -36,6 +36,9 @@ def write_main(main_file: typing.TextIO, bns, c):
     main_file.write(_head)
 
 
+
+
+
 def write_suttas(latex_io: typing.TextIO, bns, c, test=False):
     nikaya = sn.get()
 
@@ -58,10 +61,14 @@ def write_suttas(latex_io: typing.TextIO, bns, c, test=False):
                                    "{" + pin.suttas[-1].end + "}\n")
 
                 for sutta in pin.suttas:
+                    def _sutta_title():
+                        _SR = atom_suttaref.SuttaRef("SN" + "." + xiangying.serial + "." + sutta.begin)
+                        return _SR.to_tex_suttatitle(sutta.title)
+
                     latex_io.write("\\sutta" +
                                    "{" + sutta.begin + "}" +
                                    "{" + sutta.end + "}" +
-                                   "{" + c(sutta.title) + "}\n")
+                                   "{{" + _sutta_title() + "}}\n")
 
                     for body_listline in sutta.body_lines:
                         latex_io.write(pdf.join_to_tex(body_listline, bns, c))

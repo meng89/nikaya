@@ -58,13 +58,12 @@ def _do_class_comp(comp_doc, **kwargs):
             _key = re.match(r"^note(\d+)$", e["id"]).group(1)
             if list(e.contents):
                 for ori_line in atom_note.contents2lines(e.contents):
-                    note = atom_note._do_subnote2(ori_line=ori_line, sutta_temp_notes=sutta_temp_notes, **kwargs)
+                    note = atom_note.do_subnote(ori_line=ori_line, sutta_temp_notes=sutta_temp_notes, **kwargs)
                     sutta_temp_notes[_key] = note
     return sutta_temp_notes
 
 
 def _do_class_nikaya(contents, **kwargs):
-    # is_sutta_name_line_passed = False
     homage_and_head_oline = []
     homage_and_head_olines = []
 
@@ -75,10 +74,10 @@ def _do_class_nikaya(contents, **kwargs):
     body_lines = []
 
     def _do_line(_oline):
-        return pyccc.parse_original_line._do_line2(oline=_oline,
-                                                   funs=[atom_note._do_xstr2, atom_note._do_href,
-                                        atom_note._do_onmouseover_global, atom_note._do_onmouseover_local],
-                                                   **kwargs)
+        return pyccc.parse_original_line.do_line(oline=_oline,
+                                                 funs=[atom_note.do_str, atom_note.do_href,
+                                                       atom_note.do_onmouseover_global, atom_note.do_onmouseover_local],
+                                                 **kwargs)
     while contents:
         e = contents.pop(0)
         if e.name == "span" and e["class"] == ["sutra_name"]:

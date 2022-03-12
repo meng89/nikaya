@@ -4,7 +4,7 @@ import bs4
 import requests.exceptions
 
 from pyccc import atom, pdf, page_parsing, parse_note
-from pyccc.parse_original_line import _do_line2
+from pyccc.parse_original_line import do_line
 
 LOCAL_NOTE_KEY_PREFIX = "x"
 
@@ -22,7 +22,7 @@ def load_global(domain: str):
 
         for div in soup.find_all(name="div", attrs={"id": True}):
             note_no = re.match(r"^div(\d+)$", div["id"]).group(1)
-            _global_notes[note_no] = _do_globalnote2(list(div.contents), url_path=url_path)
+            _global_notes[note_no] = do_globalnote(list(div.contents), url_path=url_path)
 
 
 # 断言：
@@ -44,15 +44,15 @@ def contents2lines(contents: list):
     return lines
 
 
-def _do_globalnote2(contents, **kwargs):
+def do_globalnote(contents, **kwargs):
     lines = contents2lines(contents)
     parsed_lines = []
     for line in lines:
-        parsed_lines.append(_do_subnote2(line, **kwargs))
+        parsed_lines.append(do_subnote(line, **kwargs))
     return parsed_lines
 
 
-def _do_subnote2(ori_line, **kwargs):
+def do_subnote(ori_line, **kwargs):
     line = []
     first = ori_line.pop(0)
     assert isinstance(first, (str, bs4.element.NavigableString))
@@ -70,34 +70,34 @@ def _do_subnote2(ori_line, **kwargs):
     else:  # 此為「攝頌」...
         ori_line.insert(0, first)
 
-    line.extend(_do_line2(oline=ori_line,
-                          funs=[_do_note_xstr2, _do_href, _do_onmouseover_global, _do_onmouseover_local],
-                          **kwargs))
+    line.extend(do_line(oline=ori_line,
+                        funs=[do_note_str, do_href, do_onmouseover_global, do_onmouseover_local],
+                        **kwargs))
     return line
 
 
-def _do_note_xstr2(e, **_kwargs):
+def do_note_str(e, **_kwargs):
     if isinstance(e, (str, bs4.element.NavigableString)):
         return True, parse_note.split_str(str(e).strip("\n"))
     else:
         return False, None
 
 
-def _do_xstr2(e, **_kwargs):
+def do_str(e, **_kwargs):
     if isinstance(e, (str, bs4.element.NavigableString)):
         return True, [e.strip("\n")]
     else:
         return False, e
 
 
-def _do_href(e, url_path, **_kwargs):
+def do_href(e, url_path, **_kwargs):
     if e.name == "a" and "href" in e.attrs.keys():
         return True, [atom.Href(text=e.get_text(), href=e["href"], base_url_path=url_path, target=e["target"])]
     else:
         return False, e
 
 
-def _do_onmouseover_global(e, url_path, **_kwargs):
+def do_onmouseover_global(e, url_path, **_kwargs):
     if e.name == "a" and "onmouseover" in e.attrs.keys():
         m = re.match(r"^note\(this,(\d+)\);$", e["onmouseover"])
         if m:
@@ -118,7 +118,7 @@ def _do_onmouseover_global(e, url_path, **_kwargs):
     return False, e
 
 
-def _do_onmouseover_local(e, url_path, sutta_temp_notes, local_notes):
+def do_onmouseover_local(e, url_path, sutta_temp_notes, local_notes):
     if e.name == "a" and "onmouseover" in e.attrs.keys():
         m = re.match(r"^local\(this,(\d+)\);$", e["onmouseover"])
         if m:
