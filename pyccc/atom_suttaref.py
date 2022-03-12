@@ -50,9 +50,6 @@ class SuttaRef(object):
         else:
             return pyccc.atom.Href(self.get_text(), self.get_cccurl(), pyccc.CCC_WEBSITE, "").to_tex(lang_convert.do_nothing)
 
-    def to_tex_suttatitle(self, title):
-        return "\\goto{" + title + "}[url(" + self.get_cccurl() + ")]"
-
     def __repr__(self):
         return (f'{self.__class__.__name__}('
                 f'text={self._num!r})')

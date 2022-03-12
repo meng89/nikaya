@@ -61,14 +61,15 @@ def write_suttas(latex_io: typing.TextIO, bns, c, test=False):
                                    "{" + pin.suttas[-1].end + "}\n")
 
                 for sutta in pin.suttas:
-                    def _sutta_title():
+                    def _cccurl():
                         _SR = atom_suttaref.SuttaRef("SN" + "." + xiangying.serial + "." + sutta.begin)
-                        return _SR.to_tex_suttatitle(sutta.title)
+                        return _SR.get_cccurl()
 
                     latex_io.write("\\sutta" +
                                    "{" + sutta.begin + "}" +
                                    "{" + sutta.end + "}" +
-                                   "{{" + _sutta_title() + "}}\n")
+                                   "{" + sutta.title + "}" +
+                                   "{" + _cccurl() + "}\n")
 
                     for body_listline in sutta.body_lines:
                         latex_io.write(pdf.join_to_tex(body_listline, bns, c))
@@ -97,10 +98,7 @@ def write_localnotes(latex_io: typing.TextIO, notes, bns, c):
 def write_globalnotes(latex_io: typing.TextIO, bns, c):
     notes = atom_note.get()
     for notekey, note in notes.items():
-        # latex_io.write("\\startNote\n")
         latex_io.write("\\startitemgroup[noteitems]\n")
-
-        #for subnotekey, line in note.items():
         for index in range(len(note)):
             latex_io.write("\\item" +
                            "\\subnoteref{" + atom_note.globalnote_label(notekey, index) + "}" +
@@ -117,13 +115,13 @@ def build(sources_dir, out_dir, tex_filename, context_bin_path, lang):
     stderr_file = open(os.path.join(out_dir, "cmd_stderr"), "w")
 
     def _run():
-        print("running command:", compile_cmd, end=" ", flush=True)
+        print("运行:", compile_cmd, end=" ", flush=True)
         p = subprocess.Popen(compile_cmd, cwd=out_dir, shell=True, env=my_env,
                              stdout=stdout_file, stderr=stderr_file)
         p.communicate()
         if p.returncode != 0:
-            input("command run wrong")
-        print("done!")
+            input("出错！")
+        print("完成！")
     _run()
     stdout_file.close()
     stderr_file.close()

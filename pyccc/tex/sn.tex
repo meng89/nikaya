@@ -91,7 +91,7 @@
         \veryraggedcenter
         \let\\\endgraf
         \let\crlf\endgraf
-        %\fakeheadnumbercontent
+        \fakeheadnumbercontent
         % \headnumbercontent -> 1.1.1 ，不喜欢这个样式
         \begstrut
         \somenamedheadnumber{chapter}{current}. \headtextcontent
@@ -109,8 +109,8 @@
 \define[3]\pian{\part[title=#1(#2-#3)]}
 \define[2]\xiangying{\chapter[title=#2, bookmark=#1. #2]}
 \define[3]\pin{\section[title=#1(#2-#3)]}
-\define[3]\sutta{\subsection[reference=SN.\somenamedheadnumber{chapter}{current}.#1,
-     title={\startlua if #1==#2 then context("#1") else context("#1-#2") end \stoplua}. #3]}
+\define[4]\sutta{\subsection[reference=SN.\somenamedheadnumber{chapter}{current}.#1,
+     title={\goto{{\startlua if #1==#2 then context("#1") else context("#1-#2") end \stoplua}. #3}[url(#4)]}]}
 
 
 % 绿
@@ -165,6 +165,8 @@
    before={},
    after={}]
 
+\definehead[notes][part][placehead=chapter,before={},after={}]
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \startdocument
 
@@ -187,7 +189,7 @@
 \stopstandardmakeup
 
 
-\part{閱讀說明}
+\part{凡例}
 \input{read_note.tex}
 
 
