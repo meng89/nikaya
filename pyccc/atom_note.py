@@ -123,22 +123,16 @@ def do_onmouseover_local(e, url_path, sutta_temp_notes, local_notes):
         m = re.match(r"^local\(this,(\d+)\);$", e["onmouseover"])
         if m:
             key = m.group(1)
-
             try:
-                _note = sutta_temp_notes[key]
-                note = tuple(_note)
-                # todo
+                note = tuple(sutta_temp_notes[key])
             except KeyError:
                 page_parsing.ccc_bug(page_parsing.WARNING, url_path, "未找到本地注解编号 \"{}\"".format(key))
                 x = e.get_text()
             else:
                 local_notes.add(note)
                 k = local_notes.index(note)
-                # todo mathc
                 x = atom.TextWithNoteRef(text=e.get_text(), key=k, type_=page_parsing.LOCAL)
-
             return True, [x]
-
     return False, e
 
 

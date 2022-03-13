@@ -1,6 +1,6 @@
 import re
 
-
+import pyccc
 from pyccc import atom_suttaref, pdf
 
 P1 = r"(南傳作)(「.+?」)"
@@ -10,7 +10,7 @@ P3 = r"(菩提比丘長老英譯為)(「.+?」)"
 PATTERNS = (P1, P2, P3)
 
 
-class NoteTagBase(object):
+class NoteTagBase(pyccc.BaseElement):
     def __init__(self, text):
         self.text = text
         self._tex_cmd = self.__class__.__name__
@@ -18,7 +18,7 @@ class NoteTagBase(object):
     def get_text(self):
         return self.text
 
-    def to_tex(self, bns, c):
+    def to_tex(self, bns, c, **kwargs):
         return "\\" + self._tex_cmd + "{" + pdf.join_to_tex(line=[self.text], bns=bns, c=c) + "}"
 
     def __repr__(self):

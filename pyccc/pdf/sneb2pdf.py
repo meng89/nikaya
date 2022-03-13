@@ -36,9 +36,6 @@ def write_main(main_file: typing.TextIO, bns, c):
     main_file.write(_head)
 
 
-
-
-
 def write_suttas(latex_io: typing.TextIO, bns, c, test=False):
     nikaya = sn.get()
 
@@ -68,7 +65,7 @@ def write_suttas(latex_io: typing.TextIO, bns, c, test=False):
                     latex_io.write("\\sutta" +
                                    "{" + sutta.begin + "}" +
                                    "{" + sutta.end + "}" +
-                                   "{" + sutta.title + "}" +
+                                   "{" + c(sutta.title) + "}" +
                                    "{" + _cccurl() + "}\n")
 
                     for body_listline in sutta.body_lines:
@@ -153,7 +150,7 @@ def make(lang, temprootdir, context_bin_path, fonts_dir, bookdir):
             write_main(f, bns, c)
 
         with open(sources_dir + "/" + suttas_filename, "w") as f:
-            write_suttas(f, bns, c, True)
+            write_suttas(f, bns, c, test=False)
 
         with open(sources_dir + "/" + localnotes_filename, "w") as f:
             write_localnotes(f, nikaya.local_notes, bns, c)

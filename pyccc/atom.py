@@ -5,7 +5,7 @@ import pyccc.pdf
 from pyccc import atom_note
 
 
-class Href(object):
+class Href(pyccc.BaseElement):
     def __init__(self, text, href, base_url_path, target):
         self.text = text
         self.href = href
@@ -22,12 +22,12 @@ class Href(object):
                 f'base={self.base_url_path!r}, '
                 f'target={self.target!r})')
 
-    def to_tex(self, t):
+    def to_tex(self, c, **kwargs):
         url = urljoin(pyccc.CCC_WEBSITE, urljoin(self.base_url_path, self.href))
-        return "\\ccchref{" + t(self.text) + "}{" + pyccc.pdf.el_url(url) + "}"
+        return "\\ccchref{" + c(self.text) + "}{" + pyccc.pdf.el_url(url) + "}"
 
 
-class TextWithNoteRef(object):
+class TextWithNoteRef(pyccc.BaseElement):
     """<a onmouseover="note(this,1);">像這樣被我聽聞</a>"""
 
     def __init__(self, text, type_, key):
@@ -41,9 +41,9 @@ class TextWithNoteRef(object):
                 f'type_={self.type_!r}, '
                 f'number={self.key!r})')
 
-    def to_tex(self, t):
+    def to_tex(self, c, **kwargs):
         return "\\twnr" +\
-               "{" + t(self.get_text()) + "}" + \
+               "{" + c(self.get_text()) + "}" + \
                "{" + atom_note.note_label(self.type_, self.key) + "}"
 
     def get_text(self):

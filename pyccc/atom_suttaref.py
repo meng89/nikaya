@@ -20,7 +20,7 @@ P_AN = r"(AN)\.(\d+\.\d+)"
 PATTERNS = [P_SA, P_SN, P_MA, P_MN, P_DA, P_DN, P_UD, P_IT, P_MI, P_NI, P_PS, P_AA, P_AN]
 
 
-class SuttaRef(object):
+class SuttaRef(pyccc.BaseElement):
     def __init__(self, text):
         self.text = text
         m = None
@@ -44,15 +44,17 @@ class SuttaRef(object):
         elif self._pattern in (P_MI, P_NI, P_PS):
             return "{}/{}/{}{}.htm".format(pyccc.CCC_WEBSITE, self._BN, self._BN, self._num)
 
-    def to_tex(self, bns: list[str]):
+    def to_tex(self, bns: list[str], **kwargs):
         if self._BN in bns:
             return "\\suttaref{" + self.get_text() + "}"
         else:
-            return pyccc.atom.Href(self.get_text(), self.get_cccurl(), pyccc.CCC_WEBSITE, "").to_tex(lang_convert.do_nothing)
+            return pyccc.atom.Href(self.get_text(),
+                                   self.get_cccurl(),
+                                   pyccc.CCC_WEBSITE, "").to_tex(lang_convert.do_nothing)
 
     def __repr__(self):
         return (f'{self.__class__.__name__}('
-                f'text={self._num!r})')
+                f'text={self.text!r})')
 
 
 def parse(s: str):

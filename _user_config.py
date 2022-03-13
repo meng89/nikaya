@@ -8,7 +8,7 @@ os.makedirs(CACHE_DIR, exist_ok=True)
 
 
 # 莊春江工作站目录
-INDEX_DIR = "/mnt/data/Buddhism/ccc7/agama.buddhason.org/"
+INDEX_DIR = "/mnt/data/Buddhism/ccc_2022.03.13/agama.buddhason.org/"
 
 # 字体文件目录
 FONTS_DIR = os.path.join(PROJECT_ROOT, "fonts")

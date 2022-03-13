@@ -1,15 +1,26 @@
 \setuppapersize [A4]
 
+\enableregime[utf]
 \mainlanguage[cn]
 \language[cn]
-\enableregime[utf]
 \setscript[hanzi] % hyphenation
 
+%%%%%%%
+% 字体
 \usetypescriptfile[type-imp-myfonts]
-\usetypescript[myfonts]
-\setupbodyfont[myfonts,rm,12pt]
+\startmode [tc]
+  \usetypescript[tcfonts]
+  \setupbodyfont[tcfonts,rm,12pt]
+\stopmode
+\startmode [sc]
+  \usetypescript[scfonts]
+  \setupbodyfont[scfonts,rm,12pt]
+\stopmode
+% 字体
+%%%%%%%
 
 \usecolors[crayola]
+%\usecolors[ral]
 
 
 %%%%%%%%%%%%
@@ -27,9 +38,7 @@
 \setupheadertexts[]
 \setupheadertexts[{\tf\bf\ss \somenamedheadnumber{chapter}{current}. \getmarking[chapter]}][]
 \setupfootertexts[]
-\setupfootertexts[{\setupinteraction[color=FuzzyWuzzy] \ss
-  \goto{\doifmodeelse{sc}{点击标题可打开最新修订经文网页}{點擊標題閱讀最新訂正經文}}
-  [url(https://agama.buddhason.org/)]}][{\tfa \it \pagenumber}]
+\setupfootertexts[{\ss \doifmodeelse{sc}{点击标题可打开最新修订经文网页}{點擊標題閱讀最新訂正經文}}][{\tfa \it \pagenumber}]
 % 页脚页眉
 %%%%%%%%%%%
 
@@ -61,7 +70,7 @@
 % PDF书签
 \definelist[tobias]
 
-\placebookmarks[part,chapter,section,subsection,tobias][chapter][number=no]
+\placebookmarks[appendix,part,chapter,section,subsection,tobias][chapter][number=no]
 
 \setupinteractionscreen[option=bookmark]
 \enabledirectives[references.bookmarks.preroll]
@@ -107,7 +116,7 @@
 
 
 \define[3]\pian{\part[title=#1(#2-#3)]}
-\define[2]\xiangying{\chapter[title=#2, bookmark=#1. #2]}
+\define[2]\xiangying{\chapter[title=#2, bookmark=#1. #2,]}
 \define[3]\pin{\section[title=#1(#2-#3)]}
 \define[4]\sutta{\subsection[reference=SN.\somenamedheadnumber{chapter}{current}.#1,
      title={\goto{{\startlua if #1==#2 then context("#1") else context("#1-#2") end \stoplua}. #3}[url(#4)]}]}
@@ -161,11 +170,10 @@
 \definehead
   [appendix]
   [part]
-  [placehead=empty,
-   before={},
-   after={}]
-
-\definehead[notes][part][placehead=chapter,before={},after={}]
+  [style={\tfb \bf \ss},
+      before={},
+      after={\blank[3*big]},
+      number=no,]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \startdocument
@@ -180,7 +188,7 @@
   \blank[-3*big]
   \definedfont[SansBold at 45pt]\setstrut \strut Saṃyutta ~ Nikāya
   \blank[3*big]
-  \definedfont[Sans at 25pt] \setstrut \strut \doifmodeelse{sc}{机转简体版本}{傳統中文版}
+  \definedfont[Sans at 25pt] \setstrut \strut \doifmodeelse{sc}{机转简体版}{傳統中文版}
   \blank[18*big]
   \definedfont[Sans at 20pt] \setstrut \strut 莊春江 ~ \doifmodeelse{sc}{译}{譯}
   \blank[-2*small]
@@ -189,8 +197,10 @@
 \stopstandardmakeup
 
 
+\startstandardmakeup
 \part{凡例}
 \input{read_note.tex}
+\stopstandardmakeup
 
 
 \startmakeup[homage]
@@ -205,20 +215,39 @@ $homage
 \input{$suttas}
 \page
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 附录一：注解
-\setupheadertexts[註解][]
-\noteTitle{註解}
+\appendix[title={\doifmodeelse{sc}{注解}{註解}}]
+
+\setupheader
+  [text]
+  [before={\startframed[frame=off,bottomframe=on,topframe=off,framecolor=black,]},
+   after={\stopframed},
+  ]
+\setupfooter
+  [text]
+  [before={\startframed[frame=off,bottomframe=off,topframe=on,framecolor=black,]},
+   after={\stopframed},
+  ]
+
+\setupheadertexts[]
+\setupheadertexts[{\tf\bf\ss \getmarking[appendix]}][]
+\setupfootertexts[]
+\setupfootertexts[{\setupinteraction[color=Black]
+                   \goto{https://agama.buddhason.org}[url(https://agama.buddhason.org)]}]
+                 [{\tfa \it \pagenumber}]
+
 \input{$localnotes}
-
-\setupheadertexts[全局註解][]
-\noteTitle{全局註解}
 \input{$globalnotes}
+\page
 
-% 附录二：巴利经文
-% todo
 
-\part{PDF 制作说明}
+%\appendix[title={\doifmodeelse{sc}{附录二：巴利语经文}{附錄二：巴利語經文}}]
+%todo
+%\page
+
+
+\appendix[title={制作说明}]
 \input{creator_note.tex}
 
 \stopdocument

@@ -1,6 +1,8 @@
 from pylatex import escape_latex as el
 
-from pyccc import atom, atom_suttaref, atom_note, page_parsing, parse_note
+import pyccc
+from pyccc import atom, atom_suttaref, page_parsing, parse_note
+
 
 _url_table = [
     ("%", "\\letterpercent"),
@@ -28,22 +30,22 @@ def _el_char(c, table):
     return c
 
 
-def join_to_tex(line: list, bns: list[str], c=None):
+def join_to_tex(line: list, *args, **kwargs):
+    new_line = []
+    for x in line:
+        if isinstance(x, str):
+            new_line.extend(atom_suttaref.parse(x))
+        else:
+            new_line.append(x)
+    return _join_to_tex(new_line, *args, **kwargs)
+
+
+def _join_to_tex(line: list, bns: list[str], c=None):
     s = ""
     for x in line:
         if isinstance(x, str):
-            for x2 in atom_suttaref.parse(x):
-                if isinstance(x2, str):
-                    s += x2
-                elif isinstance(x2, atom_suttaref.SuttaRef):
-                    s += x2.to_tex(bns=bns)
-                else:
-                    raise Exception(type(x))
-        elif isinstance(x, atom.Href):
-            s += x.to_tex(c)
-        elif isinstance(x, atom.TextWithNoteRef):
-            s += x.to_tex(c)
-        elif isinstance(x, parse_note.NoteTagBase):
+            s += c(x)
+        elif isinstance(x, pyccc.BaseElement):
             s += x.to_tex(bns=bns, c=c)
         else:
             raise Exception((type(x), x))
@@ -56,13 +58,7 @@ def join_to_text(line: list, c=None):
     for x in line:
         if isinstance(x, str):
             s += x
-        elif isinstance(x, atom_suttaref.SuttaRef):
-            s += x.get_text()
-        elif isinstance(x, atom.Href):
-            s += x.get_text()
-        elif isinstance(x, atom.TextWithNoteRef):
-            s += x.get_text()
-        elif isinstance(x, parse_note.NoteTagBase):
+        elif isinstance(x, pyccc.BaseElement):
             s += x.get_text()
         else:
             raise Exception(type(x))
