@@ -1,7 +1,6 @@
 class Epub(object):
     def __init__(self):
-        self.toc = _Toc()
-        self.
+        self.tocs = []
         self.root = None
 
     def write(self):
@@ -9,13 +8,11 @@ class Epub(object):
             raise EpubError
 
 
-
 class Toc(object):
     def __init__(self):
         self.title = None
         self.href = None
-        self.kids=[]
-
+        self.kids = []
 
 
 class _Spine(object):
