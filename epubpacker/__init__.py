@@ -1,10 +1,11 @@
 class Epub(object):
     def __init__(self):
         self.tocs = []
-        self.root = None
+        self.root_dir = None
+        self.files = {}
 
-    def write(self):
-        if not self.root:
+    def write(self, path):
+        if not self.root_dir or not self.files:
             raise EpubError
 
 
@@ -25,3 +26,8 @@ class _Meta(object):
 
 class EpubError(Exception):
     pass
+
+
+def demo():
+    epub = Epub()
+    epub.files["pages/sn.1.1.xhtml"] = b"xxx"
