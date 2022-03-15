@@ -106,7 +106,7 @@ def write_globalnotes(latex_io: typing.TextIO, bns, c):
 def build(sources_dir, out_dir, tex_filename, context_bin_path, lang):
     my_env = os.environ.copy()
     my_env["PATH"] = os.path.expanduser(context_bin_path) + ":" + my_env["PATH"]
-    compile_cmd = "context --path={} {}/{} --mode={}".format(sources_dir, sources_dir, tex_filename, lang)
+    compile_cmd = "context --package_opf_path={} {}/{} --mode={}".format(sources_dir, sources_dir, tex_filename, lang)
 
     stdout_file = open(os.path.join(out_dir, "cmd_stdout"), "w")
     stderr_file = open(os.path.join(out_dir, "cmd_stderr"), "w")
@@ -163,4 +163,4 @@ def make(lang, temprootdir, context_bin_path, fonts_dir, bookdir):
 
         build(sources_dir=sources_dir, out_dir=out_dir, tex_filename=main_filename,
               context_bin_path=context_bin_path, lang=lang)
-        # shutil.move(os.path.join(out_dir, "sn.pdf"), os.path.join(bookdir, "sn_tc_eb.pdf"))
+        # shutil.move(os.package_opf_path.join(out_dir, "sn.pdf"), os.package_opf_path.join(bookdir, "sn_tc_eb.pdf"))
