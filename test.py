@@ -1,13 +1,21 @@
 #!/usr/bin/env python3
-#from epubpacker import Epub, Toc
+from epubpacker import Epub, Toc
+import uuid
 
-import zipfile
 
-def main():
+def sample():
     epub = Epub()
+    epub.meta.titles = ["Hello Book"]
+    epub.meta.identifier = "identifier_" + uuid.uuid4().hex
+    epub.meta.languages = ["zh-Hant", "pi"]
     epub.files["pages/hello.xhtml"] = b"""
-<a>HELLO</a><br/>
-<a name="hello_word">Hello, world</a><br/>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>Hello Book</head>
+  <body>
+    <a>HELLO</a><br/>
+    <a name="hello_word">Hello, world</a><br/>
+  </body>
+</html>
 """
     epub.spine.append("pages/hello.xhtml")
     chapter1_toc = Toc("chapter 1 Hello", "pages/hello.xhtml")
@@ -16,8 +24,5 @@ def main():
     epub.write("hello.epub")
 
 
+sample()
 
-z = zipfile.ZipFile("x", "w")
-z.writestr("a/b.txt", "hello")
-z.writestr("a/c.txt", "hello2")
-z.is
