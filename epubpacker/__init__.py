@@ -48,7 +48,9 @@ class Epub(object):
 ########################################################################################################################
 
         nav_html = ET.Element("html", {"xmlns:epub": "http://www.idpf.org/2007/ops",
-                                       "xmlns": "http://www.w3.org/1999/xhtml"})
+                                       "xmlns": "http://www.w3.org/1999/xhtml",
+                                       "xml:lang": self.meta.languages[0]
+                                       })
         ET.SubElement(ET.SubElement(nav_html, "head"), "title").text = self.toc_title
         body = ET.SubElement(nav_html, "body")
         nav = ET.SubElement(body, "nav", {"epub:type": "toc"})
