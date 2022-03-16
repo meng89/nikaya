@@ -8,13 +8,24 @@ def sample():
     epub.meta.titles = ["Hello Book"]
     epub.meta.identifier = "identifier_" + uuid.uuid4().hex
     epub.meta.languages = ["zh-Hant", "pi"]
-    epub.files["pages/hello.xhtml"] = b"""
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>Hello Book</head>
-  <body>
-    <a>HELLO</a><br/>
-    <a name="hello_word">Hello, world</a><br/>
-  </body>
+    epub.files["pages/hello.xhtml"] = """<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>Hello Book</title>
+</head>
+<body>
+<a>Chapter 1 Hello</a><br/>
+<a id="hello_word">Hello World!</a>
+<a epub:type="noteref" href="#footnote_1">注1</a>
+<a epub:type="noteref" href="#footnote_2">注2</a>
+<a epub:type="noteref" href="#footnote_3">注3</a>
+<section epub:type="footnotes">
+  <aside epub:type="footnote" id="footnote_1">这是注释内容1</aside>
+  <aside epub:type="footnote" id="footnote_2">这是注释内容2</aside>
+  <aside epub:type="footnote" id="footnote_3">这是注释内容3</aside>
+</section>
+</body>
 </html>
 """
     epub.spine.append("pages/hello.xhtml")
@@ -25,4 +36,3 @@ def sample():
 
 
 sample()
-

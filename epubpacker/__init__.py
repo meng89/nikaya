@@ -3,6 +3,7 @@ import zipfile
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
 import uuid
+import datetime
 
 
 # XML 和 EPUB 不是我的坑，够用就行。仅为 Nikaya 服务
@@ -12,6 +13,18 @@ import uuid
 
 def _prettxml(s):
     return minidom.parseString(s).toprettyxml(indent="   ")
+
+
+def _path2id(s):
+    news = ""
+    for c in s:
+        if c == "_":
+            news += "__"
+        elif c == "/":
+            news += "_s_"
+        else:
+            news += c
+    return news
 
 
 ROOT_OF_OPF = 'EPUB'
@@ -39,18 +52,20 @@ class Epub(object):
         ET.SubElement(ET.SubElement(nav_html, "head"), "title").text = self.toc_title
         body = ET.SubElement(nav_html, "body")
         nav = ET.SubElement(body, "nav", {"epub:type": "toc"})
+        h1 = ET.SubElement(nav, "h1")
+        h1.text = "Table of contents"
         ol = ET.SubElement(nav, "ol")
         for toc in self.root_toc:
             toc.to_et(ol)
 
         name = "toc.xhtml"
         i = 1
-        toc_xhtml = ROOT_OF_OPF + "/" + name
+        toc_xhtml = name
         while toc_xhtml in z.namelist():
             toc_xhtml = "real" + str(i) + name
             i += 1
 
-        self.files[toc_xhtml] = _prettxml(ET.tostring(nav_html, encoding="utf8", method="xml"))
+        z.writestr(ROOT_OF_OPF + "/" + toc_xhtml, _prettxml(ET.tostring(nav_html, encoding="utf8", method="xml")))
 
 
 ########################################################################################################################
@@ -60,13 +75,16 @@ class Epub(object):
                                           "unique-identifier": dc_id_id,
                                           "xml:lang": self.meta.languages[0],
                                           "xmlns": "http://www.idpf.org/2007/opf"})
-        self.meta.to_et(_package, dc_id_id)
 
-        meta = ET.SubElement(_package, "meta", {"property": "dcterms:modified"})
-        meta.text = ""
+        self.meta.to_et(_package, dc_id_id)
 
         manifest = ET.SubElement(_package, "manifest")
 
+        toc_item = ET.SubElement(manifest, "item", {"media-type": "application/xhtml+xml",
+                                                    "href": toc_xhtml,
+                                                    "id": _path2id(toc_xhtml),
+                                                    "properties": "nav"
+                                                    })
         for filename in self.files.keys():
             _, ext = os.path.splitext(filename)
             if ext.lower() == ".xhtml":
@@ -80,15 +98,14 @@ class Epub(object):
 
             attrib = {"media-type": media_type,
                       "href": filename,
-                      "id": filename
+                      "id": _path2id(filename)
                       }
-            if filename == toc_xhtml:
-                attrib["properties"] = "nav"
+
             _item = ET.SubElement(manifest, "item", attrib)
 
         spine = ET.SubElement(_package, "spine")
         for one in self.spine:
-            ET.SubElement(spine, "itemref", {"idref": one})
+            ET.SubElement(spine, "itemref", {"idref": _path2id(one)})
 
         name = "package.opf"
         i = 1
@@ -104,8 +121,6 @@ class Epub(object):
 
         for filename, data in self.files.items():
             z.writestr(ROOT_OF_OPF + "/" + filename, data)
-
-        self.files.pop(toc_xhtml)
 
 ########################################################################################################################
 
@@ -125,6 +140,8 @@ class Meta(object):
 
     def to_et(self, parent, dc_id_id):
         metadata = ET.SubElement(parent, "metadata", {"xmlns:dc": "http://purl.org/dc/elements/1.1/"})
+        meta = ET.SubElement(metadata, "meta", {"property": "dcterms:modified"})
+        meta.text = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
         if self.identifier:
             dc_id = ET.SubElement(metadata, "dc:identifier", {"id": dc_id_id})
             dc_id.text = self.identifier
@@ -144,7 +161,8 @@ class Toc(object):
 
     def to_et(self, parent):
         li = ET.SubElement(parent, "li")
-        ET.SubElement(li, "a", {"href": self.href})
+        a = ET.SubElement(li, "a", {"href": self.href})
+        a.text = self.title
         if self.kids:
             ol = ET.SubElement(li, "ol")
             for kid in self.kids:
