@@ -1,4 +1,5 @@
 import re
+import xml.etree.ElementTree as ET
 
 import pyccc
 from pyccc import atom, lang_convert
@@ -18,6 +19,12 @@ P_AA = r"(AA)\.(\d+\.\d+)"
 P_AN = r"(AN)\.(\d+\.\d+)"
 
 PATTERNS = [P_SA, P_SN, P_MA, P_MN, P_DA, P_DN, P_UD, P_IT, P_MI, P_NI, P_PS, P_AA, P_AN]
+
+
+def p2filename(p, xn, num: str):
+    if p == P_SN:
+        xiangying, sutta = num.split(".")
+        return "sn/sn.{}.xhtml".format(xiangying)
 
 
 class SuttaRef(pyccc.BaseElement):
@@ -52,6 +59,11 @@ class SuttaRef(pyccc.BaseElement):
                                    self.get_cccurl(),
                                    pyccc.CCC_WEBSITE, "").to_tex(lang_convert.do_nothing)
 
+    def to_xml(self, bns, **kwargs):
+        if self._BN in bns:
+            return ET.Element("a", "")
+
+
     def __repr__(self):
         return (f'{self.__class__.__name__}('
                 f'text={self.text!r})')
@@ -70,3 +82,8 @@ def parse(s: str):
         list_s.append(s[offset:])
 
     return list_s
+
+
+def xn2filename(xn):
+    if xn == "SN":
+        return ""

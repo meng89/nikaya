@@ -87,7 +87,7 @@ def write_localnotes(latex_io: typing.TextIO, notes, bns, c):
     for subnote in notes:
         latex_io.write("\\startitemgroup[noteitems]\n")
         latex_io.write("\\item" +
-                       "\\subnoteref{" + atom_note.localnote_label(notes.index(subnote)) + "}" +
+                       "\\subnoteref{" + atom_note.localnote_to_texlabel(notes.index(subnote)) + "}" +
                        pdf.join_to_tex(subnote, bns, c) + "\n")
         latex_io.write("\\stopitemgroup\n\n")
 
@@ -98,7 +98,7 @@ def write_globalnotes(latex_io: typing.TextIO, bns, c):
         latex_io.write("\\startitemgroup[noteitems]\n")
         for index in range(len(note)):
             latex_io.write("\\item" +
-                           "\\subnoteref{" + atom_note.globalnote_label(notekey, index) + "}" +
+                           "\\subnoteref{" + atom_note.globalnote_to_texlabel(notekey, index) + "}" +
                            pdf.join_to_tex(note[index], bns, c) + "\n")
         latex_io.write("\\stopitemgroup\n\n")
 

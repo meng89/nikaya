@@ -67,3 +67,6 @@ def join_to_text(line: list, c=None):
 
 TC = "tc"
 SC = "sc"
+
+
+def join_to_xml(line: list, c):

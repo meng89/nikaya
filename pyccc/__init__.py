@@ -22,6 +22,10 @@ class BaseElement(object):
     def to_tex(self, *args, **kwargs):
         pass
 
+    @abc.abstractmethod
+    def to_xml(self, *args, **kwargs):
+        pass
+
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             return repr(self) == repr(other)
