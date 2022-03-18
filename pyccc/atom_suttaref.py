@@ -21,38 +21,47 @@ P_AN = r"(AN)\.(\d+\.\d+)"
 PATTERNS = [P_SA, P_SN, P_MA, P_MN, P_DA, P_DN, P_UD, P_IT, P_MI, P_NI, P_PS, P_AA, P_AN]
 
 
-def p2filename(p, xn, num: str):
+def make_suttaname_href_link(suttaname):
+    return suttaname2htmlpath(suttaname) + "#" + suttaname
+
+
+def suttaname2htmlpath(suttaname):
+    p, xn, num = split_suttaname(suttaname)
     if p == P_SN:
-        xiangying, sutta = num.split(".")
-        return "sn/sn.{}.xhtml".format(xiangying)
+        xiangying_num, _sutta_num = num.split(".")
+        return "../sn/sn.{}.xhtml".format(xiangying_num)
+    else:
+        # todo other
+        raise Exception
+
+
+def split_suttaname(text):
+    m = None
+    for p in PATTERNS:
+        m = re.match("^{}$".format(p), text)
+        if m:
+            return p, m.group(1), m.group(2)
+    assert m
 
 
 class SuttaRef(pyccc.BaseElement):
     def __init__(self, text):
         self.text = text
-        m = None
-        for p in PATTERNS:
-            m = re.match("^{}$".format(p), text)
-            if m:
-                self._pattern = p
-                self._BN = m.group(1)
-                self._num = m.group(2)
-                break
-        assert m
+        self._pattern, self._bn, self._sec_num = split_suttaname(text)
 
     def get_text(self):
-        return self._BN + "." + self._num
+        return self._bn + "." + self._sec_num
 
     def get_cccurl(self):
         if self._pattern in [P_SA, P_MA, P_MN, P_DA, P_DN, P_UD, P_IT, P_NI, P_AA]:
-            return "{}/{}/dm.php?keyword={}".format(pyccc.CCC_WEBSITE, self._BN, self._num)
+            return "{}/{}/dm.php?keyword={}".format(pyccc.CCC_WEBSITE, self._bn, self._sec_num)
         elif self._pattern in (P_SN, P_AN):
-            return "{}/{}/{}.php?keyword={}".format(pyccc.CCC_WEBSITE, self._BN, self._BN.lower(), self._num)
+            return "{}/{}/{}.php?keyword={}".format(pyccc.CCC_WEBSITE, self._bn, self._bn.lower(), self._sec_num)
         elif self._pattern in (P_MI, P_NI, P_PS):
-            return "{}/{}/{}{}.htm".format(pyccc.CCC_WEBSITE, self._BN, self._BN, self._num)
+            return "{}/{}/{}{}.htm".format(pyccc.CCC_WEBSITE, self._bn, self._bn, self._sec_num)
 
     def to_tex(self, bns: list[str], **kwargs):
-        if self._BN in bns:
+        if self._bn in bns:
             return "\\suttaref{" + self.get_text() + "}"
         else:
             return pyccc.atom.Href(self.get_text(),
@@ -60,9 +69,11 @@ class SuttaRef(pyccc.BaseElement):
                                    pyccc.CCC_WEBSITE, "").to_tex(lang_convert.do_nothing)
 
     def to_xml(self, bns, **kwargs):
-        if self._BN in bns:
-            return ET.Element("a", "")
-
+        if self._bn in bns:
+            a = ET.Element("a", {"href": make_suttaname_href_link(self.get_text())})
+        else:
+            a = ET.Element("a", {"href": self.get_cccurl()})
+        return a
 
     def __repr__(self):
         return (f'{self.__class__.__name__}('

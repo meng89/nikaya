@@ -11,6 +11,7 @@ PATTERNS = (P1, P2, P3)
 
 
 class NoteTagBase(pyccc.BaseElement):
+
     def __init__(self, text):
         self.text = text
         self._tex_cmd = self.__class__.__name__
@@ -20,6 +21,9 @@ class NoteTagBase(pyccc.BaseElement):
 
     def to_tex(self, bns, c, **kwargs):
         return "\\" + self._tex_cmd + "{" + pdf.join_to_tex(line=[self.text], bns=bns, c=c) + "}"
+
+    def to_xml(self, *args, **kwargs):
+        return self.text
 
     def __repr__(self):
         return (f'{self.__class__.__name__}('

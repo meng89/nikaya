@@ -1,3 +1,5 @@
+import xml.etree.ElementTree as ET
+
 from pylatex import escape_latex as el
 
 import pyccc
@@ -70,3 +72,7 @@ SC = "sc"
 
 
 def join_to_xml(line: list, c):
+    elements = []
+    for x in line:
+        if isinstance(x, str):
+            s
