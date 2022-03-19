@@ -32,19 +32,21 @@ def _el_char(c, table):
     return c
 
 
-def join_to_tex(line: list, *args, **kwargs):
+def _new_line(line):
     new_line = []
     for x in line:
         if isinstance(x, str):
             new_line.extend(atom_suttaref.parse(x))
         else:
             new_line.append(x)
-    return _join_to_tex(new_line, *args, **kwargs)
+
+    return new_line
 
 
-def _join_to_tex(line: list, bns: list[str], c=None):
+def join_to_tex(line: list, bns: list[str], c):
+    new_line = _new_line(line)
     s = ""
-    for x in line:
+    for x in new_line:
         if isinstance(x, str):
             s += c(x)
         elif isinstance(x, pyccc.BaseElement):
@@ -52,6 +54,16 @@ def _join_to_tex(line: list, bns: list[str], c=None):
         else:
             raise Exception((type(x), x))
     return s
+
+
+def join_to_xml(line: list, bns, c):
+    new_line = _new_line(line)
+    elements = []
+    for x in line:
+        if isinstance(x, str):
+            elements.append(x)
+        elif isinstance(x, pyccc.BaseElement):
+            elements.append(x.to_xml(bns=bns, c=c))
 
 
 def join_to_text(line: list, c=None):
@@ -71,8 +83,3 @@ TC = "tc"
 SC = "sc"
 
 
-def join_to_xml(line: list, c):
-    elements = []
-    for x in line:
-        if isinstance(x, str):
-            s

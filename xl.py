@@ -36,22 +36,32 @@ def _is_straight_line(element):
         return False
 
 
-def pretty_insert(element, start_indent=0, step=4, dont_do_when_one_child=True):
+def pretty_insert(element,
+                  start_indent=0,
+                  step=4,
+                  insert_str=None,
+                  dont_do_between_str=True,
+                  dont_do_when_one_kid=True,
+                  dont_do_tags=None):
+
+    insert_str = insert_str or " "
+    dont_do_tags = dont_do_tags or []
     new_e = Element(tag=copy.deepcopy(element.tag), attrs=copy.deepcopy(element.attrs))
 
-    _indent_text = '\n' + ' ' * (start_indent + step)
-
-    if _is_straight_line(element) and dont_do_when_one_child:
+    if (dont_do_when_one_kid and _is_straight_line(element)) or element.tag in dont_do_tags:
         for kid in element.kids:
             new_e.kids.append(copy.deepcopy(kid))
 
     elif element.kids:
+        _indent_text = '\n' + insert_str * (start_indent + step)
+        last_type = None
         for kid in element.kids:
-
             if isinstance(kid, str):
-                new_text = _indent_text + kid
-
-                new_e.kids.append(new_text)
+                if dont_do_between_str and last_type == str:
+                    pass
+                else:
+                    new_e.kids.append(_indent_text)
+                new_e.kids.append(kid)
 
             elif isinstance(kid, Element):
                 new_e.kids.append(_indent_text)
@@ -59,8 +69,12 @@ def pretty_insert(element, start_indent=0, step=4, dont_do_when_one_child=True):
                 new_e.kids.append(pretty_insert(element=kid,
                                                 start_indent=start_indent + step,
                                                 step=step,
-                                                dont_do_when_one_child=dont_do_when_one_child,
+                                                insert_str=insert_str,
+                                                dont_do_between_str=dont_do_between_str,
+                                                dont_do_when_one_kid=dont_do_when_one_kid,
+                                                dont_do_tags=dont_do_tags
                                                 ))
+            last_type = type(kid)
 
         new_e.kids.append('\n' + ' ' * start_indent)
 
@@ -97,7 +111,7 @@ class _Node(object):
 class Header(_Node):
     def __init__(self, version=None, encoding=None, standalone=None):
         self.version = version or '1.0'
-        self.encoding = encoding or 'utf-8'
+        self.encoding = encoding or 'UTF-8'
         self.standalone = standalone
 
     def to_str(self):

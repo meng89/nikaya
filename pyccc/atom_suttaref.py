@@ -1,5 +1,6 @@
 import re
-import xml.etree.ElementTree as ET
+
+import xl
 
 import pyccc
 from pyccc import atom, lang_convert
@@ -70,9 +71,10 @@ class SuttaRef(pyccc.BaseElement):
 
     def to_xml(self, bns, **kwargs):
         if self._bn in bns:
-            a = ET.Element("a", {"href": make_suttaname_href_link(self.get_text())})
+            a = xl.Element("a", {"href": make_suttaname_href_link(self.get_text())})
         else:
-            a = ET.Element("a", {"href": self.get_cccurl()})
+            a = xl.Element("a", {"href": self.get_cccurl()})
+        a.kids.append(self.text)
         return a
 
     def __repr__(self):

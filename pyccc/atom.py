@@ -1,9 +1,12 @@
 from urllib.parse import urljoin
 
+
+import xl
+
+
 import pyccc.pdf
 
 from pyccc import atom_note
-import xml.etree.ElementTree as ET
 
 
 class Href(pyccc.BaseElement):
@@ -30,8 +33,7 @@ class Href(pyccc.BaseElement):
         return "\\ccchref{" + c(self.text) + "}{" + pyccc.pdf.el_url(self._url()) + "}"
 
     def to_xml(self, c, **kwargs):
-        e = ET.Element("a", {"href": self._url()})
-        e.text = c(self.text)
+        return xl.Element("a", {"href": self._url()}, [c(self.text)])
 
 
 class TextWithNoteRef(pyccc.BaseElement):
@@ -56,10 +58,7 @@ class TextWithNoteRef(pyccc.BaseElement):
     def to_xml(self, c, **kwargs):
         href = atom_note.note_to_xmlhref(self.type_, self.key)
         # <a href="chapter.xhtml#myNote" epub:type="noteref">1</a>
-        a = ET.Element("a", {"epub:type": "noteref",
-                             "href": href})
-        a.text = self.text
-        return a
+        return xl.Element("a", {"epub:type": "noteref", "href": href}, [self.text])
 
     def get_text(self):
         return self.text
