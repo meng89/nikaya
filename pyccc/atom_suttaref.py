@@ -3,7 +3,8 @@ import re
 import xl
 
 import pyccc
-from pyccc import atom, lang_convert
+from pyccc import atom, book_public
+import pyccc.epub
 
 P_SA = r"(SA)\.(\d+)"
 P_SN = r"(SN)\.(\d+\.\d+)"
@@ -23,14 +24,14 @@ PATTERNS = [P_SA, P_SN, P_MA, P_MN, P_DA, P_DN, P_UD, P_IT, P_MI, P_NI, P_PS, P_
 
 
 def make_suttaname_href_link(suttaname):
-    return suttaname2htmlpath(suttaname) + "#" + suttaname
+    return docpath_calculate(suttaname) + "#" + suttaname
 
 
-def suttaname2htmlpath(suttaname):
+def docpath_calculate(suttaname):
     p, xn, num = split_suttaname(suttaname)
     if p == P_SN:
         xiangying_num, _sutta_num = num.split(".")
-        return "../sn/sn.{}.xhtml".format(xiangying_num)
+        return "sn/sn{:0>2}.xhtml".format(xiangying_num)
     else:
         # todo other
         raise Exception
@@ -69,9 +70,9 @@ class SuttaRef(pyccc.BaseElement):
                                    self.get_cccurl(),
                                    pyccc.CCC_WEBSITE, "").to_tex(lang_convert.do_nothing)
 
-    def to_xml(self, bns, **kwargs):
+    def to_xml(self, bns, doc_path, **kwargs):
         if self._bn in bns:
-            a = xl.Element("a", {"href": make_suttaname_href_link(self.get_text())})
+            a = xl.Element("a", {"href": pyccc.epub.relpath(make_suttaname_href_link(self.get_text()), doc_path)})
         else:
             a = xl.Element("a", {"href": self.get_cccurl()})
         a.kids.append(self.text)
@@ -95,8 +96,3 @@ def parse(s: str):
         list_s.append(s[offset:])
 
     return list_s
-
-
-def xn2filename(xn):
-    if xn == "SN":
-        return ""

@@ -22,7 +22,7 @@ def index():
     return app.send_static_file('index.htm')
 
 
-@app.route('/<package_opf_path:package_opf_path>')
+@app.route('/<path:path>')
 def static_file(path):
     return app.send_static_file(path)
 

@@ -1,6 +1,3 @@
-import bs4
-
-
 def do_line(oline, funs, **kwargs):
     line = []
     for oe in oline:

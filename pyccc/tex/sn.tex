@@ -119,7 +119,7 @@
 \define[2]\xiangying{\chapter[title=#2, bookmark=#1. #2,]}
 \define[3]\pin{\section[title=#1(#2-#3)]}
 \define[4]\sutta{\subsection[reference=SN.\somenamedheadnumber{chapter}{current}.#1,
-     title={\goto{\somenamedheadnumber{chapter}{current}.{\startlua if #1==#2 then context("#1") else context("#1-#2") end \stoplua}. #3}[url(#4)]}]}
+     title={\goto{{\startlua if #1==#2 then context("#1") else context("#1-#2") end \stoplua}. #3}[url(#4)]}]}
 
 
 % 绿
@@ -204,7 +204,9 @@
 
 
 \startmakeup[homage]
-\bookmark[tobias]{\doifmodeelse{sc}{礼敬世尊}{禮敬世尊}}
+
+\doifmodeelse{sc}{\bookmark[tobias]{礼敬世尊}}{\bookmark[tobias]{禮敬世尊}}
+
 \vfill
 \blank[-25*big]
 $homage

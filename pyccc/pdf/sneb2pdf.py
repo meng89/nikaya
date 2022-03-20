@@ -6,7 +6,7 @@ import subprocess
 
 
 import pyccc
-from pyccc import atom_note, atom_suttaref, page_parsing, sn, pdf, lang_convert
+from pyccc import atom_note, atom_suttaref, page_parsing, sn, pdf, book_public
 
 main_filename = "sn.tex"
 suttas_filename = "suttas.tex"
@@ -106,7 +106,7 @@ def write_globalnotes(latex_io: typing.TextIO, bns, c):
 def build(sources_dir, out_dir, tex_filename, context_bin_path, lang):
     my_env = os.environ.copy()
     my_env["PATH"] = os.path.expanduser(context_bin_path) + ":" + my_env["PATH"]
-    compile_cmd = "context --package_opf_path={} {}/{} --mode={}".format(sources_dir, sources_dir, tex_filename, lang)
+    compile_cmd = "context --path={} {}/{} --mode={}".format(sources_dir, sources_dir, tex_filename, lang)
 
     stdout_file = open(os.path.join(out_dir, "cmd_stdout"), "w")
     stderr_file = open(os.path.join(out_dir, "cmd_stderr"), "w")
@@ -130,12 +130,12 @@ def make_keys():
 
 def make(lang, temprootdir, context_bin_path, fonts_dir, bookdir):
     bns = [sn.BN]
-    if lang == pyccc.pdf.TC:
+    if lang == pyccc.lang_convert.TC:
         c = lang_convert.do_nothing
-    else:  # lang == pyccc.pdf.SC:
+    else:  # xc == pyccc.pdf.SC:
         c = lang_convert.convert2sc
 
-    mytemprootdir = os.path.join(temprootdir, "sn_" + lang)
+    mytemprootdir = os.path.join(temprootdir, "sn_pdf_" + lang)
 
     if True:
         nikaya = sn.get()

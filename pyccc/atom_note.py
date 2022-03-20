@@ -1,5 +1,4 @@
 import re
-import xml.etree.ElementTree as ET
 
 import bs4
 import requests.exceptions
@@ -188,25 +187,4 @@ def globalnote_to_texlabel(notekey, subnotekey):
 
 def localnote_to_texlabel(key):
     return LOCAL_NOTE_KEY_PREFIX + str(key)
-
-
-MAX_NUMBER_OF_NOTES_PER_PAGE = 50
-
-
-def note_to_xmlhref(type_, key):
-    return note_page_filename(type_, key) + "#" + noteid(type_, key)
-
-
-def note_page_filename(type_, key):
-    if type_ == page_parsing.GLOBAL:
-        return "../note/globalnote{}.xhtml".format(int(key[0]) // MAX_NUMBER_OF_NOTES_PER_PAGE)
-    else:
-        return "../note/localnote{}.xhtml".format(key // MAX_NUMBER_OF_NOTES_PER_PAGE)
-
-
-def noteid(type_, key):
-    if type_ == page_parsing.GLOBAL:
-        return str(key[0])
-    else:
-        return str(key)
 

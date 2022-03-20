@@ -42,7 +42,7 @@ class _MyInfo(BaseInfo, PianInfo, PinInfo):
 # SN.1.1
 
 # 经太短，不应该一经一页
-# 有时某个相应经太少，没有品，相应下面就是经，不应该建立空品多折叠一下
+# 有些相应经太少，没有品，相应下面就是经，不应该建立空品多折叠一下
 
 
 class MyNikaya(Nikaya):
@@ -105,33 +105,26 @@ def analyse_head(lines):  # public
 
 def analyse_sutta_info(line):
     info = _MyInfo()
-    m = re.match(r"^ *相+應部?(\d+)相應 ?第?(\d+(?:-\d+)?)經(?:/(.+?經.*?))?", line)
+    # m = re.match(r"^ *相+應部?(\d+)相應 ?第?(\d+(?:-\d+)?)經(?:/(.+?經.*?))?", line)
+    m = re.match(r"^ *相+應部?(\d+)相應 ?第?(\d+(?:-\d+)?)經/(.+經[^(]*).*$", line)
     if m:
         serial = m.group(2).split('-')
-
         if len(serial) == 1:
             info.sutta_begin = serial[0]
             info.sutta_end = serial[0]
         else:
             info.sutta_begin = serial[0]
             info.sutta_end = serial[1]
-
         info.sutra_title = m.group(3)
+        return info
 
-    # “略去”的经文
-    m = re.match(r"^相應部(48)相應 (83)-(114)經\s*$", line)
+    m = re.match(r"^相應部\d+相應 ?(\d+)-(\d+)經$", line)
     if m:
-        # info.xiangying_serial = m.group(1)
-        info.sutta_begin = m.group(2)
-        info.sutta_end = m.group(3)
+        info.sutta_begin = m.group(1)
+        info.sutta_end = m.group(2)
+        return info
 
-    m = re.match(r"^相應部(48)相應 (137)-(168)經\s*", line)
-    if m:
-        # info.xiangying_serial = m.group(1)
-        info.sutta_begin = m.group(2)
-        info.sutta_end = m.group(3)
-
-    return info
+    raise Exception(repr(line))
 
 
 def add_sec_title_range(nikaya):
@@ -233,16 +226,15 @@ def make_nikaya(sutta_urls):
 
 
 def load(domain, cache_dir):
-    nikaya_filename = "sn_data"
     global _nikaya
-    data_path = os.path.join(cache_dir, nikaya_filename)
+    data_path = os.path.join(cache_dir, "sn")
     try:
         with open(data_path, "rb") as rf:
             _nikaya = pickle.load(rf)
     except (FileNotFoundError, ModuleNotFoundError):
         sutra_urls = get_sutta_urls(domain + HTML_INDEX)
-        nikaya = make_nikaya(sutra_urls)
-        _nikaya = add_sec_title_range(nikaya)
+        _nikaya = make_nikaya(sutra_urls)
+        # _nikaya = add_sec_title_range(nikaya)
         with open(data_path, "wb") as wf:
             pickle.dump(_nikaya, wf)
 

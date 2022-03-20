@@ -1,7 +1,7 @@
 import re
 
 import pyccc
-from pyccc import atom_suttaref, pdf
+from pyccc import pdf
 
 P1 = r"(南傳作)(「.+?」)"
 P2 = r"(\(i+\))(「.+?」)"

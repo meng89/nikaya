@@ -1,10 +1,5 @@
-import xml.etree.ElementTree as ET
-
-from pylatex import escape_latex as el
-
 import pyccc
-from pyccc import atom, atom_suttaref, page_parsing, parse_note
-
+from pyccc import atom_suttaref, page_parsing
 
 _url_table = [
     ("%", "\\letterpercent"),
@@ -56,14 +51,14 @@ def join_to_tex(line: list, bns: list[str], c):
     return s
 
 
-def join_to_xml(line: list, bns, c):
-    new_line = _new_line(line)
+def join_to_xml(line: list, bns, c, doc_path):
     elements = []
-    for x in line:
+    for x in _new_line(line):
         if isinstance(x, str):
             elements.append(x)
         elif isinstance(x, pyccc.BaseElement):
-            elements.append(x.to_xml(bns=bns, c=c))
+            elements.append(x.to_xml(bns=bns, c=c, doc_path=doc_path))
+    return elements
 
 
 def join_to_text(line: list, c=None):
@@ -77,9 +72,3 @@ def join_to_text(line: list, c=None):
         else:
             raise Exception(type(x))
     return c(s)
-
-
-TC = "tc"
-SC = "sc"
-
-

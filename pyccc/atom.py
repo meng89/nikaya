@@ -1,6 +1,6 @@
 from urllib.parse import urljoin
 
-
+import pyccc.epub
 import xl
 
 
@@ -55,10 +55,9 @@ class TextWithNoteRef(pyccc.BaseElement):
                "{" + c(self.get_text()) + "}" + \
                "{" + atom_note.note_to_texlabel(self.type_, self.key) + "}"
 
-    def to_xml(self, c, **kwargs):
-        href = atom_note.note_to_xmlhref(self.type_, self.key)
-        # <a href="chapter.xhtml#myNote" epub:type="noteref">1</a>
-        return xl.Element("a", {"epub:type": "noteref", "href": href}, [self.text])
+    def to_xml(self, c, doc_path, **kwargs):
+        href = pyccc.epub.note_href_calculate(self.type_, self.key)
+        return xl.Element("a", {"epub:type": "noteref", "href": pyccc.epub.relpath(href, doc_path)}, [self.text])
 
     def get_text(self):
         return self.text
