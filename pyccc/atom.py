@@ -1,12 +1,12 @@
 from urllib.parse import urljoin
 
-import pyccc.epub
 import xl
 
 
-import pyccc.pdf
-
+import pyccc
 from pyccc import atom_note
+import dopdf
+import doepub
 
 
 class Href(pyccc.BaseElement):
@@ -30,7 +30,7 @@ class Href(pyccc.BaseElement):
         return urljoin(pyccc.CCC_WEBSITE, urljoin(self.base_url_path, self.href))
 
     def to_tex(self, c, **kwargs):
-        return "\\ccchref{" + c(self.text) + "}{" + pyccc.pdf.el_url(self._url()) + "}"
+        return "\\ccchref{" + c(self.text) + "}{" + dopdf.el_url(self._url()) + "}"
 
     def to_xml(self, c, **kwargs):
         return xl.Element("a", {"href": self._url()}, [c(self.text)])
@@ -56,8 +56,8 @@ class TextWithNoteRef(pyccc.BaseElement):
                "{" + atom_note.note_to_texlabel(self.type_, self.key) + "}"
 
     def to_xml(self, c, doc_path, **kwargs):
-        href = pyccc.epub.note_href_calculate(self.type_, self.key)
-        return xl.Element("a", {"epub:type": "noteref", "href": pyccc.epub.relpath(href, doc_path)}, [self.text])
+        href = doepub.note_href_calculate(self.type_, self.key)
+        return xl.Element("a", {"epub:type": "noteref", "href": doepub.relpath(href, doc_path)}, [self.text])
 
     def get_text(self):
         return self.text

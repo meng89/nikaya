@@ -4,7 +4,8 @@ import xl
 
 import pyccc
 from pyccc import atom, book_public
-import pyccc.epub
+
+import doepub
 
 P_SA = r"(SA)\.(\d+)"
 P_SN = r"(SN)\.(\d+\.\d+)"
@@ -68,11 +69,11 @@ class SuttaRef(pyccc.BaseElement):
         else:
             return pyccc.atom.Href(self.get_text(),
                                    self.get_cccurl(),
-                                   pyccc.CCC_WEBSITE, "").to_tex(lang_convert.do_nothing)
+                                   pyccc.CCC_WEBSITE, "").to_tex(book_public.do_nothing)
 
     def to_xml(self, bns, doc_path, **kwargs):
         if self._bn in bns:
-            a = xl.Element("a", {"href": pyccc.epub.relpath(make_suttaname_href_link(self.get_text()), doc_path)})
+            a = xl.Element("a", {"href": doepub.relpath(make_suttaname_href_link(self.get_text()), doc_path)})
         else:
             a = xl.Element("a", {"href": self.get_cccurl()})
         a.kids.append(self.text)

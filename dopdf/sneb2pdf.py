@@ -6,7 +6,8 @@ import subprocess
 
 
 import pyccc
-from pyccc import atom_note, atom_suttaref, page_parsing, sn, pdf, book_public
+from pyccc import atom_note, atom_suttaref, page_parsing, sn, book_public
+import dopdf
 
 main_filename = "sn.tex"
 suttas_filename = "suttas.tex"
@@ -18,7 +19,7 @@ read_note_filename = "read_note.tex"
 
 
 def write_fontstex(work_dir, fonts_dir):
-    fonttex = open(os.path.join(pyccc.TEX_DIR, fonttex_filename), "r").read()
+    fonttex = open(os.path.join(dopdf.TEX_DIR, fonttex_filename), "r").read()
     new_fonttex = fonttex.replace("../../fonts", os.path.expanduser(fonts_dir))
 
     with open(os.path.join(work_dir, fonttex_filename), "w") as new_fonttex_file:
@@ -27,8 +28,8 @@ def write_fontstex(work_dir, fonts_dir):
 
 def write_main(main_file: typing.TextIO, bns, c):
     nikaya = sn.get()
-    homage = pdf.join_to_tex(nikaya.homage_listline, bns, c)
-    _head_t = open(os.path.join(pyccc.TEX_DIR, "sn.tex"), "r").read()
+    homage = dopdf.join_to_tex(nikaya.homage_listline, bns, c)
+    _head_t = open(os.path.join(dopdf.TEX_DIR, "sn.tex"), "r").read()
     strdate = page_parsing.lm_to_strdate(nikaya.last_modified)
     _head = Template(_head_t).substitute(date=strdate, suttas=suttas_filename,
                                          homage=homage,
@@ -69,7 +70,7 @@ def write_suttas(latex_io: typing.TextIO, bns, c, test=False):
                                    "{" + _cccurl() + "}\n")
 
                     for body_listline in sutta.body_lines:
-                        latex_io.write(pdf.join_to_tex(body_listline, bns, c))
+                        latex_io.write(dopdf.join_to_tex(body_listline, bns, c))
 
                         latex_io.write("\n\n")
                     latex_io.write("\n\n")
@@ -88,7 +89,7 @@ def write_localnotes(latex_io: typing.TextIO, notes, bns, c):
         latex_io.write("\\startitemgroup[noteitems]\n")
         latex_io.write("\\item" +
                        "\\subnoteref{" + atom_note.localnote_to_texlabel(notes.index(subnote)) + "}" +
-                       pdf.join_to_tex(subnote, bns, c) + "\n")
+                       dopdf.join_to_tex(subnote, bns, c) + "\n")
         latex_io.write("\\stopitemgroup\n\n")
 
 
@@ -99,7 +100,7 @@ def write_globalnotes(latex_io: typing.TextIO, bns, c):
         for index in range(len(note)):
             latex_io.write("\\item" +
                            "\\subnoteref{" + atom_note.globalnote_to_texlabel(notekey, index) + "}" +
-                           pdf.join_to_tex(note[index], bns, c) + "\n")
+                           dopdf.join_to_tex(note[index], bns, c) + "\n")
         latex_io.write("\\stopitemgroup\n\n")
 
 
@@ -128,14 +129,10 @@ def make_keys():
     pass
 
 
-def make(lang, temprootdir, context_bin_path, fonts_dir, bookdir):
+def make(xc, temprootdir, context_bin_path, fonts_dir, bookdir):
     bns = [sn.BN]
-    if lang == pyccc.lang_convert.TC:
-        c = lang_convert.do_nothing
-    else:  # xc == pyccc.pdf.SC:
-        c = lang_convert.convert2sc
 
-    mytemprootdir = os.path.join(temprootdir, "sn_pdf_" + lang)
+    mytemprootdir = os.path.join(temprootdir, "sn_pdf_" + xc.enlang)
 
     if True:
         nikaya = sn.get()
@@ -147,20 +144,20 @@ def make(lang, temprootdir, context_bin_path, fonts_dir, bookdir):
         write_fontstex(sources_dir, fonts_dir)
 
         with open(sources_dir + "/" + main_filename, "w") as f:
-            write_main(f, bns, c)
+            write_main(f, bns, xc.c)
 
         with open(sources_dir + "/" + suttas_filename, "w") as f:
-            write_suttas(f, bns, c, test=False)
+            write_suttas(f, bns, xc.c, test=False)
 
         with open(sources_dir + "/" + localnotes_filename, "w") as f:
-            write_localnotes(f, nikaya.local_notes, bns, c)
+            write_localnotes(f, nikaya.local_notes, bns, xc.c)
 
         with open(sources_dir + "/" + globalnotes_filename, "w") as f:
-            write_globalnotes(f, bns, c)
+            write_globalnotes(f, bns, xc.c)
 
-        shutil.copy(os.path.join(pyccc.TEX_DIR, read_note_filename), sources_dir)
-        shutil.copy(os.path.join(pyccc.TEX_DIR, creator_note_filename), sources_dir)
+        shutil.copy(os.path.join(dopdf.TEX_DIR, read_note_filename), sources_dir)
+        shutil.copy(os.path.join(dopdf.TEX_DIR, creator_note_filename), sources_dir)
 
         build(sources_dir=sources_dir, out_dir=out_dir, tex_filename=main_filename,
-              context_bin_path=context_bin_path, lang=lang)
+              context_bin_path=context_bin_path, lang=xc.enlang)
         # shutil.move(os.package_opf_path.join(out_dir, "sn.pdf"), os.package_opf_path.join(bookdir, "sn_tc_eb.pdf"))

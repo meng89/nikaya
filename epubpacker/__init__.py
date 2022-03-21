@@ -1,7 +1,5 @@
-import os.path
 import posixpath
 import zipfile
-import uuid
 import datetime
 
 import xl
@@ -48,13 +46,14 @@ class Epub(object):
 
         nav_html = xl.Element("html", {"xmlns:epub": "http://www.idpf.org/2007/ops",
                                        "xmlns": "http://www.w3.org/1999/xhtml",
-                                       "xml:xc": self.meta.languages[0]
+                                       "xml:lang": self.meta.languages[0]
                                        })
-        xl.sub(xl.sub(nav_html, "head"), "title").text = self.toc_title
+        head = xl.sub(nav_html, "head")
+        title_text = self.toc_title or "Table of contents"
+        _title = xl.sub(head, "title", kids=[title_text])
         body = xl.sub(nav_html, "body")
         nav = xl.sub(body, "nav", {"epub:type": "toc"})
-        h1 = xl.sub(nav, "h1")
-        h1.text = "Table of contents"
+        _h1 = xl.sub(nav, "h1", kids=[title_text])
         ol = xl.sub(nav, "ol")
         for toc in self.root_toc:
             toc.to_et(ol)
@@ -74,7 +73,7 @@ class Epub(object):
         dc_id_id = "id"
         _package = xl.Element("package", {"version": "3.0",
                                           "unique-identifier": dc_id_id,
-                                          "xml:xc": self.meta.languages[0],
+                                          "xml:lang": self.meta.languages[0],
                                           "xmlns": "http://www.idpf.org/2007/opf"})
 
         self.meta.to_et(_package, dc_id_id)
@@ -146,7 +145,7 @@ class Meta(object):
                        {"property": "dcterms:modified"},
                        [datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")])
         if self.identifier:
-            dc_id = xl.sub(metadata, "dc:identifier", {"id": dc_id_id}, [self.identifier])
+            _dc_id = xl.sub(metadata, "dc:identifier", {"id": dc_id_id}, [self.identifier])
         for title in self.titles:
             _title = xl.sub(metadata, "dc:title", kids=[title])
         for lang in self.languages:

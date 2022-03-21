@@ -3,7 +3,6 @@ requests
 python-dateutil
 boltons
 
-epubaker
 jinja2
 flask
 OpenCC

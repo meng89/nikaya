@@ -4,7 +4,8 @@ import bs4
 import requests.exceptions
 
 
-from pyccc import atom, pdf, page_parsing, parse_note
+from pyccc import atom, page_parsing, parse_note
+import dopdf
 from pyccc.parse_original_line import do_line
 
 LOCAL_NOTE_KEY_PREFIX = "x"
@@ -150,7 +151,7 @@ def key_hit(num, text, notes=None):
         raise NoteNotMatch((num, text))
 
     for index in range(len(_notes[num])):
-        if text in pdf.join_to_text(_notes[num][index]):
+        if text in dopdf.join_to_text(_notes[num][index]):
             return num, index
     raise NoteNotMatch((num, text))
 
@@ -164,7 +165,7 @@ def match_key(num, text, notes=None):
         raise NoteNotMatch((num, text))
 
     for subnum, subnote in _notes[num].items():
-        if text in pdf.join_to_text(subnote):
+        if text in dopdf.join_to_text(subnote):
             return num, subnum
 
     raise NoteNotMatch((num, text))

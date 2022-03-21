@@ -1,5 +1,13 @@
+import os
+
 import pyccc
 from pyccc import atom_suttaref, page_parsing
+
+
+TEX_DIR = PROJECT_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tex")
+
+assert os.path.isdir(TEX_DIR)
+
 
 _url_table = [
     ("%", "\\letterpercent"),

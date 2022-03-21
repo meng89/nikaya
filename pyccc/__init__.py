@@ -4,10 +4,6 @@ import abc
 
 CCC_WEBSITE = "https://agama.buddhason.org"
 
-TEX_DIR = PROJECT_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tex")
-
-assert os.path.isdir(TEX_DIR)
-
 
 class BaseElement(object):
     @abc.abstractmethod

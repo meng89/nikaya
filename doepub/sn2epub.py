@@ -3,13 +3,12 @@ import os
 from boltons.setutils import IndexedSet
 
 
-import pyccc.book_public
 import xl
 import epubpacker
-import pyccc.epub
 
-import pyccc.pdf
 from pyccc import sn, book_public, page_parsing, atom_suttaref, atom_note
+import dopdf
+import doepub
 
 
 def write_suttas(epub: epubpacker.Epub, bns, xc, _test=False):
@@ -71,7 +70,7 @@ def write_suttas(epub: epubpacker.Epub, bns, xc, _test=False):
 
                     for body_listline in sutta.body_lines:
                         p = xl.sub(body, "p")
-                        _x = pyccc.pdf.join_to_xml(body_listline, bns=bns, c=c, doc_path=doc_path)
+                        _x = dopdf.join_to_xml(body_listline, bns=bns, c=c, doc_path=doc_path)
                         p.kids.extend(_x)
 
             htmlstr = xl.Xl(root=xl.pretty_insert(html, dont_do_tags=["p"])).to_str()
@@ -103,7 +102,7 @@ def write_localnotes(epub: epubpacker.Epub, notes: IndexedSet, bns, xc):
     docs = {}
 
     for note in notes:
-        _doc_path = pyccc.epub.note_docname_calculate(page_parsing.LOCAL, notes.index(note))
+        _doc_path = doepub.note_docname_calculate(page_parsing.LOCAL, notes.index(note))
         if _doc_path not in docs.keys():
             docs[_doc_path] = _make_doc(xc.c("註解一"), xc)
 
@@ -111,7 +110,7 @@ def write_localnotes(epub: epubpacker.Epub, notes: IndexedSet, bns, xc):
 
         li = xl.sub(ol, "li", {"id": str(notes.index(note))})
         p = xl.sub(li, "p")
-        p.kids.extend(pyccc.pdf.join_to_xml(note, bns=bns, c=xc.c, doc_path=_doc_path))
+        p.kids.extend(dopdf.join_to_xml(note, bns=bns, c=xc.c, doc_path=_doc_path))
 
     for doc_path, (html, _ol) in docs.items():
         epub.userfiles[doc_path] = _doc_str(html)
@@ -121,16 +120,10 @@ def write_localnotes(epub: epubpacker.Epub, notes: IndexedSet, bns, xc):
 
 
 def write_globalnotes(epub: epubpacker.Epub, bns, xc):
-    def _join2list(thing, list_):
-        _new_list = []
-        for one in list_:
-            _new_list.extend([one, thing])
-        return _new_list[:-1]
-
     notes = atom_note.get()
     docs = {}
     for key, note in notes.items():
-        _doc_path = pyccc.epub.note_docname_calculate(page_parsing.GLOBAL, (key, "_x"))
+        _doc_path = doepub.note_docname_calculate(page_parsing.GLOBAL, (key, "_x"))
         if _doc_path not in docs.keys():
             docs[_doc_path] = _make_doc(xc.c("註解二"), xc)
         _html, ol = docs[_doc_path]
@@ -139,7 +132,7 @@ def write_globalnotes(epub: epubpacker.Epub, bns, xc):
         p = xl.sub(li, "p")
         es = []
         for subnote in note:
-            es.extend(pyccc.pdf.join_to_xml(subnote, bns=bns, c=xc.c, doc_path=_doc_path))
+            es.extend(dopdf.join_to_xml(subnote, bns=bns, c=xc.c, doc_path=_doc_path))
             es.append(xl.Element("br"))
         p.kids.extend(es[:-1])
 
@@ -157,6 +150,7 @@ def make(xc: book_public.XC, temprootdir, _books_dir):
     epub = epubpacker.Epub()
     epub.meta.titles = [xc.c("相應部")]
     epub.meta.languages = [xc.xmlang, "pi"]
+    epub.meta.identifier = "urn:SaṃyuttaNikāya:https://agama.buddhason.org:" + xc.enlang
 
     sn_data = sn.get()
 

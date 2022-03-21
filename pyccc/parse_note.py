@@ -1,7 +1,7 @@
 import re
 
 import pyccc
-from pyccc import pdf
+import dopdf
 
 P1 = r"(南傳作)(「.+?」)"
 P2 = r"(\(i+\))(「.+?」)"
@@ -20,7 +20,7 @@ class NoteTagBase(pyccc.BaseElement):
         return self.text
 
     def to_tex(self, bns, c, **kwargs):
-        return "\\" + self._tex_cmd + "{" + pdf.join_to_tex(line=[self.text], bns=bns, c=c) + "}"
+        return "\\" + self._tex_cmd + "{" + dopdf.join_to_tex(line=[self.text], bns=bns, c=c) + "}"
 
     def to_xml(self, *args, **kwargs):
         return self.text
