@@ -2,7 +2,6 @@ import os
 
 from boltons.setutils import IndexedSet
 
-
 import xl
 import epubpacker
 
@@ -10,35 +9,46 @@ from pyccc import sn, book_public, page_parsing, atom_suttaref, atom_note
 import dopdf
 import doepub
 
+css = """
+p{margin: 0.2em;}
+"""
+
+css_path = "_static/sutta.css"
+
+
+def _make_sutta_doc(xc: book_public.XC, doc_path):
+    html = xl.Element("html", {"xmlns:epub": "http://www.idpf.org/2007/ops",
+                               "xmlns": "http://www.w3.org/1999/xhtml",
+                               "xml:lang": xc.xmlang,
+                               "lang": xc.xmlang})
+    head = xl.sub(html, "head")
+    _link = xl.sub(head, "link", {"rel": "stylesheet", "type": "text/css", "href": doepub.relpath(css_path, doc_path)})
+    body = xl.sub(html, "body")
+    return html, head, body
+
 
 def write_suttas(epub: epubpacker.Epub, bns, xc, _test=False):
     c = xc.c
     nikaya = sn.get()
-    html = xl.Element("x")
-    head = xl.Element("x")
-    body = xl.Element("x")
-
-    def make_html():
-        nonlocal html, head, body
-        html = xl.Element("html", {"xmlns:epub": "http://www.idpf.org/2007/ops",
-                                   "xmlns": "http://www.w3.org/1999/xhtml",
-                                   "xml:lang": xc.xmlang,
-                                   "lang": xc.xmlang})
-        head = xl.sub(html, "head")
-        body = xl.sub(html, "body")
-
-    make_html()
-
     for pian in nikaya.pians:
-        pian_id = "pian"
-        xl.sub(body, "h1", {"id": pian_id}, [c(pian.title)])
 
-        doc_path = atom_suttaref.docpath_calculate("SN.{}.1".format(pian.xiangyings[0].serial))
-        pian_toc = epubpacker.Toc(c(pian.title), doc_path + "#" + pian_id)
+        def _write_pian_part(_body):
+            pian_id = "pian"
+            xl.sub(_body, "h1", {"id": pian_id}, [c(pian.title)])
+            nonlocal pian_toc
+
+        pian_toc = epubpacker.Toc(c(pian.title))
         epub.root_toc.append(pian_toc)
-        for xiangying in pian.xiangyings:
+
+        for index in range(len(pian.xiangyings)):
+            xiangying = pian.xiangyings[index]
             xy_id = "sn"
             doc_path = atom_suttaref.docpath_calculate("SN.{}.1".format(xiangying.serial))
+            html, head, body = _make_sutta_doc(xc, doc_path)
+
+            if index == 0:
+                _write_pian_part(body)
+                pian_toc.href = doc_path + "#" + xy_id
 
             _xy_title = c(xiangying.serial + ". " + xiangying.title)
             head.kids.append(xl.Element("title", kids=[_xy_title]))
@@ -77,10 +87,9 @@ def write_suttas(epub: epubpacker.Epub, bns, xc, _test=False):
 
             epub.userfiles[doc_path] = htmlstr
             epub.spine.append(doc_path)
-            make_html()
 
 
-def _make_doc(title, xc: book_public.XC):
+def _make_note_doc(title, xc: book_public.XC):
     html = xl.Element("html", {"xmlns:epub": "http://www.idpf.org/2007/ops",
                                "xmlns": "http://www.w3.org/1999/xhtml",
                                "xml:lang": xc.xmlang,
@@ -104,7 +113,7 @@ def write_localnotes(epub: epubpacker.Epub, notes: IndexedSet, bns, xc):
     for note in notes:
         _doc_path = doepub.note_docname_calculate(page_parsing.LOCAL, notes.index(note))
         if _doc_path not in docs.keys():
-            docs[_doc_path] = _make_doc(xc.c("註解一"), xc)
+            docs[_doc_path] = _make_note_doc(xc.c("註解一"), xc)
 
         _html, ol = docs[_doc_path]
 
@@ -125,7 +134,7 @@ def write_globalnotes(epub: epubpacker.Epub, bns, xc):
     for key, note in notes.items():
         _doc_path = doepub.note_docname_calculate(page_parsing.GLOBAL, (key, "_x"))
         if _doc_path not in docs.keys():
-            docs[_doc_path] = _make_doc(xc.c("註解二"), xc)
+            docs[_doc_path] = _make_note_doc(xc.c("註解二"), xc)
         _html, ol = docs[_doc_path]
         li = xl.sub(ol, "li", {"id": key})
 
@@ -147,12 +156,18 @@ def make(xc: book_public.XC, temprootdir, _books_dir):
     mytemprootdir = os.path.join(temprootdir, "sn_epub_" + xc.enlang)
     os.makedirs(mytemprootdir, exist_ok=True)
 
+    sn_data = sn.get()
+
     epub = epubpacker.Epub()
     epub.meta.titles = [xc.c("相應部")]
-    epub.meta.languages = [xc.xmlang, "pi"]
-    epub.meta.identifier = "urn:SaṃyuttaNikāya:https://agama.buddhason.org:" + xc.enlang
+    epub.meta.creators = ["莊春江({})".format(xc.c("譯"))]
+    epub.meta.date = sn_data.last_modified.strftime("%Y-%m-%dT%H:%M:%SZ")
+    epub.meta.languages = [xc.xmlang, "pi", "en-US"]
 
-    sn_data = sn.get()
+    my_uuid = doepub.get_uuid(xc.c("相應部") + xc.enlang)
+    epub.meta.identifier = my_uuid.urn
+
+    epub.userfiles[css_path] = css
 
     write_suttas(epub, bns, xc)
     first_note_doc_path = write_localnotes(epub, sn_data.local_notes, bns, xc)

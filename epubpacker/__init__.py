@@ -70,7 +70,7 @@ class Epub(object):
 
 ########################################################################################################################
 
-        dc_id_id = "id"
+        dc_id_id = "ididid"
         _package = xl.Element("package", {"version": "3.0",
                                           "unique-identifier": dc_id_id,
                                           "xml:lang": self.meta.languages[0],
@@ -137,6 +137,8 @@ class Meta(object):
         self.identifier = ""
         self.titles = []
         self.languages = []
+        self.creators = []
+        self.date = ""
 
     def to_et(self, parent, dc_id_id):
         metadata = xl.sub(parent, "metadata", {"xmlns:dc": "http://purl.org/dc/elements/1.1/"})
@@ -150,10 +152,14 @@ class Meta(object):
             _title = xl.sub(metadata, "dc:title", kids=[title])
         for lang in self.languages:
             _lang = xl.sub(metadata, "dc:language", kids=[lang])
+        for creator in self.creators:
+            _creator = xl.sub(metadata, "dc:creator", kids=[creator])
+        if self.date:
+            _date = xl.sub(metadata, "dc:date", kids=[self.date])
 
 
 class Toc(object):
-    def __init__(self, title, href):
+    def __init__(self, title, href=None):
         self.title = title
         self.href = href
         self.kids = []

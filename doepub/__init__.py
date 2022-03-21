@@ -1,3 +1,5 @@
+import uuid
+
 import posixpath
 from urllib.parse import urlsplit, urlunsplit
 
@@ -21,7 +23,7 @@ def relpath(path1, path2):
         else:
             return "#" + fragment
     else:
-        return posixpath.relpath(path1_2, posixpath.dirname(path2_2)) + "#" + fragment
+        return posixpath.relpath(path1_2, posixpath.dirname(path2_2)) + (("#" + fragment) if fragment else "")
 
 
 MAX_NUMBER_OF_NOTES_PER_PAGE = 50
@@ -43,3 +45,7 @@ def noteid(type_, key):
         return str(key[0])
     else:
         return str(key)
+
+
+def get_uuid(s):
+    return uuid.uuid5(uuid.NAMESPACE_URL, "https://github.com/meng89/nikaya" + " " + s)
