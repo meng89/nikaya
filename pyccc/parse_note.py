@@ -22,8 +22,8 @@ class NoteTagBase(pyccc.BaseElement):
     def to_tex(self, bns, c, **kwargs):
         return "\\" + self._tex_cmd + "{" + dopdf.join_to_tex(line=[self.text], bns=bns, c=c) + "}"
 
-    def to_xml(self, *args, **kwargs):
-        return self.text
+    def to_xml(self, c, *args, **kwargs):
+        return c(self.text)
 
     def __repr__(self):
         return (f'{self.__class__.__name__}('

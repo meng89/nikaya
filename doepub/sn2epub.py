@@ -10,7 +10,7 @@ import dopdf
 import doepub
 
 css = """
-p{margin: 0.2em;}
+p{margin: 0.3em;}
 """
 
 css_path = "_static/sutta.css"

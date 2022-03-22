@@ -35,6 +35,7 @@ def main():
 
     print_temprootdir()
     doepub.sn2epub.make(pyccc.book_public.TC(), temprootdir_td.name, books_dir)
+    doepub.sn2epub.make(pyccc.book_public.SC(), temprootdir_td.name, books_dir)
     dopdf.sneb2pdf.make(pyccc.book_public.TC(), temprootdir_td.name, uc.CONTEXT_BIN_PATH, uc.FONTS_DIR, books_dir)
     dopdf.sneb2pdf.make(pyccc.book_public.SC(), temprootdir_td.name, uc.CONTEXT_BIN_PATH, uc.FONTS_DIR, books_dir)
 

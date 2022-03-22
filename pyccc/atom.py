@@ -57,7 +57,7 @@ class TextWithNoteRef(pyccc.BaseElement):
 
     def to_xml(self, c, doc_path, **kwargs):
         href = doepub.note_href_calculate(self.type_, self.key)
-        return xl.Element("a", {"epub:type": "noteref", "href": doepub.relpath(href, doc_path)}, [self.text])
+        return xl.Element("a", {"epub:type": "noteref", "href": doepub.relpath(href, doc_path)}, [c(self.text)])
 
     def get_text(self):
         return self.text

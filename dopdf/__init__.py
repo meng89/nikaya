@@ -63,7 +63,7 @@ def join_to_xml(line: list, bns, c, doc_path):
     elements = []
     for x in _new_line(line):
         if isinstance(x, str):
-            elements.append(x)
+            elements.append(c(x))
         elif isinstance(x, pyccc.BaseElement):
             elements.append(x.to_xml(bns=bns, c=c, doc_path=doc_path))
     return elements
