@@ -210,7 +210,7 @@ def _escape(string):
     return s
 
 
-def sub(element, tag, *args, **kwargs):
-    sub_element = Element(tag, *args, **kwargs)
+def sub(element, tag, attrs=None, kids=None):
+    sub_element = Element(tag, attrs, kids)
     element.kids.append(sub_element)
     return sub_element

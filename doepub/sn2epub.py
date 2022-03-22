@@ -8,6 +8,7 @@ import epubpacker
 from pyccc import sn, book_public, page_parsing, atom_suttaref, atom_note
 import dopdf
 import doepub
+from . import fanli, homage
 
 css = """
 p{margin: 0.3em;}
@@ -96,6 +97,11 @@ def _make_note_doc(title, xc: book_public.XC):
                                "lang": xc.xmlang})
     head = xl.sub(html, "head")
     _title = xl.sub(head, "title", kids=[title])
+    style = xl.sub(head, "style", {"type": "text/css"})
+    style.kids.append("""
+     /* section {font-size: small;} */
+     ol {list-style:none;}
+    """)
     body = xl.sub(html, "body")
 
     sec = xl.sub(body, "section", {"epub:type": "endnotes", "role": "doc-endnotes"})
@@ -168,6 +174,9 @@ def make(xc: book_public.XC, temprootdir, _books_dir):
     epub.meta.identifier = my_uuid.urn
 
     epub.userfiles[css_path] = css
+
+    fanli.write_fanli(epub, xc)
+    homage.write_homage(epub, xc, sn_data.homage_listline)
 
     write_suttas(epub, bns, xc)
     first_note_doc_path = write_localnotes(epub, sn_data.local_notes, bns, xc)
