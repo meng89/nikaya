@@ -21,7 +21,7 @@ def main():
     run_ccc.make_sure_is_runing()
     domain = run_ccc.get_domain()
 
-    atom_note.load_global(domain)
+    atom_note.load_global(domain, uc.CACHE_DIR)
     pyccc.sn.load(domain, uc.CACHE_DIR)
 
     temprootdir_td = tempfile.TemporaryDirectory(prefix="pyccc_")

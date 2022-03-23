@@ -1,4 +1,6 @@
 import re
+import os
+import pickle
 
 import bs4
 import requests.exceptions
@@ -11,20 +13,39 @@ from pyccc.parse_original_line import do_line
 LOCAL_NOTE_KEY_PREFIX = "x"
 
 _global_notes = {}
+_is_loaded = False
 
 
-def load_global(domain: str):
+def get():
+    if _is_loaded:
+        return _global_notes
+    else:
+        raise Exception
+
+
+def load_global(domain: str, cache_dir):
     global _global_notes
-    for i in range(100):
-        try:
-            url_path = "/note/note{}.htm".format(i)
-            soup = page_parsing.read_url(domain + url_path)[0]
-        except requests.exceptions.HTTPError:
-            break
 
-        for div in soup.find_all(name="div", attrs={"id": True}):
-            note_no = re.match(r"^div(\d+)$", div["id"]).group(1)
-            _global_notes[note_no] = do_globalnote(list(div.contents), url_path=url_path)
+    data_path = os.path.join(cache_dir, "globalnotes")
+    try:
+        with open(data_path, "rb") as rf:
+            _global_notes = pickle.load(rf)
+    except (FileNotFoundError, ModuleNotFoundError):
+        for i in range(100):
+            try:
+                url_path = "/note/note{}.htm".format(i)
+                soup = page_parsing.read_url(domain + url_path)[0]
+            except requests.exceptions.HTTPError:
+                break
+
+            for div in soup.find_all(name="div", attrs={"id": True}):
+                note_no = re.match(r"^div(\d+)$", div["id"]).group(1)
+                _global_notes[note_no] = do_globalnote(list(div.contents), url_path=url_path)
+
+        with open(data_path, "wb") as wf:
+            pickle.dump(_global_notes, wf)
+    global _is_loaded
+    _is_loaded = True
 
 
 # 断言：
