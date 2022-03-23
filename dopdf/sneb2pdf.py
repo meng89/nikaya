@@ -84,16 +84,21 @@ def write_suttas(latex_io: typing.TextIO, bns, c, test=False):
                 break
 
 
-def write_localnotes(latex_io: typing.TextIO, notes, bns, c):
+def write_localnotes(latex_io: typing.TextIO, notes, bns, c, test):
+    count = 0
     for subnote in notes:
         latex_io.write("\\startitemgroup[noteitems]\n")
         latex_io.write("\\item" +
                        "\\subnoteref{" + atom_note.localnote_to_texlabel(notes.index(subnote)) + "}" +
                        dopdf.join_to_tex(subnote, bns, c) + "\n")
         latex_io.write("\\stopitemgroup\n\n")
+        count += 1
+        if test and count == 50:
+            break
 
 
-def write_globalnotes(latex_io: typing.TextIO, bns, c):
+def write_globalnotes(latex_io: typing.TextIO, bns, c, test):
+    count = 0
     notes = atom_note.get()
     for notekey, note in notes.items():
         latex_io.write("\\startitemgroup[noteitems]\n")
@@ -102,6 +107,9 @@ def write_globalnotes(latex_io: typing.TextIO, bns, c):
                            "\\subnoteref{" + atom_note.globalnote_to_texlabel(notekey, index) + "}" +
                            dopdf.join_to_tex(note[index], bns, c) + "\n")
         latex_io.write("\\stopitemgroup\n\n")
+        count += 1
+        if test and count == 50:
+            break
 
 
 def build(sources_dir, out_dir, tex_filename, context_bin_path, lang):
@@ -129,7 +137,7 @@ def make_keys():
     pass
 
 
-def make(xc, temprootdir, context_bin_path, fonts_dir, bookdir):
+def make(xc, temprootdir, context_bin_path, fonts_dir, bookdir, test=False):
     bns = [sn.BN]
 
     mytemprootdir = os.path.join(temprootdir, "sn_pdf_" + xc.enlang)
@@ -147,13 +155,13 @@ def make(xc, temprootdir, context_bin_path, fonts_dir, bookdir):
             write_main(f, bns, xc.c)
 
         with open(sources_dir + "/" + suttas_filename, "w") as f:
-            write_suttas(f, bns, xc.c, test=False)
+            write_suttas(f, bns, xc.c, test)
 
         with open(sources_dir + "/" + localnotes_filename, "w") as f:
-            write_localnotes(f, nikaya.local_notes, bns, xc.c)
+            write_localnotes(f, nikaya.local_notes, bns, xc.c, test)
 
         with open(sources_dir + "/" + globalnotes_filename, "w") as f:
-            write_globalnotes(f, bns, xc.c)
+            write_globalnotes(f, bns, xc.c, test)
 
         shutil.copy(os.path.join(dopdf.TEX_DIR, read_note_filename), sources_dir)
         shutil.copy(os.path.join(dopdf.TEX_DIR, creator_note_filename), sources_dir)
