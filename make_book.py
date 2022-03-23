@@ -4,9 +4,8 @@ import time
 import tempfile
 
 import pyccc.book_public
-import run_ccc
 
-from pyccc import sn, atom_note
+from pyccc import sn, atom_note, run_ccc
 
 import dopdf.sneb2pdf
 import doepub.sn2epub

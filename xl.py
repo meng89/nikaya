@@ -1,5 +1,7 @@
 # The MIT License
 
+""" XML without mess """
+
 from abc import abstractmethod
 import copy
 

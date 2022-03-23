@@ -9,3 +9,6 @@ OpenCC
 
 pylatex
 pybtex
+
+
+html2image

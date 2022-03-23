@@ -38,7 +38,7 @@ def write_suttas(epub: epubpacker.Epub, bns, xc, _test=False):
             xl.sub(_body, "h1", {"id": pian_id}, [c(pian.title)])
             nonlocal pian_toc
 
-        pian_toc = epubpacker.Toc(c(pian.title))
+        pian_toc = epubpacker.Toc(c(pian.title)+"({}~{})".format(pian.xiangyings[0].serial, pian.xiangyings[-1].serial))
         epub.root_toc.append(pian_toc)
 
         for index in range(len(pian.xiangyings)):
@@ -62,7 +62,9 @@ def write_suttas(epub: epubpacker.Epub, bns, xc, _test=False):
                 if pin.title is not None:
                     pin_id = "pin" + pin.serial
                     xl.sub(body, "h3", {"id": pin_id}, kids=[c(pin.title)])
-                    pin_toc = epubpacker.Toc(c(pin.title), href=doc_path + "#" + pin_id)
+                    pin_toc = epubpacker.Toc(c(pin.title + "({}~{})".format(pin.suttas[0].begin,
+                                                                            pin.suttas[-1].end)),
+                                             href=doc_path + "#" + pin_id)
                     xy_toc.kids.append(pin_toc)
                     sutta_father_toc = pin_toc
                 else:
@@ -72,7 +74,7 @@ def write_suttas(epub: epubpacker.Epub, bns, xc, _test=False):
                     if sutta.begin == sutta.end:
                         sutta_num = sutta.begin
                     else:
-                        sutta_num = "{}-{}".format(sutta.begin, sutta.end)
+                        sutta_num = "{}~{}".format(sutta.begin, sutta.end)
 
                     sutta_id = "SN.{}.{}".format(xiangying.serial, sutta.begin)
                     xl.sub(body, "h4", {"id": sutta_id}, [sutta_num + ". " + c(sutta.title)])

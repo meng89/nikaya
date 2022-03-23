@@ -1,11 +1,11 @@
 import re
 
 
-from public import Nikaya, Node, Sutta
-from public import BaseInfo, PinInfo
+from pyccc.public import Nikaya, Node, Sutta
+from pyccc.public import BaseInfo, PinInfo
 
 
-from tools import get_sutta_urls, split_chinese_lines
+from pyccc.tools import get_sutta_urls, split_chinese_lines
 from pyccc.utils import read_page
 
 
@@ -37,9 +37,8 @@ def analyse_header(lines):  # public
 
     info = _MyInfo()
 
-    # 中部1經/根本法門經(根本法門品[1])(莊春江譯)
-    # 中部24經接力車經(譬喻品[3])(莊春江譯)
-    m = re.match('^\S+?(\d+)經/?(\S+經)\((\S+品)\[(\d+)\]\)\(莊春江譯\)\s*$', lines[-1])
+    # 長部14經/譬喻大經(大品[第二])(莊春江譯)
+    m = re.match('^長部(\d+)經/(\S+經)\((\S+品)\[\S+\]\)\(莊春江譯\)$', lines[-1])
     if m:
         info.sutta_begin = m.group(1)
         info.sutta_end = m.group(1)
@@ -47,16 +46,16 @@ def analyse_header(lines):  # public
         info.sutra_title = m.group(2)
 
         info.pin_title = m.group(3)
-        info.pin_serial = m.group(4)
 
     return info
 
 
 def make_nikaya(sutra_urls):
+
     nikaya = _MyNikaya()
-    nikaya.title_st = '中部'
-    nikaya.title_pali = 'Majjhima Nikāya',
-    nikaya.abbreviation = 'MN'
+    nikaya.title_st = '長部'
+    nikaya.title_pali = 'Digha Nikāya',
+    nikaya.abbreviation = 'DN'
 
     for url in sutra_urls:
 
@@ -66,8 +65,8 @@ def make_nikaya(sutra_urls):
 
         info = analyse_header(header_lines)
 
-        if info.pin_serial is not None:
-            if not nikaya.pins or nikaya.pins[-1].serial != info.pin_serial:
+        if info.pin_title is not None:
+            if not nikaya.pins or nikaya.pins[-1].title != info.pin_title:
 
                 pin = _Pin()
                 pin.serial = info.pin_serial

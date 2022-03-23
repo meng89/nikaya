@@ -2,10 +2,10 @@ import os
 import re
 import pickle
 
-from public import BaseInfo, PianInfo, PinInfo
-from public import Nikaya, Node, Sutta
+from pyccc.public import BaseInfo, PianInfo, PinInfo
+from pyccc.public import Nikaya, Node, Sutta
 
-from tools import get_sutta_urls
+from pyccc.tools import get_sutta_urls
 
 
 from pyccc import page_parsing

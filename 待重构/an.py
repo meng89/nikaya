@@ -1,11 +1,11 @@
 import re
 
 
-from public import BaseInfo, PinInfo
-from public import Nikaya, Node, Sutta
+from pyccc.public import BaseInfo, PinInfo
+from pyccc.public import Nikaya, Node, Sutta
 
 
-from tools import get_sutta_urls, split_chinese_lines
+from pyccc.tools import get_sutta_urls, split_chinese_lines
 from pyccc.utils import read_page
 
 

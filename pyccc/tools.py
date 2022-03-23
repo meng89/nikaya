@@ -5,35 +5,6 @@ import re
 from pyccc import page_parsing
 
 
-def _del_split_chinese_lines(chinese):
-
-    lines = chinese.strip().splitlines()
-
-    head_lines = []
-    body_lines = []
-
-    is_sutra_name_line_passed = False
-
-    for line in lines:
-
-        if is_sutra_name_line_passed:
-            body_lines.append(line)
-
-        else:
-            head_lines.append(line)
-
-            if re.search(r"\(莊春江譯\)", line):
-                is_sutra_name_line_passed = True
-
-            elif re.match(r"相應部48相應 83-114經", line):
-                is_sutra_name_line_passed = True
-
-    if is_sutra_name_line_passed is not True:
-        raise Exception("解析不了: " + repr(lines))
-
-    return head_lines, body_lines
-
-
 def get_sutta_urls(nikaya_url):
     sutra_urls = []
 
