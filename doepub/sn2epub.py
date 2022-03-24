@@ -10,7 +10,7 @@ import epubpacker
 from pyccc import sn, book_public, page_parsing, atom_suttaref, atom_note
 import dopdf
 import doepub
-from . import fanli, homage
+from . import fanli, homage, notice
 
 css = """
 p{margin: 0.3em;}
@@ -185,10 +185,10 @@ def make(xc: book_public.XC, temprootdir, books_dir):
 
     write_suttas(epub, bns, xc)
     first_note_doc_path = write_localnotes(epub, sn_data.local_notes, bns, xc)
-
     write_globalnotes(epub, bns, xc)
-
     epub.root_toc.append(epubpacker.Toc(xc.c("註解"), first_note_doc_path))
+
+    notice.write_notice(epub, xc)
 
     epub_path = os.path.join(mytemprootdir, "sn.epub")
     epub.write(epub_path)
