@@ -1,4 +1,6 @@
 import os
+import datetime
+import shutil
 
 from boltons.setutils import IndexedSet
 
@@ -38,7 +40,8 @@ def write_suttas(epub: epubpacker.Epub, bns, xc, _test=False):
             xl.sub(_body, "h1", {"id": pian_id}, [c(pian.title)])
             nonlocal pian_toc
 
-        pian_toc = epubpacker.Toc(c(pian.title)+"({}~{})".format(pian.xiangyings[0].serial, pian.xiangyings[-1].serial))
+        pian_toc = epubpacker.Toc(
+            c(pian.title) + "({}~{})".format(pian.xiangyings[0].serial, pian.xiangyings[-1].serial))
         epub.root_toc.append(pian_toc)
 
         for index in range(len(pian.xiangyings)):
@@ -158,7 +161,7 @@ def write_globalnotes(epub: epubpacker.Epub, bns, xc):
         epub.spine.append(doc_path)
 
 
-def make(xc: book_public.XC, temprootdir, _books_dir):
+def make(xc: book_public.XC, temprootdir, books_dir):
     bns = [sn.BN]
 
     mytemprootdir = os.path.join(temprootdir, "sn_epub_" + xc.enlang)
@@ -187,4 +190,12 @@ def make(xc: book_public.XC, temprootdir, _books_dir):
 
     epub.root_toc.append(epubpacker.Toc(xc.c("註解"), first_note_doc_path))
 
-    epub.write(os.path.join(mytemprootdir, "sn.epub"))
+    epub_path = os.path.join(mytemprootdir, "sn.epub")
+    epub.write(epub_path)
+
+    shutil.copy(epub_path,
+                os.path.join(books_dir, "{}_{}_{}{}_{}.epub".format(xc.c("相應部"),
+                                                                    xc.zhlang,
+                                                                    "莊",
+                                                                    sn_data.last_modified.strftime("%y%m"),
+                                                                    datetime.datetime.now().strftime("%Y%m%d"))))

@@ -115,11 +115,11 @@
 
 
 %\lettertilde
-\define[3]\pian{\part[title=#1,bookmark=#1(#2~#3),]}
+\define[3]\pian{\part[title=#1,bookmark={#1(#2~#3)},]}
 \define[2]\xiangying{\chapter[title=#2, bookmark=#1. #2,]}
 \define[3]\pin{\section[title=#1,bookmark=#1(#2~#3)]}
 \define[4]\sutta{\subsection[reference=SN.\somenamedheadnumber{chapter}{current}.#1,
-     title={\goto{{\startlua if #1==#2 then context("#1") else context("#1~#2") end \stoplua}. #3}[url(#4)]}]}
+     title={\goto{{\startlua if #1==#2 then context("#1") else context("#1\\lettertilde#2") end \stoplua}. #3}[url(#4)]}]}
 
 
 % 绿

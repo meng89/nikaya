@@ -1,3 +1,4 @@
+import datetime
 import os
 import typing
 from string import Template
@@ -168,4 +169,9 @@ def make(xc, temprootdir, context_bin_path, fonts_dir, bookdir, test=False):
 
         build(sources_dir=sources_dir, out_dir=out_dir, tex_filename=main_filename,
               context_bin_path=context_bin_path, lang=xc.enlang)
-        # shutil.move(os.package_opf_path.join(out_dir, "sn.pdf"), os.package_opf_path.join(bookdir, "sn_tc_eb.pdf"))
+
+        shutil.copy(os.path.join(out_dir, "sn.pdf"),
+                    os.path.join(bookdir, "{}_{}_莊{}_{}.pdf".format(xc.c("相應部"),
+                                                                    xc.zhlang,
+                                                                    nikaya.last_modified.strftime("%y%m"),
+                                                                    datetime.datetime.now().strftime("%Y%m%d"))))

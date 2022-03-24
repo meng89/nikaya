@@ -29,11 +29,12 @@ def main():
     def print_temprootdir():
         print("temprootdir: {}".format(temprootdir_td.name))
 
-    books_dir = os.path.join(uc.PROJECT_ROOT, "books", time.strftime("%Y-%m-%d_%H.%M.%S", time.localtime()))
-    # os.makedirs(books_dir, exist_ok=True)
+    # books_dir = os.path.join(uc.PROJECT_ROOT, "books", time.strftime("%Y-%m-%d_%H.%M.%S", time.localtime()))
+    books_dir = uc.BOOKS_DIR
+    os.makedirs(books_dir, exist_ok=True)
 
     print_temprootdir()
-    doepub.sn2epub.make(pyccc.book_public.TC(), temprootdir_td.name, books_dir)
+    #doepub.sn2epub.make(pyccc.book_public.TC(), temprootdir_td.name, books_dir)
     doepub.sn2epub.make(pyccc.book_public.SC(), temprootdir_td.name, books_dir)
     dopdf.sneb2pdf.make(pyccc.book_public.TC(), temprootdir_td.name, uc.CONTEXT_BIN_PATH, uc.FONTS_DIR, books_dir)
     dopdf.sneb2pdf.make(pyccc.book_public.SC(), temprootdir_td.name, uc.CONTEXT_BIN_PATH, uc.FONTS_DIR, books_dir)
