@@ -133,7 +133,13 @@ def do_onmouseover_global(e, url_path, **_kwargs):
                                      "辞汇 \"{}\" 未匹配全局注解编号 \"{}\"".format(e.get_text(), key))
                 sub_note_key = (key, 0)
 
+            except NoteNotFound:
+                page_parsing.ccc_bug(page_parsing.WARNING, url_path,
+                                     "辞汇 \"{}\" 未找到全局注解编号 \"{}\"".format(e.get_text(), key))
+                return True, [e.get_text()]
+
             return True, [atom.TextWithNoteRef(text=e.get_text(), key=sub_note_key, type_=page_parsing.GLOBAL)]
+
     # ccc bug
     elif e.name == "a" and "nmouseover" in e.attrs.keys():
         return True, [e.get_text()]
@@ -163,13 +169,17 @@ class NoteNotMatch(Exception):
     pass
 
 
+class NoteNotFound(Exception):
+    pass
+
+
 def key_hit(num, text, notes=None):
     if notes is None:
         _notes = _global_notes
     else:
         _notes = notes
     if num not in _notes.keys():
-        raise NoteNotMatch((num, text))
+        raise NoteNotFound((num, text))
 
     for index in range(len(_notes[num])):
         if text in dopdf.join_to_text(_notes[num][index]):

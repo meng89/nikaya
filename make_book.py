@@ -8,7 +8,7 @@ import pyccc.book_public
 from pyccc import sn, atom_note, run_ccc
 
 import dopdf.sneb2pdf
-import doepub.sn2epub
+import doepub.sn2epub2
 
 
 try:
@@ -34,8 +34,8 @@ def main():
     os.makedirs(books_dir, exist_ok=True)
 
     print_temprootdir()
-    doepub.sn2epub.make(pyccc.book_public.TC(), temprootdir_td.name, books_dir)
-    doepub.sn2epub.make(pyccc.book_public.SC(), temprootdir_td.name, books_dir)
+    doepub.sn2epub2.make(pyccc.book_public.TC(), temprootdir_td.name, books_dir)
+    doepub.sn2epub2.make(pyccc.book_public.SC(), temprootdir_td.name, books_dir)
     dopdf.sneb2pdf.make(pyccc.book_public.TC(), temprootdir_td.name, uc.CONTEXT_BIN_PATH, uc.FONTS_DIR, books_dir)
     dopdf.sneb2pdf.make(pyccc.book_public.SC(), temprootdir_td.name, uc.CONTEXT_BIN_PATH, uc.FONTS_DIR, books_dir)
 

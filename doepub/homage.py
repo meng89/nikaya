@@ -6,7 +6,7 @@ import dopdf
 
 def write_homage(epub: epubpacker.Epub, xc: book_public.XC, line):
     html = xl.Element("html", {"xmlns:epub": "http://www.idpf.org/2007/ops",
-                               "xmls": "http://www.w3.org/1999/xhtml",
+                               "xmlns": "http://www.w3.org/1999/xhtml",
                                "xml:lang": xc.xmlang,
                                "lang": xc.xmlang})
     head = xl.sub(html, "head")

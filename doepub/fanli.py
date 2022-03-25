@@ -24,7 +24,7 @@ _fl = (
 
 
 def write_fanli(epub: epubpacker.Epub, xc: book_public.XC):
-    html = xl.Element("html", {"xmls": "http://www.w3.org/1999/xhtml",
+    html = xl.Element("html", {"xmlns": "http://www.w3.org/1999/xhtml",
                                "xml:lang": xc.xmlang,
                                "lang": xc.xmlang})
     head = xl.sub(html, "head")

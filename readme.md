@@ -5,14 +5,18 @@
 
 ## 进度
 相应部传统中文版（繁体）和机转简体的 PDF 和 EPUB3 已经初步做好，都带有莊春江原网页版注解和链接跳转支持。
-部分 EPUB 阅读器把注解(endnote)实现为弹窗(popup)方式，提升了阅读体验。
-已知 [Calibre](https://calibre-ebook.com)阅读器支持弹窗注解，如果你刚好知道其它程序或移动端的 App 支持有此弹窗功能，请告诉我，让我列出。
+
 目前 EPUB 缺少封面，PDF 的封面也很直白。本人不会设计，如果有贤友愿意帮助设计，请发 pull request，或直接邮件联系我。
 
 在 Windows 下制作电子书，也需要一些时间才能测试好并给出步骤。
 
 ## 获取电子书：
 请进入项目的 books 目录。
+
+## 阅读器列表
+部分 EPUB 阅读器把注解(endnote)实现为弹窗(popup)方式，提升了阅读体验：
+* [calibre](https://calibre-ebook.com) 
+* [KOReader](https://koreader.rocks)
 
 ## 出现 Bug、提供各种建议：
 写 issue 或发邮件到: observerchan@gmail.com
