@@ -14,6 +14,8 @@ from . import fanli, homage, notice
 
 css = """
 p{margin: 0.3em;}
+.sutta_title{color: inherit;
+  text-decoration: inherit;}
 """
 
 css_path = "_static/sutta.css"
@@ -80,7 +82,19 @@ def write_suttas(epub: epubpacker.Epub, bns, xc, _test=False):
                         sutta_num = "{}~{}".format(sutta.begin, sutta.end)
 
                     sutta_id = "SN.{}.{}".format(xiangying.serial, sutta.begin)
-                    xl.sub(body, "h4", {"id": sutta_id}, [sutta_num + ". " + c(sutta.title)])
+
+                    # SN.1.1 诸天相应/暴流之渡過經
+
+                    h4 = xl.sub(body, "h4", {"id": "{}".format(sutta_id)})
+                    _a = xl.sub(h4, "a", {"class": "sutta_title",
+                                          "href": "{}".format(atom_suttaref.SuttaRef(sutta_id).get_cccurl())})
+                    xl.sub(_a, "span", {"class": "sutta_id"}, [sutta_id])
+                    xl.sub(_a, "span", {"class": "space_in_sutta_title"}, [" "])
+                    xl.sub(_a, "span", {"class": "xy_name_in_sutta_title"}, [c(xiangying.title)])
+                    xl.sub(_a, "span", {"class": "slash_in_sutta_title"}, ["/"])
+                    xl.sub(_a, "span", kids=[c(sutta.title)])
+
+                    # xl.sub(body, "h4", {"id": sutta_id}, [sutta_num + ". " + c(sutta.title)])
                     sutta_toc = epubpacker.Toc(sutta_num + ". " + c(sutta.title), href=doc_path + "#" + sutta_id)
                     sutta_father_toc.kids.append(sutta_toc)
 
@@ -89,7 +103,7 @@ def write_suttas(epub: epubpacker.Epub, bns, xc, _test=False):
                         _x = dopdf.join_to_xml(body_listline, bns=bns, c=c, doc_path=doc_path)
                         p.kids.extend(_x)
 
-            htmlstr = xl.Xl(root=xl.pretty_insert(html, dont_do_tags=["p"])).to_str()
+            htmlstr = xl.Xl(root=xl.pretty_insert(html, dont_do_tags=["p", "a"])).to_str()
 
             epub.userfiles[doc_path] = htmlstr
             epub.spine.append(doc_path)
