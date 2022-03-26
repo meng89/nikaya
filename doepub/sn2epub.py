@@ -12,13 +12,21 @@ import dopdf
 import doepub
 from . import fanli, homage, notice
 
-css = """
+sutta_css = """
 p{margin: 0.3em;}
 .sutta_title{color: inherit;
   text-decoration: inherit;}
 """
 
-css_path = "_static/sutta.css"
+sutta_css_path = "_static/sutta.css"
+
+tc_font_css = """
+body{font-family: "Noto Serif CJK TC Light";}
+.title{font-family: "Noto Sans CJK TC Medium", sans-serif;}
+
+"""
+
+tc_font_path = "_static/tc_font.css"
 
 
 def _make_sutta_doc(xc: book_public.XC, doc_path):
@@ -27,7 +35,12 @@ def _make_sutta_doc(xc: book_public.XC, doc_path):
                                "xml:lang": xc.xmlang,
                                "lang": xc.xmlang})
     head = xl.sub(html, "head")
-    _link = xl.sub(head, "link", {"rel": "stylesheet", "type": "text/css", "href": doepub.relpath(css_path, doc_path)})
+    _link = xl.sub(head, "link", {"rel": "stylesheet",
+                                  "type": "text/css",
+                                  "href": doepub.relpath(sutta_css_path, doc_path)})
+    _link = xl.sub(head, "link", {"rel": "stylesheet",
+                                  "type": "text/css",
+                                  "href": doepub.relpath(tc_font_path, doc_path)})
     body = xl.sub(html, "body")
     return html, head, body
 
@@ -39,7 +52,7 @@ def write_suttas(epub: epubpacker.Epub, bns, xc, _test=False):
 
         def _write_pian_part(_body):
             pian_id = "pian"
-            xl.sub(_body, "h1", {"id": pian_id}, [c(pian.title)])
+            xl.sub(_body, "h1", {"class": "title", "id": pian_id}, [c(pian.title)])
             nonlocal pian_toc
 
         pian_toc = epubpacker.Toc(
@@ -59,14 +72,14 @@ def write_suttas(epub: epubpacker.Epub, bns, xc, _test=False):
             _xy_title = c(xiangying.serial + ". " + xiangying.title)
             head.kids.append(xl.Element("title", kids=[_xy_title]))
 
-            xl.sub(body, "h2", {"id": xy_id}, kids=[_xy_title])
+            xl.sub(body, "h2", {"class": "title", "id": xy_id}, kids=[_xy_title])
             xy_toc = epubpacker.Toc(_xy_title, doc_path + "#" + xy_id)
             pian_toc.kids.append(xy_toc)
 
             for pin in xiangying.pins:
                 if pin.title is not None:
                     pin_id = "pin" + pin.serial
-                    xl.sub(body, "h3", {"id": pin_id}, kids=[c(pin.title)])
+                    xl.sub(body, "h3", {"class": "title", "id": pin_id}, kids=[c(pin.title)])
                     pin_toc = epubpacker.Toc(c(pin.title + "({}~{})".format(pin.suttas[0].begin,
                                                                             pin.suttas[-1].end)),
                                              href=doc_path + "#" + pin_id)
@@ -86,7 +99,7 @@ def write_suttas(epub: epubpacker.Epub, bns, xc, _test=False):
                     # SN.1.1 诸天相应/暴流之渡過經
 
                     h4 = xl.sub(body, "h4", {"id": "{}".format(sutta_id)})
-                    _a = xl.sub(h4, "a", {"class": "sutta_title",
+                    _a = xl.sub(h4, "a", {"class": "title",
                                           "href": "{}".format(atom_suttaref.SuttaRef(sutta_id).get_cccurl())})
                     xl.sub(_a, "span", {"class": "sutta_id"}, [sutta_id])
                     xl.sub(_a, "span", {"class": "space_in_sutta_title"}, [" "])
@@ -192,7 +205,8 @@ def make(xc: book_public.XC, temprootdir, books_dir):
     my_uuid = doepub.get_uuid(xc.c("相應部") + xc.enlang)
     epub.meta.identifier = my_uuid.urn
 
-    epub.userfiles[css_path] = css
+    epub.userfiles[sutta_css_path] = sutta_css
+    epub.userfiles[tc_font_path] = tc_font_css
 
     fanli.write_fanli(epub, xc)
     homage.write_homage(epub, xc, sn_data.homage_listline)
