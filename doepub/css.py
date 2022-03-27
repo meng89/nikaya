@@ -26,38 +26,37 @@ p{
 """
 _tc_font2 = """
 @font-face {
-  font-family: "MySerif";
-  src: local("Noto Serif");
+    font-family: MySerif;
+    src: local('Noto Serif');
 }
 @font-face {
-  font-family: "MySerif";
-  src: local("Noto Serif CJK TC");
-  unicode-range: U+0-2FF;
+    font-family: MySerif;
+    src: local('Noto Serif CJK TC');
+    unicode-range: U+4E00-U+9FFF, U+3400-U+4DBF, U+2B740–U+2B81F;
 }
 @font-face {
-  font-family: "MySerif";
-  src: local("Noto Serif Tibetan");
-  unicode-range: U+0F00-U+0FFF;
+    font-family: MySerif;
+    src: local('Noto Serif Tibetan');
+    unicode-range: U+0F00-U+0FFF;
 }
 
 @font-face {
-  font-family: "MySans";
-  src: local("Noto Sans");
+    font-family: MySans;
+    src: local('Noto Sans');
 }
 @font-face {
-  font-family: "MySans";
-  src: local("Noto Sans CJK TC");
-  unicode-range: U+0-2FF;
+    font-family: MySans;
+    src: local('Noto Sans CJK TC');
+    unicode-range: U+0-2FF;
 }
 
 p{
-    font-family: "MySerif";
-    font-weight: 400;
+    font-family: MySerif;
 }
 .title{
-    font-family: "MySans";
-    font-weight: 700;
+    font-family: MySans;
 }
+
 """
 
 
