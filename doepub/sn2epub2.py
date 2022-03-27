@@ -12,6 +12,8 @@ import dopdf
 import doepub
 from . import fanli, homage, notice
 
+from make_book import uc
+
 css = """
 p{margin: 0.3em;}
 """

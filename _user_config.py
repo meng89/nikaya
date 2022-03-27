@@ -20,7 +20,7 @@ FONTS_DIR = os.path.join(PROJECT_ROOT, "fonts")
 CONTEXT_BIN_PATH = "~/context-lmtx/tex/texmf-linux-64/bin"
 
 # EPUBCheck 路径
-EPUBCHECK = "/mnt/data/software/epubcheck-4.2.6/epubcheck-4.2.6/epubcheck.jar"
+EPUBCHECK = "/mnt/data/software/epubcheck-4.2.6/epubcheck.jar"
 
 # 电子书存放目录
 BOOKS_DIR = os.path.join(PROJECT_ROOT, "_books")

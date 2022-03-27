@@ -139,6 +139,7 @@ class Meta(object):
         self.languages = []
         self.creators = []
         self.date = ""
+        self.others = []
 
     def to_et(self, parent, dc_id_id):
         metadata = xl.sub(parent, "metadata", {"xmlns:dc": "http://purl.org/dc/elements/1.1/"})
@@ -156,6 +157,11 @@ class Meta(object):
             _creator = xl.sub(metadata, "dc:creator", kids=[creator])
         if self.date:
             _date = xl.sub(metadata, "dc:date", kids=[self.date])
+
+        for other in self.others:
+            if not isinstance(other, xl.Element):
+                raise TypeError(other)
+            metadata.kids.append(other)
 
 
 class Toc(object):
