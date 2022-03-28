@@ -3,6 +3,9 @@ import re
 import pyccc
 import dopdf
 
+import doepub.basestr
+
+
 P1 = r"(南傳作)(「.+?」)"
 P2 = r"(\(i+\))(「.+?」)"
 P3 = r"(菩提比丘長老英譯為)(「.+?」)"
@@ -22,8 +25,8 @@ class NoteTagBase(pyccc.BaseElement):
     def to_tex(self, bns, c, **kwargs):
         return "\\" + self._tex_cmd + "{" + dopdf.join_to_tex(line=[self.text], bns=bns, c=c) + "}"
 
-    def to_xml(self, c, *args, **kwargs):
-        return c(self.text)
+    def to_es(self, c, *args, **kwargs):
+        return doepub.basestr.str2es(c(self.text))
 
     def __repr__(self):
         return (f'{self.__class__.__name__}('

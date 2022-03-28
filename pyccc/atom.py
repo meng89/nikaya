@@ -7,6 +7,7 @@ import pyccc
 from pyccc import atom_note
 import dopdf
 import doepub
+import doepub.basestr
 
 
 class Href(pyccc.BaseElement):
@@ -32,8 +33,8 @@ class Href(pyccc.BaseElement):
     def to_tex(self, c, **kwargs):
         return "\\ccchref{" + c(self.text) + "}{" + dopdf.el_url(self._url()) + "}"
 
-    def to_xml(self, c, **kwargs):
-        return xl.Element("a", {"href": self._url()}, [c(self.text)])
+    def to_es(self, c, **kwargs):
+        return [xl.Element("a", {"href": self._url()}, doepub.basestr.str2es(c(self.text)))]
 
 
 class TextWithNoteRef(pyccc.BaseElement):
@@ -55,9 +56,10 @@ class TextWithNoteRef(pyccc.BaseElement):
                "{" + c(self.get_text()) + "}" + \
                "{" + atom_note.note_to_texlabel(self.type_, self.key) + "}"
 
-    def to_xml(self, c, doc_path, **kwargs):
+    def to_es(self, c, doc_path, **kwargs):
         href = doepub.note_href_calculate(self.type_, self.key)
-        return xl.Element("a", {"epub:type": "noteref", "href": doepub.relpath(href, doc_path)}, [c(self.text)])
+        return [xl.Element("a", {"epub:type": "noteref", "href": doepub.relpath(href, doc_path)},
+                           doepub.basestr.str2es(c(self.text)))]
 
     def get_text(self):
         return self.text

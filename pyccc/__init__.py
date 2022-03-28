@@ -19,7 +19,7 @@ class BaseElement(object):
         pass
 
     @abc.abstractmethod
-    def to_xml(self, *args, **kwargs):
+    def to_es(self, *args, **kwargs):
         pass
 
     def __eq__(self, other):

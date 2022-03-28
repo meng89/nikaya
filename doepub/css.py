@@ -117,9 +117,54 @@ body{
 
 """
 
+_tc_font3 = """
+.cjk{
+    font-family: "Noto Serif CJK TC";
+    font-weight: 400;
+}
 
-font_css = {TC().enlang: _tc_font2,
-            SC().enlang: _sc_font2}
+.lat{
+    font-family: "Noto Serif";
+    font-weight: 300;
+}
+
+.tib{
+    font-family: "Noto Serif Tibetan";
+    font-weight: 400;
+}
+
+.title{
+    font-family: "Noto Sans CJK TC";
+    font-weight: 700;
+}
+"""
+
+
+_sc_font3 = """
+.cjk{
+    font-family: "Noto Serif CJK SC";
+    font-weight: 400;
+}
+
+.lat{
+    font-family: "Noto Serif";
+    font-weight: 300;
+}
+
+.tib{
+    font-family: "Noto Serif Tibetan";
+    font-weight: 400;
+}
+
+.title{
+    font-family: "Noto Sans CJK SC";
+    font-weight: 700;
+}
+"""
+
+
+font_css = {TC().enlang: _tc_font3,
+            SC().enlang: _sc_font3}
 
 font_path = {TC().enlang: "_static/tcfont.css",
              SC().enlang: "_static/scfont.css"}

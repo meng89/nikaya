@@ -2,6 +2,7 @@ import os
 
 import pyccc
 from pyccc import atom_suttaref, page_parsing
+from doepub import basestr
 
 
 TEX_DIR = PROJECT_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tex")
@@ -63,9 +64,9 @@ def join_to_xml(line: list, bns, c, doc_path):
     elements = []
     for x in _new_line(line):
         if isinstance(x, str):
-            elements.append(c(x))
+            elements.extend(basestr.str2es(c(x)))
         elif isinstance(x, pyccc.BaseElement):
-            elements.append(x.to_xml(bns=bns, c=c, doc_path=doc_path))
+            elements.extend(x.to_es(bns=bns, c=c, doc_path=doc_path))
     return elements
 
 
