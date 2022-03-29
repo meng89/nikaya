@@ -146,12 +146,21 @@ class DocType(_Node):
         return s
 
 
+class InitError(Exception):
+    pass
+
+
 class Element(_Node):
-    def __init__(self, tag, attrs=None, kids=None):
+    def __init__(self, tag=None, attrs=None, kids=None, fromstr=None):
         _Node.__init__(self)
-        self.tag = tag
-        self._attrs = dict(attrs) if attrs else {}
-        self._kids = list(kids) if kids else []
+        if (tag and fromstr) or (not tag or not fromstr):
+            raise InitError()
+        if tag:
+            self.tag = tag
+            self._attrs = dict(attrs) if attrs else {}
+            self._kids = list(kids) if kids else []
+        else:
+
 
     @property
     def tag(self):
@@ -197,6 +206,18 @@ class Element(_Node):
 
         return s
 
+    def find_attr(self, attr):
+        for _attr, value in self.attrs.items():
+            if _attr == attr:
+                return value
+
+    def find_kids(self, tag):
+        kids = []
+        for kid in self.kids:
+            if isinstance(kid, Element) and kid.tag == tag:
+                kids.append(kid)
+        return kids
+
 
 def _escape(string):
     s = ''
@@ -216,3 +237,9 @@ def sub(element, tag, attrs=None, kids=None):
     sub_element = Element(tag, attrs, kids)
     element.kids.append(sub_element)
     return sub_element
+
+def parse_element(xmlstr):
+
+def parse(xmlstr):
+    pass
+    #todo

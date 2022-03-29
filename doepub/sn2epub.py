@@ -12,7 +12,7 @@ from pyccc import sn, book_public, page_parsing, atom_suttaref, atom_note
 import dopdf
 import doepub
 from . import fanli, homage, notice
-from .css import sutta_css, sutta_css_path, font_path, font_css
+from .css import public, public_path, font_path, font_css
 
 
 def _make_sutta_doc(xc: book_public.XC, doc_path):
@@ -23,7 +23,7 @@ def _make_sutta_doc(xc: book_public.XC, doc_path):
     head = xl.sub(html, "head")
     _link = xl.sub(head, "link", {"rel": "stylesheet",
                                   "type": "text/css",
-                                  "href": doepub.relpath(sutta_css_path, doc_path)})
+                                  "href": doepub.relpath(public_path, doc_path)})
     _link = xl.sub(head, "link", {"rel": "stylesheet",
                                   "type": "text/css",
                                   "href": doepub.relpath(font_path[xc.enlang], doc_path)})
@@ -186,6 +186,8 @@ def make(xc: book_public.XC, temprootdir, books_dir, epubcheck):
     sn_data = sn.get()
 
     epub = epubpacker.Epub()
+    doepub.write_epub_cssjs(epub)
+
     epub.meta.titles = [xc.c("相應部")]
     epub.meta.creators = ["莊春江({})".format(xc.c("譯"))]
     epub.meta.date = sn_data.last_modified.strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -198,7 +200,7 @@ def make(xc: book_public.XC, temprootdir, books_dir, epubcheck):
                                        ["莊春江" + xc.c("漢譯經藏")]))
     epub.meta.others.append(xl.Element("meta", {"refines": "#c01", "property": "collection-type"}, ["series"]))
 
-    epub.userfiles[sutta_css_path] = sutta_css
+    epub.userfiles[public_path] = public
     epub.userfiles[font_path[xc.enlang]] = font_css[xc.enlang]
 
     fanli.write_fanli(epub, xc)

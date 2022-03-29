@@ -1,8 +1,11 @@
 from pyccc.book_public import TC, SC
 
 
-sutta_css = """
-p{margin: 0.3em;}
+public = """
+p{
+    margin: 0.3em;
+}
+
 a{
     color: inherit;
 }
@@ -11,7 +14,8 @@ a{
     text-decoration: inherit;
 }
 """
-sutta_css_path = "_static/sutta.css"
+
+public_path = "_css/public.css"
 
 
 _tc_font = """
@@ -117,7 +121,7 @@ body{
 
 """
 
-_tc_font3 = """
+_font3 = """
 .cjk{
     font-family: "Noto Serif CJK TC";
     font-weight: 400;
@@ -135,36 +139,20 @@ _tc_font3 = """
 
 .title{
     font-family: "Noto Sans CJK TC";
-    font-weight: 700;
+    font-weight: 500;
 }
-"""
 
-
-_sc_font3 = """
-.cjk{
-    font-family: "Noto Serif CJK SC";
+body.notice{
+    font-family: "Noto Serif CJK TC";
     font-weight: 400;
 }
 
-.lat{
-    font-family: "Noto Serif";
-    font-weight: 300;
-}
-
-.tib{
-    font-family: "Noto Serif Tibetan";
-    font-weight: 400;
-}
-
-.title{
-    font-family: "Noto Sans CJK SC";
-    font-weight: 700;
-}
 """
 
 
-font_css = {TC().enlang: _tc_font3,
-            SC().enlang: _sc_font3}
+font_css = {TC().enlang: _font3,
+            SC().enlang: _font3.replace("CJK TC", "CJK SC")}
 
-font_path = {TC().enlang: "_static/tcfont.css",
-             SC().enlang: "_static/scfont.css"}
+
+font_path = {TC().enlang: "_css/tcfont.css",
+             SC().enlang: "_css/scfont.css"}

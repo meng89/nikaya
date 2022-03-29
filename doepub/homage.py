@@ -8,16 +8,9 @@ from . import css
 
 def write_homage(epub: epubpacker.Epub, xc: book_public.XC, line):
     doc_path = "homage.xhtml"
-    html = xl.Element("html", {"xmlns:epub": "http://www.idpf.org/2007/ops",
-                               "xmlns": "http://www.w3.org/1999/xhtml",
-                               "xml:lang": xc.xmlang,
-                               "lang": xc.xmlang})
-    head = xl.sub(html, "head")
-    _link = xl.sub(head, "link", {"rel": "stylesheet",
-                                  "type": "text/css",
-                                  "href": doepub.relpath(css.font_path[xc.enlang], doc_path)})
-    _title = xl.sub(head, "title", kids=[xc.c("禮敬世尊")])
-    style = xl.sub(head, "style", attrs={"type": "text/css"})
+    html, body = doepub.make_doc(doc_path, xc, "禮敬世尊")
+    head = html.find_kids("head")[0]
+    style = xl.Element("style", attrs={"type": "text/css"})
     style.kids.append("""
 .out {
     margin: 36vh 0 0 0;
@@ -30,7 +23,8 @@ def write_homage(epub: epubpacker.Epub, xc: book_public.XC, line):
     display: inline;
 }"""
                       )
-    body = xl.sub(html, "body")
+    head.kids.insert(0, style)
+
     outdiv = xl.sub(body, "div", {"class": "out"})
     indiv = xl.sub(outdiv, "div", {"class": "in homage"})
 

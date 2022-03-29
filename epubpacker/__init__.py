@@ -22,7 +22,7 @@ def _path2id(s):
     return news
 
 
-ROOT_OF_OPF = 'EPUB'
+ROOT_OF_OPF = 'OEBPS'
 
 USER_DIR = "user_dir"
 
@@ -86,9 +86,11 @@ class Epub(object):
                                               "properties": "nav"
                                               })
         for filename in self.userfiles.keys():
+            attrib2 = {}
             _, ext = posixpath.splitext(filename)
             if ext.lower() == ".xhtml":
                 media_type = "application/xhtml+xml"
+                attrib2 = {"properties": "scripted"}
             elif ext.lower() == ".css":
                 media_type = "text/css"
             elif ext.lower() == ".js":
@@ -100,6 +102,7 @@ class Epub(object):
                       "href": posixpath.join(USER_DIR, filename),
                       "id": _path2id(filename)
                       }
+            attrib.update(attrib2)
 
             _item = xl.sub(manifest, "item", attrib)
 
@@ -109,7 +112,7 @@ class Epub(object):
 
         name = "package.opf"
         i = 1
-        package_opf_path = ROOT_OF_OPF + "/" + name
+        package_opf_path = posixpath.join(ROOT_OF_OPF, name)
         while package_opf_path in z.namelist():
             package_opf_path = "real" + str(i) + name
             i += 1
@@ -128,7 +131,7 @@ class Epub(object):
                                               "xmlns": "urn:oasis:names:tc:opendocument:xmlns:container"})
         _rootfiles = xl.sub(_container, "rootfiles")
         _rootfile = xl.sub(_rootfiles, "rootfile", {"media-type": "application/oebps-package+xml",
-                                                    "full-path": "EPUB/package.opf"})
+                                                    "full-path": posixpath.join(ROOT_OF_OPF, "package.opf")})
         z.writestr("META-INF/container.xml", xl.Xl(root=xl.pretty_insert(_container)).to_str())
 
 

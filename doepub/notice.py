@@ -23,15 +23,10 @@ _lines = (
 
 def write_notice(epub: epubpacker.Epub, xc: book_public.XC):
     doc_path = "notice.xhtml"
-    html = xl.Element("html", {"xmlns": "http://www.w3.org/1999/xhtml",
-                               "xml:lang": xc.xmlang,
-                               "lang": xc.xmlang})
-    head = xl.sub(html, "head")
-    _link = xl.sub(head, "link", {"rel": "stylesheet",
-                                  "type": "text/css",
-                                  "href": doepub.relpath(css.font_path[xc.enlang], doc_path)})
-    _title = xl.sub(head, "title", kids=["说明"])
-    body = xl.sub(html, "body")
+    html, body = doepub.make_doc(doc_path, xc, "说明")
+
+    body.attrs["class"] = "notice"
+
     _h1 = xl.sub(body, "h1", {"class": "title"}, ["说明"])
     for line in _lines:
         _p = xl.sub(body, "p", kids=line)

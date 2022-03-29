@@ -3,7 +3,7 @@ import epubpacker
 from pyccc import book_public
 import doepub
 
-from . import css
+from . import basestr
 
 
 _fl = (
@@ -27,20 +27,11 @@ _fl = (
 
 def write_fanli(epub: epubpacker.Epub, xc: book_public.XC):
     doc_path = "fanli.xhtml"
-
-    html = xl.Element("html", {"xmlns": "http://www.w3.org/1999/xhtml",
-                               "xml:lang": xc.xmlang,
-                               "lang": xc.xmlang})
-    head = xl.sub(html, "head")
-    _link = xl.sub(head, "link", {"rel": "stylesheet",
-                                  "type": "text/css",
-                                  "href": doepub.relpath(css.font_path[xc.enlang], doc_path)})
-    _title = xl.sub(head, "title", kids=["凡例"])
-    body = xl.sub(html, "body")
+    html, body = doepub.make_doc(doc_path, xc, "凡例")
     _h1 = xl.sub(body, "h1", {"class": "title"}, ["凡例"])
 
     for one in _fl:
-        _p = xl.sub(body, "p", kids=[xc.c(one)])
+        _p = xl.sub(body, "p", kids=basestr.str2es(xc.c(one)))
 
     htmlstr = xl.Xl(root=xl.pretty_insert(html, dont_do_tags=["p"])).to_str()
     epub.userfiles[doc_path] = htmlstr
