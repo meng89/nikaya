@@ -153,7 +153,7 @@ class InitError(Exception):
 class Element(_Node):
     def __init__(self, tag=None, attrs=None, kids=None, fromstr=None):
         _Node.__init__(self)
-        if (tag and fromstr) or (not tag or not fromstr):
+        if bool(tag) == bool(fromstr) or (not tag and not fromstr):
             raise InitError()
         if tag:
             self.tag = tag
@@ -219,18 +219,39 @@ class Element(_Node):
         return kids
 
 
-def _escape(string):
-    s = ''
-    for char in string:
-        if char == '&':
-            s += '&amp;'
-        elif char == '<':
-            s += '&lt;'
-        elif char == '>':
-            s += '&gt;'
-        else:
-            s += str(char)
-    return s
+_escape_table = [
+    ("&", "&amp;"),
+    ('<', '&lt;'),
+    ('>', '&gt;'),
+]
+
+
+def _unescape(text):
+    i = 0
+    nt = ""
+    while i < len(text):
+        for x, y in _escape_table:
+            if text[i: i + len(y)] == y:
+                nt += x
+                i += len(y)
+                break
+        nt += text[i]
+        i += 1
+    return nt
+
+
+def _escape(text):
+    nt = ""
+    for c in text:
+        escaped = False
+        for x, y in _escape_table:
+            if c == x:
+                nt += y
+                escaped = True
+                break
+        if not escaped:
+            nt += c
+    return nt
 
 
 def sub(element, tag, attrs=None, kids=None):
@@ -240,6 +261,8 @@ def sub(element, tag, attrs=None, kids=None):
 
 
 _blank = (" ", "\t", "\n", "\r")
+
+
 def ignore_blank(text, i):
     while i < len(text):
         if text[i] not in _blank:
@@ -249,83 +272,123 @@ def ignore_blank(text, i):
     return i
 
 
-def read_tag(text, bi):
-    bi = ignore_blank(text, bi)
-    tag, border, bi = read_till(text, bi, " />")
-    tag = tag.strip()
+def read_tag(text, i):
+    tag = ""
+    while i < len(text) and text[i] not in " />":
+        tag += text[i]
+        i += 1
+    return tag, i
 
-    attrs = {}
 
-    bi = ignore_blank(text, bi)
+def read_endtag(text, i):
+    tag = ""
+    while i < len(text) and text[i] not in " >":
+        tag += text[i]
+        i += 1
+    return tag, i
 
-    while text[bi] not in "/>":
-        key, value, bi = read_attr(text, bi)
-        attrs[key] = value
-        bi = ignore_blank(text, bi)
 
-    if text[bi] == "/":
-        bi = ignore_blank(text, bi)
-        if text[bi] != ">":
+def read_text(text, i):
+    t = ""
+    while i < len(text) and text[i] not in "<":
+        t += text[i]
+        i += 1
+    return t, i
+
+
+#  ↑↓←→↖↗↙↘
+def parse_element(text, i):
+    # <a id="1">xx<b/>yy</a>
+    # ↑           ↑
+    if text[i] != "<":
+        raise ParseError
+
+    i = ignore_blank(text, i + 1)
+    tag, i = read_tag(text, i)
+    e = Element(tag=tag)
+
+    i = ignore_blank(text, i)
+    while i < len(text) and text[i] not in "/>":
+        # <a id="1">xx<b/>yy</a>
+        #          ↖
+        key, value, i = read_attr(text, i)
+        e.attrs[key] = value
+        i = ignore_blank(text, i)
+
+    if text[i] == "/":
+        # <a id="1">xx<b/>yy</a>
+        #               ↑
+        i += 1
+        i = ignore_blank(text, i)
+        if text[i] != ">":
             raise ParseError
-        bi += 1
+        i += 1
+        return e, i
 
-        return Element(tag=tag, attrs=attrs)
+    elif text[i] == ">":
+        # <a id="1">xx<b/>yy</a>
+        #          ↑
+        i += 1
 
-    elif text[bi] == ">":
-        bi += 1
+    while i < len(text):
+        if text[i] == "<":
+            # <a id="1">xx<b/>yy</a>
+            #             ↑     ↑
+            kid_e_i = i
+            i += 1
+            i = ignore_blank(text, i)
+            if text[i] == "/":
+                # <a id="1">xx<b/>yy</a>
+                #                    ↑
+                i += 1
+                i = ignore_blank(text, i)
 
-    kids = []
-    while bi < len(text):
-        s, border, bi = read_till(text, bi, "<")
-        bi2 = bi
-        if s:
-            kids.append(parse_str(s))
-        else:
-            bi = ignore_blank(text, bi)
-            if text[bi] == "/":
-                bi = ignore_blank(text, bi)
-                end_tag, mark, bi  = read_till(text, bi, ">")
-                end_tag = end_tag.strip()
-                if mark == " ":
-                    bi = ignore_blank(text, bi)
-                else:
-                    _, _, bi = read_till(text, bi, ">")
+                # <a id="1">xx<b/>yy</a>
+                #                     ↑
+                end_tag, i = read_endtag(text, i)
                 if tag != end_tag:
+                    print(tag, end_tag)
                     raise ParseError
-                else:
-                    return Element(tag=tag, attrs=attrs, kids=kids), bi
+                i = ignore_blank(text, i)
+                # <a id="1">xx<b/>yy</a>
+                #                      ↑
+                if text[i] != ">":
+                    raise ParseError
+                i += 1
+                return e, i
+
             else:
-                kids.append(read_tag(text, bi2))
+                # <a id="1">xx<b/>yy</a>
+                #             ↑
+                kid, i = parse_element(text, kid_e_i)
+                e.kids.append(kid)
 
-        return ParseError
+        else:
+            # <a id="1">xx<b/>yy</a>
+            #           ↑     ↑
+            string_e, i = read_text(text, i)
+            e.kids.append(_unescape(string_e))
+    raise ParseError
 
 
+def read_attr(text, i):
 
-def read_attr(text, bi):
-    key, border, bi = read_till(text, bi, "=")
+    key, border, i = read_till(text, i, "=")
     key = key.strip()
-    bi = ignore_blank(text, bi)
-    qmark = text[bi]
-    bi += 1
-    value, _, bi = read_till(text, bi, qmark)
-    return key, value, bi
+    i = ignore_blank(text, i)
+    qmark = text[i]
+    i += 1
+    value, _, i = read_till(text, i, qmark)
+    return key, value, i
 
 
-def parse_str(s):
-
-
-def parse_element(text: str, bi:int, ei:int):
-
-
+def parse_str(text):
+    return _unescape(text)
 
 
 def parse(text: str):
-    text = text.strip()
-    bi = 0
-    ei = len(text) -1
-
-    if text[0] == "<" and text[ei] == ">":
-        parse_element(text, bi, ei)
+    i = ignore_blank(text, 0)
+    return parse_element(text, i)
 
 
 def read_till(text, bi, chars):
@@ -333,10 +396,11 @@ def read_till(text, bi, chars):
     while bi < len(text):
         if text[bi] not in chars:
             xs += text[bi]
-
-        else:
             bi += 1
-            return xs, text[bi], bi
+        else:
+            return xs, text[bi], bi + 1
+
+    return xs, None, bi
 
 
 class ParseError(Exception):
