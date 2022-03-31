@@ -96,4 +96,3 @@ def write_epub_cssjs(epub: epubpacker.Epub):
     epub.userfiles["_css/css2.css"] = "/* 第二个自定义 CSS 文件 */\n\n"
     epub.userfiles["_js/js1.js"] = "// 第一个自定义 JS 文件\n\n"
     epub.userfiles["_js/js2.js"] = "// 第二个自定义 JS 文件\n\n"
-

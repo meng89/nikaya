@@ -28,6 +28,7 @@ _fl = (
 def write_fanli(epub: epubpacker.Epub, xc: book_public.XC):
     doc_path = "fanli.xhtml"
     html, body = doepub.make_doc(doc_path, xc, "凡例")
+    body.attrs["class"] = "fanli"
     _h1 = xl.sub(body, "h1", {"class": "title"}, ["凡例"])
 
     for one in _fl:

@@ -2,15 +2,15 @@ from pyccc.book_public import TC, SC
 
 
 public = """
-p{
+body.sutta p{
     margin: 0.3em;
 }
 
-a{
+body.sutta a{
     color: inherit;
 }
 
-.title{
+body .title{
     text-decoration: inherit;
 }
 """

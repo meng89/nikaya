@@ -88,16 +88,16 @@ class XLError(Exception):
 
 
 class Xl(object):
-    def __init__(self, header=None, doc_type=None, root=None):
+    def __init__(self, prolog=None, doc_type=None, root=None):
 
-        self.header = header or Header()
+        self.prolog = prolog or Prolog()
         self.doc_type = doc_type
         self.root = root
 
     def to_str(self):
         s = ''
-        if self.header:
-            s += self.header.to_str() + '\n'
+        if self.prolog:
+            s += self.prolog.to_str() + '\n'
         if self.doc_type:
             s += self.doc_type.to_str() + '\n'
         s += self.root.to_str()
@@ -110,7 +110,7 @@ class _Node(object):
         pass
 
 
-class Header(_Node):
+class Prolog(_Node):
     def __init__(self, version=None, encoding=None, standalone=None):
         self.version = version or '1.0'
         self.encoding = encoding or 'UTF-8'
@@ -126,7 +126,9 @@ class Header(_Node):
         if self.encoding:
             s += ' encoding="{}"'.format(self.encoding)
         if self.standalone is not None:
-            s += ' standalone="{}"'.format('yes' if self.standalone else 'no')
+            s += ' standalone="'
+            s += self.standalone.lower()
+            s += '"'
         s += ' ?>'
         return s
 
@@ -211,6 +213,15 @@ class Element(_Node):
             if _attr == attr:
                 return value
 
+    def find_all(self, tag):
+        es = []
+        if self.tag == tag:
+            es.append(self)
+        for kid in self.kids:
+            if isinstance(kid, Element):
+                es.extend(kid.find_all(tag))
+        return es
+
     def find_kids(self, tag):
         kids = []
         for kid in self.kids:
@@ -258,6 +269,38 @@ def sub(element, tag, attrs=None, kids=None):
     sub_element = Element(tag, attrs, kids)
     element.kids.append(sub_element)
     return sub_element
+
+
+def parse_prolog(text, i):
+    prolog = Prolog()
+
+    if text[i] != "<":
+        raise ParseError
+    i += 1
+    i = ignore_blank(text, i)
+    if text[i] != "?":
+        raise ParseError
+    i += 1
+    i = ignore_blank(text, i)
+    if text[i:i+3] != "xml":
+        raise ParseError
+    i += 3
+    i = ignore_blank(text, i)
+
+    while i < len(text) and text[i] not in "?>":
+        key, value, i = read_attr(text, i)
+        setattr(prolog, key.lower(), value)
+        i = ignore_blank(text, i)
+
+    i = ignore_blank(text, i)
+    if text[i] != "?":
+        raise ParseError
+    i += 1
+    i = ignore_blank(text, i)
+    if text[i] != ">":
+        raise ParseError
+    i += 1
+    return prolog, i
 
 
 _blank = (" ", "\t", "\n", "\r")
@@ -388,7 +431,12 @@ def parse_str(text):
 
 def parse(text: str):
     i = ignore_blank(text, 0)
-    return parse_element(text, i)
+    prolog, i = parse_prolog(text, i)
+    i = ignore_blank(text, i)
+    root, i = parse_element(text, i)
+    xl = Xl(prolog, root=root)
+
+    return xl
 
 
 def read_till(text, bi, chars):

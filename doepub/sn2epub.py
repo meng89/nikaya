@@ -49,14 +49,17 @@ def write_suttas(epub: epubpacker.Epub, bns, xc, _test=False):
             xiangying = pian.xiangyings[index]
             xy_id = "sn"
             doc_path = atom_suttaref.docpath_calculate("SN.{}.1".format(xiangying.serial))
-            html, head, body = _make_sutta_doc(xc, doc_path)
+            # html, head, body = _make_sutta_doc(xc, doc_path)
+
+            _xy_title = c(xiangying.serial + ". " + xiangying.title)
+            html, body = doepub.make_doc(doc_path=doc_path, xc=xc, title=_xy_title)
+            body.attrs["class"] = "sutta"
 
             if index == 0:
                 _write_pian_part(body)
                 pian_toc.href = doc_path + "#" + xy_id
 
-            _xy_title = c(xiangying.serial + ". " + xiangying.title)
-            head.kids.append(xl.Element("title", kids=[_xy_title]))
+            # head.kids.append(xl.Element("title", kids=[_xy_title]))
 
             xl.sub(body, "h2", {"class": "title", "id": xy_id}, kids=[_xy_title])
             xy_toc = epubpacker.Toc(_xy_title, doc_path + "#" + xy_id)

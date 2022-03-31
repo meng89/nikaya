@@ -86,11 +86,14 @@ class Epub(object):
                                               "properties": "nav"
                                               })
         for filename in self.userfiles.keys():
-            attrib2 = {}
+            attrib = {}
             _, ext = posixpath.splitext(filename)
             if ext.lower() == ".xhtml":
                 media_type = "application/xhtml+xml"
-                attrib2 = {"properties": "scripted"}
+
+                xml = xl.parse(self.userfiles[filename])
+                if xml.root.find_all("script"):
+                    attrib["properties"] = "scripted"
             elif ext.lower() == ".css":
                 media_type = "text/css"
             elif ext.lower() == ".js":
@@ -98,11 +101,12 @@ class Epub(object):
             else:
                 raise EpubError(ext)
 
-            attrib = {"media-type": media_type,
-                      "href": posixpath.join(USER_DIR, filename),
-                      "id": _path2id(filename)
-                      }
-            attrib.update(attrib2)
+            attrib.update(
+                {"media-type": media_type,
+                 "href": posixpath.join(USER_DIR, filename),
+                 "id": _path2id(filename)
+                 }
+            )
 
             _item = xl.sub(manifest, "item", attrib)
 
