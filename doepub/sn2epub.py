@@ -15,22 +15,6 @@ from . import fanli, homage, notice
 from .css import public, public_path, font_path, font_css
 
 
-def _make_sutta_doc(xc: book_public.XC, doc_path):
-    html = xl.Element("html", {"xmlns:epub": "http://www.idpf.org/2007/ops",
-                               "xmlns": "http://www.w3.org/1999/xhtml",
-                               "xml:lang": xc.xmlang,
-                               "lang": xc.xmlang})
-    head = xl.sub(html, "head")
-    _link = xl.sub(head, "link", {"rel": "stylesheet",
-                                  "type": "text/css",
-                                  "href": doepub.relpath(public_path, doc_path)})
-    _link = xl.sub(head, "link", {"rel": "stylesheet",
-                                  "type": "text/css",
-                                  "href": doepub.relpath(font_path[xc.enlang], doc_path)})
-    body = xl.sub(html, "body")
-    return html, head, body
-
-
 def write_suttas(epub: epubpacker.Epub, bns, xc, _test=False):
     c = xc.c
     nikaya = sn.get()
@@ -112,22 +96,8 @@ def write_suttas(epub: epubpacker.Epub, bns, xc, _test=False):
 
 
 def _make_note_doc(title, xc: book_public.XC, doc_path):
-    html = xl.Element("html", {"xmlns:epub": "http://www.idpf.org/2007/ops",
-                               "xmlns": "http://www.w3.org/1999/xhtml",
-                               "xml:lang": xc.xmlang,
-                               "lang": xc.xmlang})
-    head = xl.sub(html, "head")
-    _title = xl.sub(head, "title", kids=[title])
-    _link = xl.sub(head, "link", {"rel": "stylesheet",
-                                  "type": "text/css",
-                                  "href": doepub.relpath(font_path[xc.enlang], doc_path)})
-    style = xl.sub(head, "style", {"type": "text/css"})
-    style.kids.append("""
-     /* section {font-size: small;} */
-     ol {list-style:none;}
-    """)
-    body = xl.sub(html, "body")
-
+    html, body = doepub.make_doc(doc_path, xc, title)
+    body.attrs["class"] = "note"
     sec = xl.sub(body, "section", {"epub:type": "endnotes", "role": "doc-endnotes"})
     ol = xl.sub(sec, "ol")
     return html, ol
