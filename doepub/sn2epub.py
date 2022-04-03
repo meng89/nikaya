@@ -150,6 +150,37 @@ def write_globalnotes(epub: epubpacker.Epub, bns, xc):
         epub.spine.append(doc_path)
 
 
+def is_tool(name):
+    """Check whether `name` is on PATH and marked as executable."""
+
+    # from whichcraft import which
+    from shutil import which
+
+    return which(name) is not None
+
+
+def check_epub(epub_path, epubcheck, mytemprootdir):
+    compile_cmd = "java -jar {} {} -q".format(epubcheck, epub_path)
+
+    stdout_file = open(os.path.join(mytemprootdir, "cmd_stdout"), "w")
+    stderr_file = open(os.path.join(mytemprootdir, "cmd_stderr"), "w")
+
+    def _run():
+        print("运行:", compile_cmd, end=" ", flush=True)
+        p = subprocess.Popen(compile_cmd, cwd=mytemprootdir, shell=True,
+                             stdout=stdout_file, stderr=stderr_file)
+        p.communicate()
+        if p.returncode != 0:
+            return False
+        return True
+
+    if not _run():
+        print("出错！")
+        return
+    else:
+        print("成功！")
+
+
 def make(xc: book_public.XC, temprootdir, books_dir, epubcheck):
     bns = [sn.BN]
 
@@ -189,24 +220,8 @@ def make(xc: book_public.XC, temprootdir, books_dir, epubcheck):
     epub_path = os.path.join(mytemprootdir, "sn.epub")
     epub.write(epub_path)
 
-    compile_cmd = "java -jar {} {} -q".format(epubcheck, epub_path)
-
-    stdout_file = open(os.path.join(mytemprootdir, "cmd_stdout"), "w")
-    stderr_file = open(os.path.join(mytemprootdir, "cmd_stderr"), "w")
-
-    def _run():
-        print("运行:", compile_cmd, end=" ", flush=True)
-        p = subprocess.Popen(compile_cmd, cwd=mytemprootdir, shell=True,
-                             stdout=stdout_file, stderr=stderr_file)
-        p.communicate()
-        if p.returncode != 0:
-            return False
-        return True
-    if not _run():
-        print("出错！")
-        return
-    else:
-        print("成功！")
+    if is_tool("java") and os.path.exists(epubcheck):
+        check_epub(epub_path=epub_path, epubcheck=epubcheck, mytemprootdir=mytemprootdir)
 
     shutil.copy(epub_path,
                 os.path.join(books_dir, "{}_{}_{}{}_{}.epub".format(xc.c("相應部"),
