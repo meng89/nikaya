@@ -34,7 +34,7 @@ def write_fontstex(work_dir, fonts_dir):
         fontabspath = findfile(fonts_dir, os.path.basename(fontpath))
         fonttex = fonttex.replace(fontpath, fontabspath)
 
-    with open(os.path.join(work_dir, fonttex_filename), "w") as new_fonttex_file:
+    with open(os.path.join(work_dir, fonttex_filename), "w", encoding="utf-8") as new_fonttex_file:
         new_fonttex_file.write(fonttex)
 
 
@@ -133,8 +133,8 @@ def build(sources_dir, out_dir, tex_filename, context_bin_path, lang):
 
     compile_cmd = "context --path={} {}/{} --mode={}".format(sources_dir, sources_dir, tex_filename, lang)
 
-    stdout_file = open(os.path.join(out_dir, "cmd_stdout"), "w")
-    stderr_file = open(os.path.join(out_dir, "cmd_stderr"), "w")
+    stdout_file = open(os.path.join(out_dir, "cmd_stdout"), "w", encoding="utf-8")
+    stderr_file = open(os.path.join(out_dir, "cmd_stderr"), "w", encoding="utf-8")
 
     def _run():
         print("运行:", compile_cmd, end=" ", flush=True)
@@ -167,16 +167,16 @@ def make(xc, temprootdir, context_bin_path, fonts_dir, bookdir, test=False):
 
         write_fontstex(sources_dir, fonts_dir)
 
-        with open(sources_dir + "/" + main_filename, "w") as f:
+        with open(sources_dir + "/" + main_filename, "w", encoding="utf-8") as f:
             write_main(f, bns, xc.c)
 
-        with open(sources_dir + "/" + suttas_filename, "w") as f:
+        with open(sources_dir + "/" + suttas_filename, "w", encoding="utf-8") as f:
             write_suttas(f, bns, xc.c, test)
 
-        with open(sources_dir + "/" + localnotes_filename, "w") as f:
+        with open(sources_dir + "/" + localnotes_filename, "w", encoding="utf-8") as f:
             write_localnotes(f, nikaya.local_notes, bns, xc.c, test)
 
-        with open(sources_dir + "/" + globalnotes_filename, "w") as f:
+        with open(sources_dir + "/" + globalnotes_filename, "w", encoding="utf-8") as f:
             write_globalnotes(f, bns, xc.c, test)
 
         shutil.copy(os.path.join(dopdf.TEX_DIR, read_note_filename), sources_dir)
