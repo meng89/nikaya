@@ -4,6 +4,7 @@ import typing
 from string import Template
 import shutil
 import subprocess
+import re
 
 
 import pyccc
@@ -19,18 +20,28 @@ creator_note_filename = "creator_note.tex"
 read_note_filename = "read_note.tex"
 
 
+def findfile(start, name):
+    for relpath, dirs, files in os.walk(start):
+        if name in files:
+            full_path = os.path.join(start, relpath, name)
+            return os.path.normpath(os.path.abspath(full_path))
+
+
 def write_fontstex(work_dir, fonts_dir):
     fonttex = open(os.path.join(dopdf.TEX_DIR, fonttex_filename), "r").read()
-    new_fonttex = fonttex.replace("../../fonts", os.path.expanduser(fonts_dir))
+
+    for fontpath in re.findall("file:(.*(?:ttf|otf))", fonttex):
+        fontabspath = findfile(fonts_dir, os.path.basename(fontpath))
+        fonttex = fonttex.replace(fontpath, fontabspath)
 
     with open(os.path.join(work_dir, fonttex_filename), "w") as new_fonttex_file:
-        new_fonttex_file.write(new_fonttex)
+        new_fonttex_file.write(fonttex)
 
 
 def write_main(main_file: typing.TextIO, bns, c):
     nikaya = sn.get()
     homage = dopdf.join_to_tex(nikaya.homage_listline, bns, c)
-    _head_t = open(os.path.join(dopdf.TEX_DIR, "sn.tex"), "r").read()
+    _head_t = open(os.path.join(dopdf.TEX_DIR, "sn.tex"), "r", encoding='utf-8').read()
     strdate = page_parsing.lm_to_strdate(nikaya.last_modified)
     _head = Template(_head_t).substitute(date=strdate, suttas=suttas_filename,
                                          homage=homage,
@@ -115,7 +126,11 @@ def write_globalnotes(latex_io: typing.TextIO, bns, c, test):
 
 def build(sources_dir, out_dir, tex_filename, context_bin_path, lang):
     my_env = os.environ.copy()
-    my_env["PATH"] = os.path.expanduser(context_bin_path) + ":" + my_env["PATH"]
+    if os.name == "posix":
+        my_env["PATH"] = os.path.expanduser(context_bin_path) + ":" + my_env["PATH"]
+    elif os.name == "nt":
+        my_env["PATH"] = os.path.expanduser(context_bin_path) + ";" + my_env["PATH"]
+
     compile_cmd = "context --path={} {}/{} --mode={}".format(sources_dir, sources_dir, tex_filename, lang)
 
     stdout_file = open(os.path.join(out_dir, "cmd_stdout"), "w")

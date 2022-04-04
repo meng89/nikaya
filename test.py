@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
-import xl
 
-xmlstr = """<?xml version="1.0" encoding="utf-8" standalone="no"?>
-<student number="1001">
-       <name>zhangSan</name>
-       <age>23</age>
-       <sex>male</sex>
-</student>
-<student number="1002">
-       <name>liSi</name>
-       <age>32</age>
-       <sex>female</sex>
-</student>"""
+import os
+import re
 
 
-xl_ = xl.parse(xmlstr)
-print(xl_.to_str())
+s = r"""
+\definefontsynonym[enserif][file:../../fonts/NotoSerif-Light.ttf]
+\definefontsynonym[enserifbd][file:../../fonts/NotoSerif-SemiBold.ttf]
+\definefontsynonym[enserifit][file:../../fonts/NotoSerif-LightItalic.ttf]
+\definefontsynonym[enserifbi][file:../../fonts/NotoSerif-SemiBoldItalic.ttf]
+
+\definefontfallback[nsecjkl][file:../../fonts/NotoSerifCJKtc-Light.otf][0x00400-0x2FA1F]
+%\definefontfallback[nsecjkl][file:../../fonts/NotoSerifCJKtc-Light.otf][0x00400-0x2FA1F]
+\definefontfallback[nsecjkb][file:../../fonts/NotoSerifCJKtc-Medium.otf][0x00400-0x2FA1F]
+"""
+print(s)
+
