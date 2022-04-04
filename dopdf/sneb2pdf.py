@@ -28,7 +28,7 @@ def findfile(start, name):
 
 
 def write_fontstex(work_dir, fonts_dir):
-    fonttex = open(os.path.join(dopdf.TEX_DIR, fonttex_filename), "r").read()
+    fonttex = open(os.path.join(dopdf.TEX_DIR, fonttex_filename), "r", encoding="utf-8").read()
 
     for fontpath in re.findall("file:(.*(?:ttf|otf))", fonttex):
         fontabspath = findfile(fonts_dir, os.path.basename(fontpath))
