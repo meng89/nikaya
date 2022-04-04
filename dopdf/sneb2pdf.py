@@ -32,7 +32,7 @@ def write_fontstex(work_dir, fonts_dir):
 
     for fontpath in re.findall("file:{(.*(?:ttf|otf))}", fonttex):
         fontabspath = findfile(fonts_dir, os.path.basename(fontpath))
-        fonttex = fonttex.replace(fontpath, fontabspath.replace("\\", "/").replace(":", "{\\lettercolon}"))
+        fonttex = fonttex.replace(fontpath, fontabspath.replace("\\", "/").replace(":", "\\lettercolon"))
 
     with open(os.path.join(work_dir, fonttex_filename), "w", encoding="utf-8") as new_fonttex_file:
         new_fonttex_file.write(fonttex)
