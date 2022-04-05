@@ -2,13 +2,13 @@ import os
 import re
 import pickle
 
-from pyccc.public import BaseInfo, PianInfo, PinInfo
-from pyccc.public import Nikaya, Node, Sutta
+from pyabo.public import BaseInfo, PianInfo, PinInfo
+from pyabo.public import Nikaya, Node, Sutta
 
-from pyccc.tools import get_sutta_urls
+from pyabo.tools import get_sutta_urls
 
 
-from pyccc import page_parsing
+from pyabo import page_parsing
 
 HTML_INDEX = '/SN/index.htm'
 

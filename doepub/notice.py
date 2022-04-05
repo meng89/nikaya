@@ -2,8 +2,7 @@ import epubpacker
 import xl
 
 import doepub
-from . import css
-from pyccc import book_public
+from pyabo import book_public
 
 
 _project_link = "https://github.com/meng89/nikaya"

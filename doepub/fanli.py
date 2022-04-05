@@ -1,6 +1,6 @@
 import xl
 import epubpacker
-from pyccc import book_public
+from pyabo import book_public
 import doepub
 
 from . import basestr

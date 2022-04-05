@@ -1,8 +1,7 @@
-import os
 import abc
 
 
-CCC_WEBSITE = "https://agama.buddhason.org"
+ABO_WEBSITE = "https://agama.buddhason.org"
 
 
 class BaseElement(object):

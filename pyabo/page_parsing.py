@@ -5,8 +5,8 @@ from urllib.parse import urlparse
 
 from dateutil.parser import parse as parsedate
 
-import pyccc.parse_original_line
-from pyccc import atom, atom_note
+import pyabo.parse_original_line
+from pyabo import base, note_thing
 
 
 class AnalyseError(Exception):
@@ -57,8 +57,8 @@ def _do_class_comp(comp_doc, **kwargs):
         for e in note_docs:
             _key = re.match(r"^note(\d+)$", e["id"]).group(1)
             if list(e.contents):
-                for ori_line in atom_note.contents2lines(e.contents):
-                    note = atom_note.do_subnote(ori_line=ori_line, sutta_temp_notes=sutta_temp_notes, **kwargs)
+                for ori_line in note_thing.contents2lines(e.contents):
+                    note = note_thing.do_subnote(ori_line=ori_line, sutta_temp_notes=sutta_temp_notes, **kwargs)
                     sutta_temp_notes[_key] = note
     return sutta_temp_notes
 
@@ -67,16 +67,15 @@ def _do_class_nikaya(contents, **kwargs):
     homage_and_head_oline = []
     homage_and_head_olines = []
 
-    homage_and_head_lines = []
-
     sutta_name_part = None
-    translator_part = None
     body_lines = []
 
     def _do_line(_oline):
-        return pyccc.parse_original_line.do_line(oline=_oline,
-                                                 funs=[atom_note.do_str, atom_note.do_href,
-                                                       atom_note.do_onmouseover_global, atom_note.do_onmouseover_local],
+        return pyabo.parse_original_line.do_line(oline=_oline,
+                                                 funs=[note_thing.do_str,
+                                                       note_thing.do_href,
+                                                       note_thing.do_onmouseover_global,
+                                                       note_thing.do_onmouseover_local],
                                                  **kwargs)
     while contents:
         e = contents.pop(0)
@@ -111,7 +110,7 @@ def _do_class_nikaya(contents, **kwargs):
 
     contents = _new_contents
 
-    for oline in atom_note.contents2lines(contents):
+    for oline in note_thing.contents2lines(contents):
         body_lines.append(_do_line(oline))
 
     return homage_and_head_lines, sutta_name_part, translator_part, body_lines
@@ -149,7 +148,7 @@ def listline_list_to_line_list(lsline_list):
         for s in lsline:
             if isinstance(s, str):
                 line += s
-            elif isinstance(s, atom.TextWithNoteRef):
+            elif isinstance(s, base.TextWithNoteRef):
                 line += s.get_text()
             else:
                 raise TypeError("Something Wrong!")

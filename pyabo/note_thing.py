@@ -6,9 +6,9 @@ import bs4
 import requests.exceptions
 
 
-from pyccc import atom, page_parsing, parse_note
+from pyabo import base, page_parsing, base_note
 import dopdf
-from pyccc.parse_original_line import do_line
+from pyabo.parse_original_line import do_line
 
 LOCAL_NOTE_KEY_PREFIX = "x"
 
@@ -83,11 +83,11 @@ def do_subnote(ori_line, **kwargs):
                  str(first))
     if m:
         if m.group("subkey"):
-            line.append(parse_note.NoteSubKeyHead(m.group("subkey")))
+            line.append(base_note.NoteSubKeyHead(m.group("subkey")))
         if m.group("agama"):
-            line.append(parse_note.NoteKeywordAgamaHead(m.group("agama")))
+            line.append(base_note.NoteKeywordAgamaHead(m.group("agama")))
         if m.group("nikaya"):
-            line.append(parse_note.NoteKeywordNikayaHead(m.group("nikaya")))
+            line.append(base_note.NoteKeywordNikayaHead(m.group("nikaya")))
         if m.group("left"):
             ori_line.insert(0, m.group("left"))
     else:  # 此為「攝頌」...
@@ -101,7 +101,7 @@ def do_subnote(ori_line, **kwargs):
 
 def do_note_str(e, **_kwargs):
     if isinstance(e, (str, bs4.element.NavigableString)):
-        return True, parse_note.split_str(str(e).strip("\n"))
+        return True, base_note.split_str(str(e).strip("\n"))
     else:
         return False, None
 
@@ -115,7 +115,7 @@ def do_str(e, **_kwargs):
 
 def do_href(e, url_path, **_kwargs):
     if e.name == "a" and "href" in e.attrs.keys():
-        return True, [atom.Href(text=e.get_text(), href=e["href"], base_url_path=url_path, target=e["target"])]
+        return True, [base.Href(text=e.get_text(), href=e["href"], base_url_path=url_path, target=e["target"])]
     else:
         return False, e
 
@@ -138,7 +138,7 @@ def do_onmouseover_global(e, url_path, **_kwargs):
                                      "辞汇 \"{}\" 未找到全局注解编号 \"{}\"".format(e.get_text(), key))
                 return True, [e.get_text()]
 
-            return True, [atom.TextWithNoteRef(text=e.get_text(), key=sub_note_key, type_=page_parsing.GLOBAL)]
+            return True, [base.TextWithNoteRef(text=e.get_text(), key=sub_note_key, type_=page_parsing.GLOBAL)]
 
     # ccc bug
     elif e.name == "a" and "nmouseover" in e.attrs.keys():
@@ -160,7 +160,7 @@ def do_onmouseover_local(e, url_path, sutta_temp_notes, local_notes):
             else:
                 local_notes.add(note)
                 k = local_notes.index(note)
-                x = atom.TextWithNoteRef(text=e.get_text(), key=k, type_=page_parsing.LOCAL)
+                x = base.TextWithNoteRef(text=e.get_text(), key=k, type_=page_parsing.LOCAL)
             return True, [x]
     return False, e
 
@@ -202,10 +202,6 @@ def match_key(num, text, notes=None):
     raise NoteNotMatch((num, text))
 
 
-def get():
-    return _global_notes
-
-
 def note_to_texlabel(type_, key):
     if type_ == page_parsing.GLOBAL:
         return globalnote_to_texlabel(key[0], key[1])
@@ -219,4 +215,3 @@ def globalnote_to_texlabel(notekey, subnotekey):
 
 def localnote_to_texlabel(key):
     return LOCAL_NOTE_KEY_PREFIX + str(key)
-

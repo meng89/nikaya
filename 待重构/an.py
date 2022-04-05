@@ -1,12 +1,12 @@
 import re
 
 
-from pyccc.public import BaseInfo, PinInfo
-from pyccc.public import Nikaya, Node, Sutta
+from pyabo.public import BaseInfo, PinInfo
+from pyabo.public import Nikaya, Node, Sutta
 
 
-from pyccc.tools import get_sutta_urls, split_chinese_lines
-from pyccc.utils import read_page
+from pyabo.tools import get_sutta_urls, split_chinese_lines
+from pyabo.utils import read_page
 
 
 class _MyInfo(BaseInfo, PinInfo):

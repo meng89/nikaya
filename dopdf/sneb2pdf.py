@@ -7,9 +7,9 @@ import subprocess
 import re
 
 
-import pyccc
-from pyccc import atom_note, atom_suttaref, page_parsing, sn, book_public
+from pyabo import note_thing, base_suttaref, page_parsing, sn
 import dopdf
+
 
 main_filename = "sn.tex"
 suttas_filename = "suttas.tex"
@@ -29,13 +29,16 @@ def findfile(start, name):
 
 def write_fontstex(work_dir, fonts_dir):
     fonttex = open(os.path.join(dopdf.TEX_DIR, fonttex_filename), "r", encoding="utf-8").read()
-
-    for fontpath in re.findall("file:(.*(?:ttf|otf))", fonttex):
-        fontabspath = findfile(fonts_dir, os.path.basename(fontpath))
+    replace_map = {}
+    for fontname in re.findall("file:(.*(?:ttf|otf))", fonttex):
+        realfontpath = findfile(fonts_dir, os.path.basename(fontname))
         if os.name == "nt":
-            fontabspath = dopdf.ntrelpath(fontabspath, work_dir)
-        fonttex = fonttex.replace(fontpath, fontabspath.replace("\\", "/"))
-    fonttex = "{{" + fonttex + "}}"
+            realfontpath = dopdf.ntrelpath(realfontpath, work_dir)
+        replace_map[fontname] = realfontpath
+
+    for fontname, realfontpath in replace_map.items():
+        fonttex = fonttex.replace(fontname, realfontpath.replace("\\", "/"))
+
     with open(os.path.join(work_dir, fonttex_filename), "w", encoding="utf-8") as new_fonttex_file:
         new_fonttex_file.write(fonttex)
 
@@ -74,7 +77,7 @@ def write_suttas(latex_io: typing.TextIO, bns, c, test=False):
 
                 for sutta in pin.suttas:
                     def _cccurl():
-                        _SR = atom_suttaref.SuttaRef("SN" + "." + xiangying.serial + "." + sutta.begin)
+                        _SR = base_suttaref.SuttaRef("SN" + "." + xiangying.serial + "." + sutta.begin)
                         return _SR.get_cccurl()
 
                     latex_io.write("\\sutta" +
@@ -103,7 +106,7 @@ def write_localnotes(latex_io: typing.TextIO, notes, bns, c, test):
     for subnote in notes:
         latex_io.write("\\startitemgroup[noteitems]\n")
         latex_io.write("\\item" +
-                       "\\subnoteref{" + atom_note.localnote_to_texlabel(notes.index(subnote)) + "}" +
+                       "\\subnoteref{" + note_thing.localnote_to_texlabel(notes.index(subnote)) + "}" +
                        dopdf.join_to_tex(subnote, bns, c) + "\n")
         latex_io.write("\\stopitemgroup\n\n")
         count += 1
@@ -113,12 +116,12 @@ def write_localnotes(latex_io: typing.TextIO, notes, bns, c, test):
 
 def write_globalnotes(latex_io: typing.TextIO, bns, c, test):
     count = 0
-    notes = atom_note.get()
+    notes = note_thing.get()
     for notekey, note in notes.items():
         latex_io.write("\\startitemgroup[noteitems]\n")
         for index in range(len(note)):
             latex_io.write("\\item" +
-                           "\\subnoteref{" + atom_note.globalnote_to_texlabel(notekey, index) + "}" +
+                           "\\subnoteref{" + note_thing.globalnote_to_texlabel(notekey, index) + "}" +
                            dopdf.join_to_tex(note[index], bns, c) + "\n")
         latex_io.write("\\stopitemgroup\n\n")
         count += 1

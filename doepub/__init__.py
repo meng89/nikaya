@@ -1,12 +1,14 @@
 import uuid
 
+
 import epubpacker
 import xl
 
-import posixpath
-from urllib.parse import urlsplit, urlunsplit
 
-from pyccc import page_parsing
+import posixpath
+from urllib.parse import urlsplit
+
+from pyabo import page_parsing
 
 from . import css
 
@@ -54,10 +56,6 @@ def noteid(type_, key):
 
 def get_uuid(s):
     return uuid.uuid5(uuid.NAMESPACE_URL, "https://github.com/meng89/nikaya" + " " + s)
-
-
-def attch_cssjs(epub):
-    pass
 
 
 def _make_css_link(head, href):

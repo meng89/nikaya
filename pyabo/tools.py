@@ -2,7 +2,7 @@ from urllib.parse import urlparse, urljoin
 
 import re
 
-from pyccc import page_parsing
+from pyabo import page_parsing
 
 
 def get_sutta_urls(nikaya_url):

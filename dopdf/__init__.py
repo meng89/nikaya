@@ -1,10 +1,9 @@
 import os
 import ntpath
-from urllib.parse import urlsplit
 
 
-import pyccc
-from pyccc import atom_suttaref, page_parsing
+import pyabo
+from pyabo import base_suttaref, page_parsing
 from doepub import basestr
 
 
@@ -43,7 +42,7 @@ def _new_line(line):
     new_line = []
     for x in line:
         if isinstance(x, str):
-            new_line.extend(atom_suttaref.parse(x))
+            new_line.extend(base_suttaref.parse(x))
         else:
             new_line.append(x)
 
@@ -56,7 +55,7 @@ def join_to_tex(line: list, bns: list[str], c):
     for x in new_line:
         if isinstance(x, str):
             s += c(x)
-        elif isinstance(x, pyccc.BaseElement):
+        elif isinstance(x, pyabo.BaseElement):
             s += x.to_tex(bns=bns, c=c)
         else:
             raise Exception((type(x), x))
@@ -68,7 +67,7 @@ def join_to_xml(line: list, bns, c, doc_path):
     for x in _new_line(line):
         if isinstance(x, str):
             elements.extend(basestr.str2es(c(x)))
-        elif isinstance(x, pyccc.BaseElement):
+        elif isinstance(x, pyabo.BaseElement):
             elements.extend(x.to_es(bns=bns, c=c, doc_path=doc_path))
     return elements
 
@@ -79,7 +78,7 @@ def join_to_text(line: list, c=None):
     for x in line:
         if isinstance(x, str):
             s += x
-        elif isinstance(x, pyccc.BaseElement):
+        elif isinstance(x, pyabo.BaseElement):
             s += x.get_text()
         else:
             raise Exception(type(x))

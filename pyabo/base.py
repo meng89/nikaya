@@ -3,14 +3,14 @@ from urllib.parse import urljoin
 import xl
 
 
-import pyccc
-from pyccc import atom_note
+import pyabo
+from pyabo import note_thing
 import dopdf
 import doepub
 import doepub.basestr
 
 
-class Href(pyccc.BaseElement):
+class Href(pyabo.BaseElement):
     def __init__(self, text, href, base_url_path, target):
         self.text = text
         self.href = href
@@ -28,7 +28,7 @@ class Href(pyccc.BaseElement):
                 f'target={self.target!r})')
 
     def _url(self):
-        return urljoin(pyccc.CCC_WEBSITE, urljoin(self.base_url_path, self.href))
+        return urljoin(pyabo.ABO_WEBSITE, urljoin(self.base_url_path, self.href))
 
     def to_tex(self, c, **kwargs):
         return "\\ccchref{" + c(self.text) + "}{" + dopdf.el_url(self._url()) + "}"
@@ -37,7 +37,7 @@ class Href(pyccc.BaseElement):
         return [xl.Element("a", {"href": self._url()}, doepub.basestr.str2es(c(self.text)))]
 
 
-class TextWithNoteRef(pyccc.BaseElement):
+class TextWithNoteRef(pyabo.BaseElement):
     """<a onmouseover="note(this,1);">像這樣被我聽聞</a>"""
 
     def __init__(self, text, type_, key):
@@ -54,7 +54,7 @@ class TextWithNoteRef(pyccc.BaseElement):
     def to_tex(self, c, **kwargs):
         return "\\twnr" +\
                "{" + c(self.get_text()) + "}" + \
-               "{" + atom_note.note_to_texlabel(self.type_, self.key) + "}"
+               "{" + note_thing.note_to_texlabel(self.type_, self.key) + "}"
 
     def to_es(self, c, doc_path, **kwargs):
         href = doepub.note_href_calculate(self.type_, self.key)

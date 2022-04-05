@@ -2,8 +2,8 @@ import re
 
 import xl
 
-import pyccc
-from pyccc import atom, book_public
+import pyabo
+from pyabo import base, book_public
 
 import doepub
 import doepub.basestr
@@ -49,7 +49,7 @@ def split_suttaname(text):
     assert m
 
 
-class SuttaRef(pyccc.BaseElement):
+class SuttaRef(pyabo.BaseElement):
     def __init__(self, text):
         self.text = text
         self._pattern, self._bn, self._sec_num = split_suttaname(text)
@@ -59,19 +59,19 @@ class SuttaRef(pyccc.BaseElement):
 
     def get_cccurl(self):
         if self._pattern in [P_SA, P_MA, P_MN, P_DA, P_DN, P_UD, P_IT, P_NI, P_AA]:
-            return "{}/{}/dm.php?keyword={}".format(pyccc.CCC_WEBSITE, self._bn, self._sec_num)
+            return "{}/{}/dm.php?keyword={}".format(pyabo.ABO_WEBSITE, self._bn, self._sec_num)
         elif self._pattern in (P_SN, P_AN):
-            return "{}/{}/{}.php?keyword={}".format(pyccc.CCC_WEBSITE, self._bn, self._bn.lower(), self._sec_num)
+            return "{}/{}/{}.php?keyword={}".format(pyabo.ABO_WEBSITE, self._bn, self._bn.lower(), self._sec_num)
         elif self._pattern in (P_MI, P_NI, P_PS):
-            return "{}/{}/{}{}.htm".format(pyccc.CCC_WEBSITE, self._bn, self._bn, self._sec_num)
+            return "{}/{}/{}{}.htm".format(pyabo.ABO_WEBSITE, self._bn, self._bn, self._sec_num)
 
     def to_tex(self, bns: list[str], **kwargs):
         if self._bn in bns:
             return "\\suttaref{" + self.get_text() + "}"
         else:
-            return pyccc.atom.Href(self.get_text(),
+            return pyabo.base.Href(self.get_text(),
                                    self.get_cccurl(),
-                                   pyccc.CCC_WEBSITE, "").to_tex(book_public.do_nothing)
+                                   pyabo.ABO_WEBSITE, "").to_tex(book_public.do_nothing)
 
     def to_es(self, bns, doc_path, **kwargs):
         if self._bn in bns:

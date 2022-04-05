@@ -1,6 +1,6 @@
 import re
 
-import pyccc
+import pyabo
 import dopdf
 
 import doepub.basestr
@@ -13,7 +13,7 @@ P3 = r"(菩提比丘長老英譯為)(「.+?」)"
 PATTERNS = (P1, P2, P3)
 
 
-class NoteTagBase(pyccc.BaseElement):
+class NoteTagBase(pyabo.BaseElement):
 
     def __init__(self, text):
         self.text = text
@@ -102,6 +102,6 @@ def split_notekeyword(s):
     raise Exception
 
 
-_s = """(1)「方便」，南傳作(i)「努力」(yoga)，菩提比丘長老英譯為「努力；盡力；致力」(an exertion)。""" \
+_s2 = """(1)「方便」，南傳作(i)「努力」(yoga)，菩提比丘長老英譯為「努力；盡力；致力」(an exertion)。""" \
      """"(ii)「精進」(vāyāmo)，菩提比丘長老英譯為「努力於」(make an effort in)。""" \
      """(iii)「法門；方法」(pariyāyaṃ)，菩提比丘長老英譯為「方法」(a method, SN.35.153)。"""

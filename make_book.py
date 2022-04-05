@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
 import os
-import time
 import tempfile
 
-import pyccc.book_public
 
-from pyccc import sn, atom_note, run_ccc
+import pyabo.book_public
+
+from pyabo import sn, note_thing, run_abo
 
 import dopdf.sneb2pdf
-import doepub.sn2epub2
 import doepub.sn2epub
 
 
@@ -19,13 +18,13 @@ except ImportError:
 
 
 def main():
-    run_ccc.make_sure_is_runing()
-    domain = run_ccc.get_domain()
+    run_abo.make_sure_is_runing()
+    domain = run_abo.get_domain()
 
-    atom_note.load_global(domain, uc.CACHE_DIR)
-    pyccc.sn.load(domain, uc.CACHE_DIR)
+    note_thing.load_global(domain, uc.CACHE_DIR)
+    pyabo.sn.load(domain, uc.CACHE_DIR)
 
-    temprootdir_td = tempfile.TemporaryDirectory(prefix="pyccc_")
+    temprootdir_td = tempfile.TemporaryDirectory(prefix="pyabo_")
 
     def print_temprootdir():
         print("temprootdir: {}".format(temprootdir_td.name))
@@ -35,10 +34,10 @@ def main():
     os.makedirs(books_dir, exist_ok=True)
 
     print_temprootdir()
-    doepub.sn2epub.make(pyccc.book_public.TC(), temprootdir_td.name, books_dir, uc.EPUBCHECK)
-    doepub.sn2epub.make(pyccc.book_public.SC(), temprootdir_td.name, books_dir, uc.EPUBCHECK)
-    dopdf.sneb2pdf.make(pyccc.book_public.TC(), temprootdir_td.name, uc.CONTEXT_BIN_PATH, uc.FONTS_DIR, books_dir)
-    dopdf.sneb2pdf.make(pyccc.book_public.SC(), temprootdir_td.name, uc.CONTEXT_BIN_PATH, uc.FONTS_DIR, books_dir)
+    doepub.sn2epub.make(pyabo.book_public.TC(), temprootdir_td.name, books_dir, uc.EPUBCHECK)
+    doepub.sn2epub.make(pyabo.book_public.SC(), temprootdir_td.name, books_dir, uc.EPUBCHECK)
+    dopdf.sneb2pdf.make(pyabo.book_public.TC(), temprootdir_td.name, uc.CONTEXT_BIN_PATH, uc.FONTS_DIR, books_dir)
+    dopdf.sneb2pdf.make(pyabo.book_public.SC(), temprootdir_td.name, uc.CONTEXT_BIN_PATH, uc.FONTS_DIR, books_dir)
 
     print_temprootdir()
     while input("input e and press enter to exit:").rstrip() != "e":

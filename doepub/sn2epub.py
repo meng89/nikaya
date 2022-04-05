@@ -8,7 +8,7 @@ from boltons.setutils import IndexedSet
 import xl
 import epubpacker
 
-from pyccc import sn, book_public, page_parsing, atom_suttaref, atom_note
+from pyabo import sn, book_public, page_parsing, base_suttaref, note_thing
 import dopdf
 import doepub
 from . import fanli, homage, notice
@@ -32,7 +32,7 @@ def write_suttas(epub: epubpacker.Epub, bns, xc, _test=False):
         for index in range(len(pian.xiangyings)):
             xiangying = pian.xiangyings[index]
             xy_id = "sn"
-            doc_path = atom_suttaref.docpath_calculate("SN.{}.1".format(xiangying.serial))
+            doc_path = base_suttaref.docpath_calculate("SN.{}.1".format(xiangying.serial))
             # html, head, body = _make_sutta_doc(xc, doc_path)
 
             _xy_title = c(xiangying.serial + ". " + xiangying.title)
@@ -73,7 +73,7 @@ def write_suttas(epub: epubpacker.Epub, bns, xc, _test=False):
 
                     h4 = xl.sub(body, "h4", {"id": "{}".format(sutta_id)})
                     _a = xl.sub(h4, "a", {"class": "title",
-                                          "href": "{}".format(atom_suttaref.SuttaRef(sutta_id).get_cccurl())})
+                                          "href": "{}".format(base_suttaref.SuttaRef(sutta_id).get_cccurl())})
                     xl.sub(_a, "span", {"class": "sutta_id"}, [sutta_id])
                     xl.sub(_a, "span", {"class": "space_in_sutta_title"}, [" "])
                     xl.sub(_a, "span", {"class": "xy_name_in_sutta_title"}, [c(xiangying.title)])
@@ -129,7 +129,7 @@ def write_localnotes(epub: epubpacker.Epub, notes: IndexedSet, bns, xc):
 
 
 def write_globalnotes(epub: epubpacker.Epub, bns, xc):
-    notes = atom_note.get()
+    notes = note_thing.get()
     docs = {}
     for key, note in notes.items():
         _doc_path = doepub.note_docname_calculate(page_parsing.GLOBAL, (key, "_x"))

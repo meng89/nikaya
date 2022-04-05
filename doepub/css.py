@@ -1,4 +1,4 @@
-from pyccc.book_public import TC, SC
+from pyabo.book_public import TC, SC
 
 
 public = """
