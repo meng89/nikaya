@@ -1,4 +1,7 @@
 import os
+import ntpath
+from urllib.parse import urlsplit
+
 
 import pyccc
 from pyccc import atom_suttaref, page_parsing
@@ -81,3 +84,11 @@ def join_to_text(line: list, c=None):
         else:
             raise Exception(type(x))
     return c(s)
+
+
+def ntrelpath(path1, path2):
+    try:
+        path = ntpath.relpath(path1, ntpath.dirname(path2))
+    except ValueError:
+        path = path1
+    return path
