@@ -35,8 +35,8 @@ def main():
     os.makedirs(books_dir, exist_ok=True)
 
     print_temprootdir()
-    #doepub.sn2epub.make(pyccc.book_public.TC(), temprootdir_td.name, books_dir, uc.EPUBCHECK)
-    #doepub.sn2epub.make(pyccc.book_public.SC(), temprootdir_td.name, books_dir, uc.EPUBCHECK)
+    doepub.sn2epub.make(pyccc.book_public.TC(), temprootdir_td.name, books_dir, uc.EPUBCHECK)
+    doepub.sn2epub.make(pyccc.book_public.SC(), temprootdir_td.name, books_dir, uc.EPUBCHECK)
     dopdf.sneb2pdf.make(pyccc.book_public.TC(), temprootdir_td.name, uc.CONTEXT_BIN_PATH, uc.FONTS_DIR, books_dir)
     dopdf.sneb2pdf.make(pyccc.book_public.SC(), temprootdir_td.name, uc.CONTEXT_BIN_PATH, uc.FONTS_DIR, books_dir)
 

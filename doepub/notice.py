@@ -13,7 +13,7 @@ _my_mail = "me@chenmeng.org"
 
 _lines = (
     ("此佛经来源于", xl.Element("a", {"href": "https://agama.buddhason.org"}, ["莊春江工作站"]),
-     "，一切相关权利归于译者。当前是2022年3月份，译者仍在订正经文中。联系译者请前往译者网站留言。"),
+     "，一切相关权利归于译者。当前是2022年4月份，译者仍在订正经文中。联系译者请前往译者网站留言。"),
     ("电子书制作工具也在开发调整当中，请至制作程序项目主页阅读说明以获取制作好的电子书：",
      xl.Element("a", {"href": "{}".format(_project_link)}, [_project_link])),
     ("如果打不开上面的链接，请尝试这个云盘链接：", xl.Element("a", {"href": "{}".format(_yunpan_link)}, [_yunpan_link])),
