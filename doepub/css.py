@@ -6,7 +6,8 @@ body.sutta p{
     margin: 0.3em;
 }
 
-body.sutta a{
+body.sutta a,
+body.homage a{
     color: inherit;
 }
 

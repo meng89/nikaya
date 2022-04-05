@@ -3,7 +3,6 @@ import epubpacker
 from pyccc import book_public
 import dopdf
 import doepub
-from . import css
 
 
 def write_homage(epub: epubpacker.Epub, xc: book_public.XC, line):
