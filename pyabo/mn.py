@@ -1,12 +1,19 @@
 import re
+import pickle
+import os
 
 
 from pyabo.public import Nikaya, Node, Sutta
 from pyabo.public import BaseInfo, PinInfo
 
 
-from pyabo.tools import get_sutta_urls, split_chinese_lines
-from pyabo.utils import read_page
+from pyabo.tools import get_sutta_urls
+
+from pyabo import page_parsing
+
+
+HTML_INDEX = '/SN/index.htm'
+BN = "SN"
 
 
 class _MyNikaya(Nikaya):
@@ -27,7 +34,7 @@ class _MyInfo(BaseInfo, PinInfo):
         PinInfo.__init__(self)
 
 
-def analyse_header(lines):  # public
+def analyse_head(lines):  # public
     """
     :param lines:
      :type lines: list
@@ -59,12 +66,16 @@ def make_nikaya(sutra_urls):
     nikaya.abbreviation = 'MN'
 
     for url in sutra_urls:
+        homage_listline, head_line_list, sutta_name_part, translator_part, lines, \
+            pali_text, last_modified = page_parsing.read_page(url, nikaya.local_notes)
 
-        chinese, pali, modified = read_page(url)
+        if nikaya.last_modified is None:
+            nikaya.last_modified = last_modified
+        elif nikaya.last_modified < last_modified:
+            nikaya.last_modified = last_modified
 
-        header_lines, main_lines = split_chinese_lines(chinese)
-
-        info = analyse_header(header_lines)
+        head_info = analyse_head(head_line_list)
+        sutta_info = analyse_sutta_info(sutta_name_part)
 
         if info.pin_serial is not None:
             if not nikaya.pins or nikaya.pins[-1].serial != info.pin_serial:
@@ -114,3 +125,31 @@ def get_nikaya(url):
     nikaya = add_sec_title_range(nikaya)
 
     return nikaya
+
+
+_nikaya = _MyNikaya()
+_is_loaded = False
+
+
+def load(domain, cache_dir):
+    global _nikaya
+    data_path = os.path.join(cache_dir, "mn")
+    try:
+        with open(data_path, "rb") as rf:
+            _nikaya = pickle.load(rf)
+    except (FileNotFoundError, ModuleNotFoundError):
+        sutra_urls = get_sutta_urls(domain + HTML_INDEX)
+        _nikaya = make_nikaya(sutra_urls)
+        # _nikaya = add_sec_title_range(nikaya)
+        with open(data_path, "wb") as wf:
+            pickle.dump(_nikaya, wf)
+
+    global _is_loaded
+    _is_loaded = True
+
+
+def get():
+    if _is_loaded:
+        return _nikaya
+    else:
+        raise Exception
