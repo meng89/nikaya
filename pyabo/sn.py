@@ -1,9 +1,8 @@
-import os
 import re
-import pickle
 
 from pyabo.public import BaseInfo, PianInfo, PinInfo
 from pyabo.public import Nikaya, Node, Sutta
+
 
 from pyabo.tools import get_sutta_urls
 
@@ -31,7 +30,7 @@ class _MyInfo(BaseInfo, PianInfo, PinInfo):
         s += 'pian     : "{}", "{}"\n'.format(self.pian_serial, self.pian_title)
         s += 'xiangying: "{}", "{}"\n'.format(self.xiangying_serial, self.xiangying_title)
         s += 'pin      : "{}", "{}"\n'.format(self.pin_serial, self.pin_title)
-        s += 'sutra    : "{}", "{}"'.format(self.sutta_begin, self.sutra_title)
+        s += 'sutra    : "{}", "{}"'.format(self.sutta_begin, self.sutta_title)
         return s
 
 
@@ -115,7 +114,7 @@ def analyse_sutta_info(line):
         else:
             info.sutta_begin = serial[0]
             info.sutta_end = serial[1]
-        info.sutra_title = m.group(3)
+        info.sutta_title = m.group(3)
         return info
 
     m = re.match(r"^相應部\d+相應 ?(\d+)-(\d+)經$", line)
@@ -127,22 +126,13 @@ def analyse_sutta_info(line):
     raise Exception(repr(line))
 
 
-def add_sec_title_range(nikaya):
-    for pian in nikaya.pians:
-        pian.sec_title = '{} ({}-{})'.format(pian.title, pian.xiangyings[0].serial, pian.xiangyings[-1].serial)
+def make_nikaya(domain):
+    sutta_urls = get_sutta_urls(domain + HTML_INDEX)
 
-        for xiangying in pian.xiangyings:
-            for pin in xiangying.pins:
-                pin.sec_title = '{} ({}-{})'.format(pin.title, pin.suttas[0].begin, pin.suttas[-1].end)
-
-    return nikaya
-
-
-def make_nikaya(sutta_urls):
     nikaya = MyNikaya()
-    nikaya.title_st = '相應部'
+    nikaya.title_zh = '相應部'
     nikaya.title_pali = 'Saṃyutta Nikāya'
-    nikaya.abbreviation = 'SN'
+    nikaya.abbr = 'SN'
     for url in sutta_urls:
         homage_listline, head_line_list, sutta_name_part, translator_part, lines, \
             pali_text, last_modified = page_parsing.read_page(url, nikaya.local_notes)
@@ -152,8 +142,8 @@ def make_nikaya(sutta_urls):
         elif nikaya.last_modified < last_modified:
             nikaya.last_modified = last_modified
 
-        if nikaya.homage_listline is None:
-            nikaya.homage_listline = homage_listline
+        if nikaya.homage_line is None:
+            nikaya.homage_line = homage_listline
 
         head_info = analyse_head(head_line_list)
         sutta_info = analyse_sutta_info(sutta_name_part)
@@ -207,8 +197,8 @@ def make_nikaya(sutta_urls):
         else:
             sutta.serial = '{}-{}'.format(sutta.begin, sutta.end)
 
-        if sutta_info.sutra_title:
-            sutta.title = sutta_info.sutra_title
+        if sutta_info.sutta_title:
+            sutta.title = sutta_info.sutta_title
         else:
             sutta.title = ''
 
@@ -217,33 +207,9 @@ def make_nikaya(sutta_urls):
         else:
             sutta.sec_title = sutta.serial
 
-        sutta.abbreviation = '{}.{}.{}'.format(nikaya.abbreviation,
+        sutta.abbreviation = '{}.{}.{}'.format(nikaya.abbr,
                                                nikaya.pians[-1].xiangyings[-1].serial,
                                                sutta.serial)
 
         nikaya.pians[-1].xiangyings[-1].pins[-1].suttas.append(sutta)
     return nikaya
-
-
-def load(domain, cache_dir):
-    global _nikaya
-    data_path = os.path.join(cache_dir, "sn")
-    try:
-        with open(data_path, "rb") as rf:
-            _nikaya = pickle.load(rf)
-    except (FileNotFoundError, ModuleNotFoundError):
-        sutra_urls = get_sutta_urls(domain + HTML_INDEX)
-        _nikaya = make_nikaya(sutra_urls)
-        # _nikaya = add_sec_title_range(nikaya)
-        with open(data_path, "wb") as wf:
-            pickle.dump(_nikaya, wf)
-
-    global _is_loaded
-    _is_loaded = True
-
-
-def get():
-    if _is_loaded:
-        return _nikaya
-    else:
-        raise Exception

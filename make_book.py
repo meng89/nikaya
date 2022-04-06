@@ -5,7 +5,7 @@ import tempfile
 
 import pyabo.book_public
 
-from pyabo import sn, note_thing, run_abo
+from pyabo import nikayas, sn, note_thing, run_abo
 
 import dopdf.sneb2pdf
 import doepub.sn2epub
@@ -22,7 +22,9 @@ def main():
     domain = run_abo.get_domain()
 
     note_thing.load_global(domain, uc.CACHE_DIR)
-    pyabo.sn.load(domain, uc.CACHE_DIR)
+
+    nikayas.load("sn", domain, uc.CACHE_DIR)
+    nikayas.load("mn", domain, uc.CACHE_DIR)
 
     temprootdir_td = tempfile.TemporaryDirectory(prefix="pyabo_")
 
@@ -34,10 +36,10 @@ def main():
     os.makedirs(books_dir, exist_ok=True)
 
     print_temprootdir()
-    doepub.sn2epub.make(pyabo.book_public.TC(), temprootdir_td.name, books_dir, uc.EPUBCHECK)
-    doepub.sn2epub.make(pyabo.book_public.SC(), temprootdir_td.name, books_dir, uc.EPUBCHECK)
-    dopdf.sneb2pdf.make(pyabo.book_public.TC(), temprootdir_td.name, uc.CONTEXT_BIN_PATH, uc.FONTS_DIR, books_dir)
-    dopdf.sneb2pdf.make(pyabo.book_public.SC(), temprootdir_td.name, uc.CONTEXT_BIN_PATH, uc.FONTS_DIR, books_dir)
+    #doepub.sn2epub.create(pyabo.book_public.TC(), temprootdir_td.name, books_dir, uc.EPUBCHECK)
+    #doepub.sn2epub.create(pyabo.book_public.SC(), temprootdir_td.name, books_dir, uc.EPUBCHECK)
+    #dopdf.sneb2pdf.create(pyabo.book_public.TC(), temprootdir_td.name, books_dir, uc.CONTEXT_BIN_PATH, uc.FONTS_DIR)
+    #dopdf.sneb2pdf.create(pyabo.book_public.SC(), temprootdir_td.name, books_dir, uc.CONTEXT_BIN_PATH, uc.FONTS_DIR)
 
     print_temprootdir()
     while input("input e and press enter to exit:").rstrip() != "e":

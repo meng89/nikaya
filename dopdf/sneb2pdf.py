@@ -7,7 +7,7 @@ import subprocess
 import re
 
 
-from pyabo import note_thing, base_suttaref, page_parsing, sn
+from pyabo import nikayas, note_thing, base_suttaref, page_parsing, sn
 import dopdf
 
 
@@ -43,9 +43,8 @@ def write_fontstex(work_dir, fonts_dir):
         new_fonttex_file.write(fonttex)
 
 
-def write_main(main_file: typing.TextIO, bns, c):
-    nikaya = sn.get()
-    homage = dopdf.join_to_tex(nikaya.homage_listline, bns, c)
+def write_main(nikaya, main_file: typing.TextIO, bns, c):
+    homage = dopdf.join_to_tex(nikaya.homage_line, bns, c)
     _head_t = open(os.path.join(dopdf.TEX_DIR, "sn.tex"), "r", encoding='utf-8').read()
     strdate = page_parsing.lm_to_strdate(nikaya.last_modified)
     _head = Template(_head_t).substitute(date=strdate, suttas=suttas_filename,
@@ -54,8 +53,7 @@ def write_main(main_file: typing.TextIO, bns, c):
     main_file.write(_head)
 
 
-def write_suttas(latex_io: typing.TextIO, bns, c, test=False):
-    nikaya = sn.get()
+def write_suttas(nikaya, latex_io: typing.TextIO, bns, c, test=False):
 
     for pian in nikaya.pians:
         latex_io.write("\\pian" +
@@ -158,13 +156,13 @@ def make_keys():
     pass
 
 
-def make(xc, temprootdir, context_bin_path, fonts_dir, bookdir, test=False):
+def make(xc, temprootdir, bookdir, context_bin_path, fonts_dir, test=False):
     bns = [sn.BN]
 
     mytemprootdir = os.path.join(temprootdir, "sn_pdf_" + xc.enlang)
 
     if True:
-        nikaya = sn.get()
+        nikaya = nikayas.get("sn")
         sources_dir = os.path.join(mytemprootdir, "work")
         os.makedirs(sources_dir, exist_ok=True)
         out_dir = os.path.join(mytemprootdir, "out")
@@ -173,10 +171,10 @@ def make(xc, temprootdir, context_bin_path, fonts_dir, bookdir, test=False):
         write_fontstex(sources_dir, fonts_dir)
 
         with open(sources_dir + "/" + main_filename, "w", encoding="utf-8") as f:
-            write_main(f, bns, xc.c)
+            write_main(nikaya, f, bns, xc.c)
 
         with open(sources_dir + "/" + suttas_filename, "w", encoding="utf-8") as f:
-            write_suttas(f, bns, xc.c, test)
+            write_suttas(nikaya, f, bns, xc.c, test)
 
         with open(sources_dir + "/" + localnotes_filename, "w", encoding="utf-8") as f:
             write_localnotes(f, nikaya.local_notes, bns, xc.c, test)

@@ -8,16 +8,15 @@ from boltons.setutils import IndexedSet
 import xl
 import epubpacker
 
-from pyabo import sn, book_public, page_parsing, base_suttaref, note_thing
+from pyabo import nikayas, sn, book_public, page_parsing, base_suttaref, note_thing
 import dopdf
 import doepub
 from . import fanli, homage, notice
 from .css import public, public_path, font_path, font_css
 
 
-def write_suttas(epub: epubpacker.Epub, bns, xc, _test=False):
+def write_suttas(nikaya, epub: epubpacker.Epub, bns, xc, _test=False):
     c = xc.c
-    nikaya = sn.get()
     for pian in nikaya.pians:
 
         def _write_pian_part(_body):
@@ -187,14 +186,14 @@ def make(xc: book_public.XC, temprootdir, books_dir, epubcheck):
     mytemprootdir = os.path.join(temprootdir, "sn_epub_" + xc.enlang)
     os.makedirs(mytemprootdir, exist_ok=True)
 
-    sn_data = sn.get()
+    nikaya = nikayas.get("sn")
 
     epub = epubpacker.Epub()
     doepub.write_epub_cssjs(epub)
 
     epub.meta.titles = [xc.c("相應部")]
     epub.meta.creators = ["莊春江({})".format(xc.c("譯"))]
-    epub.meta.date = sn_data.last_modified.strftime("%Y-%m-%dT%H:%M:%SZ")
+    epub.meta.date = nikaya.last_modified.strftime("%Y-%m-%dT%H:%M:%SZ")
     epub.meta.languages = [xc.xmlang, "pi", "en-US"]
 
     my_uuid = doepub.get_uuid(xc.c("相應部") + xc.enlang)
@@ -208,10 +207,10 @@ def make(xc: book_public.XC, temprootdir, books_dir, epubcheck):
     epub.userfiles[font_path[xc.enlang]] = font_css[xc.enlang]
 
     fanli.write_fanli(epub, xc)
-    homage.write_homage(epub, xc, sn_data.homage_listline)
+    homage.write_homage(epub, xc, nikaya.homage_line)
 
-    write_suttas(epub, bns, xc)
-    first_note_doc_path = write_localnotes(epub, sn_data.local_notes, bns, xc)
+    write_suttas(nikaya, epub, bns, xc)
+    first_note_doc_path = write_localnotes(epub, nikaya.local_notes, bns, xc)
     write_globalnotes(epub, bns, xc)
     epub.root_toc.append(epubpacker.Toc(xc.c("註解"), first_note_doc_path))
 
@@ -227,5 +226,5 @@ def make(xc: book_public.XC, temprootdir, books_dir, epubcheck):
                 os.path.join(books_dir, "{}_{}_{}{}_{}.epub".format(xc.c("相應部"),
                                                                     xc.zhlang,
                                                                     "莊",
-                                                                    sn_data.last_modified.strftime("%y%m"),
+                                                                    nikaya.last_modified.strftime("%y%m"),
                                                                     datetime.datetime.now().strftime("%Y%m%d"))))

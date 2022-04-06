@@ -43,7 +43,7 @@ def analyse_header(lines):  # public
         info.sutta_begin = m.group(1)
         info.sutta_end = m.group(1)
 
-        info.sutra_title = m.group(2)
+        info.sutta_title = m.group(2)
 
         info.pin_title = m.group(3)
 
@@ -53,9 +53,9 @@ def analyse_header(lines):  # public
 def make_nikaya(sutra_urls):
 
     nikaya = _MyNikaya()
-    nikaya.title_st = '長部'
+    nikaya.title_zh = '長部'
     nikaya.title_pali = 'Digha Nikāya',
-    nikaya.abbreviation = 'DN'
+    nikaya.abbr = 'DN'
 
     for url in sutra_urls:
 
@@ -88,11 +88,11 @@ def make_nikaya(sutra_urls):
 
         sutra.serial = sutra.begin
 
-        sutra.title = info.sutra_title
+        sutra.title = info.sutta_title
 
         sutra.sec_title = sutra.serial + ' ' + sutra.title
 
-        sutra.abbreviation = '{}.{}'.format(nikaya.abbreviation, sutra.serial)
+        sutra.abbreviation = '{}.{}'.format(nikaya.abbr, sutra.serial)
 
         nikaya.pins[-1].suttas.append(sutra)
 

@@ -21,7 +21,7 @@ class _MyInfo(BaseInfo, PinInfo):
         s = ''
         s += 'ji   : "{}", "{}"\n'.format(self.ji_serial, self.ji_title)
         s += 'pin  : "{}", "{}"\n'.format(self.pin_serial, self.pin_title)
-        s += 'sutra: "{}", "{}"'.format(self.sutta_begin, self.sutra_title)
+        s += 'sutra: "{}", "{}"'.format(self.sutta_begin, self.sutta_title)
         return s
 
 
@@ -78,7 +78,7 @@ def analyse_header(lines):  # public
             info.sutta_begin = serial[0]
             info.sutta_end = serial[1]
 
-        info.sutra_title = m.group(3)
+        info.sutta_title = m.group(3)
 
     return info
 
@@ -96,9 +96,9 @@ def add_sec_title_range(nikaya):
 def make_nikaya(sutra_urls):
 
     nikaya = MyNikaya()
-    nikaya.title_st = '增支部'
+    nikaya.title_zh = '增支部'
     nikaya.title_pali = 'Aṅguttara nikāya',
-    nikaya.abbreviation = 'AN'
+    nikaya.abbr = 'AN'
 
     for url in sutra_urls:
 
@@ -140,8 +140,8 @@ def make_nikaya(sutra_urls):
         else:
             sutra.serial = '{}-{}'.format(sutra.begin, sutra.end)
 
-        if info.sutra_title:
-            sutra.title = info.sutra_title
+        if info.sutta_title:
+            sutra.title = info.sutta_title
         else:
             sutra.title = ''
 
@@ -150,7 +150,7 @@ def make_nikaya(sutra_urls):
         else:
             sutra.sec_title = sutra.serial
 
-        sutra.abbreviation = '{}.{}.{}'.format(nikaya.abbreviation,
+        sutra.abbreviation = '{}.{}.{}'.format(nikaya.abbr,
                                                nikaya.jis[-1].serial,
                                                sutra.serial)
 

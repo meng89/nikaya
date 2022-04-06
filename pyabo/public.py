@@ -4,12 +4,11 @@ from boltons.setutils import IndexedSet
 class Nikaya(object):
     def __init__(self):
         self.languages = ['zh-tw', 'pali']
-        self.title_st = None
+        self.title_zh = None
         self.title_pali = None
+        self.abbr = None
 
-        self.abbreviation = None
-
-        self.homage_listline = None
+        self.homage_line = None
         self.last_modified = None
         self.local_notes = IndexedSet()
         self.subs = []
@@ -34,7 +33,6 @@ class Sutta(object):
         self.begin = None
         self.end = None
 
-        # self.chinese = None
         self.body_lines = None
         self.pali = None
 
@@ -47,10 +45,11 @@ class Sutta(object):
 
 class BaseInfo(object):
     def __init__(self):
-        self.sutta_begin = None
-        self.sutta_end = None
-        self.sutra_title = None
+        self.sutta_begin = None  # for SN
+        self.sutta_end = None  # for SN
+        self.sutta_title = None
 
+        self.sutta_serial = None  # for MN
         self.modified = None
 
 

@@ -103,5 +103,5 @@ def split_notekeyword(s):
 
 
 _s2 = """(1)「方便」，南傳作(i)「努力」(yoga)，菩提比丘長老英譯為「努力；盡力；致力」(an exertion)。""" \
-     """"(ii)「精進」(vāyāmo)，菩提比丘長老英譯為「努力於」(make an effort in)。""" \
+     """"(ii)「精進」(vāyāmo)，菩提比丘長老英譯為「努力於」(create an effort in)。""" \
      """(iii)「法門；方法」(pariyāyaṃ)，菩提比丘長老英譯為「方法」(a method, SN.35.153)。"""

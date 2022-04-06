@@ -140,6 +140,12 @@ def do_onmouseover_global(e, url_path, **_kwargs):
 
             return True, [base.TextWithNoteRef(text=e.get_text(), key=sub_note_key, type_=page_parsing.GLOBAL)]
 
+        m = re.match(r"^note\(this,\d+;$", e["onmouseover"])
+        if m:
+            page_parsing.ccc_bug(page_parsing.WARNING, url_path,
+                                 "Element {} 不能解析".format(repr(e)))
+            return True, [e.get_text()]
+
     # ccc bug
     elif e.name == "a" and "nmouseover" in e.attrs.keys():
         return True, [e.get_text()]
