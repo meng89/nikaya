@@ -115,7 +115,7 @@ def do_str(e, **_kwargs):
 
 def do_href(e, url_path, **_kwargs):
     if e.name == "a" and "href" in e.attrs.keys():
-        return True, [base.Href(text=e.get_text(), href=e["href"], base_url_path=url_path, target=e["target"])]
+        return True, [base.Href(text=e.get_text(), href=e["href"], base_url_path=url_path)]
     else:
         return False, e
 

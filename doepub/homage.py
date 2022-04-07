@@ -27,9 +27,10 @@ def write_homage(epub: epubpacker.Epub, xc: book_public.XC, line):
 
     outdiv = xl.sub(body, "div", {"class": "out"})
     indiv = xl.sub(outdiv, "div", {"class": "in homage"})
+    span = xl.sub(indiv, "span")
 
-    indiv.kids.extend(dopdf.join_to_xml(line, bns=[], c=xc.c, doc_path=doc_path))
-    htmlstr = xl.Xl(root=xl.pretty_insert(html, dont_do_tags=["p"])).to_str()
+    span.kids.extend(dopdf.join_to_xml(line, bns=[], c=xc.c, doc_path=doc_path))
+    htmlstr = xl.Xl(root=xl.pretty_insert(html, dont_do_tags=["span"])).to_str()
     epub.userfiles[doc_path] = htmlstr
     epub.spine.append(doc_path)
     epub.root_toc.append(epubpacker.Toc(xc.c("禮敬世尊"), doc_path))

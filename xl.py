@@ -238,16 +238,20 @@ _escape_table = [
 
 
 def _unescape(text):
-    i = 0
+    _text = text
     nt = ""
+    i = 0
     while i < len(text):
+        unescaped = False
         for x, y in _escape_table:
             if text[i: i + len(y)] == y:
                 nt += x
                 i += len(y)
+                unescaped = True
                 break
-        nt += text[i]
-        i += 1
+        if not unescaped:
+            nt += text[i]
+            i += 1
     return nt
 
 

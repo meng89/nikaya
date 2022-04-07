@@ -44,9 +44,7 @@ def analyse_head(lines):  # public
         if m:
             info.pin_serial = m.group(1)
             info.pin_title = m.group(2)
-        return info
-
-    raise Exception(lines)
+    return info
 
 
 def analyse_sutta_info(line):
@@ -86,7 +84,16 @@ def analyse_sutta_info(line):
         info.sutta_title = m.group(4)
         return info
 
-    raise Exception(line)
+    # ccc bug
+    m = re.match(r"^增支部(3)集(63)經\[/(恐怖經)]\($", line)
+    if m:
+        info.ji_serial = m.group(1)
+        info.sutta_begin = m.group(2)
+        info.sutta_end = m.group(2)
+        info.sutta_title = m.group(3)
+        return info
+
+    raise Exception(repr(line))
 
 
 def make_nikaya(domain):
@@ -112,13 +119,14 @@ def make_nikaya(domain):
         head_info = analyse_head(head_line_list)
         sutta_info = analyse_sutta_info(sutta_name_part)
 
-        if nikaya.jis and nikaya.jis[-1].ji_serial != sutta_info.ji_serial:
+        if not nikaya.jis or nikaya.jis[-1].serial != sutta_info.ji_serial:
             ji = Ji()
             ji.serial = sutta_info.ji_serial
             nikaya.jis.append(ji)
 
         if head_info.pin_serial is not None:
             if not nikaya.jis[-1].pins or nikaya.jis[-1].pins[-1].serial != head_info.pin_serial:
+
                 pin = Pin()
                 pin.serial = head_info.pin_serial
                 pin.title = head_info.pin_title
@@ -128,6 +136,7 @@ def make_nikaya(domain):
         sutta = Sutta()
         sutta.begin = sutta_info.sutta_begin
         sutta.end = sutta_info.sutta_end
+        sutta.title = sutta_info.sutta_title
 
         sutta.pali = pali_text
 

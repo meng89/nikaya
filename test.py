@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import dopdf
+import xl
 
-
-print(dopdf.ntrelpath(r"c:\x\d", r"c:\a\c"))
+print(xl._unescape("sf&lt;a&amp;bc&gt;ww"))

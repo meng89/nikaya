@@ -10,7 +10,7 @@ from pyabo.book_public import TC, SC
 from pyabo import nikayas, sn, note_thing, run_abo
 
 from dopdf import sneb2pdf
-from doepub import sn2epub, mn2epub, dn2epub
+from doepub import sn2epub, mn2epub, dn2epub, an2epub
 
 
 try:
@@ -25,7 +25,7 @@ def main():
 
     note_thing.load_global(domain, uc.CACHE_DIR)
 
-    for xn in "sn", "mn", "dn":
+    for xn in "sn", "mn", "dn", "an":
         nikayas.load(xn, domain, uc.CACHE_DIR)
 
     temprootdir_td = tempfile.TemporaryDirectory(prefix="pyabo_")
@@ -43,8 +43,9 @@ def main():
     #sn2epub.make(SC(), temprootdir_td.name, books_dir, uc.EPUBCHECK)
     #sneb2pdf.make(TC(), temprootdir_td.name, books_dir, uc.CONTEXT_BIN_PATH, uc.FONTS_DIR)
     #sneb2pdf.make(SC(), temprootdir_td.name, books_dir, uc.CONTEXT_BIN_PATH, uc.FONTS_DIR)
-    mn2epub.make(TC(), temprootdir_td.name, books_dir, uc.EPUBCHECK)
-    dn2epub.make(TC(), temprootdir_td.name, books_dir, uc.EPUBCHECK)
+    #mn2epub.make(TC(), temprootdir_td.name, books_dir, uc.EPUBCHECK)
+    #dn2epub.make(TC(), temprootdir_td.name, books_dir, uc.EPUBCHECK)
+    an2epub.make(TC(), temprootdir_td.name, books_dir, uc.EPUBCHECK)
 
     while input("input e and press enter to exit:").rstrip() != "e":
         pass

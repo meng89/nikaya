@@ -39,6 +39,9 @@ def docpath_calculate(suttaname):
         return "mn/{}.xhtml".format(suttaname)
     elif p == P_DN:
         return "dn/{}.xhtml".format(suttaname)
+    elif p == P_AN:
+        from doepub import an2epub
+        return an2epub.docpath_calc(suttaname)
     else:
         # todo other
         raise Exception

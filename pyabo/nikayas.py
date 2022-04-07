@@ -2,7 +2,7 @@ import os
 import pickle
 
 
-from . import sn, mn, dn
+from . import sn, mn, dn, an
 
 
 _all_data = {}
@@ -10,7 +10,8 @@ _all_data = {}
 
 _xn2module = {"sn": sn,
               "mn": mn,
-              "dn": dn
+              "dn": dn,
+              "an": an
               }
 
 

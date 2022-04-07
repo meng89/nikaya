@@ -11,11 +11,10 @@ import doepub.basestr
 
 
 class Href(pyabo.BaseElement):
-    def __init__(self, text, href, base_url_path, target):
+    def __init__(self, text, href, base_url_path):
         self.text = text
         self.href = href
         self.base_url_path = base_url_path
-        self.target = target
 
     def get_text(self):
         return self.text
@@ -24,8 +23,7 @@ class Href(pyabo.BaseElement):
         return (f'{self.__class__.__name__}('
                 f'text={self.text!r}, '
                 f'href={self.href!r}, '
-                f'base={self.base_url_path!r}, '
-                f'target={self.target!r})')
+                f'base={self.base_url_path!r})')
 
     def _url(self):
         return urljoin(pyabo.ABO_WEBSITE, urljoin(self.base_url_path, self.href))
