@@ -17,18 +17,18 @@ from .css import public, public_path, font_path, font_css
 
 def make(nikaya, write_suttas_fun, xc: book_public.XC, temprootdir, books_dir, epubcheck):
     epub = create(nikaya, xc)
-    bns = [nikaya.BN]
+    bns = [nikaya.abbr]
     write_suttas_fun(nikaya=nikaya, epub=epub, bns=bns, xc=xc)
     epub = write_notes(epub, nikaya, xc)
 
     notice.write_notice(epub, xc)
-
-    mytemprootdir, epub_path = write2file(epub=epub, xc=xc, temprootdir=temprootdir)
+    mytemprootdir, epub_path = write2file(epub=epub, xc=xc, temprootdir=temprootdir, bn=nikaya.abbr.lower())
 
     check_result = False
     if is_java_exist() and os.path.exists(epubcheck):
         check_result = check_epub(epub_path=epub_path, epubcheck=epubcheck, mytemprootdir=mytemprootdir)
 
+    print("che")
     if is_java_exist() and os.path.exists(epubcheck) and check_result:
         copy2booksdir(epub_path=epub_path, nikaya=nikaya, xc=xc, books_dir=books_dir)
 
@@ -44,20 +44,24 @@ def check_epub(epub_path, epubcheck, mytemprootdir):
     stdout_file = open(os.path.join(mytemprootdir, "cmd_stdout"), "w")
     stderr_file = open(os.path.join(mytemprootdir, "cmd_stderr"), "w")
 
+    check_result = None
+
     def _run():
+        nonlocal check_result
         print("运行:", compile_cmd, end=" ", flush=True)
         p = subprocess.Popen(compile_cmd, cwd=mytemprootdir, shell=True,
                              stdout=stdout_file, stderr=stderr_file)
         p.communicate()
         if p.returncode != 0:
-            return False
-        return True
-
-    if not _run():
-        print("出错！")
-        return False
-    else:
+            check_result = False
+        else:
+            check_result = True
+    _run()
+    if check_result:
         print("成功！")
+    else:
+        print("出错！")
+    return check_result
 
 
 def copy2booksdir(epub_path, nikaya, xc, books_dir):
@@ -69,11 +73,11 @@ def copy2booksdir(epub_path, nikaya, xc, books_dir):
                                                                     datetime.datetime.now().strftime("%Y%m%d"))))
 
 
-def write2file(epub, temprootdir, xc):
-    mytemprootdir = os.path.join(temprootdir, "mn_epub_" + xc.enlang)
+def write2file(epub, temprootdir, xc, bn):
+    mytemprootdir = os.path.join(temprootdir, "{}_epub_{}".format(bn, xc.enlang))
     os.makedirs(mytemprootdir, exist_ok=True)
 
-    epub_path = os.path.join(mytemprootdir, "mn.epub")
+    epub_path = os.path.join(mytemprootdir, "{}.epub".format(bn))
     epub.write(epub_path)
     return mytemprootdir, epub_path
 
@@ -104,13 +108,10 @@ def create(nikaya, xc: book_public.XC):
 
 
 def write_notes(epub, nikaya, xc: book_public.XC):
-    bns = [nikaya.BN]
+    bns = [nikaya.abbr]
     first_note_doc_path = _write_localnotes(epub, nikaya.local_notes, bns, xc)
     _write_globalnotes(epub, bns, xc)
     epub.root_toc.append(epubpacker.Toc(xc.c("註解"), first_note_doc_path))
-
-    notice.write_notice(epub, xc)
-
     return epub
 
 

@@ -38,7 +38,7 @@ class _MyInfo(BaseInfo, PianInfo, PinInfo):
         PinInfo.__init__(self)
 
 
-def analyse_head(lines):  # public
+def analyse_head(lines):
     info = _MyInfo()
 
     # 根本五十則篇

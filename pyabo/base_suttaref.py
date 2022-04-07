@@ -35,6 +35,10 @@ def docpath_calculate(suttaname):
     if p == P_SN:
         xiangying_num, _sutta_num = num.split(".")
         return "sn/sn{:0>2}.xhtml".format(xiangying_num)
+    elif p == P_MN:
+        return "mn/{}.xhtml".format(suttaname)
+    elif p == P_DN:
+        return "dn/{}.xhtml".format(suttaname)
     else:
         # todo other
         raise Exception

@@ -2,15 +2,15 @@ import os
 import pickle
 
 
-from . import mn
-from . import sn
+from . import sn, mn, dn
 
 
 _all_data = {}
 
 
 _xn2module = {"sn": sn,
-              "mn": mn
+              "mn": mn,
+              "dn": dn
               }
 
 

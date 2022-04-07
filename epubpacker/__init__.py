@@ -43,7 +43,6 @@ class Epub(object):
         z.writestr('mimetype', 'application/epub+zip'.encode('ascii'), compress_type=zipfile.ZIP_STORED)
 
 ########################################################################################################################
-
         nav_html = xl.Element("html", {"xmlns:epub": "http://www.idpf.org/2007/ops",
                                        "xmlns": "http://www.w3.org/1999/xhtml",
                                        "xml:lang": self.meta.languages[0]
@@ -182,8 +181,7 @@ class Toc(object):
         try:
             xl.sub(li, "a", {"href": posixpath.normpath(posixpath.join(USER_DIR, self.href))}, [self.title])
         except TypeError:
-            print(self.title, self.href)
-            exit()
+            raise TypeError(self.title, self.href)
         if self.kids:
             ol = xl.sub(li, "ol")
             for kid in self.kids:

@@ -117,10 +117,13 @@ def _do_class_nikaya(contents, **kwargs):
 
 
 def _split_homage_and_head(listline_list):
+    print()
+    print(listline_list)
+    print()
     homage_listline = None
     head_listline_list = []
     for listline in listline_list:
-        if listline[0] == "對那位" and listline[-1] == "禮敬":
+        if listline[0].startswith("對那位") and listline[-1].endswith("禮敬"):
             homage_listline = listline
         else:
             head_listline_list.append(listline)
