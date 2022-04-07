@@ -63,3 +63,8 @@ class PianInfo(object):
     def __init__(self):
         self.pian_serial = None
         self.pian_title = None
+
+
+class JiInfo(object):
+    def __init__(self):
+        self.ji_serial = None
