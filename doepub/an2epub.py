@@ -100,7 +100,7 @@ def write_suttas(nikaya, epub: epubpacker.Epub, bns, xc, _test=False):
                 xl.sub(_a, "span", {"class": "sutta_id"}, [sutta_id])
                 xl.sub(_a, "span", {"class": "space_in_sutta_title"}, [" "])
                 xl.sub(_a, "span", kids=[c(sutta.title)])
-                xl.sub(_a, "span", {"class": "agama_part"},
+                xl.sub(h3, "span", {"class": "agama_part"},
                        kids=dopdf.join_to_xml([sutta.agama_part], bns, c, doc_path))
 
                 if sutta.begin == sutta.end:

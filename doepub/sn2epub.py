@@ -79,7 +79,7 @@ def write_suttas(nikaya, epub: epubpacker.Epub, bns, xc, _test=False):
                     xl.sub(_a, "span", {"class": "xy_name_in_sutta_title"}, [c(xiangying.title)])
                     xl.sub(_a, "span", {"class": "slash_in_sutta_title"}, ["/"])
                     xl.sub(_a, "span", kids=[c(sutta_safe_title)])
-                    xl.sub(_a, "span", {"class": "agama_part"},
+                    xl.sub(h4, "span", {"class": "agama_part"},
                            kids=dopdf.join_to_xml([sutta.agama_part], bns, c, doc_path))
 
                     if sutta.title:
@@ -94,7 +94,7 @@ def write_suttas(nikaya, epub: epubpacker.Epub, bns, xc, _test=False):
                         _x = dopdf.join_to_xml(body_listline, bns=bns, c=c, doc_path=doc_path)
                         p.kids.extend(_x)
 
-            htmlstr = xl.Xl(root=xl.pretty_insert(html, dont_do_tags=["p", "a"])).to_str()
+            htmlstr = xl.Xl(root=xl.pretty_insert(html, dont_do_tags=["p", "a", "h4"])).to_str()
 
             epub.userfiles[doc_path] = htmlstr
             epub.spine.append(doc_path)
