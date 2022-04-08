@@ -134,8 +134,8 @@ def make_nikaya(domain):
     nikaya.title_pali = 'Saṃyutta Nikāya'
     nikaya.abbr = 'SN'
     for url in sutta_urls:
-        homage_listline, head_line_list, sutta_name_part, translator_part, lines, \
-            pali_text, last_modified = page_parsing.read_page(url, nikaya.local_notes)
+        homage_listline, head_line_list, sutta_name_part, translator_part, agama_part, \
+            lines, pali_text, last_modified = page_parsing.read_page(url, nikaya.local_notes)
 
         if nikaya.last_modified is None:
             nikaya.last_modified = last_modified
@@ -184,32 +184,15 @@ def make_nikaya(domain):
 
         sutta.begin = sutta_info.sutta_begin
         sutta.end = sutta_info.sutta_end
+        sutta.agama_part = agama_part
 
         sutta.pali = pali_text
-        # sutta.chinese = line_list
 
         sutta.body_lines = lines
 
         sutta.last_modified = last_modified
 
-        if sutta.begin == sutta.end:
-            sutta.serial = sutta.begin
-        else:
-            sutta.serial = '{}-{}'.format(sutta.begin, sutta.end)
-
-        if sutta_info.sutta_title:
-            sutta.title = sutta_info.sutta_title
-        else:
-            sutta.title = ''
-
-        if sutta.title:
-            sutta.sec_title = sutta.serial + ' ' + sutta.title
-        else:
-            sutta.sec_title = sutta.serial
-
-        sutta.abbreviation = '{}.{}.{}'.format(nikaya.abbr,
-                                               nikaya.pians[-1].xiangyings[-1].serial,
-                                               sutta.serial)
+        sutta.title = sutta_info.sutta_title
 
         nikaya.pians[-1].xiangyings[-1].pins[-1].suttas.append(sutta)
     return nikaya

@@ -109,8 +109,8 @@ def create(nikaya, xc: book_public.XC):
 
 def write_notes(epub, nikaya, xc: book_public.XC):
     bns = [nikaya.abbr]
-    first_note_doc_path = _write_localnotes(epub, nikaya.local_notes, bns, xc)
     _write_globalnotes(epub, bns, xc)
+    first_note_doc_path = _write_localnotes(epub, nikaya.local_notes, bns, xc)
     epub.root_toc.append(epubpacker.Toc(xc.c("註解"), first_note_doc_path))
     return epub
 

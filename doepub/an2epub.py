@@ -73,7 +73,7 @@ def write_suttas(nikaya, epub: epubpacker.Epub, bns, xc, _test=False):
                 xl.sub(_body, "h2", {"class": "title", "id": pin_id}, [c(pin.title)])
 
             pin_toc = epubpacker.Toc(
-                "({}). {}({}~{})".format(pin.serial, pin.title, pin.suttas[0].begin, pin.suttas[-1].end))
+                "{}. {}({}~{})".format(pin.serial, pin.title, pin.suttas[0].begin, pin.suttas[-1].end))
             ji_toc.kids.append(pin_toc)
 
             for sutta in pin.suttas:
@@ -100,6 +100,8 @@ def write_suttas(nikaya, epub: epubpacker.Epub, bns, xc, _test=False):
                 xl.sub(_a, "span", {"class": "sutta_id"}, [sutta_id])
                 xl.sub(_a, "span", {"class": "space_in_sutta_title"}, [" "])
                 xl.sub(_a, "span", kids=[c(sutta.title)])
+                xl.sub(_a, "span", {"class": "agama_part"},
+                       kids=dopdf.join_to_xml([sutta.agama_part], bns, c, doc_path))
 
                 if sutta.begin == sutta.end:
                     sutta_serial = sutta.begin
@@ -109,7 +111,7 @@ def write_suttas(nikaya, epub: epubpacker.Epub, bns, xc, _test=False):
                 if sutta.title:
                     sutta_title = sutta_serial + ". " + c(sutta.title)
                 else:
-                    sutta_title = sutta_serial
+                    sutta_title = sutta_serial + c(" 經")
 
                 sutta_toc = epubpacker.Toc(sutta_title, href=doc_path + "#" + sutta_id)
                 pin_toc.kids.append(sutta_toc)

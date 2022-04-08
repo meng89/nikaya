@@ -25,8 +25,11 @@ class NoteTagBase(pyabo.BaseElement):
     def to_tex(self, bns, c, **kwargs):
         return "\\" + self._tex_cmd + "{" + dopdf.join_to_tex(line=[self.text], bns=bns, c=c) + "}"
 
-    def to_es(self, c, *args, **kwargs):
-        return doepub.basestr.str2es(c(self.text))
+    def to_es(self, **kwargs):
+        from dopdf import join_to_xml
+        es = join_to_xml([self.text], **kwargs)
+        return es
+        # return doepub.basestr.str2es(c(self.text))
 
     def __repr__(self):
         return (f'{self.__class__.__name__}('

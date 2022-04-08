@@ -39,14 +39,14 @@ def read_page(url, local_notes):
     sutta_temp_notes = _do_class_comp(soup.find("div", {"class": "comp"}),
                                       url_path=url_path, local_notes=local_notes)
 
-    homage_and_head_lines, sutta_name_part, translator_part, body_lines = \
+    homage_and_head_lines, sutta_name_part, translator_part, agama_part, body_lines = \
         _do_class_nikaya(list(soup.find("div", {"class": "nikaya"}).contents),
                          url_path=url_path, sutta_temp_notes=sutta_temp_notes, local_notes=local_notes)
 
     homage_line, _head_lines = _split_homage_and_head(homage_and_head_lines)
     head_lines = listline_list_to_line_list(_head_lines)
 
-    return (homage_line, head_lines, sutta_name_part, translator_part,
+    return (homage_line, head_lines, sutta_name_part, translator_part, agama_part,
             body_lines, pali_doc, last_modified)
 
 
@@ -94,7 +94,15 @@ def _do_class_nikaya(contents, **kwargs):
 
     e2 = contents.pop(0)
     assert isinstance(e2, bs4.element.NavigableString)
-    translator_part = e2.get_text().strip("\n")
+    translator_line = e2.get_text().strip()
+    m = re.match(r"^(.+\(莊春江譯\))(.+)$", translator_line)
+    if m:
+        translator_part = m.group(1)
+        agama_part = m.group(2)
+    else:
+        translator_part = translator_line
+        agama_part = None
+    # todo
     _br = contents.pop(0)
     assert (isinstance(_br, bs4.element.Tag) and _br.name == "br")
 
@@ -113,7 +121,7 @@ def _do_class_nikaya(contents, **kwargs):
     for oline in note_thing.contents2lines(contents):
         body_lines.append(_do_line(oline))
 
-    return homage_and_head_lines, sutta_name_part, translator_part, body_lines
+    return homage_and_head_lines, sutta_name_part, translator_part, agama_part, body_lines
 
 
 def _split_homage_and_head(listline_list):

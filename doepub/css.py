@@ -2,21 +2,31 @@ from pyabo.book_public import TC, SC
 
 
 public = """
+
+.title{
+    color: inherit;
+    text-decoration: inherit;
+}
+
 body.sutta p{
     margin: 0.3em;
 }
 
-body.sutta a,
-body.homage a{
+a.noteref{
     color: inherit;
+    text-decoration: none;
+    border-bottom: 0.05em dashed;
 }
 
 body.note ol{
-    list-style:none;
+    list-style: none;
 }
 
-.title{
+
+a.suttaref_inbook {
     text-decoration: inherit;
+    border-bottom:  dashed #ccc;
+    color:#c00;
 }
 """
 

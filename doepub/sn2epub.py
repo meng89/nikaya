@@ -67,6 +67,7 @@ def write_suttas(nikaya, epub: epubpacker.Epub, bns, xc, _test=False):
                         sutta_num = "{}~{}".format(sutta.begin, sutta.end)
 
                     sutta_id = "SN.{}.{}".format(xiangying.serial, sutta.begin)
+                    sutta_safe_title = sutta.title or ""
 
                     # SN.1.1 诸天相应/暴流之渡過經
 
@@ -77,10 +78,15 @@ def write_suttas(nikaya, epub: epubpacker.Epub, bns, xc, _test=False):
                     xl.sub(_a, "span", {"class": "space_in_sutta_title"}, [" "])
                     xl.sub(_a, "span", {"class": "xy_name_in_sutta_title"}, [c(xiangying.title)])
                     xl.sub(_a, "span", {"class": "slash_in_sutta_title"}, ["/"])
-                    xl.sub(_a, "span", kids=[c(sutta.title)])
+                    xl.sub(_a, "span", kids=[c(sutta_safe_title)])
+                    xl.sub(_a, "span", {"class": "agama_part"},
+                           kids=dopdf.join_to_xml([sutta.agama_part], bns, c, doc_path))
 
-                    # xl.sub(body, "h4", {"id": sutta_id}, [sutta_num + ". " + c(sutta.title)])
-                    sutta_toc = epubpacker.Toc(sutta_num + ". " + c(sutta.title), href=doc_path + "#" + sutta_id)
+                    if sutta.title:
+                        sutta_toc_title = sutta_num + ". " + c(sutta.title)
+                    else:
+                        sutta_toc_title = sutta_num
+                    sutta_toc = epubpacker.Toc(sutta_toc_title, href=doc_path + "#" + sutta_id)
                     sutta_father_toc.kids.append(sutta_toc)
 
                     for body_listline in sutta.body_lines:

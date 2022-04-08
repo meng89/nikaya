@@ -105,8 +105,8 @@ def make_nikaya(domain):
     nikaya.abbr = "AN"
 
     for url in sutta_urls:
-        homage_listline, head_line_list, sutta_name_part, translator_part, lines, \
-            pali_text, last_modified = page_parsing.read_page(url, nikaya.local_notes)
+        homage_listline, head_line_list, sutta_name_part, translator_part, agama_part,\
+            lines, pali_text, last_modified = page_parsing.read_page(url, nikaya.local_notes)
 
         if nikaya.last_modified is None:
             nikaya.last_modified = last_modified
@@ -137,6 +137,8 @@ def make_nikaya(domain):
         sutta.begin = sutta_info.sutta_begin
         sutta.end = sutta_info.sutta_end
         sutta.title = sutta_info.sutta_title
+
+        sutta.agama_part = agama_part
 
         sutta.pali = pali_text
 

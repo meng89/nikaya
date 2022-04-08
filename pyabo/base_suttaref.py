@@ -27,7 +27,16 @@ PATTERNS = [P_SA, P_SN, P_MA, P_MN, P_DA, P_DN, P_UD, P_IT, P_MI, P_NI, P_PS, P_
 
 
 def make_suttaname_href_link(suttaname):
-    return docpath_calculate(suttaname) + "#" + suttaname
+    return docpath_calculate(suttaname) + "#" + suttaid_hit(suttaname)
+
+
+def suttaid_hit(suttaname):
+    p, xn, num = split_suttaname(suttaname)
+    if p == P_AN:
+        from doepub import an2epub
+        return an2epub.suttaid_hit(suttaname)
+    else:
+        return suttaname
 
 
 def docpath_calculate(suttaname):
@@ -78,11 +87,12 @@ class SuttaRef(pyabo.BaseElement):
         else:
             return pyabo.base.Href(self.get_text(),
                                    self.get_cccurl(),
-                                   pyabo.ABO_WEBSITE, "").to_tex(book_public.do_nothing)
+                                   pyabo.ABO_WEBSITE).to_tex(book_public.do_nothing)
 
     def to_es(self, bns, doc_path, **kwargs):
         if self._bn in bns:
-            a = xl.Element("a", {"href": doepub.relpath(make_suttaname_href_link(self.get_text()), doc_path)})
+            a = xl.Element("a", {"href": doepub.relpath(make_suttaname_href_link(self.get_text()), doc_path),
+                                 "class": "suttaref_inbook"})
         else:
             a = xl.Element("a", {"href": self.get_cccurl()})
         a.kids.extend(doepub.basestr.str2es(self.text))

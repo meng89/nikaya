@@ -33,6 +33,8 @@ class Sutta(object):
         self.begin = None
         self.end = None
 
+        self.agama_part = None
+
         self.body_lines = None
         self.pali = None
 

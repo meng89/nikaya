@@ -1,6 +1,8 @@
 import abc
 
+
 import xl
+
 
 cjk_table = [
     (0x2000, 0x206F),
