@@ -2,12 +2,12 @@ import xl
 import epubpacker
 from pyabo import book_public
 import dopdf
-import doepub
+from . import epub_public
 
 
 def write_homage(epub: epubpacker.Epub, xc: book_public.XC, line):
     doc_path = "homage.xhtml"
-    html, body = doepub.make_doc(doc_path, xc, "禮敬世尊")
+    html, body = epub_public.make_doc(doc_path, xc, "禮敬世尊")
     body.attrs["class"] = "homage"
     head = html.find_kids("head")[0]
     style = xl.Element("style", attrs={"type": "text/css"})

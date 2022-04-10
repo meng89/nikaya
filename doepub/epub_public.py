@@ -12,7 +12,8 @@ from pyabo import book_public, page_parsing, note_thing
 import dopdf
 import doepub
 from . import fanli, homage, notice
-from .css import public, public_path, font_path, font_css
+from . import css
+from . import js
 
 
 def make(nikaya, write_suttas_fun, xc: book_public.XC, temprootdir, books_dir, epubcheck):
@@ -83,7 +84,6 @@ def write2file(epub, temprootdir, xc, bn):
 
 def create(nikaya, xc: book_public.XC):
     epub = epubpacker.Epub()
-    doepub.write_epub_cssjs(epub)
 
     epub.meta.titles = [xc.c(nikaya.title_zh)]
     epub.meta.creators = ["莊春江({})".format(xc.c("譯"))]
@@ -97,8 +97,13 @@ def create(nikaya, xc: book_public.XC):
                                        ["莊春江" + xc.c("漢譯經藏")]))
     epub.meta.others.append(xl.Element("meta", {"refines": "#c01", "property": "collection-type"}, ["series"]))
 
-    epub.userfiles[public_path] = public
-    epub.userfiles[font_path[xc.enlang]] = font_css[xc.enlang]
+    epub.userfiles[css.css1_path] = css.css1[xc.enlang]
+    epub.userfiles[css.css2_path] = css.css2[xc.enlang]
+    epub.userfiles[js.js1_path] = js.js1
+    epub.userfiles["_css/user_css1.css"] = "/* 第一个自定义 CSS 文件 */\n\n"
+    epub.userfiles["_css/user_css2.css"] = "/* 第二个自定义 CSS 文件 */\n\n"
+    epub.userfiles["_js/user_js1.js"] = "// 第一个自定义 JS 文件\n\n"
+    epub.userfiles["_js/user_js2.js"] = "// 第二个自定义 JS 文件\n\n"
 
     fanli.write_fanli(epub, xc)
     homage.write_homage(epub, xc, nikaya.homage_line)
@@ -112,27 +117,6 @@ def write_notes(epub, nikaya, xc: book_public.XC):
     first_note_doc_path = _write_localnotes(epub, nikaya.local_notes, bns, xc)
     epub.root_toc.append(epubpacker.Toc(xc.c("註解"), first_note_doc_path))
     return epub
-
-
-def _write_localnotes(epub: epubpacker.Epub, notes: IndexedSet, bns, xc):
-    docs = {}
-
-    for note in notes:
-        _doc_path = doepub.note_docname_calculate(page_parsing.LOCAL, notes.index(note))
-        if _doc_path not in docs.keys():
-            docs[_doc_path] = _make_note_doc(xc.c("註解一"), xc, _doc_path)
-
-        _html, ol = docs[_doc_path]
-
-        li = xl.sub(ol, "li", {"id": str(notes.index(note))})
-        p = xl.sub(li, "p")
-        p.kids.extend(dopdf.join_to_xml(note, bns=bns, c=xc.c, doc_path=_doc_path))
-
-    for doc_path, (html, _ol) in docs.items():
-        epub.userfiles[doc_path] = _doc_str(html)
-        epub.spine.append(doc_path)
-
-    return list(docs.keys())[0]
 
 
 def _write_globalnotes(epub: epubpacker.Epub, bns, xc):
@@ -157,8 +141,29 @@ def _write_globalnotes(epub: epubpacker.Epub, bns, xc):
         epub.spine.append(doc_path)
 
 
+def _write_localnotes(epub: epubpacker.Epub, notes: IndexedSet, bns, xc):
+    docs = {}
+
+    for note in notes:
+        _doc_path = doepub.note_docname_calculate(page_parsing.LOCAL, notes.index(note))
+        if _doc_path not in docs.keys():
+            docs[_doc_path] = _make_note_doc(xc.c("註解一"), xc, _doc_path)
+
+        _html, ol = docs[_doc_path]
+
+        li = xl.sub(ol, "li", {"id": str(notes.index(note))})
+        p = xl.sub(li, "p")
+        p.kids.extend(dopdf.join_to_xml(note, bns=bns, c=xc.c, doc_path=_doc_path))
+
+    for doc_path, (html, _ol) in docs.items():
+        epub.userfiles[doc_path] = _doc_str(html)
+        epub.spine.append(doc_path)
+
+    return list(docs.keys())[0]
+
+
 def _make_note_doc(title, xc: book_public.XC, doc_path):
-    html, body = doepub.make_doc(doc_path, xc, title)
+    html, body = make_doc(doc_path, xc, title)
     body.attrs["class"] = "note"
     sec = xl.sub(body, "section", {"epub:type": "endnotes", "role": "doc-endnotes"})
     ol = xl.sub(sec, "ol")
@@ -167,3 +172,38 @@ def _make_note_doc(title, xc: book_public.XC, doc_path):
 
 def _doc_str(e):
     return xl.Xl(root=xl.pretty_insert(e, dont_do_tags=["p"])).to_str()
+
+
+def _make_css_link(head, href, id_=None):
+    link = xl.sub(head, "link", {"rel": "stylesheet", "type": "text/css", "href": href})
+    if id_:
+        link.attrs["id"] = id_
+    return link
+
+
+def _make_js_link(head, src, id_=None):
+    script = xl.sub(head, "script", {"type": "text/javascript", "src": src})
+    if id_:
+        script.attrs["id"] = id_
+    return script
+
+
+def make_doc(doc_path, xc, title=None):
+    html = xl.Element("html", {"xmlns:epub": "http://www.idpf.org/2007/ops",
+                               "xmlns": "http://www.w3.org/1999/xhtml",
+                               "xml:lang": xc.xmlang,
+                               "lang": xc.xmlang})
+    head = xl.sub(html, "head")
+
+    if title:
+        _title = xl.sub(head, "title", kids=[title])
+
+    _make_css_link(head, doepub.relpath(css.css1_path, doc_path), "css1")
+    _make_css_link(head, doepub.relpath("_css/user_css1.css", doc_path), "user_css1")
+    _make_css_link(head, doepub.relpath("_css/user_css2.css", doc_path), "user_css2")
+    _make_js_link(head, doepub.relpath(js.js1_path, doc_path), "js1")
+    _make_js_link(head, doepub.relpath("_js/user_js1.js", doc_path), "user_js1")
+    _make_js_link(head, doepub.relpath("_js/user_js2.js", doc_path), "user_js2")
+
+    body = xl.sub(html, "body")
+    return html, body

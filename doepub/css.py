@@ -1,8 +1,9 @@
 from pyabo.book_public import TC, SC
 
 
-public = """
-
+_css1 = """
+/* koreader 只支持部分 CSS 功能
+*/
 .title a {
     color: inherit;
     text-decoration: inherit;
@@ -18,26 +19,16 @@ body.sutta p {
 
 a.noteref {
     color: inherit;
-    text-decoration: none;
-    border-bottom: 0.05em dashed;
 }
 
 body.note ol {
     list-style: none;
 }
 
-
 a.suttaref_inbook {
-    text-decoration: inherit;
-    border-bottom:  dashed #ccc;
-    color:#c00;
+    color: inherit;
 }
-"""
 
-public_path = "_css/public.css"
-
-
-_font = """
 .cjk {
     font-family: "Noto Serif CJK TC";
     font-weight: 400;
@@ -75,10 +66,100 @@ body.notice {
 
 """
 
+_css2 = """
 
-font_css = {TC().enlang: _font,
-            SC().enlang: _font.replace("CJK TC", "CJK SC")}
+@font-face {
+    font-family: MySerif;
+    src: local('Noto Serif CJK TC Light');
+    unicode-range: U+4E00-U+9FFF, U+3400-U+4DBF, U+2B740–U+2B81F;
+}
+@font-face {
+    font-family: MySerif;
+    src: local('Noto Serif Tibetan Light');
+    unicode-range: U+0F00-U+0FFF;
+}
+@font-face {
+    font-family: MySerif;
+    src: local('Noto Serif Light');
+}
+@font-face {
+    font-family: MySerifItalic;
+    src: local('Noto Serif Light Italic');
+}
+
+@font-face {
+    font-family: MySerifBold;
+    src: local('Noto Serif CJK TC SemiBold');
+    unicode-range: U+4E00-U+9FFF, U+3400-U+4DBF, U+2B740–U+2B81F;
+}
+
+@font-face {
+    font-family: MySansMedium;
+    src: local('Noto Sans CJK TC Medium');
+}
+
+@font-face {
+    font-family: MySansMedium;
+    src: local('Noto Sans Medium');
+}
 
 
-font_path = {TC().enlang: "_css/tcfont.css",
-             SC().enlang: "_css/scfont.css"}
+.title a {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+body.sutta p {
+    margin: 0.3em;
+}
+
+.tail_number {
+    font-size: small;
+}
+
+a.noteref {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 0.08em dashed;
+}
+
+body.note ol {
+    list-style: none;
+}
+
+
+a.suttaref_inbook {
+    text-decoration: inherit;
+    border-bottom:  dashed #ccc;
+    color:#c00;
+}
+
+body{
+    font-family: MySerif;
+}
+
+.title{
+    font-family: MySansMedium;
+}
+
+.subtitle {
+    font-family: MySerifBold;
+}
+
+.tail_number {
+    font-family: MySerifItalic;
+}
+
+"""
+
+
+css1 = {TC().enlang: _css1,
+        SC().enlang: _css1.replace("CJK TC", "CJK SC")}
+
+css1_path = "_css/css1.css"
+
+
+css2 = {TC().enlang: _css2,
+        SC().enlang: _css2.replace("CJK TC", "CJK SC")}
+
+css2_path = "_css/css2.css"

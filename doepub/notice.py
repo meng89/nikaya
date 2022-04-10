@@ -1,7 +1,7 @@
 import epubpacker
 import xl
 
-import doepub
+from . import epub_public
 from pyabo import book_public
 
 
@@ -22,7 +22,7 @@ _lines = (
 
 def write_notice(epub: epubpacker.Epub, xc: book_public.XC):
     doc_path = "notice.xhtml"
-    html, body = doepub.make_doc(doc_path, xc, "说明")
+    html, body = epub_public.make_doc(doc_path, xc, "说明")
 
     body.attrs["class"] = "notice"
 
