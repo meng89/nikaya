@@ -115,8 +115,11 @@ def split2basestr(s):
     return basestrs
 
 
-def str2es(s):
-    return [bs.to_e() for bs in split2basestr(s)]
+def str2es(s, tag_unicode_range=True):
+    if tag_unicode_range:
+        return [bs.to_e() for bs in split2basestr(s)]
+    else:
+        return s
 
 
 class BaseStr(object):

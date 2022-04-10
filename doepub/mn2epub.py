@@ -5,7 +5,7 @@ from pyabo import nikayas, book_public, base_suttaref
 import dopdf
 import doepub
 
-from . import epub_public
+from . import epub_public, dn2epub
 
 
 def write_suttas(nikaya, epub: epubpacker.Epub, bns, xc, _test=False):
@@ -45,22 +45,22 @@ def write_suttas(nikaya, epub: epubpacker.Epub, bns, xc, _test=False):
                     _write_pin_title(body)
                     pin_toc.href = doc_path + "#" + pin_id
 
-                h3 = xl.sub(body, "h3", {"id": "{}".format(sutta_id)})
-                _a = xl.sub(h3, "a", {"class": "title",
-                                      "href": "{}".format(base_suttaref.SuttaRef(sutta_id).get_cccurl())})
-                xl.sub(_a, "span", {"class": "sutta_id"}, [sutta_id])
-                xl.sub(_a, "span", {"class": "space_in_sutta_title"}, [" "])
-                xl.sub(_a, "span", kids=[c(sutta.title)])
+                title_e = xl.sub(body, "h3", {"class": "title", "id": "{}".format(sutta_id)})
+                _a = xl.sub(title_e, "a", {"href": "{}".format(base_suttaref.SuttaRef(sutta_id).get_cccurl())})
+                _a.kids.append(sutta_id)
+                title_e.kids.append(" ")
+                xl.sub(title_e, "span", kids=[c(sutta.title)])
+                if sutta.agama_part is not None:
+                    title_e.kids.append(" ")
+                    xl.sub(title_e, "span", {"class": "agama_part"},
+                           kids=dopdf.join_to_xml([sutta.agama_part], bns, c, doc_path, tag_unicode_range=False))
 
                 sutta_toc = epubpacker.Toc(sutta.serial + ". " + c(sutta.title), href=doc_path + "#" + sutta_id)
                 pin_toc.kids.append(sutta_toc)
 
-                for body_listline in sutta.body_lines:
-                    p = xl.sub(body, "p")
-                    _x = dopdf.join_to_xml(body_listline, bns=bns, c=c, doc_path=doc_path)
-                    p.kids.extend(_x)
+                dn2epub.write_bodylines(nikaya, sutta, sutta.body_lines, body, bns, c, doc_path)
 
-                htmlstr = xl.Xl(root=xl.pretty_insert(html, dont_do_tags=["p", "a"])).to_str()
+                htmlstr = xl.Xl(root=xl.pretty_insert(html, dont_do_tags=["p", "a", "h3"])).to_str()
 
                 epub.userfiles[doc_path] = htmlstr
                 epub.spine.append(doc_path)

@@ -39,6 +39,6 @@ def get_sutta_urls(nikaya_url):
                 else:
                     sutra_url = urljoin(nikaya_url, a['href'])
 
-                sutra_urls.append(sutra_url)
+                sutra_urls.append((a.get_text(), sutra_url))
 
     return sutra_urls

@@ -18,8 +18,11 @@ _table = [
 
 
 def convert2sc(s):
-    converter = opencc.OpenCC('tw2sp.json')
-    return converter.convert(s)
+    if s:
+        converter = opencc.OpenCC('tw2sp.json')
+        return converter.convert(s)
+    else:
+        return s
 
 
 def convert_all(s):

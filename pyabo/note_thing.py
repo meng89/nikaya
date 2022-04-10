@@ -60,8 +60,16 @@ def contents2lines(contents: list):
         if isinstance(e, bs4.element.Tag) and e.name == "br":
             lines.append(line)
             line = []
-        else:
+        elif isinstance(e, bs4.element.Comment):
+            pass
+        elif isinstance(e, bs4.element.NavigableString):
+            if e.get_text().strip("\n") != "":
+                line.append(e)
+        elif isinstance(e, (str, bs4.element.Tag)):
             line.append(e)
+        else:
+            raise Exception((type(e), repr(e)))
+            # line.append(e)
     if line:
         lines.append(line)
     return lines
@@ -78,7 +86,8 @@ def do_globalnote(contents, **kwargs):
 def do_subnote(ori_line, **kwargs):
     line = []
     first = ori_line.pop(0)
-    assert isinstance(first, (str, bs4.element.NavigableString))
+    if not isinstance(first, (str, bs4.element.NavigableString)):
+        pass  # raise Exception((type(first), repr(first)))
     m = re.match(r"^(?P<subkey>\(\d+\))?(:?(?P<agama>「.*?(?:SA|GA|MA|DA|AA).*?」)|(?P<nikaya>「.+?」))(?P<left>.*)$",
                  str(first))
     if m:

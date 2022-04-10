@@ -9,14 +9,10 @@ from pyabo import nikayas, book_public, base_suttaref
 import dopdf
 import doepub
 
-from . import epub_public
+from . import epub_public, DocpathCalcError
 
 
-class DocpathCalcError(Exception):
-    pass
-
-
-def suttaid_hit(suttaid):
+def hit_docpath_and_id(suttaid):
     m = re.match(r"AN\.(\d+)\.(\d+)", suttaid)
     if not m:
         raise DocpathCalcError("不能识别的 Sutta ID: " + repr(suttaid))
@@ -29,24 +25,8 @@ def suttaid_hit(suttaid):
             for pin in ji.pins:
                 for sutta in pin.suttas:
                     if int(sutta.begin) <= int(sutta_serial) <= int(sutta.end):
-                        return "AN.{}.{}".format(ji_serial, sutta.begin)
-
-
-def docpath_calc(suttaid):
-    m = re.match(r"AN\.(\d+)\.(\d+)", suttaid)
-    if not m:
-        raise DocpathCalcError("不能识别的 Sutta ID: " + repr(suttaid))
-    ji_serial = m.group(1)
-    sutta_serial = m.group(2)
-    nikaya = nikayas.get("an")
-
-    for ji in nikaya.jis:
-        if ji.serial == ji_serial:
-            for pin in ji.pins:
-                begin = pin.suttas[0].begin
-                end = pin.suttas[-1].end
-                if int(begin) <= int(sutta_serial) <= int(end):
-                    return "an/AN.{}.{}-{}.xhtml".format(ji_serial, begin, end)
+                        return ("an/AN.{}.{}-{}.xhtml".format(ji_serial, sutta.begin, sutta.end),
+                                "AN.{}.{}".format(ji_serial, sutta.begin))
 
     raise DocpathCalcError("找不到 Sutta ID: " + repr(suttaid))
 
@@ -78,7 +58,7 @@ def write_suttas(nikaya, epub: epubpacker.Epub, bns, xc, _test=False):
 
             for sutta in pin.suttas:
                 sutta_id = "AN.{}.{}".format(ji.serial, sutta.begin)
-                doc_path = docpath_calc(sutta_id)
+                doc_path = hit_docpath_and_id(sutta_id)[0]
                 try:
                     html, body = docs[doc_path]
                 except KeyError:
@@ -94,14 +74,13 @@ def write_suttas(nikaya, epub: epubpacker.Epub, bns, xc, _test=False):
                     _write_pin_title(body)
                     pin_toc.href = doc_path + "#" + pin_id
 
-                h3 = xl.sub(body, "h3", {"id": "{}".format(sutta_id)})
-                _a = xl.sub(h3, "a", {"class": "title",
-                                      "href": "{}".format(base_suttaref.SuttaRef(sutta_id).get_cccurl())})
-                xl.sub(_a, "span", {"class": "sutta_id"}, [sutta_id])
-                xl.sub(_a, "span", {"class": "space_in_sutta_title"}, [" "])
-                xl.sub(_a, "span", kids=[c(sutta.title)])
-                xl.sub(h3, "span", {"class": "agama_part"},
-                       kids=dopdf.join_to_xml([sutta.agama_part], bns, c, doc_path))
+                title_e = xl.sub(body, "h3", {"class": "title", "id": "{}".format(sutta_id)})
+                _a = xl.sub(title_e, "a", {"href": "{}".format(base_suttaref.SuttaRef(sutta_id).get_cccurl())})
+
+                if sutta.begin == sutta.end:
+                    title_sutta_id = sutta_id
+                else:
+                    title_sutta_id = "{}~{}".format(sutta_id, sutta.end)
 
                 if sutta.begin == sutta.end:
                     sutta_serial = sutta.begin
@@ -109,11 +88,21 @@ def write_suttas(nikaya, epub: epubpacker.Epub, bns, xc, _test=False):
                     sutta_serial = "{}~{}".format(sutta.begin, sutta.end)
 
                 if sutta.title:
-                    sutta_title = sutta_serial + ". " + c(sutta.title)
+                    sutta_title = sutta.title
+                    sutta_toc_title = sutta_serial + ". " + c(sutta.title)
                 else:
-                    sutta_title = sutta_serial + c(" 經")
+                    sutta_title = ""
+                    sutta_toc_title = sutta_serial + c(" 經")
 
-                sutta_toc = epubpacker.Toc(sutta_title, href=doc_path + "#" + sutta_id)
+                xl.sub(title_e, "span", {"class": "sutta_id"}, [title_sutta_id])
+                title_e.kids.append(" ")
+                xl.sub(title_e, "span", kids=[c(sutta_title)])
+                if sutta.agama_part:
+                    title_e.kids.append(" ")
+                    xl.sub(title_e, "span", {"class": "agama_part"},
+                           kids=dopdf.join_to_xml([sutta.agama_part], bns, c, doc_path, tag_unicode_range=False))
+
+                sutta_toc = epubpacker.Toc(sutta_toc_title, href=doc_path + "#" + sutta_id)
                 pin_toc.kids.append(sutta_toc)
 
                 for line in sutta.body_lines:

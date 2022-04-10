@@ -13,7 +13,7 @@ HTML_INDEX = '/MN/index.htm'
 BN = "MN"
 
 
-class _MyNikaya(Nikaya):
+class MNikaya(Nikaya):
     @property
     def pians(self):
         return self.subs
@@ -74,13 +74,13 @@ def analyse_sutta_info(line):
 def make_nikaya(domain):
     sutta_urls = get_sutta_urls(domain + HTML_INDEX)
 
-    nikaya = _MyNikaya()
+    nikaya = MNikaya()
     nikaya.title_zh = '中部'
     nikaya.title_pali = 'Majjhima Nikāya',
     nikaya.abbr = 'MN'
 
-    for url in sutta_urls:
-        homage_listline, head_line_list, sutta_name_part, translator_part, lines, \
+    for _urltext, url in sutta_urls:
+        homage_listline, head_line_list, sutta_name_part, translator_part, agama_part, lines, \
             pali_text, last_modified = page_parsing.read_page(url, nikaya.local_notes)
 
         if nikaya.last_modified is None:
@@ -110,6 +110,8 @@ def make_nikaya(domain):
         sutta = Sutta()
         sutta.serial = sutta_info.sutta_serial
         sutta.title = sutta_info.sutta_title
+
+        sutta.agama_part = agama_part
 
         sutta.pali = pali_text
 

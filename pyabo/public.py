@@ -1,3 +1,6 @@
+import re
+
+
 from boltons.setutils import IndexedSet
 
 
@@ -70,3 +73,19 @@ class PianInfo(object):
 class JiInfo(object):
     def __init__(self):
         self.ji_serial = None
+
+
+def get_urltext_info(url_text):
+    info = BaseInfo()
+    m = re.match(r"^(\d+)$", url_text)
+    if m:
+        info.sutta_serial = url_text
+        info.sutta_begin = url_text
+        info.sutta_end = url_text
+        return info
+    m = re.match(r"^(\d+)-(\d+)$", url_text)
+    if m:
+        info.sutta_begin = m.group(1)
+        info.sutta_end = m.group(2)
+        return info
+    raise Exception(repr(url_text))

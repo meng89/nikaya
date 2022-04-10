@@ -7,6 +7,7 @@ from pyabo import base, book_public
 
 import doepub
 import doepub.basestr
+from doepub import sn2epub, an2epub
 
 
 P_SA = r"(SA)\.(\d+)"
@@ -32,9 +33,10 @@ def make_suttaname_href_link(suttaname):
 
 def suttaid_hit(suttaname):
     p, xn, num = split_suttaname(suttaname)
-    if p == P_AN:
-        from doepub import an2epub
-        return an2epub.suttaid_hit(suttaname)
+    if p == P_SN:
+        return sn2epub.hit_docpath_and_id(suttaname)[1]
+    elif p == P_AN:
+        return an2epub.hit_docpath_and_id(suttaname)[1]
     else:
         return suttaname
 
@@ -42,18 +44,13 @@ def suttaid_hit(suttaname):
 def docpath_calculate(suttaname):
     p, xn, num = split_suttaname(suttaname)
     if p == P_SN:
-        xiangying_num, _sutta_num = num.split(".")
-        return "sn/sn{:0>2}.xhtml".format(xiangying_num)
-    elif p == P_MN:
-        return "mn/{}.xhtml".format(suttaname)
-    elif p == P_DN:
-        return "dn/{}.xhtml".format(suttaname)
+        return sn2epub.hit_docpath_and_id(suttaname)[0]
     elif p == P_AN:
-        from doepub import an2epub
-        return an2epub.docpath_calc(suttaname)
+        return an2epub.hit_docpath_and_id(suttaname)[0]
     else:
-        # todo other
-        raise Exception
+        return "{}/{}.xhtml".format(xn, suttaname)
+
+    # todo other
 
 
 def split_suttaname(text):
@@ -89,13 +86,13 @@ class SuttaRef(pyabo.BaseElement):
                                    self.get_cccurl(),
                                    pyabo.ABO_WEBSITE).to_tex(book_public.do_nothing)
 
-    def to_es(self, bns, doc_path, **kwargs):
+    def to_es(self, bns, doc_path, tag_unicode_range, **kwargs):
         if self._bn in bns:
             a = xl.Element("a", {"href": doepub.relpath(make_suttaname_href_link(self.get_text()), doc_path),
                                  "class": "suttaref_inbook"})
         else:
             a = xl.Element("a", {"href": self.get_cccurl()})
-        a.kids.extend(doepub.basestr.str2es(self.text))
+        a.kids.extend(doepub.basestr.str2es(self.text, tag_unicode_range))
         return [a]
 
     def __repr__(self):

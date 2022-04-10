@@ -28,7 +28,6 @@ def make(nikaya, write_suttas_fun, xc: book_public.XC, temprootdir, books_dir, e
     if is_java_exist() and os.path.exists(epubcheck):
         check_result = check_epub(epub_path=epub_path, epubcheck=epubcheck, mytemprootdir=mytemprootdir)
 
-    print("che")
     if is_java_exist() and os.path.exists(epubcheck) and check_result:
         copy2booksdir(epub_path=epub_path, nikaya=nikaya, xc=xc, books_dir=books_dir)
 
@@ -44,7 +43,7 @@ def check_epub(epub_path, epubcheck, mytemprootdir):
     stdout_file = open(os.path.join(mytemprootdir, "cmd_stdout"), "w")
     stderr_file = open(os.path.join(mytemprootdir, "cmd_stderr"), "w")
 
-    check_result = None
+    check_result = False
 
     def _run():
         nonlocal check_result

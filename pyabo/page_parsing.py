@@ -28,7 +28,7 @@ INFO = "INFO"
 
 
 def ccc_bug(type_, url, string):
-    s = "<CCC {}>: url: {}, msg: {}".format(type_, url, string)
+    s = "<CCC {}>: text_and_url: {}, msg: {}".format(type_, url, string)
     print(s)
 
 

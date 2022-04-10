@@ -2,7 +2,7 @@ import re
 
 
 from pyabo.public import Nikaya, Node, Sutta
-from pyabo.public import BaseInfo, PinInfo, JiInfo
+from pyabo.public import BaseInfo, PinInfo, JiInfo, get_urltext_info
 
 from pyabo.tools import get_sutta_urls
 from pyabo import page_parsing
@@ -18,7 +18,7 @@ class _MyInfo(BaseInfo, PinInfo, JiInfo):
         JiInfo.__init__(self)
 
 
-class MyNikaya(Nikaya):
+class ANikaya(Nikaya):
     @property
     def jis(self):
         return self.subs
@@ -99,12 +99,12 @@ def analyse_sutta_info(line):
 def make_nikaya(domain):
     sutta_urls = get_sutta_urls(domain + HTML_INDEX)
 
-    nikaya = MyNikaya()
+    nikaya = ANikaya()
     nikaya.title_zh = "增支部"
     nikaya.title_pali = "Aṅguttara Nikāya",
     nikaya.abbr = "AN"
 
-    for url in sutta_urls:
+    for urltext, url in sutta_urls:
         homage_listline, head_line_list, sutta_name_part, translator_part, agama_part,\
             lines, pali_text, last_modified = page_parsing.read_page(url, nikaya.local_notes)
 
@@ -118,6 +118,7 @@ def make_nikaya(domain):
 
         head_info = analyse_head(head_line_list)
         sutta_info = analyse_sutta_info(sutta_name_part)
+        urltext_info = get_urltext_info(urltext)
 
         if not nikaya.jis or nikaya.jis[-1].serial != sutta_info.ji_serial:
             ji = Ji()
@@ -134,8 +135,8 @@ def make_nikaya(domain):
                 nikaya.jis[-1].pins.append(pin)
 
         sutta = Sutta()
-        sutta.begin = sutta_info.sutta_begin
-        sutta.end = sutta_info.sutta_end
+        sutta.begin = urltext_info.sutta_begin
+        sutta.end = urltext_info.sutta_end
         sutta.title = sutta_info.sutta_title
 
         sutta.agama_part = agama_part

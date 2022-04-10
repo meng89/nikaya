@@ -44,7 +44,7 @@ class _MyInfo(BaseInfo, PianInfo, PinInfo):
 # 有些相应经太少，没有品，相应下面就是经，不应该建立空品多折叠一下
 
 
-class MyNikaya(Nikaya):
+class SNikaya(Nikaya):
     @property
     def pians(self):
         return self.subs
@@ -68,7 +68,7 @@ class Pin(Node):
         return self.subs
 
 
-_nikaya = MyNikaya()
+_nikaya = SNikaya()
 _is_loaded = False
 
 
@@ -129,11 +129,11 @@ def analyse_sutta_info(line):
 def make_nikaya(domain):
     sutta_urls = get_sutta_urls(domain + HTML_INDEX)
 
-    nikaya = MyNikaya()
+    nikaya = SNikaya()
     nikaya.title_zh = '相應部'
     nikaya.title_pali = 'Saṃyutta Nikāya'
     nikaya.abbr = 'SN'
-    for url in sutta_urls:
+    for _urltext, url in sutta_urls:
         homage_listline, head_line_list, sutta_name_part, translator_part, agama_part, \
             lines, pali_text, last_modified = page_parsing.read_page(url, nikaya.local_notes)
 
