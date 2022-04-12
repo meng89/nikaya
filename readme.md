@@ -1,21 +1,17 @@
 ## 这是什么项目？
-这个项目的目标是把 [莊春江工作站](https://agama.buddhason.org) 翻译的南传佛教经书制作成 PDF 和 EPUB3 格式的电子书。
+这个项目的目标是把 [莊春江工作站](https://agama.buddhason.org) 翻译的南传佛教经书做成 PDF 和 EPUB3 格式的电子书。
 
 当前在重构中，重构计划除了制作 PDF 和 EPUB3 电子书之外，还包含机转简体版，以及适用于纸张阅读的版本。
 
 ## 进度
-相应部传统中文版（繁体）和机转简体的 PDF 和 EPUB3 已经初步做好，都带有莊春江原网页版注解和链接跳转支持。
-
-目前 EPUB 缺少封面，PDF 的封面也很直白。本人不会设计，如果有贤友愿意帮助设计，请发 pull request，或直接邮件联系我。
-
-在 Windows 下制作电子书，也需要一些时间才能测试好并给出步骤。
+相应部 的 PDF 和 EPUB 已经初步做好，中部、长部和增支部的 EPUB 已经初步做好。包含莊春江工作站原网页注解。
 
 ## 获取电子书：
 请进入项目的 books 目录。
 
 ## 阅读器列表
 部分 EPUB 阅读器把注解(endnote)实现为弹窗(popup)方式，提升了阅读体验：
-* [calibre](https://calibre-ebook.com) 
+* [Calibre](https://calibre-ebook.com) 
 * [KOReader](https://koreader.rocks)
 
 ## 出现 Bug、提供各种建议：

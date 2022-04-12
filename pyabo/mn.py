@@ -76,7 +76,7 @@ def make_nikaya(domain):
 
     nikaya = MNikaya()
     nikaya.title_hant = '中部'
-    nikaya.title_pali = 'Majjhima Nikāya',
+    nikaya.title_pali = 'Majjhima Nikāya'
     nikaya.abbr = 'MN'
 
     for _urltext, url in sutta_urls:

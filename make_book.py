@@ -42,11 +42,11 @@ def main():
     #sneb2pdf.make(TC(), temprootdir_td.name, books_dir, uc.CONTEXT_BIN_PATH, uc.FONTS_DIR)
     #sneb2pdf.make(SC(), temprootdir_td.name, books_dir, uc.CONTEXT_BIN_PATH, uc.FONTS_DIR)
 
-    for xc in (TC(),):  # SC()):
-        #sn2epub.make(xc, temprootdir_td.name, books_dir, uc.EPUBCHECK)
-        #mn2epub.make(xc, temprootdir_td.name, books_dir, uc.EPUBCHECK)
+    for xc in (SC(), TC()):
+        sn2epub.make(xc, temprootdir_td.name, books_dir, uc.EPUBCHECK)
+        mn2epub.make(xc, temprootdir_td.name, books_dir, uc.EPUBCHECK)
         dn2epub.make(xc, temprootdir_td.name, books_dir, uc.EPUBCHECK)
-        #an2epub.make(xc, temprootdir_td.name, books_dir, uc.EPUBCHECK)
+        an2epub.make(xc, temprootdir_td.name, books_dir, uc.EPUBCHECK)
 
     while input("input e and press enter to exit:").rstrip() != "e":
         pass

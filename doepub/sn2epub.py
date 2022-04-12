@@ -7,7 +7,6 @@ import epubpacker
 
 from pyabo import nikayas, book_public, base_suttaref
 import dopdf
-import doepub
 from . import DocpathCalcError
 from . import epub_public
 
@@ -26,7 +25,7 @@ def hit_docpath_and_id(suttaid):
                 for pin in xy.pins:
                     for sutta in pin.suttas:
                         if int(sutta.begin) <= int(sutta_serial) <= int(sutta.end):
-                            return ("sn/SN.{}.xhtml".format(xy_serial),
+                            return ("SN/SN.{}.xhtml".format(xy_serial),
                                     "SN.{}.{}".format(xy_serial, sutta.begin))
 
     raise DocpathCalcError("找不到 Sutta ID: " + repr(suttaid))
@@ -49,7 +48,7 @@ def write_suttas(nikaya, epub: epubpacker.Epub, bns, xc, _test=False):
             xy_id = "sn"
             doc_path = hit_docpath_and_id("SN.{}.1".format(xiangying.serial))[0]
             _xy_title = xiangying.serial + ". " + c(xiangying.title)
-            html, body = doepub.make_doc(doc_path=doc_path, xc=xc, title=_xy_title)
+            html, body = epub_public.make_doc(doc_path=doc_path, xc=xc, title=_xy_title)
             body.attrs["class"] = "sutta"
 
             if pian.xiangyings.index(xiangying) == 0:

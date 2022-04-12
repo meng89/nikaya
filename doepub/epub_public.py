@@ -18,19 +18,21 @@ from . import js
 
 
 def make(nikaya, write_suttas_fun, xc: book_public.XC, temprootdir, books_dir, epubcheck):
+    bn = nikaya.abbr.lower()
+    mytemprootdir = os.path.join(temprootdir, "{}_epub_{}".format(bn, xc.enlang))
+    os.makedirs(mytemprootdir, exist_ok=True)
+
     epub = create(nikaya, xc)
     bns = [nikaya.abbr]
 
-    mytemprootdir, epub_path = write2file(epub=epub, xc=xc, temprootdir=temprootdir, bn=nikaya.abbr.lower())
-
-    write_cover_img(epub, nikaya, xc, mytemprootdir)
-
-    write_suttas_fun(nikaya=nikaya, epub=epub, bns=bns, xc=xc)
-
-    write_notes(epub, nikaya, xc)
+    write_cover(epub, nikaya, xc, mytemprootdir)
     fanli.write_fanli(epub, xc)
     homage.write_homage(epub, xc, nikaya.homage_line)
+    write_suttas_fun(nikaya=nikaya, epub=epub, bns=bns, xc=xc)
+    write_notes(epub, nikaya, xc)
     notice.write_notice(epub, xc)
+
+    mytemprootdir, epub_path = write2file(epub=epub, mytemprootdir=mytemprootdir, bn=bn)
 
     check_result = False
     if is_java_exist() and os.path.exists(epubcheck):
@@ -80,9 +82,7 @@ def copy2booksdir(epub_path, nikaya, xc, books_dir):
                                                                     datetime.datetime.now().strftime("%Y%m%d"))))
 
 
-def write2file(epub, temprootdir, xc, bn):
-    mytemprootdir = os.path.join(temprootdir, "{}_epub_{}".format(bn, xc.enlang))
-    os.makedirs(mytemprootdir, exist_ok=True)
+def write2file(epub, mytemprootdir, bn):
 
     epub_path = os.path.join(mytemprootdir, "{}.epub".format(bn))
     epub.write(epub_path)
@@ -213,11 +213,15 @@ def make_doc(doc_path, xc, title=None):
     return html, body
 
 
-def write_cover_img(epub, nikaya, xc: book_public.XC, mytemprootdir):
-    cover_filename = nikaya.abbr + "_cover.png"
-    cover_path = os.path.join(mytemprootdir, cover_filename)
+def write_cover(epub, nikaya, xc: book_public.XC, mytemprootdir):
+    cover_img_filename = nikaya.abbr + "/cover.png"
+    temp_cover_img_path = os.path.join(mytemprootdir, "cover.png")
 
-    template_str = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "cover.xhtml")).read()
+    _template_str = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "cover.xhtml")).read()
+    if isinstance(xc, book_public.SC):
+        template_str = _template_str.replace("CJK TC", "CJK SC")
+    else:
+        template_str = _template_str
     t = string.Template(template_str)
 
     if len(nikaya.title_hant) == 2:
@@ -235,8 +239,19 @@ def write_cover_img(epub, nikaya, xc: book_public.XC, mytemprootdir):
 
     from html2image import Html2Image as HtI
     hti = HtI(browser_executable="google-chrome-stable", output_path=mytemprootdir)
-    hti.screenshot(html_str=doc_str, size=(1600, 2560), save_as=cover_filename)
+    hti.screenshot(html_str=doc_str, size=(1600, 2560), save_as="cover.png")
 
-    epub.userfiles[cover_filename] = open(cover_path, "rb").read()
-    epub.cover_img_path = cover_filename
-    epub.spine.append(cover_filename)
+    epub.userfiles[cover_img_filename] = open(temp_cover_img_path, "rb").read()
+    epub.cover_img_path = cover_img_filename
+
+    cover_doc_path = nikaya.abbr + "/cover.xhtml"
+    html, body = make_doc(cover_doc_path, xc, "封面")
+    body.attrs["style"] = "text-align: center;"
+
+    _img = xl.sub(body, "img", {"src": doepub.relpath(cover_img_filename, cover_doc_path),
+                                "alt": "Cover Image",
+                                "title": "Cover Image"})
+    htmlstr = xl.Xl(root=xl.pretty_insert(html)).to_str()
+    epub.userfiles[cover_doc_path] = htmlstr
+    epub.root_toc.append(epubpacker.Toc("封面", cover_doc_path))
+    epub.spine.append(cover_doc_path)

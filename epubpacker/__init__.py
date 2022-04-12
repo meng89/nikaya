@@ -124,7 +124,6 @@ class Epub(object):
 
         spine = xl.sub(_package, "spine")
         for one in self.spine:
-
             xl.sub(spine, "itemref", {"idref": _path2id(one)})
 
         name = "package.opf"

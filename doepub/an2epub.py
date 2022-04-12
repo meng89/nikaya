@@ -24,7 +24,7 @@ def hit_docpath_and_id(suttaid):
             for pin in ji.pins:
                 for sutta in pin.suttas:
                     if int(sutta.begin) <= int(sutta_serial) <= int(sutta.end):
-                        return ("an/AN.{}.{}-{}.xhtml".format(ji_serial, sutta.begin, sutta.end),
+                        return ("AN/AN.{}.{}-{}.xhtml".format(ji_serial, sutta.begin, sutta.end),
                                 "AN.{}.{}".format(ji_serial, sutta.begin))
 
     raise DocpathCalcError("找不到 Sutta ID: " + repr(suttaid))

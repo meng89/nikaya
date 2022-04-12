@@ -3,7 +3,6 @@ import epubpacker
 
 from pyabo import nikayas, book_public, base_suttaref
 import dopdf
-import doepub
 
 from . import epub_public, dn2epub
 
@@ -33,7 +32,7 @@ def write_suttas(nikaya, epub: epubpacker.Epub, bns, xc, _test=False):
             for sutta in pin.suttas:
                 sutta_id = "MN.{}".format(sutta.serial)
                 doc_path = base_suttaref.docpath_calculate(sutta_id)
-                html, body = doepub.make_doc(doc_path=doc_path, xc=xc, title=c(sutta.title))
+                html, body = epub_public.make_doc(doc_path=doc_path, xc=xc, title=c(sutta.title))
                 body.attrs["class"] = "sutta"
 
                 if pin.suttas.index(sutta) == 0:
