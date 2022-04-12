@@ -29,11 +29,16 @@ USER_DIR = "user_dir"
 
 class Epub(object):
     def __init__(self):
+        self.cover_img_path = None
         self.meta = Meta()
         self.userfiles = {}
         self.toc_title = None
         self.root_toc = []
-        self.spine = []
+        self._spine = []
+
+    @property
+    def spine(self):
+        return self._spine
 
     def write(self, filename):
         if not self.userfiles:
@@ -97,6 +102,8 @@ class Epub(object):
                 media_type = "text/css"
             elif ext.lower() == ".js":
                 media_type = "text/javascript"
+            elif ext.lower() == ".png":
+                media_type = "image/png"
             else:
                 raise EpubError(ext)
 
@@ -107,10 +114,17 @@ class Epub(object):
                  }
             )
 
+            if filename == self.cover_img_path:
+                if "properties" in attrib.keys():
+                    attrib["properties"] = attrib["properties"] + " cover-image"
+                else:
+                    attrib["properties"] = "cover-image"
+
             _item = xl.sub(manifest, "item", attrib)
 
         spine = xl.sub(_package, "spine")
         for one in self.spine:
+
             xl.sub(spine, "itemref", {"idref": _path2id(one)})
 
         name = "package.opf"

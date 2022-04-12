@@ -60,6 +60,11 @@ class XC(object):
     def enlang(self):
         pass
 
+    @property
+    @abc.abstractmethod
+    def han_version(self):
+        pass
+
 
 class TC(XC):
     @property
@@ -78,6 +83,10 @@ class TC(XC):
     def enlang(self):
         return "tc"
 
+    @property
+    def han_version(self):
+        return "傳統中文版"
+
 
 class SC(XC):
     @property
@@ -95,3 +104,7 @@ class SC(XC):
     @property
     def enlang(self):
         return "sc"
+
+    @property
+    def han_version(self):
+        return "机转简体版"

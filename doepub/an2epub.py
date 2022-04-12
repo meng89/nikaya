@@ -7,7 +7,6 @@ import epubpacker
 
 from pyabo import nikayas, book_public, base_suttaref
 import dopdf
-import doepub
 
 from . import epub_public, DocpathCalcError
 
@@ -62,7 +61,7 @@ def write_suttas(nikaya, epub: epubpacker.Epub, bns, xc, _test=False):
                 try:
                     html, body = docs[doc_path]
                 except KeyError:
-                    html, body = doepub.make_doc(doc_path=doc_path, xc=xc, title=c(pin.title))
+                    html, body = epub_public.make_doc(doc_path=doc_path, xc=xc, title=c(pin.title))
                     docs[doc_path] = (html, body)
 
                 body.attrs["class"] = "sutta"

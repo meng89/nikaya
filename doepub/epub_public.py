@@ -2,6 +2,7 @@ import os
 import datetime
 import shutil
 import subprocess
+import string
 
 from boltons.setutils import IndexedSet
 
@@ -19,11 +20,17 @@ from . import js
 def make(nikaya, write_suttas_fun, xc: book_public.XC, temprootdir, books_dir, epubcheck):
     epub = create(nikaya, xc)
     bns = [nikaya.abbr]
-    write_suttas_fun(nikaya=nikaya, epub=epub, bns=bns, xc=xc)
-    epub = write_notes(epub, nikaya, xc)
 
-    notice.write_notice(epub, xc)
     mytemprootdir, epub_path = write2file(epub=epub, xc=xc, temprootdir=temprootdir, bn=nikaya.abbr.lower())
+
+    write_cover_img(epub, nikaya, xc, mytemprootdir)
+
+    write_suttas_fun(nikaya=nikaya, epub=epub, bns=bns, xc=xc)
+
+    write_notes(epub, nikaya, xc)
+    fanli.write_fanli(epub, xc)
+    homage.write_homage(epub, xc, nikaya.homage_line)
+    notice.write_notice(epub, xc)
 
     check_result = False
     if is_java_exist() and os.path.exists(epubcheck):
@@ -66,7 +73,7 @@ def check_epub(epub_path, epubcheck, mytemprootdir):
 
 def copy2booksdir(epub_path, nikaya, xc, books_dir):
     shutil.copy(epub_path,
-                os.path.join(books_dir, "{}_{}_{}{}_{}.epub".format(xc.c(nikaya.title_zh),
+                os.path.join(books_dir, "{}_{}_{}{}_{}.epub".format(xc.c(nikaya.title_hant),
                                                                     xc.zhlang,
                                                                     "莊",
                                                                     nikaya.last_modified.strftime("%y%m"),
@@ -85,12 +92,12 @@ def write2file(epub, temprootdir, xc, bn):
 def create(nikaya, xc: book_public.XC):
     epub = epubpacker.Epub()
 
-    epub.meta.titles = [xc.c(nikaya.title_zh)]
+    epub.meta.titles = [xc.c(nikaya.title_hant)]
     epub.meta.creators = ["莊春江({})".format(xc.c("譯"))]
     epub.meta.date = nikaya.last_modified.strftime("%Y-%m-%dT%H:%M:%SZ")
     epub.meta.languages = [xc.xmlang, "pi", "en-US"]
 
-    my_uuid = doepub.get_uuid(xc.c(nikaya.title_zh) + xc.enlang)
+    my_uuid = doepub.get_uuid(xc.c(nikaya.title_hant) + xc.enlang)
     epub.meta.identifier = my_uuid.urn
 
     epub.meta.others.append(xl.Element("meta", {"property": "belongs-to-collection", "id": "c01"},
@@ -104,9 +111,6 @@ def create(nikaya, xc: book_public.XC):
     epub.userfiles["_css/user_css2.css"] = "/* 第二个自定义 CSS 文件 */\n\n"
     epub.userfiles["_js/user_js1.js"] = "// 第一个自定义 JS 文件\n\n"
     epub.userfiles["_js/user_js2.js"] = "// 第二个自定义 JS 文件\n\n"
-
-    fanli.write_fanli(epub, xc)
-    homage.write_homage(epub, xc, nikaya.homage_line)
 
     return epub
 
@@ -207,3 +211,32 @@ def make_doc(doc_path, xc, title=None):
 
     body = xl.sub(html, "body")
     return html, body
+
+
+def write_cover_img(epub, nikaya, xc: book_public.XC, mytemprootdir):
+    cover_filename = nikaya.abbr + "_cover.png"
+    cover_path = os.path.join(mytemprootdir, cover_filename)
+
+    template_str = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "cover.xhtml")).read()
+    t = string.Template(template_str)
+
+    if len(nikaya.title_hant) == 2:
+        title_hant = nikaya.title_hant[0] + "&nbsp;&nbsp;" + nikaya.title_hant[1]
+    else:
+        title_hant = nikaya.title_hant
+
+    doc_str = \
+        t.substitute(bookname_han=xc.c(title_hant),
+                     bookname_pi=nikaya.title_pali,
+                     han_version=xc.han_version,
+                     translator="莊春江 " + xc.c("譯"),
+                     date=nikaya.last_modified.strftime("%Y年%m月")
+                     )
+
+    from html2image import Html2Image as HtI
+    hti = HtI(browser_executable="google-chrome-stable", output_path=mytemprootdir)
+    hti.screenshot(html_str=doc_str, size=(1600, 2560), save_as=cover_filename)
+
+    epub.userfiles[cover_filename] = open(cover_path, "rb").read()
+    epub.cover_img_path = cover_filename
+    epub.spine.append(cover_filename)

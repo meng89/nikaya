@@ -7,7 +7,7 @@ from boltons.setutils import IndexedSet
 class Nikaya(object):
     def __init__(self):
         self.languages = ['zh-tw', 'pali']
-        self.title_zh = None
+        self.title_hant = None
         self.title_pali = None
         self.abbr = None
 

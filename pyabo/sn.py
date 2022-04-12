@@ -130,7 +130,7 @@ def make_nikaya(domain):
     sutta_urls = get_sutta_urls(domain + HTML_INDEX)
 
     nikaya = SNikaya()
-    nikaya.title_zh = '相應部'
+    nikaya.title_hant = '相應部'
     nikaya.title_pali = 'Saṃyutta Nikāya'
     nikaya.abbr = 'SN'
     for _urltext, url in sutta_urls:
