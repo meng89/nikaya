@@ -1,5 +1,6 @@
 import os
 import datetime
+import posixpath
 import shutil
 import subprocess
 import string
@@ -214,41 +215,44 @@ def make_doc(doc_path, xc, title=None):
 
 
 def write_cover(epub, nikaya, xc: book_public.XC, mytemprootdir):
-    cover_img_filename = nikaya.abbr + "/cover.png"
-    temp_cover_img_path = os.path.join(mytemprootdir, "cover.png")
 
-    _template_str = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "cover.xhtml")).read()
-    if isinstance(xc, book_public.SC):
-        template_str = _template_str.replace("CJK TC", "CJK SC")
-    else:
-        template_str = _template_str
-    t = string.Template(template_str)
+    cover_img_filename = "{}_{}_cover.png".format(nikaya.abbr, xc.enlang)
+    cover_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "cover_images")
+    cover_img_path = os.path.join(cover_dir, cover_img_filename)
 
-    if len(nikaya.title_hant) == 2:
-        title_hant = nikaya.title_hant[0] + "&nbsp;&nbsp;" + nikaya.title_hant[1]
-    else:
-        title_hant = nikaya.title_hant
+    if not os.path.exists(cover_img_path):
+        _template_str = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "cover.xhtml")).read()
+        if isinstance(xc, book_public.SC):
+            template_str = _template_str.replace("CJK TC", "CJK SC")
+        else:
+            template_str = _template_str
+        t = string.Template(template_str)
 
-    doc_str = \
-        t.substitute(bookname_han=xc.c(title_hant),
-                     bookname_pi=nikaya.title_pali,
-                     han_version=xc.han_version,
-                     translator="莊春江 " + xc.c("譯"),
-                     date=nikaya.last_modified.strftime("%Y年%m月")
-                     )
+        if len(nikaya.title_hant) == 2:
+            title_hant = nikaya.title_hant[0] + "&nbsp;&nbsp;" + nikaya.title_hant[1]
+        else:
+            title_hant = nikaya.title_hant
+        doc_str = \
+            t.substitute(bookname_han=xc.c(title_hant),
+                         bookname_pi=nikaya.title_pali,
+                         han_version=xc.han_version,
+                         translator="莊春江 " + xc.c("譯"),
+                         date=nikaya.last_modified.strftime("%Y年%m月")
+                         )
+        from html2image import Html2Image as HtI
+        hti = HtI(browser_executable="google-chrome-stable", output_path=cover_dir)
+        hti.screenshot(html_str=doc_str, size=(1600, 2560), save_as=cover_img_filename)
+    assert os.path.exists(cover_img_path)
 
-    from html2image import Html2Image as HtI
-    hti = HtI(browser_executable="google-chrome-stable", output_path=mytemprootdir)
-    hti.screenshot(html_str=doc_str, size=(1600, 2560), save_as="cover.png")
-
-    epub.userfiles[cover_img_filename] = open(temp_cover_img_path, "rb").read()
-    epub.cover_img_path = cover_img_filename
+    cover_img_path_in_epub = posixpath.join(nikaya.abbr, cover_img_filename)
+    epub.userfiles[cover_img_path_in_epub] = open(cover_img_path, "rb").read()
+    epub.cover_img_path = cover_img_path_in_epub
 
     cover_doc_path = nikaya.abbr + "/cover.xhtml"
     html, body = make_doc(cover_doc_path, xc, "封面")
     body.attrs["style"] = "text-align: center;"
 
-    _img = xl.sub(body, "img", {"src": doepub.relpath(cover_img_filename, cover_doc_path),
+    _img = xl.sub(body, "img", {"src": doepub.relpath(cover_img_path_in_epub, cover_doc_path),
                                 "alt": "Cover Image",
                                 "title": "Cover Image"})
     htmlstr = xl.Xl(root=xl.pretty_insert(html)).to_str()

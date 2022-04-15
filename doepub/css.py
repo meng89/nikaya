@@ -55,7 +55,7 @@ a.suttaref_inbook {
 }
 
 .tail_number {
-    font-family: "Noto Serif";
+    font-family: "Noto Serif Light Italic";
     font-weight: 300;
 }
 
