@@ -6,6 +6,50 @@ from abc import abstractmethod
 import copy
 
 
+_xml_escape_table = [
+    ('&', '&amp;'),
+    ('<', '&lt;'),
+    ('>', '&gt;')
+]
+
+_xml_attr_escape_table = _xml_escape_table + [
+    ('"', '&quot;'),
+    ("'", "&apos;")
+]
+
+
+def _unescape(text, table):
+    _text = text
+    nt = ""
+    i = 0
+    while i < len(text):
+        unescaped = False
+        for x, y in table:
+            if text[i: i + len(y)] == y:
+                nt += x
+                i += len(y)
+                unescaped = True
+                break
+        if not unescaped:
+            nt += text[i]
+            i += 1
+    return nt
+
+
+def _escape(text, table):
+    nt = ""
+    for c in text:
+        escaped = False
+        for x, y in table:
+            if c == x:
+                nt += y
+                escaped = True
+                break
+        if not escaped:
+            nt += c
+    return nt
+
+
 def clean_whitespaces(element):
     if not isinstance(element, Element):
         raise TypeError
@@ -188,7 +232,7 @@ class Element(_Node):
 
         _attrs_string_list = []
         for attr_name, attr_value in self.attrs.items():
-            _attrs_string_list.append('{}="{}"'.format(attr_name, attr_value))
+            _attrs_string_list.append('{}="{}"'.format(attr_name, _escape(attr_value, _xml_attr_escape_table)))
 
         if _attrs_string_list:
             s += ' '
@@ -200,7 +244,7 @@ class Element(_Node):
                 if isinstance(kid, Element):
                     s += kid.to_str()
                 elif isinstance(kid, str):
-                    s += _escape(kid)
+                    s += _escape(kid, _xml_escape_table)
             s += '</{}>'.format(self.tag)
 
         else:
@@ -228,45 +272,6 @@ class Element(_Node):
             if isinstance(kid, Element) and kid.tag == tag:
                 kids.append(kid)
         return kids
-
-
-_escape_table = [
-    ("&", "&amp;"),
-    ('<', '&lt;'),
-    ('>', '&gt;'),
-]
-
-
-def _unescape(text):
-    _text = text
-    nt = ""
-    i = 0
-    while i < len(text):
-        unescaped = False
-        for x, y in _escape_table:
-            if text[i: i + len(y)] == y:
-                nt += x
-                i += len(y)
-                unescaped = True
-                break
-        if not unescaped:
-            nt += text[i]
-            i += 1
-    return nt
-
-
-def _escape(text):
-    nt = ""
-    for c in text:
-        escaped = False
-        for x, y in _escape_table:
-            if c == x:
-                nt += y
-                escaped = True
-                break
-        if not escaped:
-            nt += c
-    return nt
 
 
 def sub(element, tag, attrs=None, kids=None):
@@ -414,7 +419,7 @@ def parse_element(text, i):
             # <a id="1">xx<b/>yy</a>
             #           ↑     ↑
             string_e, i = read_text(text, i)
-            e.kids.append(_unescape(string_e))
+            e.kids.append(_unescape(string_e, _xml_escape_table))
     raise ParseError
 
 
@@ -425,12 +430,12 @@ def read_attr(text, i):
     i = ignore_blank(text, i)
     qmark = text[i]
     i += 1
-    value, _, i = read_till(text, i, qmark)
-    return key, value, i
+    string_value, _, i = read_till(text, i, qmark)
+    return key, _unescape(string_value, _xml_attr_escape_table), i
 
 
 def parse_str(text):
-    return _unescape(text)
+    return _unescape(text, _xml_escape_table)
 
 
 def parse(text: str):
