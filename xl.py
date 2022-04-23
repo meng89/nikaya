@@ -349,7 +349,9 @@ def read_text(text, i):
 
 
 #  ↑↓←→↖↗↙↘
-def parse_element(text, i):
+def parse_element(text, i, do_strip=False, chars=None):
+    _chars = chars or " \n\r\t"
+
     # <a id="1">xx<b/>yy</a>
     # ↑           ↑
     if text[i] != "<":
@@ -412,14 +414,17 @@ def parse_element(text, i):
             else:
                 # <a id="1">xx<b/>yy</a>
                 #             ↑
-                kid, i = parse_element(text, kid_e_i)
+                kid, i = parse_element(text, kid_e_i, do_strip, _chars)
                 e.kids.append(kid)
 
         else:
             # <a id="1">xx<b/>yy</a>
             #           ↑     ↑
             string_e, i = read_text(text, i)
-            e.kids.append(_unescape(string_e, _xml_escape_table))
+            if do_strip:
+                string_e = string_e.strip(_chars)
+            if string_e:
+                e.kids.append(_unescape(string_e, _xml_escape_table))
     raise ParseError
 
 
@@ -434,15 +439,13 @@ def read_attr(text, i):
     return key, _unescape(string_value, _xml_attr_escape_table), i
 
 
-def parse_str(text):
-    return _unescape(text, _xml_escape_table)
-
-
-def parse(text: str):
+def parse(text: str, do_strip=False, chars=None):
     i = ignore_blank(text, 0)
     prolog, i = parse_prolog(text, i)
+
     i = ignore_blank(text, i)
-    root, i = parse_element(text, i)
+    root, i = parse_element(text, i, do_strip, chars)
+
     xl = Xl(prolog, root=root)
 
     return xl

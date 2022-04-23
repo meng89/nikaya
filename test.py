@@ -2,11 +2,13 @@
 
 import xl
 
-e = xl.Element("span", {"sf": """ a"'b """}, ["sffs"])
+e = xl.Element("span", {"name": "value"}, ["sf\tfs \r\t\n"])
 
 es = xl.Xl(root=e).to_str()
 print(es)
-e2 = xl.parse(es)
-print(e2.to_str())
+print()
+e2 = xl.parse(es, True, "\n\t")
+root = e2.root
+print(repr(e2.to_str()))
 
-print(e2.root.attrs)
+
