@@ -2,13 +2,8 @@
 
 import xl
 
-e = xl.Element("span", {"name": "value"}, ["sf\tfs \r\t\n"])
+e = xl.Element("span", {"name": "value"}, ["ss"])
+xl.sub(e, "span2", {"class": "sutta"}, ["ss3"])
 
-es = xl.Xl(root=e).to_str()
-print(es)
-print()
-e2 = xl.parse(es, True, "\n\t")
-root = e2.root
-print(repr(e2.to_str()))
-
+print(e.to_str2(do_pretty=True))
 

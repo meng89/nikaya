@@ -226,6 +226,70 @@ class Element(_Node):
     def kids(self):
         return self._kids
 
+    def to_str2(self,
+                do_pretty=False,
+                begin_indent=0,
+                step=4,
+                char=None,
+                dont_do_between_str=True,
+                dont_do_when_one_kid=True,
+                dont_do_tags=None):
+        char = char or " "
+        dont_do_tags = dont_do_tags or []
+
+        s = '<'
+        s += self.tag
+
+        _attrs_string_list = []
+        for attr_name, attr_value in self.attrs.items():
+            _attrs_string_list.append('{}="{}"'.format(attr_name, _escape(attr_value, _xml_attr_escape_table)))
+
+        if _attrs_string_list:
+            s += ' '
+            s += ' '.join(_attrs_string_list)
+
+        if self.kids:
+            s += '>'
+
+            if (dont_do_when_one_kid and _is_straight_line(self)) or self.tag in dont_do_tags:
+                for kid in self.kids:
+                    if isinstance(kid, str):
+                        s += _escape(kid, _xml_escape_table)
+                    elif isinstance(kid, Element):
+                        s += kid.to_str2()
+            else:
+                _indent_text = '\n' + char * (begin_indent + step)
+                last_type = None
+                for kid in self.kids:
+                    if isinstance(kid, str):
+                        if dont_do_between_str and last_type == str:
+                            pass
+                        else:
+                            last_type = str
+
+                            if do_pretty:
+                                s += _indent_text
+                        s += _escape(kid, _xml_escape_table)
+
+                    elif isinstance(kid, Element):
+                        if do_pretty:
+                            s += _indent_text
+                        s += kid.to_str2(do_pretty,
+                                         begin_indent,
+                                         step,
+                                         char,
+                                         dont_do_between_str,
+                                         dont_do_when_one_kid,
+                                         dont_do_tags)
+                    if do_pretty:
+                        s += '\n' + char * begin_indent
+
+            s += '</{}>'.format(self.tag)
+        else:
+            s += ' />'
+
+        return s
+
     def to_str(self):
         s = '<'
         s += self.tag
