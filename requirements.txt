@@ -12,3 +12,5 @@ pybtex
 
 
 html2image
+
+git+https://github.com/meng89/epubpacker@v2.0.0#egg=epubpacker
