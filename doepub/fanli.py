@@ -34,7 +34,7 @@ def write_fanli(epub: epubpacker.Epub, xc: book_public.XC):
     for one in _fl:
         _p = xl.sub(body, "p", kids=basestr.str2es(xc.c(one)))
 
-    htmlstr = xl.Xl(root=xl.pretty_insert(html, dont_do_tags=["p"])).to_str()
+    htmlstr = xl.Xml(root=html).to_str(do_pretty=True, dont_do_tags=["p"])
     epub.userfiles[doc_path] = htmlstr
     epub.spine.append(doc_path)
     epub.root_toc.append(epubpacker.Toc("凡例", doc_path))

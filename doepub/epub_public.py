@@ -176,7 +176,7 @@ def _make_note_doc(title, xc: book_public.XC, doc_path):
 
 
 def _doc_str(e):
-    return xl.Xl(root=xl.pretty_insert(e, dont_do_tags=["p"])).to_str()
+    return xl.Xml(root=e).to_str(do_pretty=True, dont_do_tags=["p"])
 
 
 def _make_css_link(head, href, id_=None):
@@ -255,7 +255,7 @@ def write_cover(epub, nikaya, xc: book_public.XC, mytemprootdir):
     _img = xl.sub(body, "img", {"src": doepub.relpath(cover_img_path_in_epub, cover_doc_path),
                                 "alt": "Cover Image",
                                 "title": "Cover Image"})
-    htmlstr = xl.Xl(root=xl.pretty_insert(html)).to_str()
+    htmlstr = xl.Xml(root=html).to_str()
     epub.userfiles[cover_doc_path] = htmlstr
     epub.root_toc.append(epubpacker.Toc("封面", cover_doc_path))
     epub.spine.append(cover_doc_path)

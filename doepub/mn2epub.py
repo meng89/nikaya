@@ -59,7 +59,7 @@ def write_suttas(nikaya, epub: epubpacker.Epub, bns, xc, _test=False):
 
                 dn2epub.write_bodylines(nikaya, sutta, sutta.body_lines, body, bns, c, doc_path)
 
-                htmlstr = xl.Xl(root=xl.pretty_insert(html, dont_do_tags=["p", "a", "h3"])).to_str()
+                htmlstr = xl.Xml(root=html).to_str(do_pretty=True, dont_do_tags=["title", "p", "h1", "h2", "h3", "h4"])
 
                 epub.userfiles[doc_path] = htmlstr
                 epub.spine.append(doc_path)

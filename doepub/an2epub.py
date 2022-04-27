@@ -110,7 +110,7 @@ def write_suttas(nikaya, epub: epubpacker.Epub, bns, xc, _test=False):
                     p.kids.extend(_x)
 
     for doc_path, (html, _) in docs.items():
-        htmlstr = xl.Xl(root=xl.pretty_insert(html, dont_do_tags=["p", "a"])).to_str()
+        htmlstr = xl.Xml(root=html).to_str(do_pretty=True, dont_do_tags=["title", "p", "a", "h1", "h2", "h3", "h4"])
         epub.userfiles[doc_path] = htmlstr
         epub.spine.append(doc_path)
 

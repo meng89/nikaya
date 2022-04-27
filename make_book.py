@@ -39,8 +39,8 @@ def main():
 
     print_temprootdir()
 
-    #sneb2pdf.make(TC(), temprootdir_td.name, books_dir, uc.CONTEXT_BIN_PATH, uc.FONTS_DIR)
-    #sneb2pdf.make(SC(), temprootdir_td.name, books_dir, uc.CONTEXT_BIN_PATH, uc.FONTS_DIR)
+    # sneb2pdf.make(TC(), temprootdir_td.name, books_dir, uc.CONTEXT_BIN_PATH, uc.FONTS_DIR)
+    # sneb2pdf.make(SC(), temprootdir_td.name, books_dir, uc.CONTEXT_BIN_PATH, uc.FONTS_DIR)
 
     for xc in (SC(), TC()):
         sn2epub.make(xc, temprootdir_td.name, books_dir, uc.EPUBCHECK)
