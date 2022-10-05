@@ -170,8 +170,8 @@ def do_onmouseover_local(e, url_path, sutta_temp_notes, local_notes):
             try:
                 note = tuple(sutta_temp_notes[key])
             except KeyError:
-                page_parsing.ccc_bug(page_parsing.WARNING, url_path, "未找到本地注解编号 \"{}\"".format(key))
                 x = e.get_text()
+                page_parsing.ccc_bug(page_parsing.WARNING, url_path, "辞汇 {} 未找到本地注解编号 {}".format(repr(x), repr(key)))
             else:
                 local_notes.add(note)
                 k = local_notes.index(note)
@@ -197,22 +197,10 @@ def key_hit(num, text, notes=None):
         raise NoteNotFound((num, text))
 
     for index in range(len(_notes[num])):
-        if text in dopdf.join_to_text(_notes[num][index]):
+        plain_note = dopdf.join_to_text(_notes[num][index])
+        if text.replace("(", "").replace(")", "").replace("者", "").replace("的", "").replace("或", "").replace("被", "")\
+                in plain_note.replace("(", "").replace(")", "").replace("者", "").replace("的", "").replace("或", ""):
             return num, index
-    raise NoteNotMatch((num, text))
-
-
-def match_key(num, text, notes=None):
-    if notes is None:
-        _notes = _global_notes
-    else:
-        _notes = notes
-    if num not in _notes.keys():
-        raise NoteNotMatch((num, text))
-
-    for subnum, subnote in _notes[num].items():
-        if text in dopdf.join_to_text(subnote):
-            return num, subnum
 
     raise NoteNotMatch((num, text))
 

@@ -41,10 +41,10 @@ class _MyInfo(BaseInfo, PianInfo, PinInfo):
 def analyse_head(lines):
     info = _MyInfo()
 
-    # 根本五十則篇
+    # 根本五十經典
     # 1.根本法門品
     for line in lines:
-        m = re.match(r"^(\S+篇)\s*$", line)
+        m = re.match(r"^(\S+經典)\s*$", line)
         if m:
             info.pian_title = m.group(1)
             continue

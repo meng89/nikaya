@@ -27,8 +27,21 @@ WARNING = "WARNING"
 INFO = "INFO"
 
 
+log_fd = None
+
+
 def ccc_bug(type_, url, string):
-    s = "<CCC {}>: text_and_url: {}, msg: {}".format(type_, url, string)
+    try:
+        import user_config as uc
+    except ImportError:
+        import _user_config as uc
+
+    global log_fd
+    if log_fd is None:
+        log_fd = open(uc.LOG_PATH, "w")
+
+    s = "<{}>: text_and_url: {}, msg: {}".format(type_, url, string)
+    log_fd.write(s+"\r\n")
     print(s)
 
 

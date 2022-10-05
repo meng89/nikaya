@@ -77,12 +77,15 @@ def write_suttas(nikaya, latex_io: typing.TextIO, bns, c, test=False):
                     def _cccurl():
                         _SR = base_suttaref.SuttaRef("SN" + "." + xiangying.serial + "." + sutta.begin)
                         return _SR.get_cccurl()
-
-                    latex_io.write("\\sutta" +
-                                   "{" + sutta.begin + "}" +
-                                   "{" + sutta.end + "}" +
-                                   "{" + c(sutta.title) + "}" +
-                                   "{" + _cccurl() + "}\n")
+                    try:
+                        latex_io.write("\\sutta" +
+                                       "{" + sutta.begin + "}" +
+                                       "{" + sutta.end + "}" +
+                                       "{" + (c(sutta.title) or "") + "}" +
+                                       "{" + _cccurl() + "}\n")
+                    except TypeError as e:
+                        print(sutta.title, sutta.begin, sutta.end, _cccurl())
+                        raise e
 
                     for body_listline in sutta.body_lines:
                         latex_io.write(dopdf.join_to_tex(body_listline, bns, c))

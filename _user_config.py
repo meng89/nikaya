@@ -8,7 +8,7 @@ os.makedirs(CACHE_DIR, exist_ok=True)
 
 
 # 莊春江工作站目录
-INDEX_DIR = "/mnt/data/Buddhism/abo_2022.04.05/agama.buddhason.org/"
+INDEX_DIR = "/mnt/data/Buddhism/abo_2022.10.05/agama.buddhason.org/"
 # INDEX_DIR = r"D:\abo_2022.03.34\agama.buddhason.org\"
 
 # 经文缓存目录
@@ -29,3 +29,5 @@ EPUBCHECK = "/mnt/data/software/epubcheck-4.2.6/epubcheck.jar"
 
 # 电子书存放目录
 BOOKS_DIR = os.path.join(PROJECT_ROOT, "_books")
+
+LOG_PATH = os.path.join(PROJECT_ROOT, "abo_log.txt")
