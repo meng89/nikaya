@@ -53,7 +53,7 @@ def write_suttas(nikaya, epub: epubpacker.Epub, bns, xc, _test=False):
 
             if pian.xiangyings.index(xiangying) == 0:
                 _write_pian_part(body)
-                pian_toc.href = doc_path + "#" + xy_id
+                pian_toc.href = doc_path + "#" + pian_id
 
             xl.sub(body, "h2", {"class": "title", "id": xy_id}, kids=[_xy_title])
             xy_toc = epubpacker.Toc(_xy_title, doc_path + "#" + xy_id)
