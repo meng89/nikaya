@@ -45,7 +45,8 @@ def main():
         sneb2pdf.make(TC(), temprootdir_td.name, books_dir, uc.CONTEXT_BIN_PATH, uc.FONTS_DIR)
         sneb2pdf.make(SC(), temprootdir_td.name, books_dir, uc.CONTEXT_BIN_PATH, uc.FONTS_DIR)
 
-    while input("input e and press enter to exit:").rstrip() != "e":
+    # Input e and press enter to exit
+    while input("输入 e 后按下回车退出:").rstrip() != "e":
         pass
 
 

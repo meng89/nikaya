@@ -58,7 +58,5 @@ def get_uuid(s):
     return uuid.uuid5(uuid.NAMESPACE_URL, "https://github.com/meng89/nikaya" + " " + s)
 
 
-
-
 class DocpathCalcError(Exception):
     pass

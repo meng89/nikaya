@@ -75,12 +75,12 @@ def check_epub(epub_path, epubcheck, mytemprootdir):
 
 
 def copy2booksdir(epub_path, nikaya, xc, books_dir):
-    shutil.copy(epub_path,
-                os.path.join(books_dir, "{}_{}_{}{}_{}.epub".format(xc.c(nikaya.title_hant),
-                                                                    xc.zhlang,
-                                                                    "莊",
-                                                                    nikaya.last_modified.strftime("%y%m"),
-                                                                    datetime.datetime.now().strftime("%Y%m%d"))))
+    shutil.copy(epub_path, os.path.join(books_dir, "{}_{}_莊春江{}{}_{}.epub".format(xc.c(nikaya.title_hant),
+                                                                                   xc.zhlang,
+                                                                                   nikaya.last_modified.strftime("%Y.%-m.%-d"),
+                                                                                   xc.c("譯"),
+                                                                                   datetime.datetime.now().strftime("%Y%m%d")
+                                                                                   )))
 
 
 def write2file(epub, mytemprootdir, bn):
@@ -215,9 +215,10 @@ def make_doc(doc_path, xc, title=None):
 
 
 def write_cover(epub, nikaya, xc: book_public.XC, mytemprootdir):
-
+    cover_xhtml_filename = "{}_{}_cover.xhtml".format(nikaya.abbr, xc.enlang)
     cover_img_filename = "{}_{}_cover.png".format(nikaya.abbr, xc.enlang)
     cover_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "cover_images")
+    os.makedirs(cover_dir, exist_ok=True)
     cover_img_path = os.path.join(cover_dir, cover_img_filename)
 
     if not os.path.exists(cover_img_path):
@@ -236,11 +237,13 @@ def write_cover(epub, nikaya, xc: book_public.XC, mytemprootdir):
             t.substitute(bookname_han=xc.c(title_hant),
                          bookname_pi=nikaya.title_pali,
                          han_version=xc.han_version,
-                         translator="莊春江 " + xc.c("譯"),
-                         date=nikaya.last_modified.strftime("%Y年%m月")
+                         translator="莊春江" + xc.c("譯"),
+                         date=nikaya.last_modified.strftime("%Y年%-m月")
                          )
+        open(os.path.join(cover_dir, cover_xhtml_filename), "w").write(doc_str)
         from html2image import Html2Image as HtI
-        hti = HtI(browser_executable="google-chrome-stable", output_path=cover_dir)
+        # Chrome 113 之前的几个版本有 bug，图像尺寸不对，所以暂时用 113 beta 版
+        hti = HtI(browser_executable="google-chrome-beta", output_path=cover_dir)
         hti.screenshot(html_str=doc_str, size=(1600, 2560), save_as=cover_img_filename)
     assert os.path.exists(cover_img_path)
 

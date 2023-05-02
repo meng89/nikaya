@@ -192,7 +192,8 @@ def make(xc, temprootdir, bookdir, context_bin_path, fonts_dir, test=False):
               context_bin_path=context_bin_path, lang=xc.enlang)
 
         shutil.copy(os.path.join(out_dir, "sn.pdf"),
-                    os.path.join(bookdir, "{}_{}_莊{}_{}.pdf".format(xc.c("相應部"),
+                    os.path.join(bookdir, "{}_{}_莊春江{}{}_{}.pdf".format(xc.c("相應部"),
                                                                     xc.zhlang,
-                                                                    nikaya.last_modified.strftime("%y%m"),
+                                                                    nikaya.last_modified.strftime("%Y.%-m.%-d"),
+                                                                           xc.c("譯"),
                                                                     datetime.datetime.now().strftime("%Y%m%d"))))
