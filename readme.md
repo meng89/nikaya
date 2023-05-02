@@ -11,6 +11,8 @@
 
 ## 阅读器列表
 部分 EPUB 阅读器把注解(endnote)实现为弹窗(popup)方式，提升了阅读体验：
+* iBook
+* 文石阅读器（贤友反馈）
 * [Calibre](https://calibre-ebook.com) 
 * [KOReader](https://koreader.rocks)
 
