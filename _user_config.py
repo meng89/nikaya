@@ -8,7 +8,7 @@ os.makedirs(CACHE_DIR, exist_ok=True)
 
 
 # 莊春江工作站目录
-INDEX_DIR = "/mnt/data/Buddhism/abo_2023.05.02/agama.buddhason.org/"
+INDEX_DIR = "/mnt/data/Buddhism/abo_2024.02.07/agama.buddhason.org/"
 # INDEX_DIR = r"D:\abo_2022.03.34\agama.buddhason.org\"
 
 # 经文缓存目录

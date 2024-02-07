@@ -85,7 +85,7 @@ def analyse_sutta_info(line):
         return info
 
     # ccc bug
-    m = re.match(r"^增支部(3)集(63)經\[/(恐怖經)]\($", line)
+    m = re.match(r"^增支部(3)集(63)經\[/(恐懼經)]$", line)
     if m:
         info.ji_serial = m.group(1)
         info.sutta_begin = m.group(2)
