@@ -56,7 +56,8 @@ class TextWithNoteRef(pyabo.BaseElement):
 
     def to_es(self, c, doc_path, tag_unicode_range, **kwargs):
         href = doepub.note_href_calculate(self.type_, self.key)
-        return [xl.Element("a", {"epub:type": "noteref",
+        return [xl.Element("a",
+                           {"epub:type": "noteref",
                                  "href": doepub.relpath(href, doc_path),
                                  "class": "noteref"},
                            doepub.basestr.str2es(c(self.text), tag_unicode_range))]

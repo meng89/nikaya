@@ -58,7 +58,7 @@ def check_epub(epub_path, epubcheck, mytemprootdir):
 
     def _run():
         nonlocal check_result
-        print("运行:", compile_cmd, end=" ", flush=True)
+        print("执行检查:", repr(compile_cmd), end=" ", flush=True)
         p = subprocess.Popen(compile_cmd, cwd=mytemprootdir, shell=True,
                              stdout=stdout_file, stderr=stderr_file)
         p.communicate()
@@ -68,9 +68,9 @@ def check_epub(epub_path, epubcheck, mytemprootdir):
             check_result = True
     _run()
     if check_result:
-        print("成功！")
+        print("没发现错误。")
     else:
-        print("出错！")
+        print("出错了！")
     return check_result
 
 
@@ -120,7 +120,7 @@ def write_notes(epub, nikaya, xc: book_public.XC):
     bns = [nikaya.abbr]
     _write_globalnotes(epub, bns, xc)
     first_note_doc_path = _write_localnotes(epub, nikaya.local_notes, bns, xc)
-    epub.root_toc.append(epubpacker.Toc(xc.c("註解"), first_note_doc_path))
+    epub.mark.kids.append(epubpacker.Mark(xc.c("註解"), first_note_doc_path))
     return epub
 
 
@@ -132,9 +132,9 @@ def _write_globalnotes(epub: epubpacker.Epub, bns, xc):
         if _doc_path not in docs.keys():
             docs[_doc_path] = _make_note_doc(xc.c("註解二"), xc, _doc_path)
         _html, ol = docs[_doc_path]
-        li = xl.sub(ol, "li", {"id": key})
+        li = ol.ekid("li", {"id": key})
 
-        p = xl.sub(li, "p")
+        p = li.ekid("p")
         es = []
         for subnote in note:
             es.extend(dopdf.join_to_xml(subnote, bns=bns, c=xc.c, doc_path=_doc_path))
@@ -156,8 +156,8 @@ def _write_localnotes(epub: epubpacker.Epub, notes: IndexedSet, bns, xc):
 
         _html, ol = docs[_doc_path]
 
-        li = xl.sub(ol, "li", {"id": str(notes.index(note))})
-        p = xl.sub(li, "p")
+        li = ol.ekid("li", {"id": str(notes.index(note))})
+        p = li.ekid("p")
         p.kids.extend(dopdf.join_to_xml(note, bns=bns, c=xc.c, doc_path=_doc_path))
 
     for doc_path, (html, _ol) in docs.items():
@@ -170,8 +170,8 @@ def _write_localnotes(epub: epubpacker.Epub, notes: IndexedSet, bns, xc):
 def _make_note_doc(title, xc: book_public.XC, doc_path):
     html, body = make_doc(doc_path, xc, title)
     body.attrs["class"] = "note"
-    sec = xl.sub(body, "section", {"epub:type": "endnotes", "role": "doc-endnotes"})
-    ol = xl.sub(sec, "ol")
+    sec = body.ekid("section", {"epub:type": "endnotes", "role": "doc-endnotes"})
+    ol = sec.ekid("ol")
     return html, ol
 
 
@@ -180,14 +180,14 @@ def _doc_str(e):
 
 
 def _make_css_link(head, href, id_=None):
-    link = xl.sub(head, "link", {"rel": "stylesheet", "type": "text/css", "href": href})
+    link = head.ekid("link", {"rel": "stylesheet", "type": "text/css", "href": href})
     if id_:
         link.attrs["id"] = id_
     return link
 
 
 def _make_js_link(head, src, id_=None):
-    script = xl.sub(head, "script", {"type": "text/javascript", "src": src})
+    script = head.ekid("script", {"type": "text/javascript", "src": src})
     if id_:
         script.attrs["id"] = id_
     return script
@@ -198,10 +198,10 @@ def make_doc(doc_path, xc, title=None):
                                "xmlns": "http://www.w3.org/1999/xhtml",
                                "xml:lang": xc.xmlang,
                                "lang": xc.xmlang})
-    head = xl.sub(html, "head")
+    head = html.ekid("head")
 
     if title:
-        _title = xl.sub(head, "title", kids=[title])
+        _title = head.ekid("title", kids=[title])
 
     _make_css_link(head, doepub.relpath(css.css1_path, doc_path), "css1")
     _make_css_link(head, doepub.relpath("_css/user_css1.css", doc_path), "user_css1")
@@ -210,11 +210,11 @@ def make_doc(doc_path, xc, title=None):
     _make_js_link(head, doepub.relpath("_js/user_js1.js", doc_path), "user_js1")
     _make_js_link(head, doepub.relpath("_js/user_js2.js", doc_path), "user_js2")
 
-    body = xl.sub(html, "body")
+    body = html.ekid("body")
     return html, body
 
 
-def write_cover(epub, nikaya, xc: book_public.XC, mytemprootdir):
+def write_cover(epub, nikaya, xc: book_public.XC, _mytemprootdir):
     cover_xhtml_filename = "{}_{}_cover.xhtml".format(nikaya.abbr, xc.enlang)
     cover_img_filename = "{}_{}_cover.png".format(nikaya.abbr, xc.enlang)
     cover_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "cover_images")
@@ -243,7 +243,7 @@ def write_cover(epub, nikaya, xc: book_public.XC, mytemprootdir):
         open(os.path.join(cover_dir, cover_xhtml_filename), "w").write(doc_str)
         from html2image import Html2Image as HtI
         # Chrome 113 之前的几个版本有 bug，图像尺寸不对，所以暂时用 113 beta 版
-        hti = HtI(browser_executable="google-chrome-beta", output_path=cover_dir)
+        hti = HtI(browser_executable="google-chrome-stable", output_path=cover_dir)
         hti.screenshot(html_str=doc_str, size=(1600, 2560), save_as=cover_img_filename)
     assert os.path.exists(cover_img_path)
 
@@ -255,10 +255,10 @@ def write_cover(epub, nikaya, xc: book_public.XC, mytemprootdir):
     html, body = make_doc(cover_doc_path, xc, "封面")
     body.attrs["style"] = "text-align: center;"
 
-    _img = xl.sub(body, "img", {"src": doepub.relpath(cover_img_path_in_epub, cover_doc_path),
+    _img = body.ekid("img", {"src": doepub.relpath(cover_img_path_in_epub, cover_doc_path),
                                 "alt": "Cover Image",
                                 "title": "Cover Image"})
     htmlstr = xl.Xml(root=html).to_str()
     epub.userfiles[cover_doc_path] = htmlstr
-    epub.root_toc.append(epubpacker.Toc("封面", cover_doc_path))
+    epub.mark.kids.append(epubpacker.Mark("封面", cover_doc_path))
     epub.spine.append(cover_doc_path)

@@ -13,19 +13,19 @@ def write_suttas(nikaya, epub: epubpacker.Epub, bns, xc, _test=False):
         pian_id = "pian"
 
         def _write_pian_title(_body):
-            xl.sub(_body, "h1", {"class": "title", "id": pian_id}, [c(pian.title)])
+            _body.ekid("h1", {"class": "title", "id": pian_id}, [c(pian.title)])
 
-        pian_toc = epubpacker.Toc(
+        pian_toc = epubpacker.Mark(
             c(pian.title) + "({}~{})".format(pian.pins[0].suttas[0].serial, pian.pins[-1].suttas[-1].serial))
-        epub.root_toc.append(pian_toc)
+        epub.mark.kids.append(pian_toc)
 
         for pin in pian.pins:
             pin_id = "pin"
 
             def _write_pin_title(_body):
-                xl.sub(_body, "h2", {"class": "title", "id": pin_id}, [c(pin.title)])
+                _body.ekid("h2", {"class": "title", "id": pin_id}, [c(pin.title)])
 
-            pin_toc = epubpacker.Toc(
+            pin_toc = epubpacker.Mark(
                 c(pin.title) + "({}~{})".format(pin.suttas[0].serial, pin.suttas[-1].serial))
             pian_toc.kids.append(pin_toc)
 
@@ -44,17 +44,17 @@ def write_suttas(nikaya, epub: epubpacker.Epub, bns, xc, _test=False):
                     _write_pin_title(body)
                     pin_toc.href = doc_path + "#" + pin_id
 
-                title_e = xl.sub(body, "h3", {"class": "title", "id": "{}".format(sutta_id)})
-                _a = xl.sub(title_e, "a", {"href": "{}".format(base_suttaref.SuttaRef(sutta_id).get_cccurl())})
+                title_e = body.ekid("h3", {"class": "title", "id": "{}".format(sutta_id)})
+                _a = title_e.ekid("a", {"href": "{}".format(base_suttaref.SuttaRef(sutta_id).get_cccurl())})
                 _a.kids.append(sutta_id)
                 title_e.kids.append(" ")
-                xl.sub(title_e, "span", kids=[c(sutta.title)])
+                title_e.ekid("span", kids=[c(sutta.title)])
                 if sutta.agama_part is not None:
                     title_e.kids.append(" ")
-                    xl.sub(title_e, "span", {"class": "agama_part"},
-                           kids=dopdf.join_to_xml([sutta.agama_part], bns, c, doc_path, tag_unicode_range=False))
+                    title_e.ekid("span", {"class": "agama_part"},
+                                 kids=dopdf.join_to_xml([sutta.agama_part], bns, c, doc_path, tag_unicode_range=False))
 
-                sutta_toc = epubpacker.Toc(sutta.serial + ". " + c(sutta.title), href=doc_path + "#" + sutta_id)
+                sutta_toc = epubpacker.Mark(sutta.serial + ". " + c(sutta.title), href=doc_path + "#" + sutta_id)
                 pin_toc.kids.append(sutta_toc)
 
                 dn2epub.write_bodylines(nikaya, sutta, sutta.body_lines, body, bns, c, doc_path)

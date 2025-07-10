@@ -37,12 +37,12 @@ def write_suttas(nikaya, epub: epubpacker.Epub, bns, xc, _test=False):
         pian_id = "pian{}".format(nikaya.pians.index(pian))
 
         def _write_pian_part(_body):
-            xl.sub(_body, "h1", {"class": "title", "id": pian_id}, [c(pian.title)])
+            body.ekid("h1", {"class": "title", "id": pian_id}, [c(pian.title)])
             nonlocal pian_toc
 
-        pian_toc = epubpacker.Toc(
+        pian_toc = epubpacker.Mark(
             c(pian.title) + "({}~{})".format(pian.xiangyings[0].serial, pian.xiangyings[-1].serial))
-        epub.root_toc.append(pian_toc)
+        epub.mark.kids.append(pian_toc)
 
         for xiangying in pian.xiangyings:
             xy_id = "sn"
@@ -55,15 +55,15 @@ def write_suttas(nikaya, epub: epubpacker.Epub, bns, xc, _test=False):
                 _write_pian_part(body)
                 pian_toc.href = doc_path + "#" + pian_id
 
-            xl.sub(body, "h2", {"class": "title", "id": xy_id}, kids=[_xy_title])
-            xy_toc = epubpacker.Toc(_xy_title, doc_path + "#" + xy_id)
+            body.ekid("h2", {"class": "title", "id": xy_id}, kids=[_xy_title])
+            xy_toc = epubpacker.Mark(_xy_title, doc_path + "#" + xy_id)
             pian_toc.kids.append(xy_toc)
 
             for pin in xiangying.pins:
                 if pin.title is not None:
                     pin_id = "pin{}".format(xiangying.pins.index(pin))
-                    xl.sub(body, "h3", {"class": "title", "id": pin_id}, kids=[c(pin.title)])
-                    pin_toc = epubpacker.Toc(c(pin.title + "({}~{})".format(pin.suttas[0].begin,
+                    body.ekid("h3", {"class": "title", "id": pin_id}, kids=[c(pin.title)])
+                    pin_toc = epubpacker.Mark(c(pin.title + "({}~{})".format(pin.suttas[0].begin,
                                                                             pin.suttas[-1].end)),
                                              href=doc_path + "#" + pin_id)
                     xy_toc.kids.append(pin_toc)
@@ -88,26 +88,26 @@ def write_suttas(nikaya, epub: epubpacker.Epub, bns, xc, _test=False):
 
                     sutta_safe_title = sutta.title or ""
 
-                    h4 = xl.sub(body, "h4", {"class": "title",
+                    h4 = body.ekid("h4", {"class": "title",
                                              "id": "{}".format(sutta_id)})
                     title_e = h4
-                    _a = xl.sub(h4, "a", {"class": "sutta_id",
-                                          "href": "{}".format(base_suttaref.SuttaRef(sutta_id).get_cccurl())},
-                                kids=[title_sutta_id])
+                    _a = h4.ekid("a", {"class": "sutta_id",
+                                       "href": "{}".format(base_suttaref.SuttaRef(sutta_id).get_cccurl())},
+                                 kids=[title_sutta_id])
                     title_e.kids.append(" ")
-                    xl.sub(title_e, "span", {"class": "xiangying_title"}, [c(xiangying.title)])
+                    title_e.ekid("span", {"class": "xiangying_title"}, [c(xiangying.title)])
                     title_e.kids.append("/")
-                    xl.sub(title_e, "span", kids=[c(sutta_safe_title)])
+                    title_e.ekid("span", kids=[c(sutta_safe_title)])
                     if sutta.agama_part is not None:
                         title_e.kids.append(" ")
-                        xl.sub(title_e, "span", {"class": "agama_part"},
+                        title_e.ekid("span", {"class": "agama_part"},
                                kids=dopdf.join_to_xml([sutta.agama_part], bns, c, doc_path, tag_unicode_range=False))
 
-                    sutta_toc = epubpacker.Toc(sutta_toc_title, href=doc_path + "#" + sutta_id)
+                    sutta_toc = epubpacker.Mark(sutta_toc_title, href=doc_path + "#" + sutta_id)
                     sutta_father_toc.kids.append(sutta_toc)
 
                     for body_listline in sutta.body_lines:
-                        p = xl.sub(body, "p")
+                        p = body.ekid("p")
                         _x = dopdf.join_to_xml(body_listline, bns=bns, c=c, doc_path=doc_path)
                         p.kids.extend(_x)
 

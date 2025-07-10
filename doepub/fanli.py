@@ -29,12 +29,12 @@ def write_fanli(epub: epubpacker.Epub, xc: book_public.XC):
     doc_path = "fanli.xhtml"
     html, body = epub_public.make_doc(doc_path, xc, "凡例")
     body.attrs["class"] = "fanli"
-    _h1 = xl.sub(body, "h1", {"class": "title"}, ["凡例"])
+    _h1 = body.ekid("h1", {"class": "title"}, ["凡例"])
 
     for one in _fl:
-        _p = xl.sub(body, "p", kids=basestr.str2es(xc.c(one)))
+        _p = body.ekid("p", kids=basestr.str2es(xc.c(one)))
 
     htmlstr = xl.Xml(root=html).to_str(do_pretty=True, dont_do_tags=["p"])
     epub.userfiles[doc_path] = htmlstr
     epub.spine.append(doc_path)
-    epub.root_toc.append(epubpacker.Toc("凡例", doc_path))
+    epub.mark.kids.append(epubpacker.Mark("凡例", doc_path))

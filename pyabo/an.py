@@ -53,6 +53,17 @@ def analyse_sutta_info(line):
     # 增支部6集35經/明的一部分經
     # 增支部4集19經/不應該行處第三
 
+    # todo report this
+
+    if line == '增支部10集11經/摩訶男經第一':
+        line = '增支部11集11經/摩訶男經第一'
+
+    elif line == '增支部10集13經/難提經':
+        line = '增支部11集13經/難提經'
+
+
+    print(repr(line))
+
     m = re.match(r"^增支部(\d+)集(\d+)經$", line)
     if m:
         info.ji_serial = m.group(1)
