@@ -7,9 +7,18 @@ CACHE_DIR = os.path.join(PROJECT_ROOT, "cache")
 os.makedirs(CACHE_DIR, exist_ok=True)
 
 
+
 # 莊春江工作站目录
 INDEX_DIR = "/mnt/data/Buddhism/abo_2025.07.09/agama.buddhason.org/"
 # INDEX_DIR = r"D:\abo_2022.03.34\agama.buddhason.org\"
+
+
+_RESOURCE_DIR = os.path.join(PROJECT_ROOT, "resource")
+
+DOWNLOADED_DIR = os.path.join(_RESOURCE_DIR, "download")
+
+TIMESTAMP = os.path.join(_RESOURCE_DIR, "timestamp.csv")
+
 
 # 经文缓存目录
 CACHE_DIR = os.path.join(PROJECT_ROOT, "cache")
