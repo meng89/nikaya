@@ -1,4 +1,4 @@
-import _user_config
+import config
 
 import requests
 from dateutil.parser import parse

@@ -8,7 +8,7 @@ from flask import Flask
 try:
     import user_config as uc
 except ImportError:
-    import _user_config as uc
+    import config as uc
 
 _is_runing = False
 

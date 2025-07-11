@@ -1,31 +1,55 @@
 #!/usr/bin/env python3
 
 import os
+import dateutil.parser
 
 import requests
-from dateutil.parser import parse
+import urllib.parse
 
-headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+try:
+    import user_config as config
+except ImportError:
+    import config as config
 
-url = "https://agama.buddhason.org/Su/Su31.htm"
+import pyabo
 
-response = requests.head(url) # Use HEAD request to get headers without downloading content
-response.raise_for_status() # Raise an exception for bad status codes (4xx or 5xx)
+_path = "Su/Su31.htm"
 
-if 'Last-Modified' in response.headers:
-    last_modified_str = response.headers['Last-Modified']
-    last_modified_date = parse(last_modified_str) # Parse the date string into a datetime object
-    print(f"Last Modified Date: {last_modified_date}")
-else:
-    print("Last-Modified header not found in the response.")
 
-path = "su31.htm"
-with open(path, "wb") as f:
-    r = requests.get(url, headers=headers)
+def sync(filename):
+    file_path = os.path.join(config.DOWNLOAD_DIR, filename)
+    if os.path.exists(file_path):
+        local_mtime = os.path.getmtime(file_path)
+        remote_mtime = None
+        if local_mtime != remote_mtime:
+            download(filename)
+    else:
+        download(filename)
+
+
+def download(filename):
+    url = urllib.parse.urljoin(pyabo.ABO_WEBSITE, filename)
+    print(url)
+    if config.SOCKS5_PROXY is not None:
+        proxies = {'http': "socks5://{}".format(config.SOCKS5_PROXY),
+                   "https": "socks5://{}".format(config.SOCKS5_PROXY)}
+        r = requests.get(url, proxies=proxies)
+    else:
+        r = requests.get(url)
     last_modified_str = r.headers['Last-Modified']
-    print(last_modified_str)
-    last_modified_date = parse(last_modified_str) # Parse the date string into a datetime object
-    print(f"Last Modified Date: {last_modified_date}")
-    os.utime(path, (new_mtime, new_mtime))
+
+    dt = dateutil.parser.parse(last_modified_str)
+    mtime = dt.timestamp()
+
+    file_path = os.path.join(config.DOWNLOAD_DIR, filename)
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+    f = open(file_path, "wb")
     f.write(r.content)
-    print(r.ok)
+    f.close()
+
+    atime = os.path.getatime(file_path)
+    os.utime(file_path, (atime, mtime))
+
+
+if __name__ == "__main__":
+    sync(_path)

@@ -15,11 +15,12 @@ INDEX_DIR = "/mnt/data/Buddhism/abo_2025.07.09/agama.buddhason.org/"
 
 _RESOURCE_DIR = os.path.join(PROJECT_ROOT, "resource")
 
-DOWNLOADED_DIR = os.path.join(_RESOURCE_DIR, "download")
+DOWNLOAD_DIR = os.path.join(_RESOURCE_DIR, "download")
 
 TIMESTAMP = os.path.join(_RESOURCE_DIR, "timestamp.csv")
 
-
+SOCKS5_PROXY = "127.0.0.1:1080"
+SOCKS5_PROXY = None
 # 经文缓存目录
 CACHE_DIR = os.path.join(PROJECT_ROOT, "cache")
 

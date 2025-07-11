@@ -34,7 +34,7 @@ def ccc_bug(type_, url, string):
     try:
         import user_config as uc
     except ImportError:
-        import _user_config as uc
+        import config as uc
 
     global log_fd
     if log_fd is None:
