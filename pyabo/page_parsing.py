@@ -123,8 +123,7 @@ def _do_class_nikaya(contents, **kwargs):
     for e in contents:
         if e.name == "div" and e["style"] == "display: none":
             continue
-        elif e.name == "span" and e["class"] == ["sutra_name"] \
-                and e.get_text() == "相應部12相應83-93經/學經等（中略）十一則":
+        elif e.name == "span" and e["class"] == ["sutra_name"] and e.get_text() == "相應部12相應83-93經/學經等（中略）十一則":
             _new_contents.append(e.get_text())
         else:
             _new_contents.append(e)
