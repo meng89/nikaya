@@ -15,6 +15,8 @@ except ImportError:
 
 import pyabo
 
+import pyabo2.kn
+
 
 
 
@@ -80,6 +82,7 @@ def download(filename, session):
     mtime = r_mtime(r)
     file_path = os.path.join(config.DOWNLOAD_DIR, filename)
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
+    os.remove(file_path)
     f = open(file_path, "wb")
     f.write(r.content)
     f.close()
@@ -90,7 +93,7 @@ def download(filename, session):
 
 def main(fresh_time, check_mtime):
     session = requests.Session()
-    for module in pyabo.kn.all_modules:
+    for module in pyabo2.kn.all_modules:
         for filename in module.htmls:
             sync(filename, session, fresh_time, check_mtime)
 

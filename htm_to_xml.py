@@ -33,30 +33,48 @@ def htm2xml(module, filename):
 
     divs = root.find_descendants("div")
 
-    nikaya_div = None
-    pali_div = None
-    comp_div = None
+    div_nikaya = None
+    div_pali = None
+    div_comp = None
 
     for div in divs:
         if "class" in div.attrs.keys():
             if div.attrs["class"] == "nikaya":
-                nikaya_div = div
+                div_nikaya = div
             elif div.attrs["class"] == "pali":
-                pali_div = div
+                div_pali = div
             elif div.attrs["class"] == "comp":
-                comp_div = div
+                div_comp = div
+
+    assert div_nikaya is not None
+
+    has_sutra_name = False
+    for span in div_nikaya.find_descendants("span"):
+        if span.attrs.keys.get("class") == "sutra_name":
+            has_sutra_name = True
+
+    if has_sutra_name:
 
 
-    print(nikaya_div.to_str())
-    print(pali_div)
 
-    exit()
+
+
 
 
 
 
     homage_and_head_lines, sutta_name_part, translator_part, agama_part, body_lines = _do_class_nikaya(nikaya)
     print(agama_part)
+
+def has_sutra_name_read_nikaya(es: list):
+    while True:
+        e = es.pop(0)
+
+
+def no_sutra_name_read_nikaya(es: list):
+    #todo
+
+
 
 
 def _do_class_nikaya_new(contents, **kwargs):
@@ -83,6 +101,7 @@ def _do_class_nikaya_new(contents, **kwargs):
             homage_and_head_oline = []
         else:
             homage_and_head_oline.append(e)
+
     if homage_and_head_oline:
         homage_and_head_olines.append(homage_and_head_oline)
 
@@ -102,6 +121,7 @@ def _do_class_nikaya_new(contents, **kwargs):
     _br = contents.pop(0)
     assert (isinstance(_br, bs4.element.Tag) and _br.name == "br")
 
+    # trans
     _new_contents = []
     for e in contents:
         if e.name == "div" and e["style"] == "display: none":
@@ -111,9 +131,10 @@ def _do_class_nikaya_new(contents, **kwargs):
         else:
             _new_contents.append(e)
 
-    contents = _new_contents
 
-    for oline in note_thing.contents2lines(contents):
+    contents2 = _new_contents
+
+    for oline in note_thing.contents2lines(contents2):
         body_lines.append(_do_line(oline))
 
     return homage_and_head_lines, sutta_name_part, translator_part, agama_part, body_lines
