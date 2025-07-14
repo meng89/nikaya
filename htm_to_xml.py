@@ -34,6 +34,9 @@ def htm2xml(module, filename):
     divs = root.find_descendants("div")
 
     nikaya_div = None
+    pali_div = None
+    comp_div = None
+
     for div in divs:
         if "class" in div.attrs.keys():
             if div.attrs["class"] == "nikaya":
