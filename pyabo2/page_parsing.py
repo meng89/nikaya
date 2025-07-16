@@ -84,18 +84,15 @@ def read_page(soup):
                 div_comp = div
 
     pali_doc = soup.find("div", {"class": "pali"}).text
-    sutta_temp_notes = _do_class_comp(soup.find("div", {"class": "comp"}),
-                                      url_path=url_path, local_notes=local_notes)
 
-    homage_and_head_lines, sutta_name_part, translator_part, agama_part, body_lines = \
-        _do_class_nikaya(list(soup.find("div", {"class": "nikaya"}).contents),
-                         url_path=url_path, sutta_temp_notes=sutta_temp_notes, local_notes=local_notes)
+    notes = take_comp(div_comp)
+
+    homage_and_head_lines, sutta_name_part, translator_part, agama_part, body_lines = take_nikaya(div_nikaya)
 
     homage_line, _head_lines = _split_homage_and_head(homage_and_head_lines)
     head_lines = listline_list_to_line_list(_head_lines)
 
-    return (homage_line, head_lines, sutta_name_part, translator_part, agama_part,
-            body_lines, pali_doc, last_modified)
+    return homage_line, head_lines, sutta_name_part, translator_part, agama_part, body_lines, pali_doc
 
 
 def take_comp(div_comp: xl.Element):
@@ -134,11 +131,12 @@ def _clean_contents(contents: list) -> list:
     return lines
 
 
-def _do_class_nikaya(contents, **kwargs):
+def take_nikaya(div_nikaya):
+    contents = div_nikaya.kids
     homage_and_head_oline = []
     homage_and_head_olines = []
 
-    sutta_name_part = None
+    sutta_name_es = None
     body_lines = []
 
     def _do_line(_oline):
@@ -150,10 +148,10 @@ def _do_class_nikaya(contents, **kwargs):
                                                  **kwargs)
     while contents:
         e = contents.pop(0)
-        if e.name == "span" and e["class"] == ["sutra_name"]:
-            sutta_name_part = e.get_text()
+        if e.tag == "span" and e.attrs["class"] == "sutra_name":
+            sutta_name_es = e.kids
             break
-        elif isinstance(e, bs4.element.Tag) and e.name == "br":
+        elif isinstance(e, xl.Element) and e.tag == "br":
             homage_and_head_olines.append(homage_and_head_oline)
             homage_and_head_oline = []
         else:
@@ -165,8 +163,8 @@ def _do_class_nikaya(contents, **kwargs):
 
 
     e2 = contents.pop(0)
-    assert isinstance(e2, bs4.element.NavigableString)
-    translator_line = e2.get_text().strip()
+    assert isinstance(e2, str)
+    translator_line = e2.strip()
     m = re.match(r"^(.+\(莊春江譯\))(.+)$", translator_line)
     if m:
         translator_part = m.group(1)
@@ -176,14 +174,14 @@ def _do_class_nikaya(contents, **kwargs):
         agama_part = None
     # todo
     _br = contents.pop(0)
-    assert (isinstance(_br, bs4.element.Tag) and _br.name == "br")
+    assert (isinstance(_br, xl.Element) and _br.tag == "br")
 
     _new_contents = []
     for e in contents:
-        if e.name == "div" and e["style"] == "display: none":
+        if e.tab == "div" and e.attrs["style"] == "display: none":
             continue
-        elif e.name == "span" and e["class"] == ["sutra_name"] and e.get_text() == "相應部12相應83-93經/學經等（中略）十一則":
-            _new_contents.append(e.get_text())
+        elif e.tab == "span" and e.attrs["class"] == "sutra_name" and e.kids[0] == "相應部12相應83-93經/學經等（中略）十一則":
+            _new_contents.append(e.kids[0])
         else:
             _new_contents.append(e)
 
@@ -192,7 +190,7 @@ def _do_class_nikaya(contents, **kwargs):
     for oline in _clean_contents(contents):
         body_lines.append(_do_line(oline))
 
-    return homage_and_head_lines, sutta_name_part, translator_part, agama_part, body_lines
+    return homage_and_head_lines, sutta_name_es, translator_part, agama_part, body_lines
 
 
 def _split_homage_and_head(listline_list):
@@ -205,8 +203,6 @@ def _split_homage_and_head(listline_list):
             head_listline_list.append(listline)
     return homage_listline, head_listline_list
 
-def lm_to_strdate(last_modified):
-    return last_modified.strftime("%Y-%m-%d")
 
 
 def listline_list_to_line_list(lsline_list):
