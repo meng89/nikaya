@@ -3,15 +3,6 @@ import re
 import bs4
 import xl
 
-import requests
-from urllib.parse import urlparse
-
-from dateutil.parser import parse as parsedate
-
-import pyabo.parse_original_line
-from pyabo import base, note_thing
-
-
 
 try:
     import user_config as config
@@ -59,17 +50,17 @@ def read_pages(filenames):
     results = []
     for file_path in filenames:
         full_path = os.path.join(config.DOWNLOAD_DIR, file_path)
-        last_modified = os.path.getmtime(full_path)
+        mtime = os.path.getmtime(full_path)
         data = open(full_path, "r").read()
         soup = bs4.BeautifulSoup(data, 'html5lib')
+        root = xl.parse(str(soup)).root
+        result = [mtime] + read_page(root)
+        results.append(result)
+    return results
 
 
-def read_page(soup):
-    x = soup.prettify()
-    root = xl.parse(str(soup)).root
-
+def read_page(root):
     divs = root.find_descendants("div")
-
     div_nikaya = None
     div_pali = None
     div_comp = None
@@ -83,28 +74,29 @@ def read_page(soup):
             elif div.attrs["class"] == "comp":
                 div_comp = div
 
-    pali_doc = soup.find("div", {"class": "pali"}).text
-
     notes = take_comp(div_comp)
 
     homage_and_head_lines, sutta_name_part, translator_part, agama_part, body_lines = take_nikaya(div_nikaya)
 
     homage_line, _head_lines = _split_homage_and_head(homage_and_head_lines)
-    head_lines = listline_list_to_line_list(_head_lines)
+    head_lines = _head_lines
 
-    return homage_line, head_lines, sutta_name_part, translator_part, agama_part, body_lines, pali_doc
+    body = lines_to_body(body_lines)
+    return [homage_line, head_lines, sutta_name_part, translator_part, agama_part, body, notes, div_pali]
 
 
 def take_comp(div_comp: xl.Element):
-    notes = []
+    notes = xl.Element("notes")
     for span in div_comp.find_descendants("span"):
         id_ = span.attrs.get("id")
         if id_ is not None:
-            m = re.match("^note(\d+)$", id_)
+            m = re.match(r"^note(\d+)$", id_)
             if m:
                 note = xl.Element("note")
                 note.attrs["id"] = m.group(1)
-                note.kids.extend(_clean_contents(span.kids))
+                note.kids.extend(span.kids)
+                notes.kids.append(note)
+
     return notes
 
 
@@ -140,15 +132,11 @@ def take_nikaya(div_nikaya):
     body_lines = []
 
     def _do_line(_oline):
-        return pyabo.parse_original_line.do_line(oline=_oline,
-                                                 funs=[note_thing.do_str,
-                                                       note_thing.do_href,
-                                                       note_thing.do_onmouseover_global,
-                                                       note_thing.do_onmouseover_local],
-                                                 **kwargs)
+        return do_line(oline=_oline, funs=[do_str, do_onmouseover_global, do_onmouseover_local])
+
     while contents:
         e = contents.pop(0)
-        if e.tag == "span" and e.attrs["class"] == "sutra_name":
+        if isinstance(e, xl.Element) and e.tag == "span" and e.attrs["class"] == "sutra_name":
             sutta_name_es = e.kids
             break
         elif isinstance(e, xl.Element) and e.tag == "br":
@@ -160,6 +148,7 @@ def take_nikaya(div_nikaya):
         homage_and_head_olines.append(homage_and_head_oline)
 
     homage_and_head_lines = [_do_line(_oline) for _oline in homage_and_head_olines]
+    # homage_and_head_lines = homage_and_head_olines
 
 
     e2 = contents.pop(0)
@@ -172,15 +161,15 @@ def take_nikaya(div_nikaya):
     else:
         translator_part = translator_line
         agama_part = None
-    # todo
+    # todo what?
     _br = contents.pop(0)
     assert (isinstance(_br, xl.Element) and _br.tag == "br")
 
     _new_contents = []
     for e in contents:
-        if e.tab == "div" and e.attrs["style"] == "display: none":
+        if isinstance(e, xl.Element) and e.tag == "div" and e.attrs["style"] == "display: none":
             continue
-        elif e.tab == "span" and e.attrs["class"] == "sutra_name" and e.kids[0] == "相應部12相應83-93經/學經等（中略）十一則":
+        elif isinstance(e, xl.Element) and e.tag == "span" and e.attrs["class"] == "sutra_name" and e.kids[0] == "相應部12相應83-93經/學經等（中略）十一則":
             _new_contents.append(e.kids[0])
         else:
             _new_contents.append(e)
@@ -204,17 +193,68 @@ def _split_homage_and_head(listline_list):
     return homage_listline, head_listline_list
 
 
+def do_line(oline, funs):
+    line = []
+    for oe in oline:
+        try:
+            line.extend(_do_e(oe, funs))
+        except TypeError:
+            raise Exception((type(oe), oe))
+    return line
 
-def listline_list_to_line_list(lsline_list):
-    lines = []
-    for lsline in lsline_list:
-        line = ""
-        for s in lsline:
-            if isinstance(s, str):
-                line += s
-            elif isinstance(s, base.TextWithNoteRef):
-                line += s.get_text()
-            else:
-                raise TypeError("Something Wrong!")
-        lines.append(line)
-    return lines
+
+def _do_e(e, funs):
+    for fun in funs:
+        answer, x = fun(e=e)
+        if answer:
+            return x
+
+    raise Exception((type(e), e))
+
+
+def do_str(e, **_kwargs):
+    if isinstance(e, str):
+        return True, [e.strip("\n")]
+    else:
+        return False, e
+
+
+def do_onmouseover_global(e):
+    if isinstance(e, xl.Element) and e.tag == "a" and "onmouseover" in e.attrs.keys():
+        m = re.match(r"^note\(this,(\d+)\);$", e.attrs["onmouseover"])
+        if m:
+            twgn = xl.Element("twgn") # text with global note
+            twgn.attrs["id"] = m.group(1)
+            twgn.kids.extend(e.kids)
+            return True, [twgn]
+
+    return False, e
+
+
+def do_onmouseover_local(e):
+    if isinstance(e, xl.Element) and e.tag == "a" and "onmouseover" in e.attrs.keys():
+        m = re.match(r"^local\(this,(\d+)\);$", e.attrs["onmouseover"])
+        if m:
+            twln = xl.Element("twln") # text with local note
+            twln.attrs["id"] = m.group(1)
+            twln.kids.extend(e.kids)
+            return True, [twln]
+
+    return False, e
+
+
+class NoteNotMatch(Exception):
+    pass
+
+
+class NoteNotFound(Exception):
+    pass
+
+
+def lines_to_body(lines):
+    body = xl.Element("body")
+    for line in lines:
+        p = body.ekid("p")
+        assert isinstance(line, list)
+        p.kids.extend(line)
+    return body

@@ -82,7 +82,11 @@ def download(filename, session):
     mtime = r_mtime(r)
     file_path = os.path.join(config.DOWNLOAD_DIR, filename)
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
-    os.remove(file_path)
+    try:
+        os.remove(file_path)
+    except FileNotFoundError:
+        pass
+
     f = open(file_path, "wb")
     f.write(r.content)
     f.close()

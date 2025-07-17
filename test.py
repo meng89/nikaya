@@ -1,11 +1,5 @@
 #!/usr/bin/env python3
 
-import re
+import pyabo2.kn.ud as ud
 
-def split_name(s):
-    m = re.match(r"^\d+_(.+)$", s)
-    return m.group(1)
-
-
-print(split_name("123_sf s.xml"))
-
+ud.trans_files()
