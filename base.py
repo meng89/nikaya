@@ -20,7 +20,7 @@ def split_name(name):
     return _split(name).group(2)
 
 
-class Dir:
+class Folder:
     def __init__(self, path=None):
         self.conts = {}
         if path:
@@ -32,7 +32,7 @@ class Dir:
 
                 if os.path.isdir(entry_path):
                     name = split_name(entry)
-                    value = Dir(entry_path)
+                    value = Folder(entry_path)
 
                 elif os.path.isfile(entry_path):
                     name = os.path.basename(entry_path)
@@ -67,3 +67,32 @@ class Doc:
         xml = xl.Xml(root)
         with open(path, "w") as f:
             f.write(xml.to_str(new_line_after_kid=True, do_pretty=True, dont_do_tags=["body"], try_self_closing=True))
+
+
+def load(path) -> dict:
+    data = {}
+    entries = os.listdir(path)
+    entries.sort(key=split_serial)
+    for entry in entries:
+        entry_path = os.path.join(path, entry)
+
+        if os.path.isdir(entry_path):
+            name = split_name(entry)
+            value = load(entry_path)
+
+        elif os.path.isfile(entry_path):
+            name = os.path.basename(entry_path)
+            value = xl.parse(open(entry_path, "r").read())
+        else:
+            raise Exception("Unknow File: {}".format(entry_path))
+        data[name] = value
+
+    return data
+
+
+
+def write(path, data):
+    for k, v in data.items():
+
+        if isinstance(v, dict):
+            write(os.path.join(path, k), v)

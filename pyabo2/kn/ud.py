@@ -1,7 +1,10 @@
 import os.path
+import re
+
 
 import xl
 
+import base
 import pyabo2.page_parsing
 
 name_han = "優陀那" # 自说经
@@ -16,9 +19,13 @@ except ImportError:
     import config as config
 
 
+
 def trans_files():
+    folder = {}
+    sutta_name_parts = []
     for x in pyabo2.page_parsing.read_pages(htmls):
         mtime, homage_line, head_lines, sutta_name_part, translator_part, agama_part, body, notes, pali_doc = x
+        sutta_name_parts.append(sutta_name_part)
 
         doc = xl.Element("doc")
         meta = doc.ekid("meta")
@@ -27,30 +34,30 @@ def trans_files():
 
         xml = xl.Xml(root=doc)
         data = xml.to_str(do_pretty=True, dont_do_tags=["p", "note"])
-        open("1.xml", "w").write(data)
+
+        m = re.match(r"\(\d+\.(\S+品)", translator_part)
+        pin_name = m.group(1)
+        if pin_name == "天生失明品":
+            pin_name = "天生失明者品"
+
+        if pin_name not in folder.keys():
+            folder[pin_name] = {}
+
+        pin = folder[pin_name]
 
 
+        m = re.match("^優陀那(\d+)經/(\S+)$", sutta_name_part[0])
 
-        print("mtime:", mtime)
-        print()
+        start = meta.ekid("start")
+        start.kids.append(m.group(1))
+        end = meta.ekid("end")
+        end.kids.append(m.group(1))
+        name = meta.ekid("name")
+        name.kids.append(m.group(2))
 
-        print("homage_line:", homage_line)
-        print()
+        filename = "Ud{}".format(m.group(1))
 
-        print("sutta_name_part:", sutta_name_part)
-        print()
-
-        print("translator_part:", translator_part)
-        print()
-
-        print("agama_part:", agama_part)
-        print()
-
-        print("body_lines:", body)
-        print()
-
-        print("pali_doc:", pali_doc)
-        print()
+        pin[filename] = xml
 
 
-        break
+    print(sutta_name_parts)

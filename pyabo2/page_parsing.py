@@ -182,15 +182,15 @@ def take_nikaya(div_nikaya):
     return homage_and_head_lines, sutta_name_es, translator_part, agama_part, body_lines
 
 
-def _split_homage_and_head(listline_list):
-    homage_listline = None
-    head_listline_list = []
-    for listline in listline_list:
-        if listline[0].startswith("對那位") and listline[-1].endswith("禮敬"):
-            homage_listline = listline
+def _split_homage_and_head(lines):
+    homage_line = None
+    head_lines = []
+    for line in lines:
+        if line[0].startswith("對那位") and line[-1].endswith("禮敬"):
+            homage_line = line
         else:
-            head_listline_list.append(listline)
-    return homage_listline, head_listline_list
+            head_lines.append(line)
+    return homage_line, head_lines
 
 
 def do_line(oline, funs):
