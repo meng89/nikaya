@@ -19,34 +19,29 @@ except ImportError:
     import config as config
 
 
-
-def trans_files():
-    folder = {}
-    sutta_name_parts = []
+def load_from_htm():
+    data = {}
     for x in pyabo2.page_parsing.read_pages(htmls):
         mtime, homage_line, head_lines, sutta_name_part, translator_part, agama_part, body, notes, pali_doc = x
-        sutta_name_parts.append(sutta_name_part)
 
         doc = xl.Element("doc")
         meta = doc.ekid("meta")
         doc.kids.append(body)
         doc.kids.append(notes)
-
         xml = xl.Xml(root=doc)
-        data = xml.to_str(do_pretty=True, dont_do_tags=["p", "note"])
 
         m = re.match(r"\(\d+\.(\S+品)", translator_part)
         pin_name = m.group(1)
+
+        # todo report bug
         if pin_name == "天生失明品":
             pin_name = "天生失明者品"
 
-        if pin_name not in folder.keys():
-            folder[pin_name] = {}
+        if pin_name not in data.keys():
+            data[pin_name] = {}
+        pin = data[pin_name]
 
-        pin = folder[pin_name]
-
-
-        m = re.match("^優陀那(\d+)經/(\S+)$", sutta_name_part[0])
+        m = re.match(r"^優陀那(\d+)經/(\S+)$", sutta_name_part[0])
 
         start = meta.ekid("start")
         start.kids.append(m.group(1))
@@ -59,5 +54,8 @@ def trans_files():
 
         pin[filename] = xml
 
+    return data
 
-    print(sutta_name_parts)
+
+def write_to_epub(data):
+    pass

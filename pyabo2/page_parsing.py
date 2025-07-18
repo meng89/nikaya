@@ -132,7 +132,7 @@ def take_nikaya(div_nikaya):
     body_lines = []
 
     def _do_line(_oline):
-        return do_line(oline=_oline, funs=[do_str, do_onmouseover_global, do_onmouseover_local])
+        return do_line(oline=_oline, funs=[do_str, do_global_note, do_local_note])
 
     while contents:
         e = contents.pop(0)
@@ -219,11 +219,11 @@ def do_str(e, **_kwargs):
         return False, e
 
 
-def do_onmouseover_global(e):
+def do_global_note(e):
     if isinstance(e, xl.Element) and e.tag == "a" and "onmouseover" in e.attrs.keys():
         m = re.match(r"^note\(this,(\d+)\);$", e.attrs["onmouseover"])
         if m:
-            twgn = xl.Element("twgn") # text with global note
+            twgn = xl.Element("gn") # text with global note
             twgn.attrs["id"] = m.group(1)
             twgn.kids.extend(e.kids)
             return True, [twgn]
@@ -231,11 +231,11 @@ def do_onmouseover_global(e):
     return False, e
 
 
-def do_onmouseover_local(e):
+def do_local_note(e):
     if isinstance(e, xl.Element) and e.tag == "a" and "onmouseover" in e.attrs.keys():
         m = re.match(r"^local\(this,(\d+)\);$", e.attrs["onmouseover"])
         if m:
-            twln = xl.Element("twln") # text with local note
+            twln = xl.Element("ln") # text with local note
             twln.attrs["id"] = m.group(1)
             twln.kids.extend(e.kids)
             return True, [twln]
