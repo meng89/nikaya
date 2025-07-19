@@ -71,12 +71,19 @@ class Doc:
 
 
 class Doc2:
-    def __init__(self):
-        doc = xl.Element("doc")
-        meta = doc.ekid("meta")
-        translator = meta.ekid("translator")
-        translator.kids.append("莊春江")
-        self._doc = doc
+    def __init__(self, path=None):
+        if path:
+            s = open(path, "w").read()
+            xml = xl.parse(s)
+            self._doc = xml.root
+        else:
+            doc = xl.Element("doc")
+            meta = doc.ekid("meta")
+            translator = meta.ekid("translator")
+            translator.kids.append("莊春江")
+            doc.ekid("body")
+            doc.ekid("notes")
+            self._doc = doc
 
     def  _get_meta_element(self, tag):
         meta = self._doc.find_kids("meta")[0]
@@ -99,6 +106,13 @@ class Doc2:
             e.kids = []
         else:
             e.kids = [value]
+
+    @property
+    def mtime(self) -> str or None:
+        return self._get_meta_sub("mtime")
+    @mtime.setter
+    def mtime(self, value: str):
+        self._set_meta_sub("mtime", value)
 
     @property
     def start(self) -> str or None:
@@ -127,6 +141,15 @@ class Doc2:
     @relevant.setter
     def relevant(self, value: str):
         self._set_meta_sub("relevant", value)
+
+    @property
+    def ps(self):
+        body = self._doc.find_kids("body")[0]
+        return body.kids
+
+    def ns(self):
+        notes = self._doc.find_kids("notes")[0]
+        return notes.kids
 
 
     @property
