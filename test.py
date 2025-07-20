@@ -3,7 +3,7 @@ import os.path
 
 import base
 
-import pyabo2.kn.it as it
+import pyabo2.kn.ps as ps
 
 
 try:
@@ -12,6 +12,6 @@ except ImportError:
     import config as config
 
 
-data = it.load_from_htm()
+data = ps.load_from_htm()
 
-base.write_to_disk(os.path.join(config.XML_DIR, it.short), data, True)
+#base.write_to_disk(os.path.join(config.XML_DIR, it.short), data, True)

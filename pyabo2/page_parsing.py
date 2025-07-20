@@ -10,53 +10,40 @@ except ImportError:
     import config as config
 
 
-class AnalyseError(Exception):
-    pass
-
-
-LOCAL = "LOCAL"
-GLOBAL = "GLOBAL"
-
-
-def _no_translate(x: str):
-    return x
-
-
-no_translate = _no_translate
-
-WARNING = "WARNING"
-INFO = "INFO"
-
-
-log_fd = None
-
-
-def ccc_bug(type_, url, string):
-    try:
-        import user_config as uc
-    except ImportError:
-        import config as uc
-
-    global log_fd
-    if log_fd is None:
-        log_fd = open(uc.LOG_PATH, "w")
-
-    s = "<{}>: text_and_url: {}, msg: {}".format(type_, url, string)
-    log_fd.write(s+"\r\n")
-    print(s)
-
-
-def read_pages(filenames):
+def read_pages(filenames,  use_read_page2=False):
+    read_page_fun = read_page
+    if use_read_page2:
+        read_page_fun = use_read_page2
     results = []
+
     for file_path in filenames:
         full_path = os.path.join(config.DOWNLOAD_DIR, file_path)
         mtime = os.path.getmtime(full_path)
         data = open(full_path, "r").read()
         soup = bs4.BeautifulSoup(data, 'html5lib')
         root = xl.parse(str(soup)).root
-        result = [mtime] + read_page(root)
+        return [root]
+        result = [mtime] + read_page_fun(root)
         results.append(result)
     return results
+
+
+def read_page2(root):
+    divs = root.find_descendants("div")
+    div_nikaya = None
+    div_pali = None
+    div_comp = None
+
+    for div in divs:
+        if "class" in div.attrs.keys():
+            if div.attrs["class"] == "nikaya":
+                div_nikaya = div
+            elif div.attrs["class"] == "pali":
+                div_pali = div
+            elif div.attrs["class"] == "comp":
+                div_comp = div
+
+    notes = take_comp(div_comp)
 
 
 def read_page(root):
