@@ -22,8 +22,20 @@ def get_name(root: xl.Element):
     assert len(tanlun_list) == 1
     return tanlun_list[0]
 
+def get_pin(body: xl.Element):
+    pin_list = []
+    for p in body.kids:
+        if len(p.kids) == 1 and isinstance(p.kids[0], str):
+            kid = p.kids[0].strip()
+            if kid.endswith("品"):
+                pin_list.append(kid)
+    assert len(pin_list) == 1
+    return pin_list[0]
+
 
 def load_from_htm():
     data = {}
     for x in pyabo2.page_parsing.read_pages(htmls):
         open("1.xml", "w").write(x.to_str(try_self_closing=True))
+
+        print(get_pin(x.find_kids("")))
