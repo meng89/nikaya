@@ -44,6 +44,8 @@ def read_page2(root):
                 div_comp = div
 
     notes = take_comp(div_comp)
+    body_lines =  _clean_contents(div_nikaya.kids)
+    return [body_lines, notes, div_nikaya]
 
 
 def read_page(root):
@@ -99,6 +101,8 @@ def _clean_contents(contents: list) -> list:
         elif isinstance(e, str):
             if e.strip("\n") != "":
                 line.append(e)
+            else:
+                pass
         elif isinstance(e, (str, xl.Element)):
             line.append(e)
         else:
