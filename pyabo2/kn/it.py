@@ -6,7 +6,7 @@ import xl
 
 
 import pyabo2.page_parsing
-
+from pyabo2.utils import get_last_folder
 
 name_han = "如是語"
 name_pali = "Itivuttaka"
@@ -19,23 +19,11 @@ class Doc:
         self.xml = xl.Xml()
 
 
-def get_last_folder(data: dict):
-    last_folder = None
-    for _, v in data.items():
-        if isinstance(v, dict):
-            last_folder = v
-
-    if last_folder is None:
-        return data
-    else:
-        return get_last_folder(last_folder)
-
-
 def load_from_htm():
     data = {}
     pian = None or dict
     for result in pyabo2.page_parsing.read_pages(htmls):
-        mtime, homage_line, head_lines, sutta_name_part, translator_part, agama_part, body, notes, pali_doc = result
+        _root, mtime, homage_line, head_lines, sutta_name_part, translator_part, agama_part, body, notes, pali_doc = result
 
         doc = xl.Element("doc")
         meta = doc.ekid("meta")

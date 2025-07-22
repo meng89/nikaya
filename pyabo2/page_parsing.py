@@ -13,7 +13,7 @@ except ImportError:
 def read_pages(filenames,  use_read_page2=False):
     read_page_fun = read_page
     if use_read_page2:
-        read_page_fun = use_read_page2
+        read_page_fun = read_page2
     results = []
 
     for file_path in filenames:
@@ -22,8 +22,7 @@ def read_pages(filenames,  use_read_page2=False):
         data = open(full_path, "r").read()
         soup = bs4.BeautifulSoup(data, 'html5lib')
         root = xl.parse(str(soup)).root
-        return [root]
-        result = [mtime] + read_page_fun(root)
+        result = [root, mtime] + read_page_fun(root)
         results.append(result)
     return results
 
@@ -44,7 +43,7 @@ def read_page2(root):
                 div_comp = div
 
     notes = take_comp(div_comp)
-    body_lines =  _clean_contents(div_nikaya.kids)
+    body_lines =  kids_to_lines(div_nikaya.kids)
     return [body_lines, notes, div_nikaya]
 
 
@@ -89,10 +88,10 @@ def take_comp(div_comp: xl.Element):
     return notes
 
 
-def _clean_contents(contents: list) -> list:
+def kids_to_lines(kids: list) -> list:
     lines = []
     line = []
-    for e in contents:
+    for e in kids:
         if isinstance(e, xl.Element) and e.tag == "br":
             lines.append(line)
             line = []
@@ -114,6 +113,8 @@ def _clean_contents(contents: list) -> list:
     return lines
 
 
+
+
 def take_nikaya(div_nikaya):
     contents = div_nikaya.kids
     homage_and_head_oline = []
@@ -122,8 +123,7 @@ def take_nikaya(div_nikaya):
     sutta_name_es = None
     body_lines = []
 
-    def _do_line(_oline):
-        return do_line(oline=_oline, funs=[do_str, do_global_note, do_local_note])
+
 
     while contents:
         e = contents.pop(0)
@@ -138,7 +138,7 @@ def take_nikaya(div_nikaya):
     if homage_and_head_oline:
         homage_and_head_olines.append(homage_and_head_oline)
 
-    homage_and_head_lines = [_do_line(_oline) for _oline in homage_and_head_olines]
+    homage_and_head_lines = htm_lines_to_xml_lines(homage_and_head_olines)
     # homage_and_head_lines = homage_and_head_olines
 
 
@@ -167,8 +167,8 @@ def take_nikaya(div_nikaya):
 
     contents = _new_contents
 
-    for oline in _clean_contents(contents):
-        body_lines.append(_do_line(oline))
+    for oline in kids_to_lines(contents):
+        body_lines.append(htm_line_to_xml_line(oline))
 
     return homage_and_head_lines, sutta_name_es, translator_part, agama_part, body_lines
 
@@ -184,11 +184,18 @@ def _split_homage_and_head(lines):
     return homage_line, head_lines
 
 
-def do_line(oline, funs):
+def htm_lines_to_xml_lines(htm_lines: list):
+    xml_lines = []
+    for htm_line in htm_lines:
+        xml_line = htm_line_to_xml_line(htm_line)
+        xml_lines.append(xml_line)
+    return xml_lines
+
+def htm_line_to_xml_line(htm_line):
     line = []
-    for oe in oline:
+    for oe in htm_line:
         try:
-            line.extend(_do_e(oe, funs))
+            line.extend(_do_e(oe, [do_str, do_global_note, do_local_note]))
         except TypeError:
             raise Exception((type(oe), oe))
     return line
