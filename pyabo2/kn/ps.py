@@ -36,6 +36,7 @@ def get_pin(body: xl.Element):
 def load_from_htm():
     data = {}
     for x in pyabo2.page_parsing.read_pages(htmls):
+        mtime, body_lines, notes, div_nikaya = x
         open("1.xml", "w").write(x.to_str(try_self_closing=True))
 
         print(get_pin(x.find_kids("")))
