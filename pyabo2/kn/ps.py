@@ -74,9 +74,11 @@ def load_from_htm():
     data = {}
     for x in pyabo2.page_parsing.read_pages(htmls, use_read_page2=True):
         root, mtime, body_lines, notes, div_nikaya = x
-        #open("1.xml", "w").write(x.to_str(try_self_closing=True))
+        open("1.xml", "w").write(root.to_str(try_self_closing=True))
+        exit()
 
-        body = pyabo2.page_parsing.lines_to_body(body_lines)
+        body = pyabo2.page_parsing.htm_lines_to_xml_lines(body_lines)
+        body = pyabo2.page_parsing.lines_to_body(body)
 
         pin_name = get_pin_name(body_lines)
         _name = get_name(root)

@@ -4,7 +4,6 @@ import re
 import xl
 
 
-
 import pyabo2.page_parsing
 from pyabo2.utils import get_last_folder
 

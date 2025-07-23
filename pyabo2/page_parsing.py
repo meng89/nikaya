@@ -88,6 +88,9 @@ def take_comp(div_comp: xl.Element):
     return notes
 
 
+
+
+
 def kids_to_lines(kids: list) -> list:
     lines = []
     line = []
@@ -195,10 +198,20 @@ def htm_line_to_xml_line(htm_line):
     line = []
     for oe in htm_line:
         try:
-            line.extend(_do_e(oe, [do_str, do_global_note, do_local_note]))
+            line.extend(_do_e(oe, [do_str, do_global_note, do_local_note, do_a]))
         except TypeError:
             raise Exception((type(oe), oe))
     return line
+
+
+def print_line(line):
+    l = ""
+    for x in line:
+        if isinstance(x, str):
+            l += x
+        elif isinstance(x, xl.Element):
+            l += x.to_str()
+    print("print_line:", l)
 
 
 def _do_e(e, funs):
@@ -206,13 +219,22 @@ def _do_e(e, funs):
         answer, x = fun(e=e)
         if answer:
             return x
-
     raise Exception((type(e), e))
 
 
-def do_str(e, **_kwargs):
+def do_str(e):
     if isinstance(e, str):
         return True, [e.strip("\n")]
+    else:
+        return False, e
+
+
+def do_a(e):
+    if isinstance(e, xl.Element) and e.tag == "a":
+        new_kids = htm_line_to_xml_line(e.kids)
+        #e.kids.clear()
+        e.kids = new_kids
+        return True, [e]
     else:
         return False, e
 
