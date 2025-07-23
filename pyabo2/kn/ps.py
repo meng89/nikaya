@@ -34,12 +34,14 @@ def get_pin_name(body_lines):
         if len(line) == 1 and isinstance(line[0], str):
             kid = line[0].strip()
             if kid.endswith("品"):
-                pin_list.append(kid)
+                m = re.match(r"^(\d+\.)?(\S+)$", kid)
+                pin_list.append(m.group(2))
 
     if pin_list:
         return pin_list[0]
     else:
         return None
+
 
 def make_xml(start, end, name, mtime, ctime, body, notes):
     doc = xl.Element("doc")
