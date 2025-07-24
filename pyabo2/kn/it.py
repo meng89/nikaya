@@ -21,7 +21,9 @@ class Doc:
 def load_from_htm():
     data = {}
     pian = None or dict
-    for result in pyabo2.page_parsing.read_pages(htmls):
+    for html in htmls:
+        result = pyabo2.page_parsing.read_page(html)
+    #for result in pyabo2.page_parsing.read_pages(htmls):
         _root, mtime, homage_line, head_lines, sutta_name_part, translator_part, agama_part, body, notes, pali_doc = result
 
         doc = xl.Element("doc")

@@ -10,24 +10,46 @@ except ImportError:
     import config as config
 
 
-def read_pages(filenames,  use_read_page2=False):
+def _read_pages(filenames,  use_read_page2=False):
     read_page_fun = read_page
     if use_read_page2:
-        read_page_fun = read_page2
+        read_page_fun = _read_page2
     results = []
 
     for file_path in filenames:
+        print("read_page:", file_path)
         full_path = os.path.join(config.DOWNLOAD_DIR, file_path)
         mtime = os.path.getmtime(full_path)
         data = open(full_path, "r").read()
         soup = bs4.BeautifulSoup(data, 'html5lib')
         root = xl.parse(str(soup)).root
+        if file_path == "Ni/Ni16.htm" and False:
+            open("Ni16.xml", "w").write(root.to_str())
+            exit()
         result = [root, mtime] + read_page_fun(root)
         results.append(result)
     return results
 
 
-def read_page2(root):
+def read_page(file_path, style=1):
+    read_page_fun = _read_page1
+    if style == 2:
+        read_page_fun = _read_page2
+
+
+    print("read_page:", file_path)
+    full_path = os.path.join(config.DOWNLOAD_DIR, file_path)
+    mtime = os.path.getmtime(full_path)
+    data = open(full_path, "r").read()
+    soup = bs4.BeautifulSoup(data, 'html5lib')
+    root = xl.parse(str(soup)).root
+
+    result = [root, mtime] + read_page_fun(root)
+    return result
+
+
+
+def _read_page2(root):
     divs = root.find_descendants("div")
     div_nikaya = None
     div_pali = None
@@ -47,7 +69,7 @@ def read_page2(root):
     return [body_lines, notes, div_nikaya]
 
 
-def read_page(root):
+def _read_page1(root):
     divs = root.find_descendants("div")
     div_nikaya = None
     div_pali = None
@@ -194,11 +216,11 @@ def htm_lines_to_xml_lines(htm_lines: list):
         xml_lines.append(xml_line)
     return xml_lines
 
-def htm_line_to_xml_line(htm_line):
+def htm_line_to_xml_line(htm_line, funs=None):
     line = []
     for oe in htm_line:
         try:
-            line.extend(_do_e(oe, [do_str, do_global_note, do_local_note, do_a]))
+            line.extend(_do_e(oe, funs or [do_str, do_global_note, do_local_note, do_a, do_styled_span]))
         except TypeError:
             raise Exception((type(oe), oe))
     return line
@@ -219,22 +241,15 @@ def _do_e(e, funs):
         answer, x = fun(e=e)
         if answer:
             return x
+
+    if isinstance(e, xl.Element):
+        print(e.to_str())
     raise Exception((type(e), e))
 
 
 def do_str(e):
     if isinstance(e, str):
         return True, [e.strip("\n")]
-    else:
-        return False, e
-
-
-def do_a(e):
-    if isinstance(e, xl.Element) and e.tag == "a":
-        new_kids = htm_line_to_xml_line(e.kids)
-        #e.kids.clear()
-        e.kids = new_kids
-        return True, [e]
     else:
         return False, e
 
@@ -261,6 +276,32 @@ def do_local_note(e):
             return True, [twln]
 
     return False, e
+
+
+def do_a(e):
+    if isinstance(e, xl.Element) and e.tag == "a":
+        new_kids = htm_line_to_xml_line(e.kids)
+        #e.kids.clear()
+        e.kids = new_kids
+        return True, [e]
+    else:
+        return False, e
+
+
+def do_styled_span(e):
+    if isinstance(e, xl.Element) and e.tag == "span" and e.attrs.get("style") == "color: #800000":
+        new_kids = htm_line_to_xml_line(e.kids, [do_str, do_global_note, do_local_note, do_a, do_styled_span, do_br])
+        e.kids = new_kids
+        return True, [e]
+    else:
+        return False, e
+
+
+def do_br(e):
+    if isinstance(e, xl.Element) and e.tag == "br":
+        return True, [e]
+    else:
+        return False, e
 
 
 class NoteNotMatch(Exception):
