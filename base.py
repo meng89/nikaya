@@ -157,10 +157,6 @@ class Doc2:
         return xl.Xml(self._doc).to_str(do_pretty=True, dont_do_tags=["start", "end", "name", "mtime", "relevent", "p", "note"])
 
 
-
-
-
-
 def load_from_disk(path) -> dict:
     data = {}
     entries = os.listdir(path)
@@ -184,7 +180,6 @@ def load_from_disk(path) -> dict:
     return data
 
 
-
 def write_to_disk(path, data: dict, delete_existed=False):
     if os.path.exists(path) and delete_existed is True:
         shutil.rmtree(path)
@@ -195,6 +190,6 @@ def write_to_disk(path, data: dict, delete_existed=False):
         if isinstance(v, dict):
             write_to_disk(sub_path, v)
         elif isinstance(v, xl.Xml):
-            s = v.to_str(do_pretty=True, dont_do_tags=["start", "end", "name", "mtime", "relevent", "p", "note"])
-            with open(os.path.join(sub_path + ".xml"), "w") as f:
+            s = v.to_str(do_pretty=True, try_self_closing=True, dont_do_tags=["start", "end", "name", "mtime", "relevent", "p", "note"])
+            with open(sub_path + ".xml", "w") as f:
                 f.write(s)

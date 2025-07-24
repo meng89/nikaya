@@ -57,7 +57,7 @@ def make_xml(start, end, name, mtime, ctime, body, notes):
     name_e.kids.append(name)
 
     mtime_e = meta.ekid("mtime")
-    mtime_str = datetime.fromtimestamp(mtime, timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
+    mtime_str = datetime.fromtimestamp(mtime).astimezone().strftime('%Y-%m-%d %H:%M:%S %z')
     mtime_e.kids.append(mtime_str)
 
     ctime_e = meta.ekid("ctime")
@@ -74,8 +74,6 @@ def load_from_htm():
     data = {}
     for x in pyabo2.page_parsing.read_pages(htmls, use_read_page2=True):
         root, mtime, body_lines, notes, div_nikaya = x
-        open("1.xml", "w").write(root.to_str(try_self_closing=True))
-        exit()
 
         body = pyabo2.page_parsing.htm_lines_to_xml_lines(body_lines)
         body = pyabo2.page_parsing.lines_to_body(body)

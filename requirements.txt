@@ -1,5 +1,6 @@
 beautifulsoup4
 html5lib
+pytz
 requests[socks]
 python-dateutil
 boltons
