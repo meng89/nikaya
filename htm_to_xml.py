@@ -18,6 +18,11 @@ def main():
             base.write_to_disk(os.path.join(config.XML_DIR, module.short), data, True)
 
 
+def main2():
+    import pyabo2.kn.th as th
+    th.load_from_htm()
+
+
 if __name__ == "__main__":
-    main()
+    main2()
 
