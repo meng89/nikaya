@@ -19,8 +19,9 @@ def main():
 
 
 def main2():
-    import pyabo2.kn.th as th
-    th.load_from_htm()
+    import pyabo2.kn.ps as th
+    data = th.load_from_htm()
+    base.write_to_disk(os.path.join(config.XML_DIR, th.short), data, True)
 
 
 if __name__ == "__main__":

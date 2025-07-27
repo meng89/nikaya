@@ -103,4 +103,4 @@ def main(fresh_time, check_mtime):
 
 
 if __name__ == "__main__":
-    main(fresh_time=60 * 60 * 5, check_mtime=True)
+    main(fresh_time=60 * 60 * 24 * 2, check_mtime=True)

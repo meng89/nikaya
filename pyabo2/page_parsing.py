@@ -319,3 +319,12 @@ def lines_to_body(lines):
         assert isinstance(line, list)
         p.kids.extend(line)
     return body
+
+
+def lines_to_head(lines):
+    head = xl.Element("head")
+    for line in lines:
+        p = head.ekid("p")
+        assert isinstance(line, list)
+        p.kids.extend(line)
+    return head

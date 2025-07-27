@@ -60,9 +60,16 @@ def debug_print_es(l):
             raise Exception
     print(s)
 
-def make_xml(start, end, name, mtime, ctime, body, notes):
+              # SN.1.1   1     1
+def make_xml(source_page, sutta_num, start, end, mtime, ctime, title_line, head, body, notes):
     doc = xl.Element("doc")
     meta = doc.ekid("meta")
+
+    source_page_e = meta.ekid("source_page")
+    source_page_e.kids.append(source_page)
+
+    sutta_num_e = meta.ekid("sutta_num")
+    sutta_num_e.kids.append(sutta_num)
 
     start_e = meta.ekid("start")
     if start is not None:
@@ -72,8 +79,8 @@ def make_xml(start, end, name, mtime, ctime, body, notes):
     if end is not None:
         end_e.kids.append(end)
 
-    name_e = meta.ekid("name")
-    name_e.kids.append(name)
+    name_e = meta.ekid("title")
+    name_e.kids.extend(title_line)
 
     mtime_e = meta.ekid("mtime")
     mtime_str = datetime.fromtimestamp(mtime).astimezone().strftime('%Y-%m-%d %H:%M:%S %z')
@@ -83,6 +90,7 @@ def make_xml(start, end, name, mtime, ctime, body, notes):
     if ctime:
         ctime_e.kids.append(ctime)
 
+    doc.kids.append(head)
     doc.kids.append(body)
     doc.kids.append(notes)
     xml = xl.Xml(root=doc)

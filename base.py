@@ -190,6 +190,7 @@ def write_to_disk(path, data: dict, delete_existed=False):
         if isinstance(v, dict):
             write_to_disk(sub_path, v)
         elif isinstance(v, xl.Xml):
-            s = v.to_str(do_pretty=True, try_self_closing=True, dont_do_tags=["start", "end", "name", "mtime", "relevent", "p", "note"])
+            s = v.to_str(do_pretty=True, try_self_closing=True,
+                         dont_do_tags=["source_page", "sutta_num", "start", "end", "name", "mtime", "ctime", "relevent", "p", "note", "title"])
             with open(sub_path + ".xml", "w") as f:
                 f.write(s)
