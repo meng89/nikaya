@@ -5,19 +5,25 @@ import pyabo2.utils
 from . import th
 
 
+# 与 c
 name_han = "大義釋" # 大与小
 name_pali = "Mahāniddesa"
 short = "Mnd"
-htmls = ["Ni/Ni{}.htm".format(x) for x in range(1, 17)]
+
+
+da_htmls = ["Ni/Ni{}.htm".format(x) for x in range(1, 17)]
 
 xiao_htmls = ["Ni/Ni{}.htm".format(x) for x in range(17, 40)]
 
 
 def load_from_htm():
-    return load_(htmls, short)
+    data = []
+    data = {}
+    data["大義釋"] = load_(da_htmls)
+    data["小義釋"] = load_(xiao_htmls)
 
 
-def load_(htmls_, short_):
+def load_(htmls_):
     data = {}
     for htm in htmls_:
         root, mtime, body_lines, notes, div_nikaya = pyabo2.page_parsing.read_page(htm, 2)
@@ -36,12 +42,10 @@ def load_(htmls_, short_):
 
             seril, title_line = th.split_seril_title(title_line)
 
-            sutta_num = "{}.{}".format(short_, seril)
-
             title_line = pyabo2.page_parsing.htm_line_to_xml_line(title_line)
 
             xml = pyabo2.utils.make_xml(source_page=htm,
-                                        sutta_num = sutta_num,
+                                        sutta_num = None,
                                         start = str(seril),
                                         end = str(seril),
                                         mtime = mtime,
@@ -51,7 +55,8 @@ def load_(htmls_, short_):
                                         body = body,
                                         notes = notes
                                         )
+            m = re.match(r"Ni/(.*).htm", htm)
 
-            data[sutta_num] = xml
+            data[m.group(1)] = xml
 
     return data
