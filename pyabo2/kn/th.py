@@ -89,17 +89,18 @@ def load_from_htm():
     return data
 
 
-def split_sutta(body_lines, ji_lines):
+def split_sutta(body_lines, sutta_lines):
+    sutta_lines_ = copy.deepcopy(sutta_lines)
     jis = [] #[title_line, head_lines, ji_body_lines]
 
-    title_index, _title_line = ji_lines.pop(0)
+    title_index, _title_line = sutta_lines_.pop(0)
     last_head_lines = body_lines[0: title_index]
     last_title_line = body_lines[title_index]
 
     last_title_index = title_index
 
 
-    for title_index, _title_line in ji_lines:
+    for title_index, _title_line in sutta_lines_:
         title_line = body_lines[title_index]
 
         last_body_lines = body_lines[last_title_index +1: title_index]
