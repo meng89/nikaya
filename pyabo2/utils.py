@@ -20,15 +20,14 @@ class AnalysisFailed(Exception):
     pass
 
 
-def get_name(root, ends):
+def get_name(root, pattern):
     names = []
     for span in root.find_descendants("span"):
         if len(span.kids) > 0 and isinstance(span.kids[0], str):
             kid = span.kids[0].strip()
-            if kid.endswith(ends):
-                names.append(kid)
-            else:
-                pass
+            m = re.match(pattern, kid)
+            if m:
+                names.append(m)
     if len(names) != 1:
         open("get_name_debug.xml", "w").write(root.to_str())
         debug_print_es(root.find_descendants("span"))
@@ -69,7 +68,8 @@ def make_xml(source_page, sutta_num, start, end, mtime, ctime, title_line, head,
     source_page_e.kids.append(source_page)
 
     sutta_num_e = meta.ekid("sutta_num")
-    sutta_num_e.kids.append(sutta_num)
+    if sutta_num:
+        sutta_num_e.kids.append(sutta_num)
 
     start_e = meta.ekid("start")
     if start is not None:
@@ -90,7 +90,10 @@ def make_xml(source_page, sutta_num, start, end, mtime, ctime, title_line, head,
     if ctime:
         ctime_e.kids.append(ctime)
 
-    doc.kids.append(head)
+    if head:
+        doc.kids.append(head)
+    else:
+        doc.ekid("head")
     doc.kids.append(body)
     doc.kids.append(notes)
     xml = xl.Xml(root=doc)

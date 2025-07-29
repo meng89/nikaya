@@ -22,8 +22,10 @@ except ImportError:
 def load_from_htm():
     data = {}
     for html in htmls:
-        x = pyabo2.page_parsing.read_page(html)
+        x = pyabo2.page_parsing.read_page(html, 2)
         _root, mtime, homage_line, head_lines, sutta_name_part, translator_part, agama_part, body, notes, pali_doc = x
+
+        p = re.compile(r"^優陀那(\d)經/(.+)\(\d\.(.+品)\)\(莊春江譯\)(.*)$")
 
         doc = xl.Element("doc")
         meta = doc.ekid("meta")

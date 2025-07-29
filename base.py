@@ -157,8 +157,8 @@ class Doc2:
         return xl.Xml(self._doc).to_str(do_pretty=True, dont_do_tags=["start", "end", "name", "mtime", "relevent", "p", "note"])
 
 
-def load_from_disk(path) -> dict:
-    data = {}
+def load_from_disk(path) -> list:
+    data = []
     entries = os.listdir(path)
     entries.sort(key=split_serial)
     for entry in entries:
@@ -176,21 +176,22 @@ def load_from_disk(path) -> dict:
         else:
             raise Exception("Unknow File: {}".format(entry_path))
         print(name)
-        data[name] = v
+        data.append((name, v))
     return data
 
 
-def write_to_disk(path, data: dict, delete_existed=False):
+def write_to_disk(path, data: list, delete_existed=False):
     if os.path.exists(path) and delete_existed is True:
         shutil.rmtree(path)
     os.makedirs(path)
-    for i, (k, v) in enumerate(data.items(), 1):
-        name = "{:0>4}_{}".format(i, k)
-        sub_path = os.path.join(path, name)
-        if isinstance(v, dict):
-            write_to_disk(sub_path, v)
-        elif isinstance(v, xl.Xml):
-            s = v.to_str(do_pretty=True, try_self_closing=True,
+    width = len(str(len(data)))
+    for i, (name, obj) in enumerate(data, 1):
+        file_name = f"{i:>{width}}_{name}"
+        sub_path = os.path.join(path, file_name)
+        if isinstance(obj, list):
+            write_to_disk(sub_path, obj)
+        elif isinstance(obj, xl.Xml):
+            s = obj.to_str(do_pretty=True, try_self_closing=True,
                          dont_do_tags=["source_page", "sutta_num", "start", "end", "name", "mtime", "ctime", "relevent", "p", "note", "title"])
             with open(sub_path + ".xml", "w") as f:
                 f.write(s)
