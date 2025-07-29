@@ -6,6 +6,8 @@ import xl
 
 import base
 import pyabo2.page_parsing
+import pyabo2.utils
+
 
 name_han = "優陀那" # 自说经
 name_pali = "Udānapāḷi"
@@ -20,45 +22,66 @@ except ImportError:
 
 
 def load_from_htm():
-    data = {}
-    for html in htmls:
-        x = pyabo2.page_parsing.read_page(html, 2)
-        _root, mtime, homage_line, head_lines, sutta_name_part, translator_part, agama_part, body, notes, pali_doc = x
+    data = []
+    pin = []
+    pin_name = None
+    sutta_seril = 0
+    for htm in htmls:
+        root, mtime, body_lines, notes, div_nikaya = pyabo2.page_parsing.read_page(htm, 2)
 
-        p = re.compile(r"^優陀那(\d)經/(.+)\(\d\.(.+品)\)\(莊春江譯\)(.*)$")
+        p = re.compile(r"^優陀那\d+經/(.+)\((\d)\.(.+品)\)\(莊春江譯\)(.*)$")
+        matches = pyabo2.utils.match_line(body_lines, [p])
+        assert len(matches) == 1
 
-        doc = xl.Element("doc")
-        meta = doc.ekid("meta")
-        doc.kids.append(body)
-        doc.kids.append(notes)
-        xml = xl.Xml(root=doc)
+        m = matches[0][0]
 
-        m = re.match(r"\(\d+\.(\S+品)", translator_part)
-        pin_name = m.group(1)
+        pin_seril = m.group(2)
+        new_pin_name = m.group(3)
 
         # todo report bug
-        if pin_name == "天生失明品":
-            pin_name = "天生失明者品"
+        if new_pin_name == "天生失明品":
+            new_pin_name = "天生失明者品"
 
-        if pin_name not in data.keys():
-            data[pin_name] = {}
-        pin = data[pin_name]
+        if pin_name != new_pin_name:
+            pin_name = new_pin_name
+            pin = []
+            pin_name_whole = pin_seril + "." + new_pin_name
+            data.append((pin_name_whole, pin))
+            sutta_seril = 0
 
-        m = re.match(r"^優陀那(\d+)經/(\S+)$", sutta_name_part[0])
+        suttas = pyabo2.utils.split_sutta(body_lines, matches)
+        assert len(suttas) == 1
 
-        start = meta.ekid("start")
-        start.kids.append(m.group(1))
-        end = meta.ekid("end")
-        end.kids.append(m.group(1))
-        name = meta.ekid("name")
-        name.kids.append(m.group(2))
+        title_line, head_lines, sutta_body_lines = suttas[0]
 
-        filename = "Ud{}".format(m.group(1))
+        body = pyabo2.page_parsing.htm_lines_to_xml_lines(sutta_body_lines)
+        body = pyabo2.page_parsing.lines_to_body(body)
 
-        pin[filename] = xml
+        head = pyabo2.page_parsing.htm_lines_to_xml_lines(head_lines)
+        head = pyabo2.page_parsing.lines_to_head(head)
+
+        sutta_seril += 1
+
+        sutta_num = "Ud.{}.{}".format(pin_seril, sutta_seril)
+
+        sutta_nums = [
+            (None, sutta_num),
+            ("SC", "Ud {}.{}".format(pin_seril, sutta_seril))
+        ]
+
+        xml = pyabo2.utils.make_xml(source_page=htm,
+                                    sutta_nums=sutta_nums,
+                                    start=str(sutta_seril),
+                                    end=str(sutta_seril),
+                                    mtime=mtime,
+                                    ctime=None,
+                                    source_title=pyabo2.utils.strip_crlf(matches[0][2]),
+                                    relevant=m.group(4),
+                                    title_line=m.group(1),
+                                    head=head,
+                                    body=body,
+                                    notes=notes)
+
+        pin.append((sutta_num, xml))
 
     return data
-
-
-def write_to_epub(data):
-    pass

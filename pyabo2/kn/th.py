@@ -5,7 +5,7 @@ import xl
 
 import pyabo2.page_parsing
 import pyabo2.utils
-
+from pyabo2.utils import match_line
 
 name_han = "長老偈"
 name_pali = "Theragāthā"
@@ -89,49 +89,7 @@ def load_from_htm():
     return data
 
 
-def split_sutta(body_lines, sutta_lines):
-    sutta_lines_ = copy.deepcopy(sutta_lines)
-    jis = [] #[title_line, head_lines, ji_body_lines]
 
-    title_index, _title_line = sutta_lines_.pop(0)
-    last_head_lines = body_lines[0: title_index]
-    last_title_line = body_lines[title_index]
-
-    last_title_index = title_index
-
-
-    for title_index, _title_line in sutta_lines_:
-        title_line = body_lines[title_index]
-
-        last_body_lines = body_lines[last_title_index +1: title_index]
-
-        jis.append(
-            (last_title_line, last_head_lines, last_body_lines)
-        )
-        last_title_index = title_index
-
-        last_head_lines = []
-        last_title_line = title_line
-
-    last_body_lines = body_lines[last_title_index +1:]
-    jis.append(
-        (last_title_line, last_head_lines, last_body_lines)
-    )
-
-    return jis
-
-
-def line_to_txt(line: list):
-    s = ""
-    for x in line:
-        if isinstance(x, str):
-            s += x
-        elif isinstance(x, xl.Element):
-            s += line_to_txt(x.kids)
-        else:
-            raise Exception(x)
-
-    return s
 
 
 def strip_line(line: list):
@@ -159,16 +117,3 @@ def split_seril_title(line: list):
     raise Exception(new_line)
 
 
-def match_line(lines: list, ends_list):
-    matched_lines = []
-    for index, line in enumerate(lines):
-        txt = line_to_txt(line).strip()
-        for ends in ends_list:
-            if isinstance(ends, str) and txt.endswith(ends):
-                matched_lines.append((index, line))
-            elif isinstance(ends, re.Pattern):
-                m = re.match(ends, txt)
-                if m:
-                    matched_lines.append((index, line))
-
-    return matched_lines

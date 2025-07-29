@@ -1,4 +1,5 @@
 import re
+import copy
 from datetime import datetime
 
 import xl
@@ -59,17 +60,21 @@ def debug_print_es(l):
             raise Exception
     print(s)
 
-              # SN.1.1   1     1
-def make_xml(source_page, sutta_num, start, end, mtime, ctime, title_line, head, body, notes):
+                            # SN.1.1   1     1
+def make_xml(source_page, sutta_nums, start, end, mtime, ctime, source_title, relevant, title_line, head, body, notes):
     doc = xl.Element("doc")
     meta = doc.ekid("meta")
 
     source_page_e = meta.ekid("source_page")
     source_page_e.kids.append(source_page)
 
-    sutta_num_e = meta.ekid("sutta_num")
-    if sutta_num:
-        sutta_num_e.kids.append(sutta_num)
+    sutta_nums_e = meta.ekid("sutta_nums")
+    for type_, v in sutta_nums:
+        e = sutta_nums_e.ekid("sutta_num")
+        if type_ is not None:
+            e.attrs["type"] = type_
+        e.kids.append(v)
+
 
     start_e = meta.ekid("start")
     if start is not None:
@@ -78,6 +83,13 @@ def make_xml(source_page, sutta_num, start, end, mtime, ctime, title_line, head,
     end_e = meta.ekid("end")
     if end is not None:
         end_e.kids.append(end)
+
+    source_title_e = meta.ekid("source_title")
+    source_title_e.kids.extend(source_title)
+
+    relevant_e = meta.ekid("relevant")
+    if relevant is not None:
+        relevant_e.kids.append(relevant)
 
     name_e = meta.ekid("title")
     name_e.kids.extend(title_line)
@@ -98,6 +110,8 @@ def make_xml(source_page, sutta_num, start, end, mtime, ctime, title_line, head,
     doc.kids.append(notes)
     xml = xl.Xml(root=doc)
     return xml
+
+WRITE_DONT_DO_TAGS = ["source_page", "sutta_num", "start", "end", "name", "mtime", "ctime", "relevent", "p", "note", "title", "source_title"]
 
 
 def get_pin_name(body_lines):
@@ -132,3 +146,67 @@ def get_pin_name2(body_lines):
         return pin_list[0]
     else:
         return None
+
+
+def match_line(lines: list, partterns: list):
+    matched_lines = []
+    for index, line in enumerate(lines):
+        txt = line_to_txt(line).strip()
+        for parttern in partterns:
+            m = re.match(parttern, txt)
+            if m:
+                matched_lines.append((m, index, line))
+
+    return matched_lines
+
+
+def line_to_txt(line: list):
+    s = ""
+    for x in line:
+        if isinstance(x, str):
+            s += x
+        elif isinstance(x, xl.Element):
+            s += line_to_txt(x.kids)
+        else:
+            raise Exception(x)
+
+    return s
+
+
+def split_sutta(body_lines, sutta_lines):
+    sutta_lines_ = copy.deepcopy(sutta_lines)
+    suttas = [] #[title_line, head_lines, ji_body_lines]
+
+    _m, title_index, _title_line = sutta_lines_.pop(0)
+    last_head_lines = body_lines[0: title_index]
+    last_title_line = body_lines[title_index]
+
+    last_title_index = title_index
+
+
+    for _m, title_index, _title_line in sutta_lines_:
+        title_line = body_lines[title_index]
+
+        last_body_lines = body_lines[last_title_index +1: title_index]
+
+        suttas.append(
+            (last_title_line, last_head_lines, last_body_lines)
+        )
+        last_title_index = title_index
+
+        last_head_lines = []
+        last_title_line = title_line
+
+    last_body_lines = body_lines[last_title_index +1:]
+    suttas.append(
+        (last_title_line, last_head_lines, last_body_lines)
+    )
+
+    return suttas
+
+
+def strip_crlf(line):
+    newline = copy.deepcopy(line)
+    if isinstance(newline[-1], str):
+        newline[-1] = newline[-1].rstrip()
+    return newline

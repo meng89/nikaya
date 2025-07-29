@@ -13,61 +13,73 @@ short = "It"
 htmls = ["It/It{:0>3d}.htm".format(x) for x in range(1, 113)]
 
 
-class Doc:
-    def __init__(self):
-        self.xml = xl.Xml()
-
-
 def load_from_htm():
-    data = {}
-    pian = None or dict
-    for html in htmls:
-        result = pyabo2.page_parsing.read_page(html)
-    #for result in pyabo2.page_parsing.read_pages(htmls):
-        _root, mtime, homage_line, head_lines, sutta_name_part, translator_part, agama_part, body, notes, pali_doc = result
+    data = []
+    jipian_name = None
+    jipian: None | list = None
+    pin: None | list = None
 
-        doc = xl.Element("doc")
-        meta = doc.ekid("meta")
-        doc.kids.append(body)
-        doc.kids.append(notes)
-        xml = xl.Xml(root=doc)
+    for htm in htmls:
+        root, mtime, body_lines, notes, div_nikaya = pyabo2.page_parsing.read_page(htm, 2)
+
+        p = re.compile(r"^如是語(\d+)經/(.+)\((.*集篇)\)\(莊春江譯\)(.*)$")
+        matches = pyabo2.utils.match_line(body_lines, [p])
+        assert len(matches) == 1
+
+        m = matches[0][0]
+
+        new_jipian_name = m.group(3)
+
+        if jipian_name != new_jipian_name:
+            jipian = []
+            jipian_name = new_jipian_name
+            data.append((jipian_name, jipian))
+            pin = None
 
 
-        m = re.match(r"\((\S+篇)\)", translator_part)
-        if "篇" in translator_part:
-            assert m
-            pian_name = m.group(1)
-            if pian_name not in data.keys():
-                data[pian_name] = {}
-            pian = data[pian_name]
+        suttas = pyabo2.utils.split_sutta(body_lines, matches)
+        assert len(suttas) == 1
 
+        title_line, head_lines, sutta_body_lines = suttas[0]
 
+        pin_matchs = pyabo2.utils.match_line(head_lines, [re.compile("^(?:\d\.)?(.+品)$")])
+        if pin_matchs:
+            assert len(pin_matchs) == 1
+            pin_m = pin_matchs[0][0]
+            pin_name = pin_m.group(1)
+            pin = []
+            jipian.append((pin_name, pin))
 
-        for line in head_lines:
-            s = line[0].strip()
+        body = pyabo2.page_parsing.htm_lines_to_xml_lines(sutta_body_lines)
+        body = pyabo2.page_parsing.lines_to_body(body)
 
-            m = re.match(r".*(第\S+品)", s)
-            if "品" in s:
-                pin_name = m.group(1)
-                pin = {}
-                pian[pin_name] = pin
+        head = pyabo2.page_parsing.htm_lines_to_xml_lines(head_lines)
+        head = pyabo2.page_parsing.lines_to_head(head)
 
-        m =  re.match(r"如是語(\d+)經/(\S+經)", sutta_name_part[0])
-        start = meta.ekid("start"); start.kids.append(m.group(1))
-        end = meta.ekid("end"); end.kids.append(m.group(1))
-        name = meta.ekid("name"); name.kids.append(m.group(2))
-        relevant = meta.ekid("relevent")
-        if agama_part:
-            relevant.kids.append(agama_part)
+        sutta_seril = m.group(1)
 
-        filename = "It{}".format(m.group(1))
-        last_folder = get_last_folder(data)
-        last_folder[filename] = xml
+        sutta_num = "{}.{}".format(short, sutta_seril)
+        sutta_nums = [
+            (None, sutta_num),
+            ("SC", "Iti {}".format(sutta_seril))
+        ]
 
-    #print(data)
+        xml = pyabo2.utils.make_xml(source_page=htm,
+                                    sutta_nums=sutta_nums,
+                                    start=sutta_seril,
+                                    end=sutta_seril,
+                                    mtime=mtime,
+                                    ctime=None,
+                                    source_title=pyabo2.utils.strip_crlf(matches[0][2]),
+                                    relevant=m.group(4),
+                                    title_line=m.group(2),
+                                    head=head,
+                                    body=body,
+                                    notes=notes)
+
+        if pin is not None:
+            pin.append((sutta_num, xml))
+        else:
+            jipian.append((sutta_num, xml))
+
     return data
-
-
-
-
-

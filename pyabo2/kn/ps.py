@@ -19,7 +19,7 @@ def load_from_htm():
     for htm in htmls:
         root, mtime, body_lines, notes, div_nikaya = pyabo2.page_parsing.read_page(htm, 2)
 
-        pin_lines = th.match_line(body_lines, [re.compile(r"^\d?.*品$")])
+        pin_lines = pyabo2.utils.match_line(body_lines, [re.compile(r"^\d?.*品$")])
         if pin_lines:
             # todo report
             if pin_lines[0][1][0] == "\u3000大品\n":
@@ -30,7 +30,7 @@ def load_from_htm():
             pin = {}
             data[pin_name] = pin
 
-        sutta_lines = th.match_line(body_lines, [re.compile(r"^\d+.*的談論$")])
+        sutta_lines = pyabo2.utils.match_line(body_lines, [re.compile(r"^\d+.*的談論$")])
         assert len(sutta_lines) == 1
         suttas = th.split_sutta(body_lines, sutta_lines)
         assert len(suttas) == 1

@@ -10,27 +10,6 @@ except ImportError:
     import config as config
 
 
-def _read_pages(filenames,  use_read_page2=False):
-    read_page_fun = read_page
-    if use_read_page2:
-        read_page_fun = _read_page2
-    results = []
-
-    for file_path in filenames:
-        print("read_page:", file_path)
-        full_path = os.path.join(config.DOWNLOAD_DIR, file_path)
-        mtime = os.path.getmtime(full_path)
-        data = open(full_path, "r").read()
-        soup = bs4.BeautifulSoup(data, 'html5lib')
-        root = xl.parse(str(soup)).root
-        if file_path == "Ni/Ni16.htm" and False:
-            open("Ni16.xml", "w").write(root.to_str())
-            exit()
-        result = [root, mtime] + read_page_fun(root)
-        results.append(result)
-    return results
-
-
 def read_page(file_path, style=1):
     read_page_fun = _read_page1
     if style == 2:

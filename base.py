@@ -8,6 +8,8 @@ import shutil
 
 import xl
 
+import pyabo2.utils
+
 
 def _split(name):
     return re.match(r"^(\d+)_(.+?)(\.xml)?$", name)
@@ -191,7 +193,6 @@ def write_to_disk(path, data: list, delete_existed=False):
         if isinstance(obj, list):
             write_to_disk(sub_path, obj)
         elif isinstance(obj, xl.Xml):
-            s = obj.to_str(do_pretty=True, try_self_closing=True,
-                         dont_do_tags=["source_page", "sutta_num", "start", "end", "name", "mtime", "ctime", "relevent", "p", "note", "title"])
+            s = obj.to_str(do_pretty=True, try_self_closing=True, dont_do_tags=pyabo2.utils.WRITE_DONT_DO_TAGS)
             with open(sub_path + ".xml", "w") as f:
                 f.write(s)

@@ -26,8 +26,8 @@ def load_from_htm_real(_htmls, _short):
     for htm in _htmls:
         root, mtime, body_lines, notes, div_nikaya = pyabo2.page_parsing.read_page(htm, 2)
 
-        pin_lines = th.match_line(body_lines, [re.compile(r"^\d+.*品.*$")])
-        ap_lines = th.match_line(body_lines, [re.compile(r"^\d+.*阿波陀那.*$")])
+        pin_lines = pyabo2.utils.match_line(body_lines, [re.compile(r"^\d+.*品.*$")])
+        ap_lines = pyabo2.utils.match_line(body_lines, [re.compile(r"^\d+.*阿波陀那.*$")])
 
         if pin_lines:
             _seril, line = th.split_seril_title(pin_lines[0][1])

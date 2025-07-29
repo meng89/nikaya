@@ -20,8 +20,8 @@ def load_from_htm():
     for htm in htmls:
         root, mtime, body_lines, notes, div_nikaya = pyabo2.page_parsing.read_page(htm, 2)
 
-        pian_lines = th.match_line(body_lines, ["集篇"])
-        ji_lines = th.match_line(body_lines, [re.compile(r"^\d+.*長老尼偈.*$")])
+        pian_lines = pyabo2.utils.match_line(body_lines, ["集篇"])
+        ji_lines = pyabo2.utils.match_line(body_lines, [re.compile(r"^\d+.*長老尼偈.*$")])
 
         if pian_lines:
             seril, line = th.split_seril_title(pian_lines[0][1])

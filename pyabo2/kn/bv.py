@@ -19,7 +19,7 @@ def load_from_htm():
         root, mtime, body_lines, notes, div_nikaya = pyabo2.page_parsing.read_page(htm, 2)
 
         # todo report 3.燃燈佛種性
-        sutta_lines = th.match_line(body_lines, [re.compile(r"^\d+.*(佛種性|佛種姓|寶物經行處章|蘇昧達的願求說|種種佛章|遺骨的分配說).*$")])
+        sutta_lines = pyabo2.utils.match_line(body_lines, [re.compile(r"^\d+.*(佛種性|佛種姓|寶物經行處章|蘇昧達的願求說|種種佛章|遺骨的分配說).*$")])
         if sutta_lines[0][1][0] == "\n3.燃燈佛種性\n":
             sutta_lines[0][1][0] = "\n3.燃燈佛種姓\n"
 
