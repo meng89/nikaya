@@ -15,12 +15,6 @@ short = "Ud"
 htmls = ["Ud/Ud{:0>2d}.htm".format(x) for x in range(1, 81)]
 
 
-try:
-    import user_config as config
-except ImportError:
-    import config as config
-
-
 def load_from_htm():
     data = []
     pin = []
