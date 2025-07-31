@@ -16,9 +16,7 @@ except ImportError:
 import pyabo
 
 import pyabo2.kn
-
-
-
+import pyabo2.note
 
 
 # _headers = {'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.135 Safari/537.36"}
@@ -97,7 +95,7 @@ def download(filename, session):
 
 def main(fresh_time, check_mtime):
     session = requests.Session()
-    for module in pyabo2.kn.all_modules:
+    for module in [pyabo2.note] + list(pyabo2.kn.all_modules):
         for filename in module.htmls:
             sync(filename, session, fresh_time, check_mtime)
 

@@ -16,6 +16,9 @@ da_htmls = ["Ni/Ni{}.htm".format(x) for x in range(1, 17)]
 xiao_htmls = ["Ni/Ni{}.htm".format(x) for x in range(17, 40)]
 
 
+htmls = da_htmls + xiao_htmls
+
+
 def load_from_htm():
     data = [
         ("大義釋", load_(da_htmls)),

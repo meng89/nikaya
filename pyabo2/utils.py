@@ -114,7 +114,7 @@ def make_xml(source_page, sutta_nums, start, end, mtime, ctime, source_title, re
     xml = xl.Xml(root=doc)
     return xml
 
-WRITE_DONT_DO_TAGS = ["source_page", "sutta_num", "start", "end", "name", "mtime", "ctime", "relevent", "p", "note", "title", "source_title"]
+WRITE_DONT_DO_TAGS = ["source_page", "sutta_num", "start", "end", "name", "mtime", "ctime", "relevant", "p", "note", "title", "source_title"]
 
 
 def get_pin_name(body_lines):
@@ -159,6 +159,7 @@ def match_line(lines: list, partterns: list):
             m = re.match(parttern, txt)
             if m:
                 matched_lines.append((m, index, line))
+                break
 
     return matched_lines
 
@@ -210,6 +211,8 @@ def split_sutta(body_lines, matches):
 
 def strip_crlf(line):
     newline = copy.deepcopy(line)
+    if isinstance(newline[-1], str):
+        newline[0] = newline[0].lstrip()
     if isinstance(newline[-1], str):
         newline[-1] = newline[-1].rstrip()
     return newline

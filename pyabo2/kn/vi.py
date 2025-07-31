@@ -15,36 +15,65 @@ htmls = ["Vi/Vi{}.htm".format(x) for x in range(1, 86)]
 
 def load_from_htm():
     data = []
+    sexual_tiangong = None
     pin = None
-    pin_seril = None
 
-    sutta_seril = 0
+    sutta_seril = None
+
+    after_18 = False
 
     for htm in htmls:
+        print()
         root, mtime, nikaya_lines, notes, div_nikaya = pyabo2.page_parsing.read_page(htm, 2)
-        p = re.compile(r"^(\d+)\.(.+(?:經|所問|偈))(?:\(\d+\.\))?(.*)$")
-        matchs = pyabo2.utils.match_line(nikaya_lines, [p, p2])
+
+
+        p = re.compile(r"^(\d+)\.(.+(?:天宮事|忠貞者).*)$")
+
+        if htm == "Vi/Vi18.htm" or after_18:
+            after_18 = True
+            p = re.compile(r"^(\d+)\.(.+天宮事.*)\((\d+)\.\)(.+)?\*?$")
+
+        matchs = pyabo2.utils.match_line(nikaya_lines, [p])
         print(matchs)
         assert len(matchs) == 1
         m = matchs[0][0]
 
-        print(m.group(1), m.group(2), m.group(3))
+        try:
+            sutta_seril = m.group(3)
+        except IndexError:
+            sutta_seril = m.group(1)
+        sutta_name = m.group(2)
+
+        try:
+            relevant = m.group(4)
+        except IndexError:
+            relevant = None
 
         suttas = pyabo2.utils.split_sutta(nikaya_lines, matchs)
         assert len(suttas) == 1
         source_title_line, head_lines, body_lines = suttas[0]
+        print(source_title_line)
 
-        #_sutta_seril, title_line = pyabo2.utils.split_seril_title(source_title_line)
 
-        pin_matchs = pyabo2.utils.match_line(head_lines, [re.compile(r"^(\d+)\.(.+品(?:\(.+品\))?)$")])
+        p = re.compile(r"^\d\.(女子天宮|男子天宮)$")
+        sexual_matchs = pyabo2.utils.match_line(head_lines, [p])
+        if sexual_matchs:
+            assert len(sexual_matchs) == 1
+            m = sexual_matchs[0][0]
+            s_tg_name = m.group(1)
+            sexual_tiangong = []
+            data.append((s_tg_name, sexual_tiangong))
+            pin = None
+
+        p = re.compile(r"^\d\.(.+品)$")
+        pin_matchs = pyabo2.utils.match_line(head_lines, [p])
         if pin_matchs:
-            assert len(pin_matchs) == 1
-            pin_m = pin_matchs[0][0]
-            pin_seril = pin_m.group(1)
-            pin_num = "{}.{}".format(pin_m.group(1), pin_m.group(2))
+            assert len(pin_matchs)
+            m = pin_matchs[0][0]
+            pin_name = m.group(1)
             pin = []
-            data.append((pin_num, pin))
-            sutta_seril = 0
+            sexual_tiangong.append((pin_name, pin))
+
 
         head_lines = pyabo2.page_parsing.htm_lines_to_xml_lines(head_lines)
         head = pyabo2.page_parsing.lines_to_body(head_lines)
@@ -52,89 +81,25 @@ def load_from_htm():
         body = pyabo2.page_parsing.htm_lines_to_xml_lines(body_lines)
         body = pyabo2.page_parsing.lines_to_body(body)
 
-        sutta_seril += 1
-        sutta_num = "Su.{}.{}".format(pin_seril, sutta_seril)
+        sutta_num = "Vi.{}".format(sutta_seril)
         sutta_nums = [
-            (None, sutta_num)
+            (None, sutta_num),
+            ("SC", "Vv {}".format(sutta_seril))
         ]
 
         xml = pyabo2.utils.make_xml(source_page=htm,
                                     sutta_nums=sutta_nums,
-                                    start=str(sutta_seril),
-                                    end=str(sutta_seril),
+                                    start=sutta_seril,
+                                    end=sutta_seril,
                                     mtime=mtime,
                                     ctime=None,
-                                    source_title=source_title_line,
-                                    relevant=m.group(3),
-                                    title_line=m.group(2),
+                                    source_title=pyabo2.utils.strip_crlf(source_title_line),
+                                    relevant=relevant,
+                                    title_line=sutta_name,
                                     head=head,
                                     body=body,
                                     notes=notes
                                     )
         pin.append((sutta_num, xml))
-
-    return data
-
-
-
-def _get_tiangong_name(body_lines):
-    tiangongs = []
-    for line in body_lines:
-        if len(line) == 1 and isinstance(line[0], str):
-            kid = line[0].strip()
-            if kid.endswith("天宮"):
-                m = re.match(r"^\d+\.(\S+)$", kid)
-                tiangongs.append(m.group(1))
-
-
-    if len(tiangongs) > 1:
-        raise pyabo2.utils.AnalysisFailed(tiangongs)
-
-    if tiangongs:
-        return tiangongs[0]
-    else:
-        return None
-
-
-def load_from_htm2():
-    data = {}
-
-    tiangong: dict or None = None
-
-    for htm in htmls:
-        root, mtime, body_lines, notes, div_nikaya = pyabo2.page_parsing.read_page(htm, 2)
-
-        body = pyabo2.page_parsing.htm_lines_to_xml_lines(body_lines)
-        body = pyabo2.page_parsing.lines_to_body(body)
-
-        tiangong_name = _get_tiangong_name(body_lines)
-        if tiangong_name:
-            tiangong = {}
-            data[tiangong_name] = tiangong
-
-        pin_name = pyabo2.utils.get_pin_name2(body_lines)
-        if pin_name:
-            last = pyabo2.utils.get_last_folder(data)
-            tiangong[pin_name] = {}
-
-        _name = pyabo2.utils.get_name2(root)
-
-        m = re.match(r"^(\d+)\.(\S+)$", _name)
-        if m:
-            start = m.group(1)
-            end = m.group(1)
-            name = m.group(2)
-        m = re.match(r"^(椅子)(\d)$", _name)
-        if m:
-            start = m.group(2)
-            end = m.group(2)
-            name = _name
-
-        xml = pyabo2.utils.make_xml(start, end, name, mtime, None, body, notes)
-
-        folder = pyabo2.utils.get_last_folder(data)
-        m = re.match("Vi/Vi(\d+).htm", htm)
-        seril = m.group(1)
-        folder["Vi{}".format(seril)] = xml
 
     return data
