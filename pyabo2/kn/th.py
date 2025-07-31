@@ -1,11 +1,8 @@
 import copy
 import re
 
-import xl
-
 import pyabo2.page_parsing
 import pyabo2.utils
-from pyabo2.utils import match_line
 
 name_han = "長老偈"
 name_pali = "Theragāthā"
@@ -99,21 +96,5 @@ def strip_line(line: list):
     if isinstance(new_line[-1], str):
         new_line[-1] = new_line[-1].rstrip()
     return new_line
-
-
-def split_seril_title(line: list):
-    new_line = copy.deepcopy(line)
-    new_line = strip_line(new_line)
-    if isinstance(new_line[0], str):
-        m = re.match(r"([\d-]+)\.(.*)$", new_line[0])
-        if m:
-            if m.group(2):
-                new_line[0] = m.group(2)
-            else:
-                new_line.pop(0)
-
-            return m.group(1), new_line
-
-    raise Exception(new_line)
 
 

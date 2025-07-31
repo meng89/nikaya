@@ -24,7 +24,7 @@ def load_from_htm():
         ji_lines = pyabo2.utils.match_line(body_lines, [re.compile(r"^\d+.*長老尼偈.*$")])
 
         if pian_lines:
-            seril, line = th.split_seril_title(pian_lines[0][1])
+            seril, line = pyabo2.utils.split_seril_title(pian_lines[0][1])
             assert len(line) == 1 and isinstance(line[0], str)
             pian_seril = seril
             pian_name = "{}.{}".format(seril, line[0])
@@ -43,7 +43,7 @@ def load_from_htm():
             head = pyabo2.page_parsing.htm_lines_to_xml_lines(head_lines)
             head = pyabo2.page_parsing.lines_to_head(head)
 
-            seril, title_line = th.split_seril_title(title_line)
+            seril, title_line = pyabo2.utils.split_seril_title(title_line)
             sutta_num = "Thag.{}.{}".format(pian_seril, seril)
 
             title_line = pyabo2.page_parsing.htm_line_to_xml_line(title_line)

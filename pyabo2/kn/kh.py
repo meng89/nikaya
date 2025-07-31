@@ -11,10 +11,27 @@ htmls = ["Kh/Kh{}.htm".format(x) for x in range(1, 10)]
 
 
 def load_from_htm():
-    data = {}
+    data = []
 
     for htm in htmls:
         root, mtime, body_lines, notes, div_nikaya = pyabo2.page_parsing.read_page(htm, 2)
+
+        parttern = re.compile(r"(\d)\.(三歸依|十學處|三十二行相|童問.*|.+經.*)")
+        matchs = pyabo2.utils.match_line(body_lines, [parttern])
+        assert len(matchs) == 1
+
+        m = matchs[0][0]
+        sutta_seril = m.group(1)
+        sutta_name = m.group(2)
+
+        suttas = pyabo2.utils.split_sutta(body_lines, matchs)
+        assert len(suttas) == 1
+        source_title_line, head_lines, body_lines = suttas[0]
+
+        _sutta_seril, title_line = pyabo2.utils.split_seril_title(source_title_line)
+
+        head = pyabo2.page_parsing.htm_lines_to_xml_lines(head_lines)
+        head = pyabo2.page_parsing.lines_to_head(head)
 
         body = pyabo2.page_parsing.htm_lines_to_xml_lines(body_lines)
         body = pyabo2.page_parsing.lines_to_body(body)
@@ -25,10 +42,26 @@ def load_from_htm():
         if htm == "Kh/Kh8.htm":
             _name = "8.部分財寶經"
 
-        m = re.match(r"^(\d+)\.(\S+)$", _name)
-        xml = pyabo2.utils.make_xml(m.group(1), m.group(1), m.group(2), mtime, None, body, notes)
+        sutta_num = "Kh." + sutta_seril
+        sutta_nums = [
+            (None, sutta_num),
+            ("SC", "Kh " + sutta_seril)
+        ]
 
-        folder = pyabo2.utils.get_last_folder(data)
-        folder["Kh{}".format(m.group(1))] = xml
+        xml = pyabo2.utils.make_xml(source_page=htm,
+                                    sutta_nums=sutta_nums,
+                                    start=m.group(1),
+                                    end=m.group(1),
+                                    mtime=mtime,
+                                    ctime=None,
+                                    source_title=pyabo2.utils.strip_crlf(source_title_line),
+                                    relevant=None,
+                                    title_line=title_line,
+                                    head=head,
+                                    body=body,
+                                    notes=notes
+                                    )
+
+        data.append((sutta_num, xml))
 
     return data

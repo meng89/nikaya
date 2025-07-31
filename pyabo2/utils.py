@@ -4,6 +4,8 @@ from datetime import datetime
 
 import xl
 
+from pyabo2.kn.th import strip_line
+
 
 def get_last_folder(data: dict):
     last_folder = None
@@ -85,7 +87,8 @@ def make_xml(source_page, sutta_nums, start, end, mtime, ctime, source_title, re
         end_e.kids.append(end)
 
     source_title_e = meta.ekid("source_title")
-    source_title_e.kids.extend(source_title)
+    if source_title is not None:
+        source_title_e.kids.extend(source_title)
 
     relevant_e = meta.ekid("relevant")
     if relevant is not None:
@@ -173,8 +176,8 @@ def line_to_txt(line: list):
     return s
 
 
-def split_sutta(body_lines, sutta_lines):
-    sutta_lines_ = copy.deepcopy(sutta_lines)
+def split_sutta(body_lines, matches):
+    sutta_lines_ = copy.deepcopy(matches)
     suttas = [] #[title_line, head_lines, ji_body_lines]
 
     _m, title_index, _title_line = sutta_lines_.pop(0)
@@ -210,3 +213,19 @@ def strip_crlf(line):
     if isinstance(newline[-1], str):
         newline[-1] = newline[-1].rstrip()
     return newline
+
+
+def split_seril_title(line: list):
+    new_line = copy.deepcopy(line)
+    new_line = strip_line(new_line)
+    if isinstance(new_line[0], str):
+        m = re.match(r"([\d-]+)\.(.*)$", new_line[0])
+        if m:
+            if m.group(2):
+                new_line[0] = m.group(2)
+            else:
+                new_line.pop(0)
+
+            return m.group(1), new_line
+
+    raise Exception(new_line)

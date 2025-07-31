@@ -23,7 +23,7 @@ def load_from_htm():
         pin_lines = pyabo2.utils.match_line(body_lines, [re.compile(r"^\d+.*品.*$")])
 
         if pin_lines:
-            _seril, line = th.split_seril_title(pin_lines[0][1])
+            _seril, line = pyabo2.utils.split_seril_title(pin_lines[0][1])
             assert len(line) == 1 and isinstance(line[0], str)
             pin_name = line[0]
             pin = {}
@@ -43,7 +43,7 @@ def load_from_htm():
         head = pyabo2.page_parsing.htm_lines_to_xml_lines(head_lines)
         head = pyabo2.page_parsing.lines_to_head(head)
 
-        _seril, title_line = th.split_seril_title(title_line)
+        _seril, title_line = pyabo2.utils.split_seril_title(title_line)
 
         seril += 1
 

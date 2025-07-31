@@ -30,7 +30,7 @@ def load_from_htm_real(_htmls, _short):
         ap_lines = pyabo2.utils.match_line(body_lines, [re.compile(r"^\d+.*阿波陀那.*$")])
 
         if pin_lines:
-            _seril, line = th.split_seril_title(pin_lines[0][1])
+            _seril, line = pyabo2.utils.split_seril_title(pin_lines[0][1])
             assert len(line) == 1 and isinstance(line[0], str)
             pin_name = line[0]
             pin = {}
@@ -52,7 +52,7 @@ def load_from_htm_real(_htmls, _short):
             if title_line[0] == "\n3-8賓頭盧婆羅墮若[↝AN.1.195]":
                 title_line[0] = "\n3-8.賓頭盧婆羅墮若[↝AN.1.195]"
 
-            _seril, title_line = th.split_seril_title(title_line)
+            _seril, title_line = pyabo2.utils.split_seril_title(title_line)
             #m = re.match("3-(\d)", seril)
             #if m:
             #    seril = str(int(m.group(1)) + 2)

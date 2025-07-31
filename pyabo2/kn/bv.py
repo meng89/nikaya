@@ -35,7 +35,7 @@ def load_from_htm():
         head = pyabo2.page_parsing.htm_lines_to_xml_lines(head_lines)
         head = pyabo2.page_parsing.lines_to_head(head)
 
-        seril, title_line = th.split_seril_title(title_line)
+        seril, title_line = pyabo2.utils.split_seril_title(title_line)
 
         sutta_num = "{}.{}".format(short, seril)
 

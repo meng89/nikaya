@@ -2,10 +2,10 @@ import re
 
 import pyabo2.page_parsing
 import pyabo2.utils
-from . import th
 
 
-# 与 c
+# 与 SC 经号差别较大
+
 name_han = "大義釋" # 大与小
 name_pali = "Mahāniddesa"
 short = "Ni"
@@ -23,6 +23,7 @@ def load_from_htm():
     ]
     return data
 
+
 def load_(htmls_):
     data = []
     for htm in htmls_:
@@ -34,11 +35,13 @@ def load_(htmls_):
         body = pyabo2.page_parsing.lines_to_body(body)
 
         xml = pyabo2.utils.make_xml(source_page = htm,
-                                    sutta_num = None,
+                                    sutta_nums = [],
                                     start = m.group(1),
                                     end = m.group(1),
                                     mtime = mtime,
                                     ctime = None,
+                                    source_title=None,
+                                    relevant = None,
                                     title_line = m.group(2),
                                     head = None,
                                     body = body,
