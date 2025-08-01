@@ -19,7 +19,7 @@ def main():
 
 
 def main2():
-    import pyabo2.kn.vi as m
+    import pyabo2.kn.pv as m
     data = m.load_from_htm()
     base.write_to_disk(os.path.join(config.XML_DIR, m.short), data, True)
 

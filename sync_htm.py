@@ -4,9 +4,12 @@ import os
 import time
 
 import dateutil.parser
-
 import requests
 import urllib.parse
+
+import bs4
+
+import xl
 
 try:
     import user_config as config
@@ -14,7 +17,6 @@ except ImportError:
     import config as config
 
 import pyabo
-
 import pyabo2.kn
 import pyabo2.note
 
@@ -93,11 +95,41 @@ def download(filename, session):
     os.utime(file_path, (atime, mtime))
 
 
+def get_others(filename):
+    htm_str = open(os.path.join(config.DOWNLOAD_DIR, filename), "r").read()
+    soup = bs4.BeautifulSoup(htm_str, 'html5lib')
+    root = xl.parse(str(soup)).root
+    paths = get_paths(root)
+
+    filename_dir = os.path.dirname(filename)
+    others = []
+    for path in paths:
+        other = os.path.normpath(os.path.join(filename_dir, path))
+        others.append(other)
+
+    return others
+
+
+def get_paths(e: xl.Element):
+    paths = []
+    for _, v in e.attrs.items():
+        if v.lower().endswith(".css") or v.lower().endswith(".js"):
+            paths.append(v)
+    for kid in e.kids:
+        if isinstance(kid, xl.Element):
+            paths.extend(get_paths(kid))
+
+    return paths
+
+
 def main(fresh_time, check_mtime):
     session = requests.Session()
     for module in [pyabo2.note] + list(pyabo2.kn.all_modules):
         for filename in module.htmls:
             sync(filename, session, fresh_time, check_mtime)
+            for other in get_others(filename):
+                sync(other, session, fresh_time, check_mtime)
+
 
 
 if __name__ == "__main__":
