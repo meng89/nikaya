@@ -12,48 +12,43 @@ htmls = ["Th/Th{}.htm".format(x) for x in range(1, 113)]
 
 
 def load_from_htm():
-    data = {}
+    data = []
     pian_seril = None
-    pian: None or dict = None
-    pin: None or dict = None
-    last_folder: None or dict = None
+    pian = None
+    pin = None
+
 
     ji_seril = None
 
 
     for htm in htmls:
-        root, mtime, body_lines, notes, div_nikaya = pyabo2.page_parsing.read_page(htm, 2)
+        root, mtime, nikaya_lines, notes, div_nikaya = pyabo2.page_parsing.read_page(htm, 2)
 
-        pian_lines = match_line(body_lines, ["集篇"])
-        pin_lines = match_line(body_lines, ["品"])
-        ji_lines = match_line(body_lines, [re.compile(r"^\d+.*長老偈.*$")])
+        matchs = pyabo2.utils.match_line(nikaya_lines, [re.compile(r"^\d+\.(.+長老偈).*$")])
 
-        if pian_lines:
-            ji_seril, line = split_seril_title(pian_lines[0][1])
-            assert len(line) == 1 and isinstance(line[0], str)
-            pian_seril = ji_seril
-            pian_name = "{}.{}".format(ji_seril, line[0])
-            pian = {}
-            data[pian_name] = pian
-            last_folder = pian
+        jis = pyabo2.utils.split_sutta(nikaya_lines, matchs)
+        for source_title_line, head_lines, body_lines in jis:
+            pian_p = re.compile(r"^(\d+)\.(.+集篇)$")
+            pian_matchs = pyabo2.utils.match_line(head_lines, [pian_p])
+            if pian_matchs:
+                assert len(pian_matchs) == 1
+                pian_m = pian_matchs[0][0]
+                pian = []
+                pian_num = pian_m.group(1) + pian_m.group(2)
+                data.append((pian_num, pian))
+                pin = None
 
-            pin = None
-            ji_seril = 0
-
-        if pin_lines:
-            _seril, line = split_seril_title(pin_lines[0][1])
-            assert len(line) == 1 and isinstance(line[0], str)
-            pin_name = line[0]
-            pin = {}
-            pian[pin_name] = pin
-            last_folder = pin
-
-        assert ji_lines
-        jis = split_sutta(body_lines, ji_lines)
-        for title_line, head_lines, sutta_body_lines in jis:
+            pin_p = re.compile(r"^\d+\.(.+品)$")
+            pin_matchs = pyabo2.utils.match_line(head_lines, [pin_p])
+            if pin_matchs:
+                assert len(pin_matchs) == 1
+                pin_m = pin_matchs[0][0]
+                pin = []
+                pian.append((pin_m.group(1), pin))
 
 
-            body = pyabo2.page_parsing.htm_lines_to_xml_lines(sutta_body_lines)
+
+            body = pyabo2.page_parsing.htm_lines_to_xml_lines(body_lines)
             body = pyabo2.page_parsing.lines_to_body(body)
 
             head = pyabo2.page_parsing.htm_lines_to_xml_lines(head_lines)

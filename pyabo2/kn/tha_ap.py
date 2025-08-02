@@ -1,9 +1,7 @@
 import re
 
-
 import pyabo2.page_parsing
 import pyabo2.utils
-from . import th
 
 
 name_han = "長老阿波陀那" #譬喻
@@ -38,9 +36,8 @@ def load_from_htm_real(_htmls, _short):
 
 
         assert len(ap_lines) == 1
-        aps = th.split_sutta(body_lines, ap_lines)
-        for title_line, head_lines, sutta_body_lines in aps:
-
+        suttas = pyabo2.utils.split_sutta(body_lines, ap_lines)
+        for title_line, head_lines, sutta_body_lines in suttas:
 
             body = pyabo2.page_parsing.htm_lines_to_xml_lines(sutta_body_lines)
             body = pyabo2.page_parsing.lines_to_body(body)

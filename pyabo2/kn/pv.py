@@ -24,8 +24,6 @@ def load_from_htm():
         sutta_seril = m.group(3) or m.group(1)
         sutta_name = m.group(2)
 
-        print(sutta_seril, sutta_name)
-
         suttas = pyabo2.utils.split_sutta(nikaya_lines, matchs)
         assert len(suttas) == 1
 
