@@ -14,65 +14,62 @@ htmls = ["Ap/Ap{}.htm".format(x) for x in range(1, 564)]
 short = "Tha-ap"
 
 
-def load_form_htm():
+def load_from_htm():
     return load_from_htm_real(htmls, short)
 
+
 def load_from_htm_real(_htmls, _short):
-    data = {}
-    pin: None or dict = None
-    seril = 0
+    data = []
+    pin = None
+    sutta_seril = 0
     for htm in _htmls:
-        root, mtime, body_lines, notes, div_nikaya = pyabo2.page_parsing.read_page(htm, 2)
+        root, mtime, nikaya_lines, notes, div_nikaya = pyabo2.page_parsing.read_page(htm, 2)
 
-        pin_lines = pyabo2.utils.match_line(body_lines, [re.compile(r"^\d+.*品.*$")])
-        ap_lines = pyabo2.utils.match_line(body_lines, [re.compile(r"^\d+.*阿波陀那.*$")])
+        matchs = pyabo2.utils.match_line(nikaya_lines, [re.compile(r"^\d+(?:-\d)?\.?(.+阿波陀那).*$")])
+        print(matchs)
+        assert len(matchs) == 1
+        m = matchs[0][0]
+        sutta_seril += 1
+        sutta_name = m.group(1)
 
-        if pin_lines:
-            _seril, line = pyabo2.utils.split_seril_title(pin_lines[0][1])
-            assert len(line) == 1 and isinstance(line[0], str)
-            pin_name = line[0]
-            pin = {}
-            data[pin_name] = pin
+        aps = pyabo2.utils.split_sutta(nikaya_lines, matchs)
+        source_title_line, head_lines, body_lines = aps[0]
+
+        pin_matchs = pyabo2.utils.match_line(head_lines, [re.compile(r"^\d+\.(.+品).*$")])
+        if pin_matchs:
+            assert len(pin_matchs) == 1
+            pin_m = pin_matchs[0][0]
+            pin_name = pin_m.group(1)
+            pin = []
+            data.append((pin_name, pin))
+
+        body_lines = pyabo2.page_parsing.htm_lines_to_xml_lines(body_lines)
+        body = pyabo2.page_parsing.lines_to_body(body_lines)
+
+        head_lines = pyabo2.page_parsing.htm_lines_to_xml_lines(head_lines)
+        head = pyabo2.page_parsing.lines_to_head(head_lines)
 
 
-        assert len(ap_lines) == 1
-        suttas = pyabo2.utils.split_sutta(body_lines, ap_lines)
-        for title_line, head_lines, sutta_body_lines in suttas:
+        sutta_num = "{} {}".format(_short, sutta_seril)
+        sutta_nums = [
+            ("SC", sutta_num)
+        ]
 
-            body = pyabo2.page_parsing.htm_lines_to_xml_lines(sutta_body_lines)
-            body = pyabo2.page_parsing.lines_to_body(body)
+        xml = pyabo2.utils.make_xml(source_page = htm,
+                                    sutta_nums = sutta_nums,
+                                    start = str(sutta_seril),
+                                    end = str(sutta_seril),
+                                    mtime = mtime,
+                                    ctime = None,
+                                    source_title = pyabo2.page_parsing.htm_line_to_xml_line(pyabo2.utils.strip_crlf(source_title_line)),
+                                    relevant = None,
+                                    title_line = sutta_name,
+                                    head = head,
+                                    body = body,
+                                    notes = notes
+                                    )
 
-            head = pyabo2.page_parsing.htm_lines_to_xml_lines(head_lines)
-            head = pyabo2.page_parsing.lines_to_head(head)
-
-            # todo report
-            if title_line[0] == "\n3-8賓頭盧婆羅墮若[↝AN.1.195]":
-                title_line[0] = "\n3-8.賓頭盧婆羅墮若[↝AN.1.195]"
-
-            _seril, title_line = pyabo2.utils.split_seril_title(title_line)
-            #m = re.match("3-(\d)", seril)
-            #if m:
-            #    seril = str(int(m.group(1)) + 2)
-
-            seril += 1
-
-            sutta_num = "{}.{}".format(_short, seril)
-
-            title_line = pyabo2.page_parsing.htm_line_to_xml_line(title_line)
-            print(th.line_to_txt(title_line))
-            xml = pyabo2.utils.make_xml(source_page=htm,
-                                        sutta_num = sutta_num,
-                                        start = str(seril),
-                                        end = str(seril),
-                                        mtime = mtime,
-                                        ctime = None,
-                                        title_line = title_line,
-                                        head = head,
-                                        body = body,
-                                        notes = notes
-                                        )
-
-            filename = sutta_num
-            pin[filename] = xml
+        filename = "{}{}".format(_short, sutta_seril)
+        pin.append((filename, xml))
 
     return data

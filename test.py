@@ -1,17 +1,9 @@
 #!/usr/bin/env python3
-import os.path
-
-import base
-
-import pyabo2.kn.ps as ps
 
 
-try:
-    import user_config as config
-except ImportError:
-    import config as config
+import pyabo2.utils
 
 
-data = ps.load_from_htm()
+s = pyabo2.utils.get_toc_title(["1.测试[syz]测试[SN.1.1]"])
 
-#base.write_to_disk(os.path.join(config.XML_DIR, it.short), data, True)
+print(s)

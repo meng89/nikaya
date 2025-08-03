@@ -1,10 +1,17 @@
+from typing import NewType
+
+
+
+
 import re
 import copy
 from datetime import datetime
 
 import xl
 
-from pyabo2.kn.th import strip_line
+
+Line = list[str | xl.Element]
+Lines = list[Line]
 
 
 def get_last_folder(data: dict):
@@ -63,7 +70,7 @@ def debug_print_es(l):
     print(s)
 
                             # SN.1.1   1     1
-def make_xml(source_page, sutta_nums, start, end, mtime, ctime, source_title, relevant, title_line, head, body, notes):
+def make_xml(source_page, sutta_nums, start, end, mtime, ctime, source_title, relevant, title_line, head, body, notes) -> xl.Xml:
     doc = xl.Element("doc")
     meta = doc.ekid("meta")
 
@@ -151,7 +158,10 @@ def get_pin_name2(body_lines):
         return None
 
 
-def match_line(lines: list, partterns: list):
+Match = tuple[re.Match, int, Line]
+Matchs = list[Match]
+
+def match_line(lines: Lines, partterns: list[re.Pattern]) -> Matchs:
     matched_lines = []
     for index, line in enumerate(lines):
         txt = line_to_txt(line).strip()
@@ -164,7 +174,7 @@ def match_line(lines: list, partterns: list):
     return matched_lines
 
 
-def line_to_txt(line: list):
+def line_to_txt(line: Line):
     s = ""
     for x in line:
         if isinstance(x, str):
@@ -177,7 +187,8 @@ def line_to_txt(line: list):
     return s
 
 
-def split_sutta(body_lines, matches):
+Suttas = list[tuple[Line, Lines, Lines]]
+def split_sutta(body_lines, matches: Matchs) -> Suttas:
     sutta_lines_ = copy.deepcopy(matches)
     suttas = [] #[title_line, head_lines, ji_body_lines]
 
@@ -209,7 +220,7 @@ def split_sutta(body_lines, matches):
     return suttas
 
 
-def strip_crlf(line):
+def strip_crlf(line: Line) -> Line:
     newline = copy.deepcopy(line)
     if isinstance(newline[-1], str):
         newline[0] = newline[0].lstrip()
@@ -218,7 +229,7 @@ def strip_crlf(line):
     return newline
 
 
-def split_seril_title(line: list):
+def split_seril_title(line: Line) -> tuple[str, Line]:
     new_line = copy.deepcopy(line)
     new_line = strip_line(new_line)
     if isinstance(new_line[0], str):
@@ -232,3 +243,33 @@ def split_seril_title(line: list):
             return m.group(1), new_line
 
     raise Exception(new_line)
+
+
+# xml need 1: toc title 没有其它经的引用，没有经号。
+# 2: html 页面的 title，保留原有，包含其它经文的引用，包含注解。没有经号。
+# 所以应该有一个
+
+
+def get_toc_title(line: Line) -> str:
+    txt = line_to_txt(line)
+    txt.strip()
+
+    m = re.match(r"^([^一-龥]*)(.*?)([^一-龥]*)$", txt)
+    
+    return (m.group(1),m.group(2),m.group(3))
+
+
+
+def get_page_title(line: Line) -> Line:
+    pass
+
+
+
+
+def strip_line(line: Line):
+    new_line = copy.deepcopy(line)
+    if isinstance(new_line[0], str):
+        new_line[0] = new_line[0].lstrip()
+    if isinstance(new_line[-1], str):
+        new_line[-1] = new_line[-1].rstrip()
+    return new_line
