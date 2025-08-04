@@ -29,11 +29,8 @@ def load_from_htm():
         p = re.compile(r"^(\d+)\.(.+(?:經|所問|偈))(?:\(\d+\.\))?(.*)$")
         p2 = re.compile(r"^(\d*)(序　偈)\(\d+\.\)(.*)$")
         matchs = pyabo2.utils.match_line(nikaya_lines, [p, p2])
-        print(matchs)
         assert len(matchs) == 1
         m = matchs[0][0]
-
-        print(m.group(1), m.group(2), m.group(3))
 
         suttas = pyabo2.utils.split_sutta(nikaya_lines, matchs)
         assert len(suttas) == 1

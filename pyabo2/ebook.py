@@ -1,0 +1,191 @@
+import os
+import string
+import abc
+
+import opencc
+
+import config
+
+
+def do_nothing(x):
+    return x
+
+
+_table = [
+    ("「", "“"),
+    ("」", "”"),
+    ("『", "‘"),
+    ("』", "’"),
+]
+
+
+def convert2sc(s):
+    if s:
+        converter = opencc.OpenCC('tw2sp.json')
+        return converter.convert(s)
+    else:
+        return s
+
+
+def convert_all(s):
+    new_sc_s = ""
+    for c in convert2sc(s):
+        new_sc_s += _convert_punctuation(c)
+    return new_sc_s
+
+
+def _convert_punctuation(c):
+    for tp, sp in _table:
+        if tp == c:
+            return sp
+    return c
+
+
+
+class Lang(abc.ABC):
+    @property
+    @abc.abstractmethod
+    def c(self):
+        pass
+
+    @property
+    @abc.abstractmethod
+    def xml(self):
+        pass
+
+    @property
+    @abc.abstractmethod
+    def zh(self):
+        pass
+
+    @property
+    @abc.abstractmethod
+    def en(self):
+        pass
+
+    @property
+    @abc.abstractmethod
+    def han_version(self):
+        pass
+
+
+class TC(Lang):
+    @property
+    def c(self):
+        return do_nothing
+
+    @property
+    def xml(self):
+        return "zh-Hant"
+
+    @property
+    def zh(self):
+        return "繁"
+
+    @property
+    def en(self):
+        return "tc"
+
+    @property
+    def han_version(self):
+        return "傳統中文版"
+
+
+class SC(Lang):
+    @property
+    def c(self):
+        return convert2sc
+
+    @property
+    def xml(self):
+        return "zh-Hans"
+
+    @property
+    def zh(self):
+        return "简"
+
+    @property
+    def en(self):
+        return "sc"
+
+    @property
+    def han_version(self):
+        return "简体版"
+
+
+
+def make_cover(module, data, lang: Lang):
+
+    translated_date = read_mtime(data)
+    filename = "{}_{}_{}_{}".format(module.name_han, lang.zh, translated_date, today())
+    xhtml_filename = filename + ".xhtml"
+    image_filename = filename + ".png"
+
+    os.makedirs(config.COVER_DIR, exist_ok=True)
+
+    image_path = os.path.join(config.COVER_DIR, image_filename)
+
+    if not os.path.exists(image_path):
+        _template_str = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "cover.xhtml")).read()
+        if isinstance(lang, SC):
+            template_str = _template_str.replace("CJK TC", "CJK SC")
+        else:
+            template_str = _template_str
+
+        t = string.Template(template_str)
+
+        if len(module.name_han) == 2:
+            # 半角：&nbsp;
+            # 全角：&emsp;
+            title_hant = module.name_han[0] + "&nbsp;&nbsp;" + module.name_han[1]
+        else:
+            title_hant = module.name_han
+        doc_str = t.substitute(bookname_han=lang.c(title_hant),
+                               bookname_pi=module.name_pali,
+                               han_version=lang.han_version,
+                               translator_line="莊春江" + lang.c("譯"),
+                               translated_date_line = lang.c("譯：" + translated_date),
+                               created_date_line = lang.c("製：" + today()),
+                               )
+
+        open(os.path.join(config.COVER_DIR, xhtml_filename), "w").write(doc_str)
+        from html2image import Html2Image as HtI
+
+        hti = HtI(browser_executable=config.BROWSER, output_path=config.COVER_DIR)
+        hti.screenshot(html_str=doc_str, size=(1600, 2560), save_as=image_filename)
+
+    return image_path
+
+
+def today():
+    from datetime import datetime
+    import time
+    return datetime.fromtimestamp(time.time()).astimezone().strftime("%Y年%m月%d日")
+
+
+def read_mtime(data: list):
+    from datetime import datetime
+    ts =  _read_mtime(data)
+    return datetime.fromtimestamp(ts).astimezone().strftime("%Y年%m月%d日")
+
+def _read_mtime(data):
+    import dateutil.parser
+    import xl
+    newest_ts = None
+    for _name, obj in data:
+        if isinstance(obj, list):
+            obj_ts =  _read_mtime(obj)
+            if newest_ts is None:
+                newest_ts = obj_ts
+            else:
+                newest_ts = max(newest_ts, obj_ts)
+        elif isinstance(obj, xl.Xml):
+            mtime = obj.root.find_descendants("mtime")[0]
+            ts = dateutil.parser.parse(mtime.kids[0]).timestamp()
+            if newest_ts is None:
+                newest_ts = ts
+            else:
+                newest_ts = max(newest_ts, ts)
+    return newest_ts
+
+

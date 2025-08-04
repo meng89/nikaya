@@ -222,7 +222,7 @@ def split_sutta(body_lines, matches: Matchs) -> Suttas:
 
 def strip_crlf(line: Line) -> Line:
     newline = copy.deepcopy(line)
-    if isinstance(newline[-1], str):
+    if isinstance(newline[0], str):
         newline[0] = newline[0].lstrip()
     if isinstance(newline[-1], str):
         newline[-1] = newline[-1].rstrip()
@@ -250,27 +250,16 @@ def split_seril_title(line: Line) -> tuple[str, Line]:
 # 所以应该有一个
 
 
-<<<<<<< HEAD
-def get_toc_title(line: Line) -> tuple[str, str, str]:
-=======
 def split_title_txt(line: Line) -> tuple[str, str, str]:
->>>>>>> c29db7b4020c1639fd8eb17028157fd141bbe980
     txt = line_to_txt(line)
     txt.strip()
-
     m = re.match(r"^([^一-龥]*)(.*?)([^一-龥]*)$", txt)
-<<<<<<< HEAD
-
-=======
-    
->>>>>>> c29db7b4020c1639fd8eb17028157fd141bbe980
     return m.group(1), m.group(2), m.group(3)
 
 
 
 def get_page_title(line: Line) -> Line:
     pass
-
 
 
 

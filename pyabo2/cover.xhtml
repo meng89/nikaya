@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>Title</title>
+    <style type="text/css">
+        body {
+            background-color: white;
+        }
+
+        .bookname_han {
+            text-shadow: 0.05em 0.05em 0.05em Grey;
+            font-family: "Noto Serif CJK TC Black";
+            margin: 10vh 0 0 0;
+            text-align: center;
+            font-size: 16vw;
+        }
+        .bookname_pi {
+            text-shadow: 0.1em 0.1em 0.1em Grey;
+            font-family: "Noto Serif Black";
+            margin: 0vh 0 0 0;
+            text-align: center;
+            font-size: 7vw;
+        }
+        .han_version {
+            text-shadow: 0.05em 0.05em 0.08em Grey;
+            font-family: "Noto Sans CJK TC Medium";
+            font-weight: Bold;
+            margin: 10vh 0 0 0;
+            text-align: center;
+            font-size: 6vw;
+        }
+        .translator {
+            font-family: "Noto Serif CJK TC";
+            font-weight: 500;
+            text-shadow: 0.1em 0.1em 0.25em;
+            margin: 25vh 0 0 0;
+            text-align: center;
+            font-size: 5vw;
+        }
+        .translated_date,
+        .created_date {
+            font-family: "Noto Serif CJK TC";
+            text-shadow: 0.1em 0.1em 0.25em;
+            text-align: center;
+            font-size: 3vw;
+        }
+        .translator,
+        .translated_date,
+        .created_date {
+            text-shadow: 0.05em 0.05em 0.1em grey;
+        }
+    </style>
+</head>
+<body>
+    <div class="bookname bookname_han">$bookname_han</div>
+    <div class="bookname bookname_pi">$bookname_pi</div>
+    <div class="han_version">$han_version</div>
+    <div>
+        <div class="translator">$translator_line</div>
+        <div class="translated_date">$translated_date_line</div>
+        <div class="created_date">$created_date_line</div>
+    </div>
+</body>
+</html>

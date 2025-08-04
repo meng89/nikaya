@@ -23,7 +23,6 @@ def load_from_htm():
     after_18 = False
 
     for htm in htmls:
-        print()
         root, mtime, nikaya_lines, notes, div_nikaya = pyabo2.page_parsing.read_page(htm, 2)
 
 
@@ -34,7 +33,6 @@ def load_from_htm():
             p = re.compile(r"^(\d+)\.(.+天宮事.*)\((\d+)\.\)(.+)?\*?$")
 
         matchs = pyabo2.utils.match_line(nikaya_lines, [p])
-        print(matchs)
         assert len(matchs) == 1
         m = matchs[0][0]
 
@@ -52,7 +50,6 @@ def load_from_htm():
         suttas = pyabo2.utils.split_sutta(nikaya_lines, matchs)
         assert len(suttas) == 1
         source_title_line, head_lines, body_lines = suttas[0]
-        print(source_title_line)
 
 
         p = re.compile(r"^\d\.(女子天宮|男子天宮)$")

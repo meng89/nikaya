@@ -19,7 +19,6 @@ def load_from_htm():
         root, mtime, nikaya_lines, notes, div_nikaya = pyabo2.page_parsing.read_page(htm, 2)
 
         matchs = pyabo2.utils.match_line(nikaya_lines, [re.compile(r"(\d+)\.(.+品.*)")])
-        print(matchs)
         assert len(matchs) == 1
 
         m = matchs[0][0]

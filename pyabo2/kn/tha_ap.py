@@ -26,7 +26,6 @@ def load_from_htm_real(_htmls, _short):
         root, mtime, nikaya_lines, notes, div_nikaya = pyabo2.page_parsing.read_page(htm, 2)
 
         matchs = pyabo2.utils.match_line(nikaya_lines, [re.compile(r"^\d+(?:-\d)?\.?(.+阿波陀那).*$")])
-        print(matchs)
         assert len(matchs) == 1
         m = matchs[0][0]
         sutta_seril += 1
