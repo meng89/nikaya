@@ -250,13 +250,13 @@ def split_seril_title(line: Line) -> tuple[str, Line]:
 # 所以应该有一个
 
 
-def get_toc_title(line: Line) -> str:
+def split_title_txt(line: Line) -> tuple[str, str, str]:
     txt = line_to_txt(line)
     txt.strip()
 
     m = re.match(r"^([^一-龥]*)(.*?)([^一-龥]*)$", txt)
     
-    return (m.group(1),m.group(2),m.group(3))
+    return m.group(1), m.group(2), m.group(3)
 
 
 
