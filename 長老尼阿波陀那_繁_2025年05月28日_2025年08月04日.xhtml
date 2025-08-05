@@ -4,20 +4,35 @@
     <title>Title</title>
     <style type="text/css">
         body {
-            background-color: white;
-            place-items: center;
-            margin: 0 auto;
+             margin: 0;
+          padding: 0;
+          position: relative; /* 确保子元素的绝对定位是相对于 body */
+          min-height: 100vh; /* 保证 body 高度至少为视口高度 */
+        }
+        .name {
+            border : 2px solid green;
+            top: 5vh; /* 距离顶部 20px */
+             left: 50%; /* 水平居中 */
+             transform: translateX(-50%); /* 水平居中 */
         }
 
-        .bookname_han {
+        .box {
+          //width: 200px;
+          //height: 100px;
+          background-color: lightblue;
+          border: 1px solid blue;
+          position: absolute; /* 使所有 div 都脱离文档流 */
+        }
+
+        .han {
             text-shadow: 0.05em 0.05em 0.05em Grey;
             font-family: "Noto Serif CJK TC Black";
-            margin: 10vh 0 0 0;
+            //margin: 10vh 0 0 0;
             text-align: center;
             font-size: 16vw;
             line-height: 18vw;
         }
-        .bookname_pi {
+        .pali {
 
             text-shadow: 0.1em 0.1em 0.1em Grey;
             font-family: "Noto Serif Black";
@@ -25,14 +40,11 @@
             text-align: center;
             font-size: 7vw;
         }
-        .han_version {
-
+        .version {
             border: 1px solid red;
-            display: flex;
-            align-items: center;
-            flex-direction: column;
-            top: 0vh;
-            text-align:center;
+            top: 50%; /* 距离顶部 50% */
+            left: 50%; /* 水平居中 */
+            transform: translate(-50%, -50%); /* 垂直和水平居中 */
 
             text-shadow: 0.05em 0.05em 0.08em Grey;
             font-family: "Noto Sans CJK TC Medium";
@@ -45,7 +57,7 @@
             font-family: "Noto Serif CJK TC";
             font-weight: 500;
             text-shadow: 0.1em 0.1em 0.25em;
-            margin: 25vh 0 0 0;
+            //margin: 25vh 0 0 0;
             text-align: center;
             font-size: 5vw;
         }
@@ -66,23 +78,20 @@
         }
 
         .translator {
-            border: 1px solid blue;
-            align-items: center;
-            flex-direction: column;
-            text-align: center;
-
-            display: flex;
-            justify-content: center;
-            align-items: middle;
+          bottom: 5vh; /* 距离底部 20px */
+          left: 50%; /* 水平居中 */
+          transform: translateX(-50%); /* 水平居中 */
 
         }
     </style>
 </head>
 <body>
-    <div class="bookname bookname_han">長老尼<br/>阿波陀那</div>
-    <div class="bookname bookname_pi">Therīapadāna</div>
-    <div class="han_version">傳統中文版</div>
-    <div class="translator">
+<div class="box name">
+    <div class="han">長老尼<br/><nobr>阿波陀那</nobr></div>
+    <div class="pali">Therīapadāna</div>
+</div>
+    <div class="box version">傳統中文版</div>
+    <div class="box translator">
         <div class="translator_line">莊春江譯</div>
         <div class="translated_line">譯：2025年05月28日</div>
         <div class="created_line">製：2025年08月04日</div>

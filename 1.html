@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>三div布局</title>
+    <style>
+        body {
+          margin: 0;
+          padding: 0;
+          position: relative; /* 确保子元素的绝对定位是相对于 body */
+          min-height: 100vh; /* 保证 body 高度至少为视口高度 */
+        }
+
+        .box {
+          width: 200px;
+          height: 100px;
+          background-color: lightblue;
+          border: 1px solid blue;
+          position: absolute; /* 使所有 div 都脱离文档流 */
+        }
+
+        .top-div {
+          top: 20px; /* 距离顶部 20px */
+          left: 50%; /* 水平居中 */
+          transform: translateX(-50%); /* 水平居中 */
+        }
+
+        .middle-div {
+          top: 50%; /* 距离顶部 50% */
+          left: 50%; /* 水平居中 */
+          transform: translate(-50%, -50%); /* 垂直和水平居中 */
+        }
+
+        .bottom-div {
+          bottom: 20px; /* 距离底部 20px */
+          left: 50%; /* 水平居中 */
+          transform: translateX(-50%); /* 水平居中 */
+        }
+    </style>
+</head>
+<body>
+
+<div class="box top-div">
+    <div class="han">长老尼阿波陀那</div>
+    <div class="pali">Therīapadāna</div>
+</div>
+<div class="box middle-div">第二个 div</div>
+<div class="box bottom-div">第三个 div</div>
+
+</body>
+</html>
