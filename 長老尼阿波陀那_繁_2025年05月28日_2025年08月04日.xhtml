@@ -4,13 +4,14 @@
     <title>Title</title>
     <style type="text/css">
         body {
-             margin: 0;
+          margin: 0;
           padding: 0;
           position: relative; /* 确保子元素的绝对定位是相对于 body */
           min-height: 100vh; /* 保证 body 高度至少为视口高度 */
         }
-        .name {
-            border : 2px solid green;
+
+        .box1 {
+            //border: 2px solid green;
             top: 5vh; /* 距离顶部 20px */
              left: 50%; /* 水平居中 */
              transform: translateX(-50%); /* 水平居中 */
@@ -19,8 +20,8 @@
         .box {
           //width: 200px;
           //height: 100px;
-          background-color: lightblue;
-          border: 1px solid blue;
+          //background-color: lightblue;
+          //border: 1px solid blue;
           position: absolute; /* 使所有 div 都脱离文档流 */
         }
 
@@ -40,8 +41,8 @@
             text-align: center;
             font-size: 7vw;
         }
-        .version {
-            border: 1px solid red;
+        .box2 {
+            //border: 1px solid red;
             top: 50%; /* 距离顶部 50% */
             left: 50%; /* 水平居中 */
             transform: translate(-50%, -50%); /* 垂直和水平居中 */
@@ -49,11 +50,11 @@
             text-shadow: 0.05em 0.05em 0.08em Grey;
             font-family: "Noto Sans CJK TC Medium";
             font-weight: Bold;
-            margin: 10vh 0 0 0;
+            //margin: 10vh 0 0 0;
             text-align: center;
             font-size: 6vw;
         }
-        .translator_line {
+        .translator {
             font-family: "Noto Serif CJK TC";
             font-weight: 500;
             text-shadow: 0.1em 0.1em 0.25em;
@@ -61,40 +62,40 @@
             text-align: center;
             font-size: 5vw;
         }
-        .translated_line,
-        .created_line {
+        .translated,
+        .created {
             font-family: "Noto Serif CJK TC";
             text-shadow: 0.1em 0.1em 0.25em;
             text-align: center;
             font-size: 3vw;
         }
-        .translator_line,
-        .translated_line,
-        .created_line {
-            border: 1px solid green;
-            background-color: lightcyan;
+        .translator,
+        .translated,
+        .created {
+            //border: 1px solid green;
+            //background-color: lightcyan;
             text-align: center;
             text-shadow: 0.05em 0.05em 0.1em grey;
         }
 
-        .translator {
+        .box3 {
           bottom: 5vh; /* 距离底部 20px */
           left: 50%; /* 水平居中 */
           transform: translateX(-50%); /* 水平居中 */
-
         }
     </style>
 </head>
 <body>
-<div class="box name">
-    <div class="han">長老尼<br/><nobr>阿波陀那</nobr></div>
+<div class="box box1">
+    <div class="han">長老尼<br/><nobr>阿波陀那那</nobr></div>
     <div class="pali">Therīapadāna</div>
 </div>
-    <div class="box version">傳統中文版</div>
-    <div class="box translator">
-        <div class="translator_line">莊春江譯</div>
-        <div class="translated_line">譯：2025年05月28日</div>
-        <div class="created_line">製：2025年08月04日</div>
+    <div class="box box2">傳統中文版</div>
+    <div class="box box3">
+        <div class="translator">莊春江譯</div>
+        <div class="translated">譯：2025年05月28日</div>
+        <div class="created">製：2025年08月04日</div>
     </div>
 </body>
 </html>
+

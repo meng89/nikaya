@@ -4,28 +4,54 @@
     <title>Title</title>
     <style type="text/css">
         body {
-            background-color: white;
+          margin: 0;
+          padding: 0;
+          position: relative; /* 确保子元素的绝对定位是相对于 body */
+          min-height: 100vh; /* 保证 body 高度至少为视口高度 */
+          background-color: white;
         }
 
-        .bookname_han {
+        .box1 {
+            //border: 2px solid green;
+            top: 10%; /* 距离顶部 20px */
+             left: 50%; /* 水平居中 */
+             transform: translateX(-50%); /* 水平居中 */
+        }
+
+        .box {
+          //width: 200px;
+          //height: 100px;
+          //background-color: lightblue;
+          //border: 1px solid blue;
+          position: absolute; /* 使所有 div 都脱离文档流 */
+        }
+
+        .han {
             text-shadow: 0.05em 0.05em 0.05em Grey;
             font-family: "Noto Serif CJK TC Black";
-            margin: 10vh 0 0 0;
+            //margin: 10vh 0 0 0;
             text-align: center;
             font-size: 16vw;
+            line-height: 18vw;
         }
-        .bookname_pi {
+        .pali {
+
             text-shadow: 0.1em 0.1em 0.1em Grey;
             font-family: "Noto Serif Black";
             margin: 0vh 0 0 0;
             text-align: center;
             font-size: 7vw;
         }
-        .han_version {
+        .version {
+            //border: 1px solid red;
+            //top: 40%; /* 距离顶部 50% */
+            //left: 50%; /* 水平居中 */
+            //transform: translate(-50%, -50%); /* 垂直和水平居中 */
+
             text-shadow: 0.05em 0.05em 0.08em Grey;
             font-family: "Noto Sans CJK TC Medium";
             font-weight: Bold;
-            margin: 10vh 0 0 0;
+            margin: 5vh 0 0 0;
             text-align: center;
             font-size: 6vw;
         }
@@ -33,32 +59,44 @@
             font-family: "Noto Serif CJK TC";
             font-weight: 500;
             text-shadow: 0.1em 0.1em 0.25em;
-            margin: 25vh 0 0 0;
+            //margin: 25vh 0 0 0;
             text-align: center;
             font-size: 5vw;
         }
-        .translated_date,
-        .created_date {
+        .translated,
+        .created {
             font-family: "Noto Serif CJK TC";
             text-shadow: 0.1em 0.1em 0.25em;
             text-align: center;
             font-size: 3vw;
         }
         .translator,
-        .translated_date,
-        .created_date {
+        .translated,
+        .created {
+            //border: 1px solid green;
+            //background-color: lightcyan;
+            text-align: center;
             text-shadow: 0.05em 0.05em 0.1em grey;
+        }
+
+        .box2 {
+          bottom: 5vh; /* 距离底部 20px */
+          left: 50%; /* 水平居中 */
+          transform: translateX(-50%); /* 水平居中 */
         }
     </style>
 </head>
 <body>
-    <div class="bookname bookname_han">$bookname_han</div>
-    <div class="bookname bookname_pi">$bookname_pi</div>
-    <div class="han_version">$han_version</div>
-    <div>
-        <div class="translator">$translator_line</div>
-        <div class="translated_date">$translated_date_line</div>
-        <div class="created_date">$created_date_line</div>
-    </div>
+<div class="box box1">
+    <div class="han">$han</div>
+    <div class="pali">$pali</div>
+    <div class="version">$version</div>
+</div>
+
+<div class="box box2">
+    <div class="translator">$translator</div>
+    <div class="translated">$translated</div>
+    <div class="created">$created</div>
+</div>
 </body>
 </html>

@@ -140,12 +140,20 @@ def make_cover(module, data, lang: Lang):
             title_hant = module.name_han[0] + "&nbsp;&nbsp;" + module.name_han[1]
         else:
             title_hant = module.name_han
-        doc_str = t.substitute(bookname_han=lang.c(title_hant),
-                               bookname_pi=module.name_pali,
-                               han_version=lang.han_version,
-                               translator_line="莊春江" + lang.c("譯"),
-                               translated_date_line = lang.c("譯：" + translated_date),
-                               created_date_line = lang.c("製：" + today()),
+
+        if title_hant == "長老尼阿波陀那":
+            title_hant = "長老尼<br/><nobr>阿波陀那</nobr>"
+        elif title_hant == "長老阿波陀那":
+            title_hant = "長&nbsp;&nbsp;老<br/><nobr>阿波陀那</nobr>"
+        else:
+            title_hant = "<nobr>{}</nobr>".format(title_hant)
+
+        doc_str = t.substitute(han=lang.c(title_hant),
+                               pali=module.name_pali,
+                               version=lang.han_version,
+                               translator="莊春江" + lang.c("譯"),
+                               translated = lang.c("譯：" + translated_date),
+                               created = lang.c("製：" + today()),
                                )
 
         open(os.path.join(config.COVER_DIR, xhtml_filename), "w").write(doc_str)
@@ -165,27 +173,29 @@ def today():
 
 def read_mtime(data: list):
     from datetime import datetime
-    ts =  _read_mtime(data)
+    ts =  read_timestamp(data)
     return datetime.fromtimestamp(ts).astimezone().strftime("%Y年%m月%d日")
 
-def _read_mtime(data):
+
+def _max(a, b):
+    if a is None:
+        return b
+    if b is None:
+        return a
+    return max(a, b)
+
+
+def read_timestamp(data):
     import dateutil.parser
     import xl
     newest_ts = None
     for _name, obj in data:
         if isinstance(obj, list):
-            obj_ts =  _read_mtime(obj)
-            if newest_ts is None:
-                newest_ts = obj_ts
-            else:
-                newest_ts = max(newest_ts, obj_ts)
+            newest_ts = max(newest_ts, read_mtime(obj))
         elif isinstance(obj, xl.Xml):
             mtime = obj.root.find_descendants("mtime")[0]
             ts = dateutil.parser.parse(mtime.kids[0]).timestamp()
-            if newest_ts is None:
-                newest_ts = ts
-            else:
-                newest_ts = max(newest_ts, ts)
+            newest_ts = max(newest_ts, ts)
     return newest_ts
 
 
