@@ -1,6 +1,8 @@
 import uuid
 from datetime import datetime
 import math
+import posixpath
+from urllib.parse import urlsplit
 
 import epubpacker
 import xl
@@ -41,7 +43,16 @@ def make_epub(data, module, lang):
 def write_suttas(epub, module, data, lang):
     for name, obj in data:
         if is_leaf(obj) and need_join_one_page(obj):
+            write_one_page(epub, module, obj, lang)
 
+
+def write_sutta(epub, module, data, lang):
+    pass
+
+
+def write_one_page(epub, module, parent_path, obj, lang):
+    make_doc()
+    for name, sub_obj in obj:
 
 
 
@@ -53,14 +64,14 @@ def need_join_one_page(obj):
     large_page = 0
 
     for xml in obj:
-        real_line = 0
+        line_count = 0
         root = xml.root
         body = root.find("body")[0]
         for p in body.find("p"):
             txt = pyabo2.utils.line_to_txt(p.kids)
-            real_line += math.ceil(len(txt)/40)
+            line_count += math.ceil(len(txt)/40)
 
-        if real_line <= 30:
+        if line_count <= 30:
             small_page += 1
         else:
             large_page += 1
@@ -80,6 +91,59 @@ def is_leaf(obj: list):
 
 
 
+def make_doc(doc_path, lang, title=None):
+    html = xl.Element("html", {"xmlns:epub": "http://www.idpf.org/2007/ops",
+                               "xmlns": "http://www.w3.org/1999/xhtml",
+                               "xml:lang": lang.xmlang,
+                               "lang": lang.xmlang})
+    head = html.ekid("head")
+
+    if title:
+        _title = head.ekid("title", kids=[title])
+
+    _make_css_link(head, relpath(css.css1_path, doc_path), "css1")
+    _make_css_link(head, relpath("_css/user_css1.css", doc_path), "user_css1")
+    _make_css_link(head, relpath("_css/user_css2.css", doc_path), "user_css2")
+    _make_js_link(head, relpath(js.js1_path, doc_path), "js1")
+    _make_js_link(head, relpath("_js/user_js1.js", doc_path), "user_js1")
+    _make_js_link(head, relpath("_js/user_js2.js", doc_path), "user_js2")
+
+    body = html.ekid("body")
+    return html, body
+
+
+def _make_css_link(head, href, id_=None):
+    link = head.ekid("link", {"rel": "stylesheet", "type": "text/css", "href": href})
+    if id_:
+        link.attrs["id"] = id_
+    return link
+
+
+def _make_js_link(head, src, id_=None):
+    script = head.ekid("script", {"type": "text/javascript", "src": src})
+    if id_:
+        script.attrs["id"] = id_
+    return script
+
+
+def relpath(path1, path2):
+    """
+     ("note/note0.xhtml", "sn/sn01.xhtml") -> "../note/note0.xhtml"
+     ("sn/sn21.xhtml#SN.21.1, "sn/sn21.xhtml") -> "#SN.21.1"
+    """
+
+    path1_2 = posixpath.normpath(urlsplit(path1).path)
+    fragment = urlsplit(path1).fragment
+
+    path2_2 = posixpath.normpath(path2)
+
+    if path1_2 == path2_2:
+        if not fragment:
+            raise ValueError("How to link to self without a tag id?")
+        else:
+            return "#" + fragment
+    else:
+        return posixpath.relpath(path1_2, posixpath.dirname(path2_2)) + (("#" + fragment) if fragment else "")
 
 
 def write_cover(epub, module, data, lang):
