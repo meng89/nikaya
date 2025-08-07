@@ -56,18 +56,18 @@ def load_from_htm():
         head = pyabo2.page_parsing.htm_lines_to_xml_lines(head_lines)
         head = pyabo2.page_parsing.lines_to_head(head)
 
-        sutta_seril = m.group(1)
+        sutta_serial = m.group(1)
 
-        sutta_num = "{}.{}".format(short, sutta_seril)
+        sutta_num = "{}.{}".format(short, sutta_serial)
         sutta_nums = [
             (None, sutta_num),
-            ("SC", "Iti {}".format(sutta_seril))
+            ("SC", "Iti {}".format(sutta_serial))
         ]
 
         xml = pyabo2.utils.make_xml(source_page=htm,
                                     sutta_nums=sutta_nums,
-                                    start=sutta_seril,
-                                    end=sutta_seril,
+                                    start=sutta_serial,
+                                    end=sutta_serial,
                                     mtime=mtime,
                                     ctime=None,
                                     source_title=pyabo2.utils.strip_crlf(matches[0][2]),

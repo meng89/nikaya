@@ -14,9 +14,9 @@ htmls = ["Th/Th{}.htm".format(x) for x in range(1, 113)]
 
 def load_from_htm():
     data = []
-    pian_seril = None
+    pian_serial = None
     pian = None
-    ji_seril = 0
+    ji_serial = 0
 
     last = None
 
@@ -35,12 +35,12 @@ def load_from_htm():
             assert len(pian_matchs) == 1
             pian_m = pian_matchs[0][0]
             pian = []
-            pian_seril = pian_m.group(1)
+            pian_serial = pian_m.group(1)
             pian_name = pian_m.group(2)
-            pian_num = pian_seril + "." + pian_name
+            pian_num = pian_serial + "." + pian_name
             data.append((pian_num, pian))
             last = pian
-            ji_seril = 0
+            ji_serial = 0
 
         pin_p = re.compile(r"^\d+\.(.+品)$")
         pin_matchs = pyabo2.utils.match_line(_head_lines, [pin_p])
@@ -54,7 +54,7 @@ def load_from_htm():
 
         for index, (source_title_line, head_lines, body_lines) in enumerate(jis):
             m = matchs[index][0]
-            ji_seril += 1
+            ji_serial += 1
             sutta_name = m.group(1)
 
             body_lines = pyabo2.page_parsing.htm_lines_to_xml_lines(body_lines)
@@ -63,17 +63,17 @@ def load_from_htm():
             head_lines = pyabo2.page_parsing.htm_lines_to_xml_lines(head_lines)
             head = pyabo2.page_parsing.lines_to_head(head_lines)
 
-            sutta_num = "Thag.{}.{}".format(pian_seril, ji_seril)
+            sutta_num = "Thag.{}.{}".format(pian_serial, ji_serial)
 
             sutta_nums = [
                 (None, sutta_num),
-                ("SC", "Thag {}.{}".format(pian_seril, ji_seril))
+                ("SC", "Thag {}.{}".format(pian_serial, ji_serial))
             ]
 
             xml = pyabo2.utils.make_xml(source_page = htm,
                                         sutta_nums = sutta_nums,
-                                        start = str(ji_seril),
-                                        end = str(ji_seril),
+                                        start = str(ji_serial),
+                                        end = str(ji_serial),
                                         mtime = mtime,
                                         ctime = None,
                                         source_title = pyabo2.utils.strip_crlf(source_title_line),

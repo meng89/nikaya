@@ -21,14 +21,14 @@ def load_from_htm():
         assert len(matchs) == 1
 
         m = matchs[0][0]
-        sutta_seril = m.group(1)
+        sutta_serial = m.group(1)
         sutta_name = m.group(2)
 
         suttas = pyabo2.utils.split_sutta(body_lines, matchs)
         assert len(suttas) == 1
         source_title_line, head_lines, body_lines = suttas[0]
 
-        _sutta_seril, title_line = pyabo2.utils.split_seril_title(source_title_line)
+        _sutta_serial, title_line = pyabo2.utils.split_serial_title(source_title_line)
 
         head = pyabo2.page_parsing.htm_lines_to_xml_lines(head_lines)
         head = pyabo2.page_parsing.lines_to_head(head)
@@ -42,10 +42,10 @@ def load_from_htm():
         if htm == "Kh/Kh8.htm":
             _name = "8.部分財寶經"
 
-        sutta_num = "Kh." + sutta_seril
+        sutta_num = "Kh." + sutta_serial
         sutta_nums = [
             (None, sutta_num),
-            ("SC", "Kh " + sutta_seril)
+            ("SC", "Kh " + sutta_serial)
         ]
 
         xml = pyabo2.utils.make_xml(source_page=htm,

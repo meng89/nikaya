@@ -12,7 +12,7 @@ htmls = ["Cp/Cp{}.htm".format(x) for x in range(1, 36)]
 
 def load_from_htm():
     data = []
-    sutta_seril = 0
+    sutta_serial = 0
     pin = None
 
     for htm in htmls:
@@ -20,7 +20,7 @@ def load_from_htm():
         matchs = pyabo2.utils.match_line(nikaya_lines, [re.compile(r"^\d+\.(.+所行)(.*)$")])
         assert len(matchs) == 1
         m = matchs[0][0]
-        sutta_seril += 1
+        sutta_serial += 1
         sutta_name = m.group(1)
 
         suttas = pyabo2.utils.split_sutta(nikaya_lines, matchs)
@@ -41,13 +41,13 @@ def load_from_htm():
         head = pyabo2.page_parsing.lines_to_head(head_lines)
 
         sutta_nums = [
-            ("SC", "Cp {}".format(sutta_seril))
+            ("SC", "Cp {}".format(sutta_serial))
         ]
 
         xml = pyabo2.utils.make_xml(source_page = htm,
                                     sutta_nums = sutta_nums,
-                                    start = str(sutta_seril),
-                                    end = str(sutta_seril),
+                                    start = str(sutta_serial),
+                                    end = str(sutta_serial),
                                     mtime = mtime,
                                     ctime = None,
                                     source_title = pyabo2.page_parsing.htm_line_to_xml_line(pyabo2.utils.strip_crlf(source_title_line)),
@@ -58,7 +58,7 @@ def load_from_htm():
                                     notes = notes
                                     )
 
-        filename = "Cp{}".format(sutta_seril)
+        filename = "Cp{}".format(sutta_serial)
         pin.append((filename, xml))
 
     return data

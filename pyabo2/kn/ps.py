@@ -16,7 +16,7 @@ htmls = ["Ps/Ps{}.htm".format(x) for x in range(1, 31)]
 def load_from_htm():
     data = []
     pin = None
-    pin_seril = None
+    pin_serial = None
     for htm in htmls:
         root, mtime, body_lines, notes, div_nikaya = pyabo2.page_parsing.read_page(htm, 2)
 
@@ -26,7 +26,7 @@ def load_from_htm():
 
         m = matches[0][0]
 
-        sutta_seril = m.group(1)
+        sutta_serial = m.group(1)
         sutta_name = m.group(2)
 
         suttas = pyabo2.utils.split_sutta(body_lines, matches)
@@ -38,9 +38,9 @@ def load_from_htm():
         if pin_matchs:
             assert len(pin_matchs) == 1
             pin_m = pin_matchs[0][0]
-            pin_seril = pin_m.group(1) or "1"
+            pin_serial = pin_m.group(1) or "1"
             pin_name = pin_m.group(2)
-            pin_name_whole = pin_seril + "." + pin_name
+            pin_name_whole = pin_serial + "." + pin_name
             pin = []
             data.append((pin_name_whole, pin))
 
@@ -50,17 +50,17 @@ def load_from_htm():
         head = pyabo2.page_parsing.htm_lines_to_xml_lines(head_lines)
         head = pyabo2.page_parsing.lines_to_head(head)
 
-        sutta_num = "Ps.{}.{}".format(pin_seril, sutta_seril)
+        sutta_num = "Ps.{}.{}".format(pin_serial, sutta_serial)
 
         sutta_nums = [
             (None, sutta_num),
-            ("SC", "Ps {}.{}".format(pin_seril, sutta_seril))
+            ("SC", "Ps {}.{}".format(pin_serial, sutta_serial))
         ]
 
         xml = pyabo2.utils.make_xml(source_page=htm,
                                     sutta_nums=sutta_nums,
-                                    start=str(sutta_seril),
-                                    end=str(sutta_seril),
+                                    start=str(sutta_serial),
+                                    end=str(sutta_serial),
                                     mtime=mtime,
                                     ctime=None,
                                     source_title=pyabo2.utils.strip_crlf(matches[0][2]),

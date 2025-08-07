@@ -1,3 +1,5 @@
+import os.path
+import re
 import uuid
 from datetime import datetime
 import math
@@ -50,11 +52,59 @@ def write_sutta(epub, module, data, lang):
     pass
 
 
-def write_one_page(epub, module, parent_path, obj, lang):
-    make_doc()
-    for name, sub_obj in obj:
+def write_one_page(epub, module, parent_path, name, obj, lang):
+    doc_path = posixpath.join(parent_path, name) + ".xhtml"
+    html, body = make_doc(doc_path, lang, title=name)
+
+    for sub_name, sub_obj in obj:
 
 
+def sub_range(sub_data):
+    for name, obj in sub_data:
+        if isinstance(obj, list):
+            m = re.match(r"^(\d+)\..+$", name)
+            if m:
+                return get_range_list(sub_data)
+        elif isinstance(obj, xl.Xml):
+            return get_range_xml(sub_data)
+
+    raise Exception("No serial type found")
+
+
+def is_serialized_list(name, obj):
+    if isinstance(obj, list) and re.match(r"^(\d+)\..+$", name):
+        return True
+    return False
+
+
+def get_range_list(data):
+    start = None
+    end = None
+    for name, obj in data:
+        if isinstance(obj, list):
+            m = re.match(r"^(\d+)\..+$", name)
+            start = ebook_utils.any_min(start, m.group(1))
+            end = ebook_utils.any_max(start, m.group(1))
+
+            sub_start, sub_end = get_range_list(obj)
+            start = ebook_utils.any_min(start, sub_start)
+            end = ebook_utils.any_max(end, sub_end)
+
+    return start, end
+
+
+def get_range_xml(data):
+    start = None
+    end = None
+    for name, obj in data:
+        if isinstance(obj, xl.Xml):
+            start = ebook_utils.any_min(start, obj.root.find_descendants("start")[0].kids[0])
+            end = ebook_utils.any_max(end, obj.root.find_descendants("end")[0].kids[0])
+        elif isinstance(obj, list):
+            _start, _end = get_range_xml(data)
+            start = ebook_utils.any_min(start, _start)
+            end = ebook_utils.any_max(end, _end)
+    return start, end
 
 
 def need_join_one_page(obj):
@@ -139,7 +189,7 @@ def relpath(path1, path2):
 
     if path1_2 == path2_2:
         if not fragment:
-            raise ValueError("How to link to self without a tag id?")
+            raise ValueError("How to link to itself without a tag id?")
         else:
             return "#" + fragment
     else:

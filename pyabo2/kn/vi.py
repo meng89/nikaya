@@ -18,7 +18,7 @@ def load_from_htm():
     sexual_tiangong = None
     pin = None
 
-    sutta_seril = None
+    sutta_serial = None
 
     after_18 = False
 
@@ -37,9 +37,9 @@ def load_from_htm():
         m = matchs[0][0]
 
         try:
-            sutta_seril = m.group(3)
+            sutta_serial = m.group(3)
         except IndexError:
-            sutta_seril = m.group(1)
+            sutta_serial = m.group(1)
         sutta_name = m.group(2)
 
         try:
@@ -78,16 +78,16 @@ def load_from_htm():
         body = pyabo2.page_parsing.htm_lines_to_xml_lines(body_lines)
         body = pyabo2.page_parsing.lines_to_body(body)
 
-        sutta_num = "Vi.{}".format(sutta_seril)
+        sutta_num = "Vi.{}".format(sutta_serial)
         sutta_nums = [
             (None, sutta_num),
-            ("SC", "Vv {}".format(sutta_seril))
+            ("SC", "Vv {}".format(sutta_serial))
         ]
 
         xml = pyabo2.utils.make_xml(source_page=htm,
                                     sutta_nums=sutta_nums,
-                                    start=sutta_seril,
-                                    end=sutta_seril,
+                                    start=sutta_serial,
+                                    end=sutta_serial,
                                     mtime=mtime,
                                     ctime=None,
                                     source_title=pyabo2.utils.strip_crlf(source_title_line),

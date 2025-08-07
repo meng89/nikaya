@@ -22,14 +22,14 @@ def load_from_htm():
         assert len(matchs) == 1
 
         m = matchs[0][0]
-        sutta_seril = m.group(1)
+        sutta_serial = m.group(1)
         sutta_name = m.group(2)
 
         suttas = pyabo2.utils.split_sutta(nikaya_lines, matchs)
         assert len(suttas) == 1
         source_title_line, head_lines, body_lines = suttas[0]
 
-        sutta_seril, title_line = pyabo2.utils.split_seril_title(source_title_line)
+        sutta_serial, title_line = pyabo2.utils.split_serial_title(source_title_line)
 
         head_lines = pyabo2.page_parsing.htm_lines_to_xml_lines(head_lines)
         head = pyabo2.page_parsing.lines_to_body(head_lines)
@@ -37,7 +37,7 @@ def load_from_htm():
         body = pyabo2.page_parsing.htm_lines_to_xml_lines(body_lines)
         body = pyabo2.page_parsing.lines_to_body(body)
 
-        sutta_num = "Dh." + sutta_seril
+        sutta_num = "Dh." + sutta_serial
         sutta_nums = [
             (None, sutta_num),
         ]

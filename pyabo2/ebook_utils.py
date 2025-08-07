@@ -177,12 +177,20 @@ def read_mtime(data: list):
     return datetime.fromtimestamp(ts).astimezone().strftime("%Y年%m月%d日")
 
 
-def _max(a, b):
+def any_min(x, y):
+    if x is None:
+        return y
+    if y is None:
+        return x
+    return min(int(x), int(y))
+
+
+def any_max(a, b):
     if a is None:
         return b
     if b is None:
         return a
-    return max(a, b)
+    return max(int(a), int(b))
 
 
 def read_timestamp(data):

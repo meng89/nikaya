@@ -229,7 +229,7 @@ def strip_crlf(line: Line) -> Line:
     return newline
 
 
-def split_seril_title(line: Line) -> tuple[str, Line]:
+def split_serial_title(line: Line) -> tuple[str, Line]:
     new_line = copy.deepcopy(line)
     new_line = strip_line(new_line)
     if isinstance(new_line[0], str):
