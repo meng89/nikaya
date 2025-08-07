@@ -42,10 +42,21 @@ def make_epub(data, module, lang):
     return epub
 
 
+
+# 有偈篇
+#     1.諸天相應
+#         蘆葦品
+#             1.暴流之渡過經
+#             2.解脫經
+#     2.天子相應
+
+
 def write_suttas(epub, module, data, lang):
     for name, obj in data:
-        if is_leaf(obj) and need_join_one_page(obj):
+        if is_leaf(obj) and need_join(obj):
             write_one_page(epub, module, obj, lang)
+        else:
+            make_doc()
 
 
 def write_sutta(epub, module, data, lang):
@@ -59,61 +70,52 @@ def write_one_page(epub, module, parent_path, name, obj, lang):
     for sub_name, sub_obj in obj:
 
 
-def sub_range(sub_data):
-    for name, obj in sub_data:
-        if isinstance(obj, list):
-            m = re.match(r"^(\d+)\..+$", name)
-            if m:
-                return get_range_list(sub_data)
-        elif isinstance(obj, xl.Xml):
-            return get_range_xml(sub_data)
+def need_attach_range(name, obj):
+    # 有偈篇 和 芦苇品 这样的文件夹可以在后面添加经号范围。当然有偈篇包含的是其下的相应的范围，芦苇品包含的是其下面的经文范围
+    if isinstance(obj, list) and not re.match(r"^\d+\..+$", name):
+        return True
+    else:
+        return False
 
-    raise Exception("No serial type found")
+def read_range(obj):
+    return read_start(obj), read_end(obj)
+
+def read_start(obj):
+    sub_name, sub_obj = obj[0]
+    if isinstance(sub_obj, list):
+        m = re.match(r"^(\d+)\..+$", sub_name)
+        if m:
+            return m.group(1)
+        else:
+            return read_start(sub_obj)
+    else:
+        return obj.root.find_descendants("start")[0].kids[0]
+
+def read_end(obj):
+    sub_name, sub_obj = obj[-1]
+    if isinstance(sub_obj, list):
+        m = re.match(r"^(\d+)\..+$", sub_name)
+        if m:
+            return m.group(1)
+        else:
+            return read_end(sub_obj)
+    else:
+        return obj.root.find_descendants("end")[0].kids[0]
 
 
-def is_serialized_list(name, obj):
+def is_serialized_folder(name, obj):
     if isinstance(obj, list) and re.match(r"^(\d+)\..+$", name):
         return True
     return False
 
 
-def get_range_list(data):
-    start = None
-    end = None
-    for name, obj in data:
-        if isinstance(obj, list):
-            m = re.match(r"^(\d+)\..+$", name)
-            start = ebook_utils.any_min(start, m.group(1))
-            end = ebook_utils.any_max(start, m.group(1))
-
-            sub_start, sub_end = get_range_list(obj)
-            start = ebook_utils.any_min(start, sub_start)
-            end = ebook_utils.any_max(end, sub_end)
-
-    return start, end
-
-
-def get_range_xml(data):
-    start = None
-    end = None
-    for name, obj in data:
-        if isinstance(obj, xl.Xml):
-            start = ebook_utils.any_min(start, obj.root.find_descendants("start")[0].kids[0])
-            end = ebook_utils.any_max(end, obj.root.find_descendants("end")[0].kids[0])
-        elif isinstance(obj, list):
-            _start, _end = get_range_xml(data)
-            start = ebook_utils.any_min(start, _start)
-            end = ebook_utils.any_max(end, _end)
-    return start, end
-
-
-def need_join_one_page(obj):
-    # 检查是否把这里面的所有页面都合并在一起
-    # 因为有些经太短小，一些（哪些?）阅读器没有拼页功能，导致频繁翻页，上下相关的经文不在一个页面上。
+def need_join(obj):
+    # 检查是否需要把这里面的所有页面都合并在一起
+    # 因为有些经文字太少，一些（哪些?）阅读器没有拼页功能，导致频繁翻页，上下相关的经文不在一个页面上。
     small_page = 0
     large_page = 0
 
-    for xml in obj:
+    for name, xml in obj:
         line_count = 0
         root = xml.root
         body = root.find("body")[0]
@@ -126,18 +128,21 @@ def need_join_one_page(obj):
         else:
             large_page += 1
 
-    if small_page/large_page > 1:
+    if small_page / large_page > 1:
         return True
     else:
         return False
 
 
 
-def is_leaf(obj: list):
-    if isinstance(obj[0], list):
+def is_leaf(obj):
+    if not isinstance(obj, list):
         return False
-    else:
+
+    if isinstance(obj[0], xl.Xml):
         return True
+    else:
+        return False
 
 
 
