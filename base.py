@@ -2,6 +2,7 @@
 #KISS
 #KISS
 
+from typing import List, Tuple, Union
 import os
 import re
 import shutil
@@ -21,55 +22,6 @@ def split_serial(name):
 
 def split_name(name):
     return _split(name).group(2)
-
-
-class Folder:
-    def __init__(self, path=None):
-        self.conts = {}
-        if path:
-            entries = os.listdir(path)
-            entries.sort(key=split_serial)
-
-            for entry in entries:
-                entry_path = os.path.join(path, entry)
-
-                if os.path.isdir(entry_path):
-                    name = split_name(entry)
-                    value = Folder(entry_path)
-
-                elif os.path.isfile(entry_path):
-                    name = os.path.basename(entry_path)
-                    value = Doc(entry_path)
-                else:
-                    raise Exception("Unknow File: {}".format(entry_path))
-
-                self.conts[name] = value
-
-    def write(self, path):
-        os.makedirs(path, exist_ok=True)
-        index = 1
-        for name, obj in self.conts.items():
-            obj.write(os.path.join(path, "{}_{}".format(index, name)))
-
-
-class Doc:
-    def __init__(self, path=None):
-        if path:
-            xml = xl.parse(open(path, "r").read())
-            root = xml.root
-            self._meta = root.find_kids("meta")[0]
-            self._body = root.find_kids("body")[0]
-        else:
-            self._meta = xl.Element("meta")
-            self._body = xl.Element("body")
-
-
-    def write(self, path):
-        root = xl.Element("doc")
-        root.kids.extend([self._meta, self._body])
-        xml = xl.Xml(root)
-        with open(path, "w") as f:
-            f.write(xml.to_str(new_line_after_kid=True, do_pretty=True, dont_do_tags=["body"], try_self_closing=True))
 
 
 class Doc2:
@@ -157,6 +109,10 @@ class Doc2:
     @property
     def str(self) -> str:
         return xl.Xml(self._doc).to_str(do_pretty=True, dont_do_tags=["start", "end", "name", "mtime", "relevent", "p", "note"])
+
+
+Entry = Tuple[str, Union[xl.Xml, List["Entry"]]]
+Folder = List[Entry]
 
 
 def load_from_disk(path) -> list:

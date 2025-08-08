@@ -12,6 +12,7 @@ import xl
 import pyabo2.utils
 from . import css, js
 from . import ebook_utils
+from base import Folder, Entry
 
 
 
@@ -51,10 +52,13 @@ def make_epub(data, module, lang):
 #     2.天子相應
 
 
-def write_suttas(epub, module, data, lang):
+def write_suttas(mark, userfiles, module, data, lang):
     for name, obj in data:
-        if is_leaf(obj) and need_join(obj):
-            write_one_page(epub, module, obj, lang)
+        if isinstance(obj, list):
+            if is_leaf(obj) and need_join(obj):
+                write_one_page(mark, userfiles, module, obj, lang)
+            else:
+
         else:
             make_doc()
 
