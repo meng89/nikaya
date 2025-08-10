@@ -43,7 +43,6 @@ def make_epub(data, module, lang):
     return epub
 
 
-
 # 有偈篇
 #     1.諸天相應
 #         蘆葦品
@@ -52,26 +51,87 @@ def make_epub(data, module, lang):
 #     2.天子相應
 
 
-def write_suttas(mark, userfiles, module, data, lang):
+def write_suttas(module, marks, userfiles, branch: list, data, lang):
     for name, obj in data:
+        def _make_doc():
+            doc_path = posixpath.join(*branch, name) + ".xhtml"
+            return make_doc(doc_path, lang)
+
+
         if isinstance(obj, list):
             if is_leaf(obj) and need_join(obj):
-                write_one_page(mark, userfiles, module, obj, lang)
+                html, body = _make_doc()
+                write_one_folder(marks, userfiles, module, branch, obj, lang)
             else:
+                write_suttas(module, )
 
         else:
-            make_doc()
+            html, body = _make_doc()
+            write_one_doc(marks, userfiles, module, branch, html, body, obj, lang)
 
 
-def write_sutta(epub, module, data, lang):
-    pass
+def write_one_doc(marks, userfiles, module, branch, html, body, obj: xl.Xml, lang):
+    h = body.ekid("h" + str(len(branch) + 1))
+
+    sutta_num = get_sutta_num(obj.root)
+    if sutta_num == 0:
+        h.kids.append(sutta_num)
+
+    title = get_sutta_name(obj.root)
+
+    serialized_nodes = get_serialized_nodes(branch)
+    if serialized_nodes:
+        head = "{}/{}".format(serialized_nodes[0], title)
+    else:
+        head = title
+
+    h.kids.append(head)
 
 
-def write_one_page(epub, module, parent_path, name, obj, lang):
-    doc_path = posixpath.join(parent_path, name) + ".xhtml"
-    html, body = make_doc(doc_path, lang, title=name)
 
+def write_one_folder(epub, module, branch, name, obj, lang):
     for sub_name, sub_obj in obj:
+        write_one_doc()
+
+
+
+def get_sutta_name(root: xl.Element):
+    return root.find_descendants("title")[0].kids[0]
+
+
+def get_sutta_num(root: xl.Element):
+    for sutta_num in root.find_descendants("sutta_nums"):
+        if sutta_num.attrs.get("type") is None:
+            return sutta_num.kids[0]
+    return None
+
+
+def get_serialized_nodes(branch: list, nodes=None):
+    nodes = nodes or []
+    for node in branch:
+        m = re.match(r"^\d+\.(.+)$", node)
+        if m:
+            nodes.append(m.group(1))
+    return nodes
+
+
+
+def get_path(data, obj, path=None):
+    path = path or []
+    for _, sub_obj in data:
+
+        if obj is sub_obj:
+            return path
+
+        if isinstance(sub_obj, list):
+            path.append(sub_obj)
+            path2 = get_path(sub_obj, obj, path)
+            if path2:
+                return path2
+
+    return None
+
+
 
 
 def need_attach_range(name, obj):
