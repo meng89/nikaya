@@ -10,6 +10,7 @@ import epubpacker
 import xl
 
 import pyabo2.utils
+import pyabo2.note
 from . import css, js
 from . import ebook_utils
 from base import Folder, Entry
@@ -51,33 +52,36 @@ def make_epub(data, module, lang):
 #     2.天子相應
 
 
-def write_suttas(module, marks, userfiles, branch: list, data, lang):
+def write_suttas(module, marks, userfiles, branch: list, data, gn, lang):
     for name, obj in data:
         def _make_doc():
             doc_path = posixpath.join(*branch, name) + ".xhtml"
             return make_doc(doc_path, lang)
 
-
         if isinstance(obj, list):
             if is_leaf(obj) and need_join(obj):
                 html, body = _make_doc()
-                write_one_folder(marks, userfiles, module, branch, obj, lang)
+                write_one_folder(marks, userfiles, module, branch, html, body, obj, gn, lang)
             else:
-                write_suttas(module, )
+                new_branch = branch + [name]
+                write_suttas(module, marks, userfiles, new_branch, obj, gn, lang)
 
         else:
             html, body = _make_doc()
-            write_one_doc(marks, userfiles, module, branch, html, body, obj, lang)
+            write_one_doc(marks, userfiles, module, branch, None, html, body, obj, gn, lang)
 
 
-def write_one_doc(marks, userfiles, module, branch, html, body, obj: xl.Xml, lang):
+def write_one_doc(marks, userfiles, module, branch, doc_path, html, body, obj: xl.Xml, gn, lang):
+    title = get_sutta_name(obj.root)
+
+    if doc_path is None:
+        doc_path = posixpath.join("",*(branch[0:-1]+[title])) + ".xhtml"
+
     h = body.ekid("h" + str(len(branch) + 1))
 
     sutta_num = get_sutta_num(obj.root)
     if sutta_num == 0:
         h.kids.append(sutta_num)
-
-    title = get_sutta_name(obj.root)
 
     serialized_nodes = get_serialized_nodes(branch)
     if serialized_nodes:
@@ -88,19 +92,36 @@ def write_one_doc(marks, userfiles, module, branch, html, body, obj: xl.Xml, lan
     h.kids.append(head)
 
     for xml_p in obj.root.find_descendants("p"):
+        html_p = body.ekid("p")
+        html_p.kids.extend(xml_to_html(xml_p.kids, gn, doc_path, lang))
 
 
 
-def write_one_folder(epub, module, branch, name, obj, lang):
+def write_one_folder(marks, userfiles, module, branch, html, body, obj, gn, lang):
+    doc_path = posixpath.join("", *branch) + ".xhtml"
     for sub_name, sub_obj in obj:
-        write_one_doc()
+        write_one_doc(marks, userfiles, module, branch, doc_path, html, body, obj, gn, lang)
 
 
+ES = list[xl.Element | str]
 
-def xml_to_html(es: list[xl.Element]):
+def xml_to_html(es: ES, gn: pyabo2.note.GlobalNotes, doc_path, lang) -> ES:
     new_es = []
     for e in es:
-        if isinstance(e, xl.Element) and e.tag == "gn":
+        if isinstance(e, xl.Element):
+            if e.tag == "gn":
+                a = xl.Element("a", attrs={"epub:type": "noteref"})
+                link = gn.get_link(e.attrs["id"])
+                href = relpath(link, doc_path)
+                a.attrs["href"] = href
+                a.kids.extend(xml_to_html(e.kids, gn, doc_path, lang))
+                new_es.append(a)
+
+        elif isinstance(e, str):
+            new_es.append(lang.c(e))
+
+    return new_es
+
 
 
 def get_sutta_name(root: xl.Element):
