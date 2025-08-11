@@ -87,12 +87,20 @@ def write_one_doc(marks, userfiles, module, branch, html, body, obj: xl.Xml, lan
 
     h.kids.append(head)
 
+    for xml_p in obj.root.find_descendants("p"):
+
 
 
 def write_one_folder(epub, module, branch, name, obj, lang):
     for sub_name, sub_obj in obj:
         write_one_doc()
 
+
+
+def xml_to_html(es: list[xl.Element]):
+    new_es = []
+    for e in es:
+        if isinstance(e, xl.Element) and e.tag == "gn":
 
 
 def get_sutta_name(root: xl.Element):
