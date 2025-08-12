@@ -99,8 +99,11 @@ def write_one_doc(marks, userfiles, module, branch, doc_path, html, body, obj: x
 
 def write_one_folder(marks, userfiles, module, branch, html, body, obj, gn, lang):
     doc_path = posixpath.join("", *branch) + ".xhtml"
+    h = body.ekid("h{}".format(len(branch)))
+    h.kids.append(branch[-1])
     for sub_name, sub_obj in obj:
-        write_one_doc(marks, userfiles, module, branch, doc_path, html, body, obj, gn, lang)
+        sub_branch = branch + [sub_name]
+        write_one_doc(marks, userfiles, module, sub_branch, doc_path, html, body, sub_obj, gn, lang)
 
 
 ES = list[xl.Element | str]
