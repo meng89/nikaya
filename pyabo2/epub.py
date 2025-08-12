@@ -54,42 +54,40 @@ def make_epub(data, module, lang):
 
 def write_suttas(module, marks, userfiles, branch: list, data, gn, lang):
     for name, obj in data:
-        def _make_doc():
-            doc_path = posixpath.join(*branch, name) + ".xhtml"
-            return make_doc(doc_path, lang)
-
         if isinstance(obj, list):
             if is_leaf(obj) and need_join(obj):
-                html, body = _make_doc()
-                write_one_folder(marks, userfiles, module, branch, html, body, obj, gn, lang)
+                write_one_folder(marks, userfiles, module, branch, obj, gn, lang)
             else:
                 new_branch = branch + [name]
                 write_suttas(module, marks, userfiles, new_branch, obj, gn, lang)
 
         else:
-            html, body = _make_doc()
-            write_one_doc(marks, userfiles, module, branch, None, html, body, obj, gn, lang)
+            title = get_sutta_name(obj.root)
+            new_branch = branch + [title]
+            doc_path = posixpath.join("",*new_branch) + ".xhtml"
+            html, body = make_doc(doc_path, lang, title)
+            write_one_doc(marks, userfiles, module, branch, doc_path, html, body, obj, gn, lang)
 
 
 def write_one_doc(marks, userfiles, module, branch, doc_path, html, body, obj: xl.Xml, gn, lang):
-    title = get_sutta_name(obj.root)
-
-    if doc_path is None:
-        doc_path = posixpath.join("",*(branch[0:-1]+[title])) + ".xhtml"
-
     h = body.ekid("h" + str(len(branch) + 1))
 
     sutta_num = get_sutta_num(obj.root)
     if sutta_num == 0:
         h.kids.append(sutta_num)
 
-    serialized_nodes = get_serialized_nodes(branch)
-    if serialized_nodes:
-        head = "{}/{}".format(serialized_nodes[0], title)
-    else:
-        head = title
+    serialized_nodes = []
+    for node in branch[0: -1]:
+        m = re.match(r"^\d+\.(.+)$", node)
+        if m:
+            serialized_nodes.append(m.group(1))
+    assert len(serialized_nodes) <= 1
 
-    h.kids.append(head)
+    if serialized_nodes:
+        h.kids.append("{}/{}".format(serialized_nodes[0], branch[-1]))
+    else:
+        h.kids.append(branch[-1])
+
 
     for xml_p in obj.root.find_descendants("p"):
         html_p = body.ekid("p")
@@ -97,8 +95,9 @@ def write_one_doc(marks, userfiles, module, branch, doc_path, html, body, obj: x
 
 
 
-def write_one_folder(marks, userfiles, module, branch, html, body, obj, gn, lang):
+def write_one_folder(marks, userfiles, module, branch, obj, gn, lang):
     doc_path = posixpath.join("", *branch) + ".xhtml"
+    html, body = make_doc(doc_path, lang, branch[-1])
     h = body.ekid("h{}".format(len(branch)))
     h.kids.append(branch[-1])
     for sub_name, sub_obj in obj:
@@ -136,16 +135,6 @@ def get_sutta_num(root: xl.Element):
         if sutta_num.attrs.get("type") is None:
             return sutta_num.kids[0]
     return None
-
-
-def get_serialized_nodes(branch: list, nodes=None):
-    nodes = nodes or []
-    for node in branch:
-        m = re.match(r"^\d+\.(.+)$", node)
-        if m:
-            nodes.append(m.group(1))
-    return nodes
-
 
 
 def get_path(data, obj, path=None):
