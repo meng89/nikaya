@@ -52,24 +52,58 @@ def make_epub(data, module, lang):
 #     2.天子相應
 
 
-def write_suttas(module, marks, userfiles, branch: list, data, gn, lang):
+def write_suttas(module, marks: list[epubpacker.Mark], userfiles, branch: list, data, gn, lang):
+    first_doc_path = None
+
     for name, obj in data:
         if isinstance(obj, list):
+            new_branch = branch + [name]
+            mark = epubpacker.Mark(name)
+            marks.append(mark)
+
             if is_leaf(obj) and need_join(obj):
-                write_one_folder(marks, userfiles, module, branch, obj, gn, lang)
+                doc_path = posixpath.join("", *branch) + ".xhtml"
+                html, body = make_doc(doc_path, lang, branch[-1])
+                h = body.ekid("h{}".format(len(branch)))
+                h.kids.append(branch[-1])
+                for sub_name, sub_obj in obj:
+                    sub_branch = branch + [sub_name]
+                    write_one_doc(sub_branch, doc_path, html, body, sub_obj, gn, lang)
+                userfiles[doc_path] = html.to_str()
+                #return doc_path
+                #doc_path = write_one_folder(mark.kids, userfiles, module, new_branch, obj, gn, lang)
+
             else:
-                new_branch = branch + [name]
-                write_suttas(module, marks, userfiles, new_branch, obj, gn, lang)
+                doc_path = write_suttas(module, mark.kids, userfiles, new_branch, obj, gn, lang)
+            mark.href = doc_path
 
         else:
             title = get_sutta_name(obj.root)
             new_branch = branch + [title]
             doc_path = posixpath.join("",*new_branch) + ".xhtml"
             html, body = make_doc(doc_path, lang, title)
-            write_one_doc(marks, userfiles, module, branch, doc_path, html, body, obj, gn, lang)
+            write_one_doc(new_branch, doc_path, html, body, obj, gn, lang)
+            userfiles[doc_path] = html.to_str()
+            marks.append(epubpacker.Mark(title, href=doc_path))
+
+        if first_doc_path is None:
+            first_doc_path = doc_path
+
+    return first_doc_path
 
 
-def write_one_doc(marks, userfiles, module, branch, doc_path, html, body, obj: xl.Xml, gn, lang):
+def write_one_folder(marks, userfiles, module, branch, obj, gn, lang):
+    doc_path = posixpath.join("", *branch) + ".xhtml"
+    html, body = make_doc(doc_path, lang, branch[-1])
+    h = body.ekid("h{}".format(len(branch)))
+    h.kids.append(branch[-1])
+    for sub_name, sub_obj in obj:
+        sub_branch = branch + [sub_name]
+        write_one_doc(sub_branch, doc_path, html, body, sub_obj, gn, lang)
+    return doc_path
+
+
+def write_one_doc(branch, doc_path, html, body, obj: xl.Xml, gn, lang):
     h = body.ekid("h" + str(len(branch) + 1))
 
     sutta_num = get_sutta_num(obj.root)
@@ -92,17 +126,6 @@ def write_one_doc(marks, userfiles, module, branch, doc_path, html, body, obj: x
     for xml_p in obj.root.find_descendants("p"):
         html_p = body.ekid("p")
         html_p.kids.extend(xml_to_html(xml_p.kids, gn, doc_path, lang))
-
-
-
-def write_one_folder(marks, userfiles, module, branch, obj, gn, lang):
-    doc_path = posixpath.join("", *branch) + ".xhtml"
-    html, body = make_doc(doc_path, lang, branch[-1])
-    h = body.ekid("h{}".format(len(branch)))
-    h.kids.append(branch[-1])
-    for sub_name, sub_obj in obj:
-        sub_branch = branch + [sub_name]
-        write_one_doc(marks, userfiles, module, sub_branch, doc_path, html, body, sub_obj, gn, lang)
 
 
 ES = list[xl.Element | str]
