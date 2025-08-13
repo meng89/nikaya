@@ -199,11 +199,13 @@ def read_timestamp(data):
     newest_ts = None
     for _name, obj in data:
         if isinstance(obj, list):
-            newest_ts = max(newest_ts, read_mtime(obj))
+            newest_ts = any_max(newest_ts, read_timestamp(obj))
         elif isinstance(obj, xl.Xml):
             mtime = obj.root.find_descendants("mtime")[0]
+
             ts = dateutil.parser.parse(mtime.kids[0]).timestamp()
-            newest_ts = max(newest_ts, ts)
+            print(ts)
+            newest_ts = any_max(newest_ts, ts)
     return newest_ts
 
 
