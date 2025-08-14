@@ -13,8 +13,6 @@ import pyabo2.utils
 import pyabo2.note
 from . import css, js
 from . import ebook_utils
-from base import Folder, Entry
-from . import note
 
 
 def make_epub(data, module, lang):
@@ -41,7 +39,13 @@ def make_epub(data, module, lang):
     epub.userfiles["_js/user_js1.js"] = "// 第一个自定义 JS 文件\n\n"
     epub.userfiles["_js/user_js2.js"] = "// 第二个自定义 JS 文件\n\n"
 
-    write_suttas(module, epub.mark.kids, epub.userfiles, [], data, note.get_gn(), lang)
+    ln = pyabo2.note.LocalNotes()
+    gn = pyabo2.note.get_gn()
+    write_suttas(module, epub.mark.kids, epub.userfiles, epub.spine, [], data, ln, gn, lang)
+
+    for title, path, page in gn.get_pages(lang):
+        epub.userfiles[path] = page
+        epub.spine.append(path)
 
     return epub
 
@@ -54,7 +58,7 @@ def make_epub(data, module, lang):
 #     2.天子相應
 
 
-def write_suttas(module, marks: list[epubpacker.Mark], userfiles, branch: list, data, gn, lang):
+def write_suttas(module, marks: list[epubpacker.Mark], userfiles, spine, branch: list, data, ln, gn, lang):
     first_doc_path = None
 
     for name, obj in data:
@@ -72,20 +76,23 @@ def write_suttas(module, marks: list[epubpacker.Mark], userfiles, branch: list, 
                     sub_branch = branch + [sub_name]
                     write_one_doc(sub_branch, doc_path, html, body, sub_obj, gn, lang)
                 userfiles[doc_path] = html.to_str()
+                spine.append(doc_path)
                 #return doc_path
                 #doc_path = write_one_folder(mark.kids, userfiles, module, new_branch, obj, gn, lang)
 
             else:
-                doc_path = write_suttas(module, mark.kids, userfiles, new_branch, obj, gn, lang)
+                doc_path = write_suttas(module, mark.kids, userfiles, spine, new_branch, obj, ln, gn, lang)
             mark.href = doc_path
 
         else:
+
             title = get_sutta_name(obj.root)
             new_branch = branch + [title]
             doc_path = posixpath.join("",*new_branch) + ".xhtml"
             html, body = make_doc(doc_path, lang, title)
-            write_one_doc(new_branch, doc_path, html, body, obj, gn, lang)
+            write_one_doc(new_branch, doc_path, html, body, obj, ln, gn, lang)
             userfiles[doc_path] = html.to_str()
+            spine.append(doc_path)
             marks.append(epubpacker.Mark(title, href=doc_path))
 
         if first_doc_path is None:
@@ -94,7 +101,7 @@ def write_suttas(module, marks: list[epubpacker.Mark], userfiles, branch: list, 
     return first_doc_path
 
 
-def write_one_folder(marks, userfiles, module, branch, obj, gn, lang):
+def _____write_one_folder(marks, userfiles, module, branch, obj, gn, lang):
     doc_path = posixpath.join("", *branch) + ".xhtml"
     html, body = make_doc(doc_path, lang, branch[-1])
     h = body.ekid("h{}".format(len(branch)))
@@ -105,7 +112,7 @@ def write_one_folder(marks, userfiles, module, branch, obj, gn, lang):
     return doc_path
 
 
-def write_one_doc(branch, doc_path, html, body, obj: xl.Xml, gn, lang):
+def write_one_doc(branch, doc_path, html, body, obj: xl.Xml, ln, gn, lang):
     h = body.ekid("h" + str(len(branch) + 1))
 
     sutta_num = get_sutta_num(obj.root)
@@ -127,12 +134,12 @@ def write_one_doc(branch, doc_path, html, body, obj: xl.Xml, gn, lang):
 
     for xml_p in obj.root.find_descendants("p"):
         html_p = body.ekid("p")
-        html_p.kids.extend(xml_to_html(xml_p.kids, gn, doc_path, lang))
+        html_p.kids.extend(xml_to_html(xml_p.kids, obj.root, ln, gn, doc_path, lang))
 
 
 ES = list[xl.Element | str]
 
-def xml_to_html(es: ES, gn: pyabo2.note.GlobalNotes, doc_path, lang) -> ES:
+def xml_to_html(es: ES, root, ln, gn: pyabo2.note.GlobalNotes, doc_path, lang) -> ES:
     new_es = []
     for e in es:
         if isinstance(e, xl.Element):
@@ -141,13 +148,37 @@ def xml_to_html(es: ES, gn: pyabo2.note.GlobalNotes, doc_path, lang) -> ES:
                 link = gn.get_link(e.attrs["id"])
                 href = relpath(link, doc_path)
                 a.attrs["href"] = href
-                a.kids.extend(xml_to_html(e.kids, gn, doc_path, lang))
+                a.kids.extend(xml_to_html(e.kids, root, ln, gn, doc_path, lang))
                 new_es.append(a)
+
+            elif e.tag == "ln":
+                a = xl.Element("a", attrs={"epub:type": "noteref"})
+                _id = e.attrs["id"]
+                link = _get_ln_link_by_id(root, ln, _id)
+                href = relpath(link, doc_path)
+                a.attrs["href"] = href
+                a.kids.extend(xml_to_html(e.kids, root, ln, gn, doc_path, lang))
+
+            elif e.tag == "a" and "href" in e.attrs.keys() and "id" in e.attrs.keys():
+                new_es.append(e)
+            elif e.tag == "a" and "href" in e.attrs.keys() and
+            else:
+                print(e.to_str())
+                raise Exception("Unknown element type")
 
         elif isinstance(e, str):
             new_es.append(lang.c(e))
 
     return new_es
+
+
+def _get_ln_link_by_id(root, ln, id_):
+    for note in root.find_descendants("notes")[0].kids:
+        if note.attrs.get("id") == id_:
+            link = ln.add(note.kids)
+            return link
+
+    return ln.add("*没有注解*")
 
 
 
