@@ -60,18 +60,18 @@ def load_from_htm():
             (None, sutta_num)
         ]
 
-        xml = pyabo2.utils.make_xml(source_page=htm,
-                                    sutta_nums=sutta_nums,
-                                    start=str(sutta_serial),
-                                    end=str(sutta_serial),
-                                    mtime=mtime,
-                                    ctime=None,
-                                    source_title=source_title_line,
-                                    relevant=m.group(3),
-                                    title_line=m.group(2),
-                                    head=head,
-                                    body=body,
-                                    notes=notes
+        xml = pyabo2.utils.make_xml(source_page = htm,
+                                    sutta_nums = sutta_nums,
+                                    start = str(sutta_serial),
+                                    end = str(sutta_serial),
+                                    mtime = mtime,
+                                    ctime = None,
+                                    source_title = source_title_line,
+                                    relevant = m.group(3),
+                                    title_line = [m.group(2)],
+                                    head = head,
+                                    body = body,
+                                    notes = notes
                                     )
         pin.append((sutta_num, xml))
 

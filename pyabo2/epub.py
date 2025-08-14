@@ -14,7 +14,7 @@ import pyabo2.note
 from . import css, js
 from . import ebook_utils
 from base import Folder, Entry
-
+from . import note
 
 
 def make_epub(data, module, lang):
@@ -40,6 +40,8 @@ def make_epub(data, module, lang):
     epub.userfiles["_css/user_css2.css"] = "/* 第二个自定义 CSS 文件 */\n\n"
     epub.userfiles["_js/user_js1.js"] = "// 第一个自定义 JS 文件\n\n"
     epub.userfiles["_js/user_js2.js"] = "// 第二个自定义 JS 文件\n\n"
+
+    write_suttas(module, epub.mark.kids, epub.userfiles, [], data, note.get_gn(), lang)
 
     return epub
 
@@ -150,11 +152,12 @@ def xml_to_html(es: ES, gn: pyabo2.note.GlobalNotes, doc_path, lang) -> ES:
 
 
 def get_sutta_name(root: xl.Element):
-    return root.find_descendants("title")[0].kids[0]
-
+    x = root.find_descendants("title")[0].kids[0]
+    # input(x)
+    return x
 
 def get_sutta_num(root: xl.Element):
-    for sutta_num in root.find_descendants("sutta_nums"):
+    for sutta_num in root.find_descendants("sutta_num"):
         if sutta_num.attrs.get("type") is None:
             return sutta_num.kids[0]
     return None
@@ -257,8 +260,8 @@ def is_leaf(obj):
 def make_doc(doc_path, lang, title=None):
     html = xl.Element("html", {"xmlns:epub": "http://www.idpf.org/2007/ops",
                                "xmlns": "http://www.w3.org/1999/xhtml",
-                               "xml:lang": lang.xmlang,
-                               "lang": lang.xmlang})
+                               "xml:lang": lang.xml,
+                               "lang": lang.xml})
     head = html.ekid("head")
 
     if title:

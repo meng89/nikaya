@@ -1,9 +1,6 @@
 import re
 
 
-import xl
-
-
 import pyabo2.page_parsing
 from pyabo2.utils import get_last_folder
 
@@ -72,7 +69,7 @@ def load_from_htm():
                                     ctime=None,
                                     source_title=pyabo2.utils.strip_crlf(matches[0][2]),
                                     relevant=m.group(4),
-                                    title_line=m.group(2),
+                                    title_line=[m.group(2)],
                                     head=head,
                                     body=body,
                                     notes=notes)

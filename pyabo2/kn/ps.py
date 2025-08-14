@@ -65,7 +65,7 @@ def load_from_htm():
                                     ctime=None,
                                     source_title=pyabo2.utils.strip_crlf(matches[0][2]),
                                     relevant=None,
-                                    title_line=m.group(1),
+                                    title_line=[m.group(2)],
                                     head=head,
                                     body=body,
                                     notes=notes)

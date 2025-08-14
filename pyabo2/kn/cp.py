@@ -52,7 +52,7 @@ def load_from_htm():
                                     ctime = None,
                                     source_title = pyabo2.page_parsing.htm_line_to_xml_line(pyabo2.utils.strip_crlf(source_title_line)),
                                     relevant = m.group(2),
-                                    title_line = sutta_name,
+                                    title_line = [sutta_name],
                                     head = head,
                                     body = body,
                                     notes = notes

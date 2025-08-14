@@ -63,6 +63,9 @@ def load_from_htm():
             head_lines = pyabo2.page_parsing.htm_lines_to_xml_lines(head_lines)
             head = pyabo2.page_parsing.lines_to_head(head_lines)
 
+            #print(source_title_line)
+            _serial, title_line = pyabo2.utils.split_serial_title(source_title_line)
+
             sutta_num = "Thag.{}.{}".format(pian_serial, ji_serial)
 
             sutta_nums = [
@@ -78,7 +81,7 @@ def load_from_htm():
                                         ctime = None,
                                         source_title = pyabo2.utils.strip_crlf(source_title_line),
                                         relevant=None,
-                                        title_line = sutta_name,
+                                        title_line = title_line,
                                         head = head,
                                         body = body,
                                         notes = notes,

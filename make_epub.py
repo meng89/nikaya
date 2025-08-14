@@ -25,7 +25,7 @@ def main():
 
         for lang in pyabo2.ebook_utils.TC(), pyabo2.ebook_utils.SC():
             epub = pyabo2.epub.make_epub(data, m, lang)
-            filename = "{}_{}_莊_{}{}".format(lang.c(m.name_han), lang.zh, date, lang.c("製"))
+            filename = "{}_莊_{}_{}{}.epub".format(lang.c(m.name_han), lang.zh, date, lang.c("製"))
             full_path = os.path.join(temp_td.name, filename)
             epub.write(full_path)
 

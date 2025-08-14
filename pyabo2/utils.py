@@ -102,6 +102,8 @@ def make_xml(source_page, sutta_nums, start, end, mtime, ctime, source_title, re
         relevant_e.kids.append(relevant)
 
     name_e = meta.ekid("title")
+    if not isinstance(title_line, list):
+        input(repr(title_line))
     name_e.kids.extend(title_line)
 
     mtime_e = meta.ekid("mtime")

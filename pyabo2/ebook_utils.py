@@ -182,7 +182,7 @@ def any_min(x, y):
         return y
     if y is None:
         return x
-    return min(int(x), int(y))
+    return min(x, y)
 
 
 def any_max(a, b):
@@ -190,7 +190,7 @@ def any_max(a, b):
         return b
     if b is None:
         return a
-    return max(int(a), int(b))
+    return max(a, b)
 
 
 def read_timestamp(data):
@@ -202,9 +202,7 @@ def read_timestamp(data):
             newest_ts = any_max(newest_ts, read_timestamp(obj))
         elif isinstance(obj, xl.Xml):
             mtime = obj.root.find_descendants("mtime")[0]
-
             ts = dateutil.parser.parse(mtime.kids[0]).timestamp()
-            print(ts)
             newest_ts = any_max(newest_ts, ts)
     return newest_ts
 

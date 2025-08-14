@@ -43,9 +43,9 @@ def load_(htmls_):
                                     end = m.group(1),
                                     mtime = mtime,
                                     ctime = None,
-                                    source_title=None,
+                                    source_title = None,
                                     relevant = None,
-                                    title_line = m.group(2),
+                                    title_line = [m.group(2)],
                                     head = None,
                                     body = body,
                                     notes = notes

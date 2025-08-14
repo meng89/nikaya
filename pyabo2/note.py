@@ -16,6 +16,15 @@ def load_from_htm():
         pass
 
 
+_gn = None
+
+def get_gn():
+    global _gn
+    if _gn is None:
+        _gn = GlobalNotes()
+    return _gn
+
+
 class GlobalNotes:
     def __init__(self):
         self.notes = {}

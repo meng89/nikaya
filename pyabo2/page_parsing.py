@@ -89,9 +89,6 @@ def take_comp(div_comp: xl.Element):
     return notes
 
 
-
-
-
 def kids_to_lines(kids: list) -> list:
     lines = []
     line = []
@@ -117,8 +114,6 @@ def kids_to_lines(kids: list) -> list:
     return lines
 
 
-
-
 def take_nikaya(div_nikaya):
     contents = div_nikaya.kids
     homage_and_head_oline = []
@@ -126,8 +121,6 @@ def take_nikaya(div_nikaya):
 
     sutta_name_es = None
     body_lines = []
-
-
 
     while contents:
         e = contents.pop(0)
@@ -144,7 +137,6 @@ def take_nikaya(div_nikaya):
 
     homage_and_head_lines = htm_lines_to_xml_lines(homage_and_head_olines)
     # homage_and_head_lines = homage_and_head_olines
-
 
     e2 = contents.pop(0)
     assert isinstance(e2, str)
