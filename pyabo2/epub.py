@@ -41,13 +41,26 @@ def make_epub(data, module, lang):
 
     ln = pyabo2.note.LocalNotes()
     gn = pyabo2.note.get_gn()
-    write_suttas(module, epub.mark.kids, epub.userfiles, epub.spine, [], data, ln, gn, lang)
+    docs = write_suttas(module, epub.mark.kids, epub.userfiles, epub.spine, [], data, ln, gn, lang)
 
     for title, path, page in gn.get_pages(lang):
         epub.userfiles[path] = page
         epub.spine.append(path)
 
     return epub
+
+
+def make_inbook_ref(docs, refs):
+    new_docs = []
+    for path, xml in docs:
+        new_xml = ref_ref2(xml, refs)
+        new_docs.append((path, new_xml))
+    return new_docs
+
+def ref2(xml, refs):
+
+
+
 
 
 # 有偈篇

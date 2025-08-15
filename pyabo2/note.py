@@ -7,7 +7,7 @@ import bs4
 import xl
 
 import config
-import pyabo2.epub
+
 
 htmls = ["note/note{}.htm".format(x) for x in range(10)]
 
@@ -24,7 +24,6 @@ def get_gn():
     if _gn is None:
         _gn = GlobalNotes()
     return _gn
-
 
 
 class GlobalNotes:
@@ -59,6 +58,7 @@ class GlobalNotes:
         return self.notes.get(note_id)
 
     def get_pages(self, lang):
+        import pyabo2.epub
         xhtmls = []
         last_page_path = None
         last_ol = None
