@@ -161,7 +161,12 @@ def xml_to_html(es: ES, root, ln, gn: pyabo2.note.GlobalNotes, doc_path, lang) -
 
             elif e.tag == "a" and "href" in e.attrs.keys() and "id" in e.attrs.keys():
                 new_es.append(e)
-            elif e.tag == "a" and "href" in e.attrs.keys() and
+            elif e.tag == "a" and "href" in e.attrs.keys() and "target" in e.attrs.keys():
+                new_es.append(e)
+            elif e.tag == "span" and "style" in e.attrs.keys():
+                new_es.append(e)
+            elif len(e.kids) == 0:
+                pass
             else:
                 print(e.to_str())
                 raise Exception("Unknown element type")
