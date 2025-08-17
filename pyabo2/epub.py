@@ -1,3 +1,4 @@
+import copy
 import os.path
 import re
 import uuid
@@ -41,7 +42,9 @@ def make_epub(data, module, lang):
 
     ln = pyabo2.note.LocalNotes()
     gn = pyabo2.note.get_gn()
-    docs = write_suttas(module, epub.mark.kids, epub.userfiles, epub.spine, [], data, ln, gn, lang)
+    docs = []
+    refs = []
+    write_suttas(module, epub.mark.kids, docs, refs, [], data, ln, gn, lang)
 
     for title, path, page in gn.get_pages(lang):
         epub.userfiles[path] = page
@@ -49,15 +52,29 @@ def make_epub(data, module, lang):
 
     return epub
 
+# refs = [("PS/Ps1.html", "id", "PS/PS.1.xhtml", "id2")]
 
-def make_inbook_ref(docs, refs):
+def inbook_ref_to_href(docs, refs):
     new_docs = []
     for path, xml in docs:
-        new_xml = ref_ref2(xml, refs)
+        new_xml = copy.deepcopy(xml)
+        e_ref_to_href(path, new_xml.root, refs)
         new_docs.append((path, new_xml))
     return new_docs
 
-def ref2(xml, refs):
+
+def e_ref_to_href(path, e:xl.Element, refs):
+    for kid in e.kids:
+        if isinstance(kid, xl.Element):
+            # <a in_book_ref="SN.1.1">xxx</a> ->
+            # 1. <a href="sn/sn.1.1.xhtml#SN.1.1>xxx</a>
+            # 2. <a href="#SN.1.1>xxx</a>
+            ref = kid.attrs.get("in_book_ref")
+            if ref:
+                for htm_path, id1, xhtml_path, id2 in refs:
+                    if id2 == ref:
+                        kid.attrs["href"] = relpath(xhtml_path, path)
+            e_ref_to_href(path, kid, refs)
 
 
 
@@ -71,7 +88,7 @@ def ref2(xml, refs):
 #     2.天子相應
 
 
-def write_suttas(module, marks: list[epubpacker.Mark], userfiles, spine, branch: list, data, ln, gn, lang):
+def write_suttas(module, marks: list[epubpacker.Mark], docs, refs, branch: list, data, ln, gn, lang):
     first_doc_path = None
 
     for name, obj in data:
@@ -87,14 +104,11 @@ def write_suttas(module, marks: list[epubpacker.Mark], userfiles, spine, branch:
                 h.kids.append(branch[-1])
                 for sub_name, sub_obj in obj:
                     sub_branch = branch + [sub_name]
-                    write_one_doc(sub_branch, doc_path, html, body, sub_obj, gn, lang)
-                userfiles[doc_path] = html.to_str()
-                spine.append(doc_path)
-                #return doc_path
-                #doc_path = write_one_folder(mark.kids, userfiles, module, new_branch, obj, gn, lang)
+                    write_one_doc(sub_branch, doc_path, body, sub_obj, refs, ln, gn, lang)
+                docs.append((doc_path, html))
 
             else:
-                doc_path = write_suttas(module, mark.kids, userfiles, spine, new_branch, obj, ln, gn, lang)
+                doc_path = write_suttas(module, mark.kids, docs, refs, new_branch, obj, ln, gn, lang)
             mark.href = doc_path
 
         else:
@@ -103,9 +117,8 @@ def write_suttas(module, marks: list[epubpacker.Mark], userfiles, spine, branch:
             new_branch = branch + [title]
             doc_path = posixpath.join("",*new_branch) + ".xhtml"
             html, body = make_doc(doc_path, lang, title)
-            write_one_doc(new_branch, doc_path, html, body, obj, ln, gn, lang)
-            userfiles[doc_path] = html.to_str()
-            spine.append(doc_path)
+            write_one_doc(new_branch, doc_path, body, obj, refs, ln, gn, lang)
+            docs.append((doc_path, html))
             marks.append(epubpacker.Mark(title, href=doc_path))
 
         if first_doc_path is None:
@@ -114,18 +127,8 @@ def write_suttas(module, marks: list[epubpacker.Mark], userfiles, spine, branch:
     return first_doc_path
 
 
-def _____write_one_folder(marks, userfiles, module, branch, obj, gn, lang):
-    doc_path = posixpath.join("", *branch) + ".xhtml"
-    html, body = make_doc(doc_path, lang, branch[-1])
-    h = body.ekid("h{}".format(len(branch)))
-    h.kids.append(branch[-1])
-    for sub_name, sub_obj in obj:
-        sub_branch = branch + [sub_name]
-        write_one_doc(sub_branch, doc_path, html, body, sub_obj, gn, lang)
-    return doc_path
 
-
-def write_one_doc(branch, doc_path, html, body, obj: xl.Xml, ln, gn, lang):
+def write_one_doc(branch, doc_path, body, obj: xl.Xml, refs, ln, gn, lang):
     h = body.ekid("h" + str(len(branch) + 1))
 
     sutta_num = get_sutta_num(obj.root)
