@@ -15,7 +15,7 @@ def parse(s: str):
     list_s = []
     offset = 0
     for m in re.finditer("|".join([P_SN, P_AN]), s):
-        print(m.regs)
+        print(m.string)
         (begin, end) = m.span()
         list_s.append(s[offset:begin])
         list_s.append("X>"+s[begin:end])
