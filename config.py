@@ -7,6 +7,7 @@ CACHE_DIR = os.path.join(PROJECT_ROOT, "cache")
 os.makedirs(CACHE_DIR, exist_ok=True)
 
 
+ABO_WEBSITE = "https://agama.buddhason.org"
 
 # 莊春江工作站目录
 INDEX_DIR = "/mnt/data/Buddhism/abo_2025.07.09/agama.buddhason.org/"

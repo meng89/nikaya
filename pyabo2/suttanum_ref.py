@@ -1,124 +1,84 @@
+
 import re
+import config
+
 
 import xl
 
-import pyabo
-from pyabo import base, book_public
 
-import doepub
-import doepub.basestr
-from doepub import sn2epub, an2epub
-
-
-P_SA = r"(SA)\.(\d+)"
-P_SN = r"(SN)\.(\d+\.\d+)"
-P_MA = r"(MA)\.(\d+)"
-P_MN = r"(MN)\.(\d+)"
-P_DA = r"(DA)\.(\d+)"
-P_DN = r"(DN)\.(\d+)"
-P_UD = r"(Ud)\.(\d+)"
-P_IT = r"(It)\.(\d+)"
-P_MI = r"(Mi)\.(\d+)"
-P_NI = r"(Ni)\.(\d+)"
-P_PS = r"(Ps)\.(\d+)"
-P_AA = r"(AA)\.(\d+\.\d+)"
-P_AN = r"(AN)\.(\d+\.\d+)"
+P_SA = re.compile(r"(SA\.\d+)")
+P_SN = re.compile(r"(SN\.\d+\.\d+)")
+P_MA = re.compile(r"(MA\.\d+)")
+P_MN = re.compile(r"(MN\.\d+)")
+P_DA = re.compile(r"(DA\.\d+)")
+P_DN = re.compile(r"(DN\.\d+)")
+P_UD = re.compile(r"(Ud\.\d+)")
+P_IT = re.compile(r"(It\.\d+)")
+P_MI = re.compile(r"(Mi\.\d+)")
+P_NI = re.compile(r"(Ni\.\d+)")
+P_PS = re.compile(r"(Ps\.\d+)")
+P_AA = re.compile(r"(AA\.\d+\.\d+)")
+P_AN = re.compile(r"(AN\.\d+\.\d+)")
 
 PATTERNS = [P_SA, P_SN, P_MA, P_MN, P_DA, P_DN, P_UD, P_IT, P_MI, P_NI, P_PS, P_AA, P_AN]
 
 
-def make_suttaname_href_link(suttaname):
-    return docpath_calculate(suttaname) + "#" + suttaid_hit(suttaname)
+string = "text1 SN.1.1, SN.1.31, AN.2.1 text2"
 
 
-def suttaid_hit(suttaname):
-    p, xn, num = split_suttaname(suttaname)
-    if p == P_SN:
-        return sn2epub.hit_docpath_and_id(suttaname)[1]
-    elif p == P_AN:
-        return an2epub.hit_docpath_and_id(suttaname)[1]
+def _make_cccurl(s, pattern):
+    bn, num = _split_bn_num(s)
+    if pattern in [P_SA, P_MA, P_MN, P_DA, P_DN, P_UD, P_IT, P_NI, P_AA]:
+        return "{}/{}/dm.php?keyword={}".format(config.ABO_WEBSITE, bn, num)
+    elif pattern in (P_SN, P_AN):
+        return "{}/{}/{}.php?keyword={}".format(config.ABO_WEBSITE, bn, bn.lower(), num)
+    elif pattern in (P_MI, P_NI, P_PS):
+        return "{}/{}/{}{}.htm".format(config.ABO_WEBSITE, bn, bn, num)
+
+    raise Exception("What?")
+
+
+def _split_bn_num(s):
+    m = re.match("([a-zA-Z]+)+\.(.+)", s)
+    return m.group(1), m.group(2)
+
+
+def _make_xml(s, pattern, bns):
+    bn, num = _split_bn_num(s)
+    if bn in bns:
+        a = xl.Element("a", {"inbookref": s, "class": "suttaref_inbook"})
     else:
-        return suttaname
+        a = xl.Element("a", {"href": _make_cccurl(s, pattern)})
+    a.kids.append(s)
+    return a
 
 
-def docpath_calculate(suttaname):
-    p, xn, num = split_suttaname(suttaname)
-    if p == P_SN:
-        return sn2epub.hit_docpath_and_id(suttaname)[0]
-    elif p == P_AN:
-        return an2epub.hit_docpath_and_id(suttaname)[0]
-    else:
-        return "{}/{}.xhtml".format(xn, suttaname)
-
-    # todo other
+def make_suttanum_xml(s, bns):
+    return _make_suttanum(s, PATTERNS, bns, _make_xml)
 
 
-def split_suttaname(text):
-    m = None
-    for p in PATTERNS:
-        m = re.match("^{}$".format(p), text)
-        if m:
-            return p, m.group(1), m.group(2)
-    assert m
+def make_suttanum_tex(s, bns):
+    #todo
+    raise Exception("TODO")
 
 
-class SuttaRef(pyabo.BaseElement):
-    def __init__(self, text):
-        self.text = text
-        self._pattern, self._bn, self._sec_num = split_suttaname(text)
 
-    def get_text(self):
-        return self._bn + "." + self._sec_num
-
-    def get_cccurl(self):
-        if self._pattern in [P_SA, P_MA, P_MN, P_DA, P_DN, P_UD, P_IT, P_NI, P_AA]:
-            return "{}/{}/dm.php?keyword={}".format(pyabo.ABO_WEBSITE, self._bn, self._sec_num)
-        elif self._pattern in (P_SN, P_AN):
-            return "{}/{}/{}.php?keyword={}".format(pyabo.ABO_WEBSITE, self._bn, self._bn.lower(), self._sec_num)
-        elif self._pattern in (P_MI, P_NI, P_PS):
-            return "{}/{}/{}{}.htm".format(pyabo.ABO_WEBSITE, self._bn, self._bn, self._sec_num)
-
-    def to_tex(self, bns: list[str], **kwargs):
-        if self._bn in bns:
-            return "\\suttaref{" + self.get_text() + "}"
-        else:
-            return pyabo.base.Href(self.get_text(),
-                                   self.get_cccurl(),
-                                   pyabo.ABO_WEBSITE).to_tex(book_public.do_nothing)
-
-    def to_es(self, bns, doc_path, tag_unicode_range, **kwargs):
-        if self._bn in bns:
-            a = xl.Element("a", {"href": doepub.relpath(make_suttaname_href_link(self.get_text()), doc_path),
-                                 "class": "suttaref_inbook"})
-        else:
-            a = xl.Element("a", {"href": self.get_cccurl()})
-        a.kids.extend(doepub.basestr.str2es(self.text, tag_unicode_range))
-        return [a]
-
-    def __repr__(self):
-        return (f'{self.__class__.__name__}('
-                f'text={self.text!r})')
-
-
-def sn_ref(suttaname):
-
-P_SN = r"(SN)\.(\d+\.\d+)"
-
-def make_suttanum_link(bns, s):
-
-
-def parse(s: str):
+def _make_suttanum(s: str, patterns: list[re.Pattern], bns, func):
     # [some text SN.1.1, AN.2.1 some text] ->
     # [some text <a href="xxx.xhtml#SN.1.1">SN.1.1</a>, <a href="https://AN.2.1">AN.2.1</a> some text]
+    if not patterns:
+        return [s]
 
-    list_s = []
-    offset = 0
-    for m in re.finditer("|".join(PATTERNS), s):
-        (begin, end) = m.span()
-        list_s.append(s[offset:begin])
-        list_s.append(SuttaRef(s[begin:end]))
-        offset = end
-    if offset < len(s):
-        list_s.append(s[offset:])
+    new_patterns = patterns.copy()
+    p = new_patterns.pop()
+    pieces = re.split(p, s)
 
-    return list_s
+    new_pieces = []
+    for index, piece in enumerate(pieces):
+        if index % 2 == 0:
+            new_pieces.extend(_make_suttanum(piece, new_patterns, bns, func))
+        else:
+            obj = func(piece, p, bns)
+            new_pieces.append(obj)
+
+    return new_pieces

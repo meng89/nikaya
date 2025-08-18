@@ -44,9 +44,18 @@ def make_epub(data, module, lang):
     gn = pyabo2.note.get_gn()
     docs = []
     refs = []
-    write_suttas(module, epub.mark.kids, docs, refs, [], data, ln, gn, lang)
+    bns = [module.short]
+    write_suttas(bns, module, epub.mark.kids, docs, refs, [], data, ln, gn, lang)
+    _inbookref_to_href(docs)
+    for path, xml in docs:
+        epub.userfiles[path] = xml.to_str()
+        epub.spine.append(path)
 
-    for title, path, page in gn.get_pages(lang):
+    for title, path, page in ln.get_pages(bns, lang):
+        epub.userfiles[path] = page
+        epub.spine.append(path)
+
+    for title, path, page in gn.get_pages(bns, lang):
         epub.userfiles[path] = page
         epub.spine.append(path)
 
@@ -54,30 +63,43 @@ def make_epub(data, module, lang):
 
 # refs = [("PS/Ps1.html", "id", "PS/PS.1.xhtml", "id2")]
 
-def inbook_ref_to_href(docs, refs):
+def _inbookref_to_href(docs):
     new_docs = []
-    for path, xml in docs:
-        new_xml = copy.deepcopy(xml)
-        e_ref_to_href(path, new_xml.root, refs)
-        new_docs.append((path, new_xml))
+    for path, e in docs:
+        new_e = copy.deepcopy(e)
+        _e_inbookref_to_href(path, new_e, docs)
+        new_docs.append((path, new_e))
     return new_docs
 
-
-def e_ref_to_href(path, e:xl.Element, refs):
+def _e_inbookref_to_href(path, e: xl.Element, docs):
     for kid in e.kids:
         if isinstance(kid, xl.Element):
             # <a in_book_ref="SN.1.1">xxx</a> ->
             # 1. <a href="sn/sn.1.1.xhtml#SN.1.1>xxx</a>
             # 2. <a href="#SN.1.1>xxx</a>
-            ref = kid.attrs.get("in_book_ref")
+            ref = kid.attrs.get("inbookref")
             if ref:
-                for htm_path, id1, xhtml_path, id2 in refs:
-                    if id2 == ref:
-                        kid.attrs["href"] = relpath(xhtml_path, path)
-            e_ref_to_href(path, kid, refs)
+                result = _find_path(ref, docs)
+                if result[0]:
+                    kid.attrs["href"] = relpath(result, path) + "#" + ref
+                    kid.attrs.pop("inbookref")
+            _e_inbookref_to_href(path, kid, docs)
 
+def _find_path(id_, docs):
+    for path, e in docs:
+        if _get_id(id_, e):
+            return True, path
+    return False, None
 
+def _get_id(id_, e: xl.Element):
+    for kid in e.kids:
+        if isinstance(kid, xl.Element):
+            if kid.attrs.get("id") == id_:
+                return True
+            if _get_id(id_, kid):
+                return True
 
+    return False
 
 
 # 有偈篇
@@ -88,7 +110,7 @@ def e_ref_to_href(path, e:xl.Element, refs):
 #     2.天子相應
 
 
-def write_suttas(module, marks: list[epubpacker.Mark], docs, refs, branch: list, data, ln, gn, lang):
+def write_suttas(bns, module, marks: list[epubpacker.Mark], docs, refs, branch: list, data, ln, gn, lang):
     first_doc_path = None
 
     for name, obj in data:
@@ -104,11 +126,11 @@ def write_suttas(module, marks: list[epubpacker.Mark], docs, refs, branch: list,
                 h.kids.append(branch[-1])
                 for sub_name, sub_obj in obj:
                     sub_branch = branch + [sub_name]
-                    write_one_doc(sub_branch, doc_path, body, sub_obj, refs, ln, gn, lang)
+                    write_one_doc(bns, sub_branch, doc_path, body, sub_obj, refs, ln, gn, lang)
                 docs.append((doc_path, html))
 
             else:
-                doc_path = write_suttas(module, mark.kids, docs, refs, new_branch, obj, ln, gn, lang)
+                doc_path = write_suttas(bns, module, mark.kids, docs, refs, new_branch, obj, ln, gn, lang)
             mark.href = doc_path
 
         else:
@@ -117,7 +139,7 @@ def write_suttas(module, marks: list[epubpacker.Mark], docs, refs, branch: list,
             new_branch = branch + [title]
             doc_path = posixpath.join("",*new_branch) + ".xhtml"
             html, body = make_doc(doc_path, lang, title)
-            write_one_doc(new_branch, doc_path, body, obj, refs, ln, gn, lang)
+            write_one_doc(bns, new_branch, doc_path, body, obj, refs, ln, gn, lang)
             docs.append((doc_path, html))
             marks.append(epubpacker.Mark(title, href=doc_path))
 
@@ -128,7 +150,7 @@ def write_suttas(module, marks: list[epubpacker.Mark], docs, refs, branch: list,
 
 
 
-def write_one_doc(branch, doc_path, body, obj: xl.Xml, refs, ln, gn, lang):
+def write_one_doc(bns, branch, doc_path, body, obj: xl.Xml, refs, ln, gn, lang):
     h = body.ekid("h" + str(len(branch) + 1))
 
     sutta_num = get_sutta_num(obj.root)
@@ -150,12 +172,12 @@ def write_one_doc(branch, doc_path, body, obj: xl.Xml, refs, ln, gn, lang):
 
     for xml_p in obj.root.find_descendants("p"):
         html_p = body.ekid("p")
-        html_p.kids.extend(xml_to_html(xml_p.kids, obj.root, ln, gn, doc_path, lang))
+        html_p.kids.extend(xml_to_html(bns, xml_p.kids, obj.root, ln, gn, doc_path, lang))
 
 
 ES = list[xl.Element | str]
 
-def xml_to_html(es: ES, root, ln, gn: pyabo2.note.GlobalNotes, doc_path, lang) -> ES:
+def xml_to_html(bns, es: ES, root, ln, gn: pyabo2.note.GlobalNotes, doc_path, lang) -> ES:
     new_es = []
     for e in es:
         if isinstance(e, xl.Element):
@@ -164,7 +186,7 @@ def xml_to_html(es: ES, root, ln, gn: pyabo2.note.GlobalNotes, doc_path, lang) -
                 link = gn.get_link(e.attrs["id"])
                 href = relpath(link, doc_path)
                 a.attrs["href"] = href
-                a.kids.extend(xml_to_html(e.kids, root, ln, gn, doc_path, lang))
+                a.kids.extend(xml_to_html(bns, e.kids, root, ln, gn, doc_path, lang))
                 new_es.append(a)
 
             elif e.tag == "ln":
@@ -173,7 +195,7 @@ def xml_to_html(es: ES, root, ln, gn: pyabo2.note.GlobalNotes, doc_path, lang) -
                 link = _get_ln_link_by_id(root, ln, _id)
                 href = relpath(link, doc_path)
                 a.attrs["href"] = href
-                a.kids.extend(xml_to_html(e.kids, root, ln, gn, doc_path, lang))
+                a.kids.extend(xml_to_html(bns, e.kids, root, ln, gn, doc_path, lang))
 
             elif e.tag == "a" and "href" in e.attrs.keys() and "id" in e.attrs.keys():
                 new_es.append(e)
@@ -188,7 +210,7 @@ def xml_to_html(es: ES, root, ln, gn: pyabo2.note.GlobalNotes, doc_path, lang) -
                 raise Exception("Unknown element type")
 
         elif isinstance(e, str):
-            new_es.extend(suttanum_ref.parse(lang.c(e)))
+            new_es.extend(suttanum_ref.make_suttanum_xml(lang.c(e), bns))
 
     return new_es
 
