@@ -1,5 +1,4 @@
 import copy
-import os.path
 import re
 import uuid
 from datetime import datetime
@@ -14,6 +13,7 @@ import pyabo2.utils
 import pyabo2.note
 from . import css, js
 from . import ebook_utils
+from . import suttanum_ref
 
 
 def make_epub(data, module, lang):
@@ -188,7 +188,7 @@ def xml_to_html(es: ES, root, ln, gn: pyabo2.note.GlobalNotes, doc_path, lang) -
                 raise Exception("Unknown element type")
 
         elif isinstance(e, str):
-            new_es.append(lang.c(e))
+            new_es.extend(suttanum_ref.parse(lang.c(e)))
 
     return new_es
 
