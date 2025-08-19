@@ -1,4 +1,5 @@
 import copy
+import os
 import re
 import uuid
 from datetime import datetime
@@ -33,20 +34,26 @@ def make_epub(data, module, lang):
     epub.meta.others.append(xl.Element("meta", {"refines": "#c01", "property": "collection-type"}, ["series"]))
 
     epub.userfiles[css.css1_path] = css.css1[lang.en]
-    epub.userfiles[css.css2_path] = css.css2[lang.en]
+    #epub.userfiles[css.css2_path] = css.css2[lang.en]
     epub.userfiles[js.js1_path] = js.js1
-    epub.userfiles["_css/user_css1.css"] = "/* 第一个自定义 CSS 文件 */\n\n"
-    epub.userfiles["_css/user_css2.css"] = "/* 第二个自定义 CSS 文件 */\n\n"
-    epub.userfiles["_js/user_js1.js"] = "// 第一个自定义 JS 文件\n\n"
-    epub.userfiles["_js/user_js2.js"] = "// 第二个自定义 JS 文件\n\n"
+    #epub.userfiles["_css/user_css1.css"] = "/* 第一个自定义 CSS 文件 */\n\n"
+    #epub.userfiles["_css/user_css2.css"] = "/* 第二个自定义 CSS 文件 */\n\n"
+    #epub.userfiles["_js/user_js1.js"] = "// 第一个自定义 JS 文件\n\n"
+    #epub.userfiles["_js/user_js2.js"] = "// 第二个自定义 JS 文件\n\n"
 
     ln = pyabo2.note.LocalNotes()
     gn = pyabo2.note.get_gn()
     docs = []
     refs = []
     bns = [module.short]
+
+    write_cover(epub, ebook_utils.make_cover(module, data, lang), lang)
+    write_homage(bns, module, epub.mark.kids, docs, ln, gn, lang)
+
     write_suttas(bns, module, epub.mark.kids, docs, refs, [], data, ln, gn, lang)
+
     _inbookref_to_href(docs)
+
     for path, xml in docs:
         epub.userfiles[path] = xml.to_str()
         epub.spine.append(path)
@@ -342,11 +349,11 @@ def make_doc(doc_path, lang, title=None):
         _title = head.ekid("title", kids=[title])
 
     _make_css_link(head, relpath(css.css1_path, doc_path), "css1")
-    _make_css_link(head, relpath("_css/user_css1.css", doc_path), "user_css1")
-    _make_css_link(head, relpath("_css/user_css2.css", doc_path), "user_css2")
+    #_make_css_link(head, relpath("_css/user_css1.css", doc_path), "user_css1")
+    #_make_css_link(head, relpath("_css/user_css2.css", doc_path), "user_css2")
     _make_js_link(head, relpath(js.js1_path, doc_path), "js1")
-    _make_js_link(head, relpath("_js/user_js1.js", doc_path), "user_js1")
-    _make_js_link(head, relpath("_js/user_js2.js", doc_path), "user_js2")
+    #_make_js_link(head, relpath("_js/user_js1.js", doc_path), "user_js1")
+    #_make_js_link(head, relpath("_js/user_js2.js", doc_path), "user_js2")
 
     body = html.ekid("body")
     return html, body
@@ -386,14 +393,37 @@ def relpath(path1, path2):
         return posixpath.relpath(path1_2, posixpath.dirname(path2_2)) + (("#" + fragment) if fragment else "")
 
 
-def write_cover(epub, module, data, lang):
-    pass
+def write_cover(epub, cover_image_path, lang):
+    base_name = os.path.basename(cover_image_path)
+    epub.userfiles[base_name] = open(cover_image_path, "rb").read()
+    cover_doc_path = "cover.xhtml"
+    html, body = make_doc(cover_doc_path, lang, "封面")
+    body.attrs["style"] = "text-align: center;"
 
-def write_homage(epub, module, data, lang):
-    pass
+    _img = body.ekid("img", {"src": relpath(base_name, cover_doc_path),
+                             "alt": "Cover Image",
+                             "title": "Cover Image"})
+    htmlstr = xl.Xml(root=html).to_str()
+    epub.userfiles[cover_doc_path] = htmlstr
+    epub.mark.kids.append(epubpacker.Mark("封面", cover_doc_path))
+    epub.spine.append(cover_doc_path)
 
-def write_notes(epub, module, data, lang):
-    pass
+
+def write_homage(bns, _module, marks, docs, ln, gn, lang):
+    doc_path = "homage.xhtml"
+    html, body = make_doc(doc_path, lang, lang.c("禮敬世尊"))
+    body.attrs["class"] = "homage"
+
+    outdiv = body.ekid("div", {"class": "homage_out"})
+    indiv = outdiv.ekid("div", {"class": "homage_in"})
+
+    kids = xl.parse("""<p>對那位<gn id="12">世尊</gn>、<gn id="5">阿羅漢</gn>、<gn id="6">遍正覺者</gn>禮敬</p>""").root.kids
+    p = indiv.ekid("p")
+    p.kids.extend(xml_to_html(bns, kids, html, ln, gn, doc_path, lang))
+    #indiv.kids.append())
+
+    docs.append((doc_path, html))
+    marks.append(epubpacker.Mark(lang.c("禮敬世尊"), doc_path))
 
 
 def get_uuid(s):

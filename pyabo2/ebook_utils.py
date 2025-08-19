@@ -41,7 +41,6 @@ def _convert_punctuation(c):
     return c
 
 
-
 class Lang(abc.ABC):
     @property
     @abc.abstractmethod
@@ -113,9 +112,7 @@ class SC(Lang):
         return "简体版"
 
 
-
 def make_cover(module, data, lang: Lang):
-
     translated_date = read_mtime(data)
     filename = "{}_{}_{}_{}".format(module.name_han, lang.zh, translated_date, today())
     xhtml_filename = filename + ".xhtml"
@@ -152,8 +149,8 @@ def make_cover(module, data, lang: Lang):
                                pali=module.name_pali,
                                version=lang.han_version,
                                translator="莊春江" + lang.c("譯"),
-                               translated = lang.c("譯：" + translated_date),
-                               created = lang.c("製：" + today()),
+                               translated=lang.c("譯：" + translated_date),
+                               created=lang.c("製：" + today()),
                                )
 
         open(os.path.join(config.COVER_DIR, xhtml_filename), "w").write(doc_str)
@@ -173,7 +170,7 @@ def today():
 
 def read_mtime(data: list):
     from datetime import datetime
-    ts =  read_timestamp(data)
+    ts = read_timestamp(data)
     return datetime.fromtimestamp(ts).astimezone().strftime("%Y年%m月%d日")
 
 
@@ -205,5 +202,3 @@ def read_timestamp(data):
             ts = dateutil.parser.parse(mtime.kids[0]).timestamp()
             newest_ts = any_max(newest_ts, ts)
     return newest_ts
-
-
