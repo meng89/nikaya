@@ -1,7 +1,6 @@
 import re
 import config
 
-
 import xl
 
 
@@ -38,7 +37,7 @@ def _make_cccurl(s, pattern):
 
 
 def _split_bn_num(s):
-    m = re.match("([a-zA-Z]+)+\.(.+)", s)
+    m = re.match(r"([a-zA-Z]+)+\.(.+)", s)
     return m.group(1), m.group(2)
 
 
@@ -59,7 +58,6 @@ def make_suttanum_xml(s, bns):
 def make_suttanum_tex(s, bns):
     #todo
     raise Exception("TODO")
-
 
 
 def _make_suttanum(s: str, patterns: list[re.Pattern], bns, func):

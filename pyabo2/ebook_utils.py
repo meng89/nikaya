@@ -156,7 +156,9 @@ def make_cover(module, data, lang: Lang):
         open(os.path.join(config.COVER_DIR, xhtml_filename), "w").write(doc_str)
         from html2image import Html2Image as HtI
 
-        hti = HtI(browser_executable=config.BROWSER, output_path=config.COVER_DIR)
+        hti = HtI(browser_executable=config.BROWSER,
+                  output_path=config.COVER_DIR,
+                  custom_flags="--disable-gpu --disable-accelerated-video --in-process-gpu")
         hti.screenshot(html_str=doc_str, size=(1600, 2560), save_as=image_filename)
 
     return image_path

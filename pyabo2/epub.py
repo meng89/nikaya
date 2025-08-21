@@ -47,10 +47,10 @@ def make_epub(data, module, lang):
     refs = []
     bns = [module.short]
 
-    write_cover(epub, ebook_utils.make_cover(module, data, lang), lang)
-    write_homage(bns, module, epub.mark.kids, docs, ln, gn, lang)
+    _write_cover(epub, ebook_utils.make_cover(module, data, lang), lang)
+    _write_homage(bns, module, epub.mark.kids, docs, ln, gn, lang)
 
-    write_suttas(bns, module, epub.mark.kids, docs, refs, [], data, ln, gn, lang)
+    _make_suttas(bns, module, epub.mark.kids, docs, refs, [], data, ln, gn, lang)
 
     _inbookref_to_href(docs)
 
@@ -65,6 +65,8 @@ def make_epub(data, module, lang):
     for title, path, page in gn.get_pages(bns, lang):
         epub.userfiles[path] = page
         epub.spine.append(path)
+
+    _write_readme(epub, lang)
 
     return epub
 
@@ -117,7 +119,7 @@ def _get_id(id_, e: xl.Element):
 #     2.天子相應
 
 
-def write_suttas(bns, module, marks: list[epubpacker.Mark], docs, refs, branch: list, data, ln, gn, lang):
+def _make_suttas(bns, module, marks: list[epubpacker.Mark], docs, refs, branch: list, data, ln, gn, lang):
     first_doc_path = None
 
     for name, obj in data:
@@ -137,7 +139,7 @@ def write_suttas(bns, module, marks: list[epubpacker.Mark], docs, refs, branch: 
                 docs.append((doc_path, html))
 
             else:
-                doc_path = write_suttas(bns, module, mark.kids, docs, refs, new_branch, obj, ln, gn, lang)
+                doc_path = _make_suttas(bns, module, mark.kids, docs, refs, new_branch, obj, ln, gn, lang)
             mark.href = doc_path
 
         else:
@@ -393,7 +395,7 @@ def relpath(path1, path2):
         return posixpath.relpath(path1_2, posixpath.dirname(path2_2)) + (("#" + fragment) if fragment else "")
 
 
-def write_cover(epub, cover_image_path, lang):
+def _write_cover(epub, cover_image_path, lang):
     base_name = os.path.basename(cover_image_path)
     epub.userfiles[base_name] = open(cover_image_path, "rb").read()
     cover_doc_path = "cover.xhtml"
@@ -409,7 +411,7 @@ def write_cover(epub, cover_image_path, lang):
     epub.spine.append(cover_doc_path)
 
 
-def write_homage(bns, _module, marks, docs, ln, gn, lang):
+def _write_homage(bns, _module, marks, docs, ln, gn, lang):
     doc_path = "homage.xhtml"
     html, body = make_doc(doc_path, lang, lang.c("禮敬世尊"))
     body.attrs["class"] = "homage"
@@ -424,6 +426,38 @@ def write_homage(bns, _module, marks, docs, ln, gn, lang):
 
     docs.append((doc_path, html))
     marks.append(epubpacker.Mark(lang.c("禮敬世尊"), doc_path))
+
+
+_project_link = "https://github.com/meng89/nikaya"
+_yunpan_link = "https://www.jianguoyun.com/p/DbVa44QQnbmtChiojLEE"
+_my_mail = "observerchan@gmail.com"
+
+
+_lines = (
+    ("此汉译佛经数据来源于", xl.Element("a", {"href": "https://agama.buddhason.org"}, ["莊春江讀經站"]),
+     "，一切相关权利归于译者。"),
+    ("原译文是繁体中文，简体版由程序转换，可能会出现转换错误。电子书版经文标题部分做了一些修改，正文部分与原页面相同，但可能丢失了一些链接以及格式等元数据。",),
+    ("获取最新制成的电子书，请访问项目主页：",
+     xl.Element("a", {"href": "{}".format(_project_link)}, [_project_link])),
+    #("如果打不开上面的链接，请尝试这个云盘链接：", xl.Element("a", {"href": "{}".format(_yunpan_link)}, [_yunpan_link])),
+    ("若难以下载电子书，或者有此项目的相关问题，请联系我：", xl.Element("a", {"href": "mailto:{}".format(_my_mail)}, [_my_mail]))
+)
+
+
+def _write_readme(epub, lang):
+    doc_path = "readme.xhtml"
+    html, body = make_doc(doc_path, lang, "电子书说明")
+
+    body.attrs["class"] = "readme"
+
+    _h1 = body.ekid("h1", {"class": "title"}, ["电子书说明"])
+    for line in _lines:
+        _p = body.ekid("p", kids=list(line))
+
+    htmlstr = xl.Xml(root=html).to_str(do_pretty=True, dont_do_tags=["p"])
+    epub.userfiles[doc_path] = htmlstr
+    epub.spine.append(doc_path)
+    epub.mark.kids.append(epubpacker.Mark(lang.c("电子书说明"), doc_path))
 
 
 def get_uuid(s):
