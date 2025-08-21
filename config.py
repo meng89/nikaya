@@ -44,5 +44,6 @@ BOOKS_DIR = os.path.join(PROJECT_ROOT, "_books")
 
 LOG_PATH = os.path.join(PROJECT_ROOT, "abo_log.txt")
 
-BROWSER = "google-chrome-stable"
+#BROWSER = "/opt/firefox/firefox"
+BROWSER = "google-chrome-beta"
 COVER_DIR = os.path.join(_RESOURCE_DIR, "Cover")

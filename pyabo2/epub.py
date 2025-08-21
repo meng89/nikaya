@@ -6,10 +6,12 @@ from datetime import datetime
 import math
 import posixpath
 from urllib.parse import urlsplit
+import urllib.parse
 
 import epubpacker
 import xl
 
+import config
 import pyabo2.utils
 import pyabo2.note
 from . import css, js
@@ -163,8 +165,13 @@ def write_one_doc(bns, branch, doc_path, body, obj: xl.Xml, refs, ln, gn, lang):
     h = body.ekid("h" + str(len(branch) + 1))
 
     sutta_num = get_sutta_num(obj.root)
-    if sutta_num == 0:
-        h.kids.append(sutta_num)
+    if sutta_num is not None:
+        pass
+        #x = suttanum_ref.make_suttanum_xml(sutta_num, [])
+        #h.kids.append(sutta_num)
+        #h.kids.append(sutta_num)
+
+        #h.kids.append(" ")
 
     serialized_nodes = []
     for node in branch[0: -1]:
@@ -174,19 +181,29 @@ def write_one_doc(bns, branch, doc_path, body, obj: xl.Xml, refs, ln, gn, lang):
     assert len(serialized_nodes) <= 1
 
     if serialized_nodes:
-        h.kids.append("{}/{}".format(serialized_nodes[0], branch[-1]))
+        a = h.ekid("a")
+        a.attrs["href"] = urllib.parse.urljoin(config.ABO_WEBSITE,get_source_page(obj.root))
+        a.kids.append("{}/{}".format(serialized_nodes[0], branch[-1]))
     else:
         h.kids.append(branch[-1])
 
+    sutta_num_sc = get_sutta_num_sc(obj.root)
+    if sutta_num_sc is not None and True:
+        h.kids.append(" ")
+        sc_a = xl.Element("a", {"href": "https://suttacentral.net/" + sutta_num_sc.replace(" ","")}, ["SC"])
+        h.kids.append(sc_a)
 
-    for xml_p in obj.root.find_descendants("p"):
+
+
+    xml_body = obj.root.find_descendants("body")[0]
+    for xml_p in xml_body.find_descendants("p"):
         html_p = body.ekid("p")
-        html_p.kids.extend(xml_to_html(bns, xml_p.kids, obj.root, ln, gn, doc_path, lang))
+        html_p.kids.extend(_xml_es_to_html(bns, xml_p.kids, obj.root, ln, gn, doc_path, lang))
 
 
 ES = list[xl.Element | str]
 
-def xml_to_html(bns, es: ES, root, ln, gn: pyabo2.note.GlobalNotes, doc_path, lang) -> ES:
+def _xml_es_to_html(bns, es: ES, root, ln, gn: pyabo2.note.GlobalNotes, doc_path, lang) -> ES:
     new_es = []
     for e in es:
         if isinstance(e, xl.Element):
@@ -195,7 +212,7 @@ def xml_to_html(bns, es: ES, root, ln, gn: pyabo2.note.GlobalNotes, doc_path, la
                 link = gn.get_link(e.attrs["id"])
                 href = relpath(link, doc_path)
                 a.attrs["href"] = href
-                a.kids.extend(xml_to_html(bns, e.kids, root, ln, gn, doc_path, lang))
+                a.kids.extend(_xml_es_to_html(bns, e.kids, root, ln, gn, doc_path, lang))
                 new_es.append(a)
 
             elif e.tag == "ln":
@@ -204,7 +221,7 @@ def xml_to_html(bns, es: ES, root, ln, gn: pyabo2.note.GlobalNotes, doc_path, la
                 link = _get_ln_link_by_id(root, ln, _id)
                 href = relpath(link, doc_path)
                 a.attrs["href"] = href
-                a.kids.extend(xml_to_html(bns, e.kids, root, ln, gn, doc_path, lang))
+                a.kids.extend(_xml_es_to_html(bns, e.kids, root, ln, gn, doc_path, lang))
 
             elif e.tag == "a" and "href" in e.attrs.keys() and "id" in e.attrs.keys():
                 new_es.append(e)
@@ -244,6 +261,15 @@ def get_sutta_num(root: xl.Element):
         if sutta_num.attrs.get("type") is None:
             return sutta_num.kids[0]
     return None
+
+def get_sutta_num_sc(root: xl.Element):
+    for sutta_num in root.find_descendants("sutta_num"):
+        if sutta_num.attrs.get("type") == "SC":
+            return sutta_num.kids[0]
+    return None
+
+def get_source_page(root: xl.Element):
+    return root.find_descendants("source_page")[0].kids[0]
 
 
 def get_path(data, obj, path=None):
@@ -421,7 +447,7 @@ def _write_homage(bns, _module, marks, docs, ln, gn, lang):
 
     kids = xl.parse("""<p>對那位<gn id="12">世尊</gn>、<gn id="5">阿羅漢</gn>、<gn id="6">遍正覺者</gn>禮敬</p>""").root.kids
     p = indiv.ekid("p")
-    p.kids.extend(xml_to_html(bns, kids, html, ln, gn, doc_path, lang))
+    p.kids.extend(_xml_es_to_html(bns, kids, html, ln, gn, doc_path, lang))
     #indiv.kids.append())
 
     docs.append((doc_path, html))
@@ -433,16 +459,49 @@ _yunpan_link = "https://www.jianguoyun.com/p/DbVa44QQnbmtChiojLEE"
 _my_mail = "observerchan@gmail.com"
 
 
+
+_fanli = (
+    "1.巴利語經文與經號均依 tipitaka.org (緬甸版)。",
+
+    "2.巴利語經文之譯詞，依拙編《簡要巴漢辭典》，詞性、語態儘量維持與巴利語原文相同，並採「直譯」原則。"
+    "譯文之「性、數、格、語態」儘量符合原文，「呼格」(稱呼；呼叫某人)以標點符號「！」表示。",
+
+    "3.註解中作以比對的英譯，採用Bhikkhu Ñaṇamoli and Bhikkhu Bodhi,Wisdom Publication,1995年版譯本為主。",
+
+    "4.《顯揚真義》(Sāratthappakāsinī, 核心義理的說明)為《相應部》的註釋書，"
+    "《破斥猶豫》(Papañcasūdaṇī, 虛妄的破壞)為《中部》的註釋書，"
+    "《吉祥悅意》(Sumaṅgalavilāsinī, 善吉祥的優美)為《長部》的註釋書，"
+    "《滿足希求》(Manorathapūraṇī, 心願的充滿)為《增支部》的註釋書，"
+    "《勝義光明》(paramatthajotikā, 最上義的說明)為《小部/經集》等的註釋書，"
+    "《勝義燈》(paramatthadīpanī, 最上義的註釋)為《小部/長老偈》等的註釋書。",
+
+    "5.前後相關或對比的詞就可能以「；」區隔強調，而不只限於句或段落。"
+)
+
+def _write_fanli(epub: epubpacker.Epub, lang):
+    doc_path = "fanli.xhtml"
+    html, body = make_doc(doc_path, lang, "凡例")
+    body.attrs["class"] = "fanli"
+    _h1 = body.ekid("h1", {"class": "title"}, ["凡例"])
+
+    for one in _fanli:
+        _p = body.ekid("p", kids=basestr.str2es(lang.c(one)))
+
+    htmlstr = xl.Xml(root=html).to_str(do_pretty=True, dont_do_tags=["p"])
+    epub.userfiles[doc_path] = htmlstr
+    epub.spine.append(doc_path)
+    epub.mark.kids.append(epubpacker.Mark("凡例", doc_path))
+
+
 _lines = (
     ("此汉译佛经数据来源于", xl.Element("a", {"href": "https://agama.buddhason.org"}, ["莊春江讀經站"]),
      "，一切相关权利归于译者。"),
-    ("原译文是繁体中文，简体版由程序转换，可能会出现转换错误。电子书版经文标题部分做了一些修改，正文部分与原页面相同，但可能丢失了一些链接以及格式等元数据。",),
-    ("获取最新制成的电子书，请访问项目主页：",
+    ("原译文是繁体中文，简体版由程序转换，可能会出现转换错误。电子书中目录以及经文标题部分可能有一些修改，正文部分与原页面相同，但可能丢失了一部分链接以及格式等元数据。",),
+    ("要获取最新制成的电子书，请访问项目主页：",
      xl.Element("a", {"href": "{}".format(_project_link)}, [_project_link])),
     #("如果打不开上面的链接，请尝试这个云盘链接：", xl.Element("a", {"href": "{}".format(_yunpan_link)}, [_yunpan_link])),
-    ("若难以下载电子书，或者有此项目的相关问题，请联系我：", xl.Element("a", {"href": "mailto:{}".format(_my_mail)}, [_my_mail]))
+    ("若难以下载电子书，或者有对此项目的相关问题，请联系我：", xl.Element("a", {"href": "mailto:{}".format(_my_mail)}, [_my_mail]))
 )
-
 
 def _write_readme(epub, lang):
     doc_path = "readme.xhtml"

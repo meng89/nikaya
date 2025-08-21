@@ -88,7 +88,7 @@ class GlobalNotes:
             li = last_ol.ekid("li")
             li.attrs["id"] = note_id
             p = li.ekid("p")
-            p.kids.extend(pyabo2.epub.xml_to_html(bns, note, last_html, lang, get_gn(), last_page_path, lang))
+            p.kids.extend(pyabo2.epub._xml_es_to_html(bns, note, last_html, lang, get_gn(), last_page_path, lang))
 
         pages = []
         for title, path, xhtml in xhtmls:
