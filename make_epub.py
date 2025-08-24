@@ -15,7 +15,8 @@ date = datetime.today().strftime('%Y.%m.%d')
 
 def main():
 
-    for m in pyabo2.kn.all_modules:
+    #for m in pyabo2.kn.all_modules:
+    for m in [pyabo2.kn.pv]:
         try:
             load_from_htm = getattr(m, "load_from_htm")
         except AttributeError:

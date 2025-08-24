@@ -42,7 +42,7 @@ def load_from_htm():
         body = pyabo2.page_parsing.lines_to_body(body_lines)
 
         head_lines = pyabo2.page_parsing.htm_lines_to_xml_lines(head_lines)
-        head = pyabo2.page_parsing.lines_to_body(head_lines)
+        head = pyabo2.page_parsing.lines_to_head(head_lines)
 
         sutta_num = "Pv." + sutta_serial
         sutta_nums = [

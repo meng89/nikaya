@@ -17,6 +17,7 @@ import pyabo2.note
 from . import css, js
 from . import ebook_utils
 from . import suttanum_ref
+from . import tag_str
 
 
 def make_epub(data, module, lang):
@@ -50,6 +51,7 @@ def make_epub(data, module, lang):
     bns = [module.short]
 
     _write_cover(epub, ebook_utils.make_cover(module, data, lang), lang)
+    _write_fanli(bns, epub, ln, gn, lang)
     _write_homage(bns, module, epub.mark.kids, docs, ln, gn, lang)
 
     _make_suttas(bns, module, epub.mark.kids, docs, refs, [], data, ln, gn, lang)
@@ -197,6 +199,8 @@ def write_one_doc(bns, branch, doc_path, body, obj: xl.Xml, refs, ln, gn, lang):
 
     xml_body = obj.root.find_descendants("body")[0]
     for xml_p in xml_body.find_descendants("p"):
+        print("hehe")
+        print(branch)
         html_p = body.ekid("p")
         html_p.kids.extend(_xml_es_to_html(bns, xml_p.kids, obj.root, ln, gn, doc_path, lang))
 
@@ -236,7 +240,8 @@ def _xml_es_to_html(bns, es: ES, root, ln, gn: pyabo2.note.GlobalNotes, doc_path
                 raise Exception("Unknown element type")
 
         elif isinstance(e, str):
-            new_es.extend(suttanum_ref.make_suttanum_xml(lang.c(e), bns))
+            new_es.extend(tag_str.str_to_es(lang.c(e)))
+            #new_es.extend(suttanum_ref.make_suttanum_xml(lang.c(e), bns))
 
     return new_es
 
@@ -478,14 +483,14 @@ _fanli = (
     "5.前後相關或對比的詞就可能以「；」區隔強調，而不只限於句或段落。"
 )
 
-def _write_fanli(epub: epubpacker.Epub, lang):
+def _write_fanli(bns, epub, ln, gn, lang):
     doc_path = "fanli.xhtml"
     html, body = make_doc(doc_path, lang, "凡例")
     body.attrs["class"] = "fanli"
     _h1 = body.ekid("h1", {"class": "title"}, ["凡例"])
 
     for one in _fanli:
-        _p = body.ekid("p", kids=basestr.str2es(lang.c(one)))
+        _p = body.ekid("p", kids=_xml_es_to_html(bns, [one], html, ln, gn, doc_path, lang))
 
     htmlstr = xl.Xml(root=html).to_str(do_pretty=True, dont_do_tags=["p"])
     epub.userfiles[doc_path] = htmlstr
@@ -494,13 +499,12 @@ def _write_fanli(epub: epubpacker.Epub, lang):
 
 
 _lines = (
-    ("此汉译佛经数据来源于", xl.Element("a", {"href": "https://agama.buddhason.org"}, ["莊春江讀經站"]),
-     "，一切相关权利归于译者。"),
+    ("此汉译佛经数据来源于", xl.Element("a", {"href": "https://agama.buddhason.org"}, ["莊春江讀經站"]),"，一切相关权利归于译者。"),
     ("原译文是繁体中文，简体版由程序转换，可能会出现转换错误。电子书中目录以及经文标题部分可能有一些修改，正文部分与原页面相同，但可能丢失了一部分链接以及格式等元数据。",),
     ("要获取最新制成的电子书，请访问项目主页：",
      xl.Element("a", {"href": "{}".format(_project_link)}, [_project_link])),
     #("如果打不开上面的链接，请尝试这个云盘链接：", xl.Element("a", {"href": "{}".format(_yunpan_link)}, [_yunpan_link])),
-    ("若难以下载电子书，或者有对此项目的相关问题，请联系我：", xl.Element("a", {"href": "mailto:{}".format(_my_mail)}, [_my_mail]))
+    ("若难以下载电子书，或者有对此电子书相关的其它问题，请联系我：", xl.Element("a", {"href": "mailto:{}".format(_my_mail)}, [_my_mail]))
 )
 
 def _write_readme(epub, lang):
