@@ -149,12 +149,18 @@ def _make_suttas(bns, module, marks: list[epubpacker.Mark], docs, refs, branch: 
         else:
 
             title = get_sutta_name(obj.root)
+            start, end = get_sutta_range(obj.root)
+            if start == end:
+                _range = start
+            else:
+                _range = start + "～" + end
+
             new_branch = branch + [title]
             doc_path = posixpath.join("",*new_branch) + ".xhtml"
             html, body = make_doc(doc_path, lang, title)
             write_one_doc(bns, new_branch, doc_path, body, obj, refs, ln, gn, lang)
             docs.append((doc_path, html))
-            marks.append(epubpacker.Mark(title, href=doc_path))
+            marks.append(epubpacker.Mark("{}.{}".format(_range, title), href=doc_path))
 
         if first_doc_path is None:
             first_doc_path = doc_path
@@ -255,6 +261,11 @@ def _get_ln_link_by_id(root, ln, id_):
     return ln.add("*没有注解*")
 
 
+
+def get_sutta_range(root: xl.Element):
+    start = root.find_descendants("start")[0].kids[0]
+    end = root.find_descendants("end")[0].kids[0]
+    return start, end
 
 def get_sutta_name(root: xl.Element):
     x = root.find_descendants("title")[0].kids[0]
