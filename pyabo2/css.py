@@ -44,7 +44,7 @@ a.suttaref_inbook {
     font-weight: 400;
 }
 
-.title {
+.sutta_title {
     font-family: "Noto Sans CJK TC";
     font-weight: 600;
 }

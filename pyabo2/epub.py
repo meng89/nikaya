@@ -175,6 +175,9 @@ def _make_suttas(bns, module, marks: list[epubpacker.Mark], docs, refs, branch: 
 
 def write_one_doc(bns, branch, doc_path, body, obj: xl.Xml, refs, ln, gn, lang):
     h = body.ekid("h" + str(len(branch) + 1))
+    h.attrs["class"] = "title"
+
+    sne = xl.Element("span", {"class": "sutta_num"})
 
     sutta_num = get_sutta_num(obj.root)
     sutta_num_sc = get_sutta_num_sc(obj.root)
@@ -182,16 +185,18 @@ def write_one_doc(bns, branch, doc_path, body, obj: xl.Xml, refs, ln, gn, lang):
     if sutta_num is not None:
         #x = suttanum_ref.make_suttanum_xml(sutta_num, bns)
         #print(x[1].to_str())
-        h.kids.append(sutta_num)
+        sne.kids.append(sutta_num)
 
     if sutta_num and sutta_num_sc:
-        h.kids.append("/")
+        sne.kids.append("/")
 
     if sutta_num_sc is not None:
         sc_a = xl.Element("a", {"href": "https://suttacentral.net/" + sutta_num_sc.replace(" ","")}, [sutta_num_sc])
-        h.kids.append(sc_a)
+        sc_a.attrs["class"] = "sutta_name"
+        sne.kids.append(sc_a)
 
     if sutta_num and sutta_num_sc:
+        h.kids.append(sne)
         h.kids.append("　")
 
     serialized_nodes = []
@@ -227,6 +232,7 @@ def _xml_es_to_html(bns, es: ES, root, ln, gn: pyabo2.note.GlobalNotes, doc_path
                 link = gn.get_link(e.attrs["id"])
                 href = relpath(link, doc_path)
                 a.attrs["href"] = href
+                a.attrs["class"] = "noteref"
                 a.kids.extend(_xml_es_to_html(bns, e.kids, root, ln, gn, doc_path, lang))
                 new_es.append(a)
 
@@ -236,6 +242,7 @@ def _xml_es_to_html(bns, es: ES, root, ln, gn: pyabo2.note.GlobalNotes, doc_path
                 link = _get_ln_link_by_id(root, ln, _id)
                 href = relpath(link, doc_path)
                 a.attrs["href"] = href
+                a.attrs["class"] = "noteref"
                 a.kids.extend(_xml_es_to_html(bns, e.kids, root, ln, gn, doc_path, lang))
 
             elif e.tag == "a" and "href" in e.attrs.keys() and "id" in e.attrs.keys():

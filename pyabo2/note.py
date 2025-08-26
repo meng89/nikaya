@@ -74,6 +74,7 @@ class GlobalNotes:
                 last_page_path = _path
                 title = self.note_name+"第{}页".format(self._get_page_index(note_id))
                 html, body = pyabo2.epub.make_doc(last_page_path, lang, lang.c(title))
+                body.attrs["class"] = "note"
                 last_html = html
                 h1 = body.ekid("h1")
                 h1.kids.append(title)
