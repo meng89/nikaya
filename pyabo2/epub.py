@@ -129,7 +129,12 @@ def _make_suttas(bns, module, marks: list[epubpacker.Mark], docs, refs, branch: 
     for name, obj in data:
         if isinstance(obj, list):
             new_branch = branch + [name]
-            mark = epubpacker.Mark(name)
+            if need_attach_range(name, obj):
+                start, end = read_range(obj)
+                name2 = "{}({}～{})".format(name, start, end)
+            else:
+                name2 = name
+            mark = epubpacker.Mark(lang.c(name2))
             marks.append(mark)
 
             if is_leaf(obj) and need_join(obj):
@@ -147,7 +152,6 @@ def _make_suttas(bns, module, marks: list[epubpacker.Mark], docs, refs, branch: 
             mark.href = doc_path
 
         else:
-
             title = get_sutta_name(obj.root)
             start, end = get_sutta_range(obj.root)
             if start == end:
@@ -160,7 +164,7 @@ def _make_suttas(bns, module, marks: list[epubpacker.Mark], docs, refs, branch: 
             html, body = make_doc(doc_path, lang, title)
             write_one_doc(bns, new_branch, doc_path, body, obj, refs, ln, gn, lang)
             docs.append((doc_path, html))
-            marks.append(epubpacker.Mark("{}.{}".format(_range, title), href=doc_path))
+            marks.append(epubpacker.Mark("{}.{}".format(_range, lang.c(title)), href=doc_path))
 
         if first_doc_path is None:
             first_doc_path = doc_path
@@ -173,13 +177,22 @@ def write_one_doc(bns, branch, doc_path, body, obj: xl.Xml, refs, ln, gn, lang):
     h = body.ekid("h" + str(len(branch) + 1))
 
     sutta_num = get_sutta_num(obj.root)
-    if sutta_num is not None:
-        pass
-        #x = suttanum_ref.make_suttanum_xml(sutta_num, [])
-        #h.kids.append(sutta_num)
-        #h.kids.append(sutta_num)
+    sutta_num_sc = get_sutta_num_sc(obj.root)
 
-        #h.kids.append(" ")
+    if sutta_num is not None:
+        #x = suttanum_ref.make_suttanum_xml(sutta_num, bns)
+        #print(x[1].to_str())
+        h.kids.append(sutta_num)
+
+    if sutta_num and sutta_num_sc:
+        h.kids.append("/")
+
+    if sutta_num_sc is not None:
+        sc_a = xl.Element("a", {"href": "https://suttacentral.net/" + sutta_num_sc.replace(" ","")}, [sutta_num_sc])
+        h.kids.append(sc_a)
+
+    if sutta_num and sutta_num_sc:
+        h.kids.append("　")
 
     serialized_nodes = []
     for node in branch[0: -1]:
@@ -188,25 +201,17 @@ def write_one_doc(bns, branch, doc_path, body, obj: xl.Xml, refs, ln, gn, lang):
             serialized_nodes.append(m.group(1))
     assert len(serialized_nodes) <= 1
 
+    a = h.ekid("a")
+    a.attrs["href"] = urllib.parse.urljoin(config.ABO_WEBSITE,get_source_page(obj.root))
     if serialized_nodes:
-        a = h.ekid("a")
-        a.attrs["href"] = urllib.parse.urljoin(config.ABO_WEBSITE,get_source_page(obj.root))
-        a.kids.append("{}/{}".format(serialized_nodes[0], branch[-1]))
+        name = "{}/{}".format(serialized_nodes[0], branch[-1])
     else:
-        h.kids.append(branch[-1])
+        name = branch[-1]
 
-    sutta_num_sc = get_sutta_num_sc(obj.root)
-    if sutta_num_sc is not None and True:
-        h.kids.append(" ")
-        sc_a = xl.Element("a", {"href": "https://suttacentral.net/" + sutta_num_sc.replace(" ","")}, ["SC"])
-        h.kids.append(sc_a)
-
-
+    a.kids.append(lang.c(name))
 
     xml_body = obj.root.find_descendants("body")[0]
     for xml_p in xml_body.find_descendants("p"):
-        print("hehe")
-        print(branch)
         html_p = body.ekid("p")
         html_p.kids.extend(_xml_es_to_html(bns, xml_p.kids, obj.root, ln, gn, doc_path, lang))
 
@@ -325,7 +330,7 @@ def read_start(obj):
         else:
             return read_start(sub_obj)
     else:
-        return obj.root.find_descendants("start")[0].kids[0]
+        return sub_obj.root.find_descendants("start")[0].kids[0]
 
 def read_end(obj):
     sub_name, sub_obj = obj[-1]
@@ -336,7 +341,7 @@ def read_end(obj):
         else:
             return read_end(sub_obj)
     else:
-        return obj.root.find_descendants("end")[0].kids[0]
+        return sub_obj.root.find_descendants("end")[0].kids[0]
 
 
 def is_serialized_folder(name, obj):
@@ -511,7 +516,7 @@ def _write_fanli(bns, epub, ln, gn, lang):
 
 _lines = (
     ("此汉译佛经数据来源于", xl.Element("a", {"href": "https://agama.buddhason.org"}, ["莊春江讀經站"]),"，一切相关权利归于译者。"),
-    ("原译文是繁体中文，简体版由程序转换，可能会出现转换错误。电子书中目录以及经文标题部分可能有一些修改，正文部分与原页面相同，但可能丢失了一部分链接以及格式等元数据。",),
+    ("原译文是繁体中文，简体版由程序转换，可能会出现转换错误。电子书目录以及经文标题部分可能有一些修改，正文部分与原页面相同，但可能丢失了一部分链接以及格式等元数据。",),
     ("要获取最新制成的电子书，请访问项目主页：",
      xl.Element("a", {"href": "{}".format(_project_link)}, [_project_link])),
     #("如果打不开上面的链接，请尝试这个云盘链接：", xl.Element("a", {"href": "{}".format(_yunpan_link)}, [_yunpan_link])),
