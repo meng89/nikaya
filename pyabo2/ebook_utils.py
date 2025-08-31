@@ -149,8 +149,8 @@ def make_cover(module, data, lang: Lang):
                                pali=module.name_pali,
                                version=lang.han_version,
                                translator="莊春江" + lang.c("譯"),
-                               translated=lang.c("譯：" + translated_date),
-                               created=lang.c("製：" + today()),
+                               translated=lang.c(translated_date + " 更新"),
+                               created=lang.c(today() + " 製作"),
                                )
 
         open(os.path.join(config.COVER_DIR, xhtml_filename), "w").write(doc_str)

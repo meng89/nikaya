@@ -20,6 +20,7 @@ import pyabo
 import pyabo2.kn
 import pyabo2.note
 
+from pyabo2 import sn, mn, dn, an
 
 # _headers = {'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.135 Safari/537.36"}
 
@@ -124,7 +125,7 @@ def get_paths(e: xl.Element):
 
 def main(fresh_time, check_mtime):
     session = requests.Session()
-    for module in [pyabo2.note] + list(pyabo2.kn.all_modules):
+    for module in [pyabo2.note] + [sn, mn, dn, an] + list(pyabo2.kn.all_modules):
         for filename in module.htmls:
             sync(filename, session, fresh_time, check_mtime)
             for other in get_others(filename):
