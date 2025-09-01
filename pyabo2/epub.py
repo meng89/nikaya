@@ -139,19 +139,38 @@ def _make_suttas(bns, module, marks: list[epubpacker.Mark], docs, refs, branch: 
             mark = epubpacker.Mark(lang.c(name2))
             marks.append(mark)
 
-            if is_leaf(obj) and need_join(obj):
-                doc_path = posixpath.join("", *branch) + ".xhtml"
-                html, body = make_doc(doc_path, lang, branch[-1])
-                h = body.ekid("h{}".format(len(branch)))
-                h.kids.append(branch[-1])
-                for sub_name, sub_obj in obj:
-                    sub_branch = branch + [sub_name]
-                    write_one_doc(bns, sub_branch, doc_path, body, sub_obj, refs, ln, gn, lang)
+            if is_leaf(obj) and need_join(obj): # 这是最后一个目录 且 短经很多
+                doc_path = posixpath.join("", *new_branch) + ".xhtml"
+                html, body = make_doc(doc_path, lang, new_branch[-1])
+                h = body.ekid("h{}".format(len(new_branch)))
+                h.kids.append(new_branch[-1])
+
+                for index, (sub_name, sub_obj) in enumerate(obj, start=1):
+                    title = get_sutta_name(sub_obj.root)
+                    start, end = get_sutta_range(sub_obj.root)
+                    if start == end:
+                        _range = start
+                    else:
+                        _range = start + "～" + end
+
+                    new_branch2 = new_branch + [title]
+                    #input(new_branch2)
+
+                    sutta_id = "sutta{}".format(index)
+                    write_one_doc(bns, new_branch2, doc_path, sutta_id, body, sub_obj, refs, ln, gn, lang)
+
+                    sutta_mark = epubpacker.Mark("{}.{}".format(_range, lang.c(title)), "{}#{}".format(doc_path, sutta_id))
+                    #sutta_mark.href = "{}#{}".format(doc_path, sutta_id)
+                    #marks.append(sutta_mark)
+                    mark.kids.append(sutta_mark)
+
                 docs.append((doc_path, html))
+
 
             else:
                 doc_path = _make_suttas(bns, module, mark.kids, docs, refs, new_branch, obj, ln, gn, lang)
             mark.href = doc_path
+
 
         else:
             title = get_sutta_name(obj.root)
@@ -164,9 +183,9 @@ def _make_suttas(bns, module, marks: list[epubpacker.Mark], docs, refs, branch: 
             new_branch = branch + [title]
             doc_path = posixpath.join("",*new_branch) + ".xhtml"
             html, body = make_doc(doc_path, lang, title)
-            write_one_doc(bns, new_branch, doc_path, body, obj, refs, ln, gn, lang)
+            write_one_doc(bns, new_branch, doc_path, "sutta1", body, obj, refs, ln, gn, lang)
             docs.append((doc_path, html))
-            marks.append(epubpacker.Mark("{}.{}".format(_range, lang.c(title)), href=doc_path))
+            marks.append(epubpacker.Mark("{}.{}".format(_range, lang.c(title)), href=doc_path + "#sutta1"))
 
         if first_doc_path is None:
             first_doc_path = doc_path
@@ -175,9 +194,13 @@ def _make_suttas(bns, module, marks: list[epubpacker.Mark], docs, refs, branch: 
 
 
 
-def write_one_doc(bns, branch, doc_path, body, obj: xl.Xml, refs, ln, gn, lang):
-    h = body.ekid("h" + str(len(branch) + 1))
-    h.attrs["class"] = "title"
+def write_one_doc(bns, branch, doc_path, sutta_id, body, obj: xl.Xml, refs, ln, gn, lang):
+    level = len(branch)
+    if level < 3:
+        level = 3
+    h = body.ekid("h" + str(level))
+    h.attrs["class"] = "sutta_title"
+    h.attrs["id"] = sutta_id
 
     sne = xl.Element("span", {"class": "sutta_num"})
 
@@ -366,10 +389,11 @@ def need_join(obj):
     large_page = 0
 
     for name, xml in obj:
+        xml: xl.Xml
         line_count = 0
         root = xml.root
-        body = root.find("body")[0]
-        for p in body.find("p"):
+        body = root.find_kids("body")[0]
+        for p in body.find_kids("p"):
             txt = pyabo2.utils.line_to_txt(p.kids)
             line_count += math.ceil(len(txt)/40)
 
@@ -377,20 +401,22 @@ def need_join(obj):
             small_page += 1
         else:
             large_page += 1
-
-    if small_page / large_page > 1:
+    try:
+        if small_page / large_page > 1:
+            return True
+        else:
+            return False
+    except ZeroDivisionError:
         return True
-    else:
-        return False
 
 
 
 def is_leaf(obj):
-    if not isinstance(obj, list):
-        return False
-
-    if isinstance(obj[0], xl.Xml):
-        return True
+    if isinstance(obj, list):
+        if isinstance(obj[0][1], xl.Xml):
+            return True
+        else:
+            return False
     else:
         return False
 

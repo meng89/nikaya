@@ -4,6 +4,8 @@ from pyabo.book_public import TC, SC
 _css1 = """
 /* koreader 只支持部分 CSS 功能
 */
+
+
 .title a {
     color: inherit;
     text-decoration: inherit;
