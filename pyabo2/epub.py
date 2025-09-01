@@ -59,7 +59,9 @@ def make_epub(data, module, lang):
     _inbookref_to_href(docs)
 
     for path, xml in docs:
-        epub.userfiles[path] = xml.to_str()
+        xml: xl.Xml
+        epub.userfiles[path] = xml.to_str(do_pretty=True,
+                                          dont_do_tags=["title", "h1", "h2", "h3", "h4", "a", "span", "p"])
         epub.spine.append(path)
 
     for title, path, page in ln.get_pages(bns, lang):
@@ -192,7 +194,7 @@ def write_one_doc(bns, branch, doc_path, body, obj: xl.Xml, refs, ln, gn, lang):
 
     if sutta_num_sc is not None:
         sc_a = xl.Element("a", {"href": "https://suttacentral.net/" + sutta_num_sc.replace(" ","")}, [sutta_num_sc])
-        sc_a.attrs["class"] = "sutta_name"
+        # sc_a.attrs["class"] = "sutta_num"
         sne.kids.append(sc_a)
 
     if sutta_num and sutta_num_sc:
@@ -206,7 +208,7 @@ def write_one_doc(bns, branch, doc_path, body, obj: xl.Xml, refs, ln, gn, lang):
             serialized_nodes.append(m.group(1))
     assert len(serialized_nodes) <= 1
 
-    a = h.ekid("a")
+    a = h.ekid("a", {"class": "sutta_name"})
     a.attrs["href"] = urllib.parse.urljoin(config.ABO_WEBSITE,get_source_page(obj.root))
     if serialized_nodes:
         name = "{}/{}".format(serialized_nodes[0], branch[-1])
