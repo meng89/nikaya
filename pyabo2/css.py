@@ -31,6 +31,7 @@ a.suttaref_inbook {
     color: inherit;
 }
 
+
 .cjk {
     font-family: "Noto Serif CJK TC";
     font-weight: 400;
@@ -45,6 +46,7 @@ a.suttaref_inbook {
     font-family: "Noto Serif Tibetan";
     font-weight: 400;
 }
+
 
 .sutta_title {
     font-family: "Noto Sans CJK TC";

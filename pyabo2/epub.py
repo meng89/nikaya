@@ -38,7 +38,7 @@ def make_epub(data, module, lang):
 
     epub.userfiles[css.css1_path] = css.css1[lang.en]
     #epub.userfiles[css.css2_path] = css.css2[lang.en]
-    epub.userfiles[js.js1_path] = js.js1
+    #epub.userfiles[js.js1_path] = js.js1
     #epub.userfiles["_css/user_css1.css"] = "/* 第一个自定义 CSS 文件 */\n\n"
     #epub.userfiles["_css/user_css2.css"] = "/* 第二个自定义 CSS 文件 */\n\n"
     #epub.userfiles["_js/user_js1.js"] = "// 第一个自定义 JS 文件\n\n"
@@ -435,7 +435,7 @@ def make_doc(doc_path, lang, title=None):
     _make_css_link(head, relpath(css.css1_path, doc_path), "css1")
     #_make_css_link(head, relpath("_css/user_css1.css", doc_path), "user_css1")
     #_make_css_link(head, relpath("_css/user_css2.css", doc_path), "user_css2")
-    _make_js_link(head, relpath(js.js1_path, doc_path), "js1")
+    #_make_js_link(head, relpath(js.js1_path, doc_path), "js1")
     #_make_js_link(head, relpath("_js/user_js1.js", doc_path), "user_js1")
     #_make_js_link(head, relpath("_js/user_js2.js", doc_path), "user_js2")
 
