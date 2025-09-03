@@ -72,7 +72,8 @@ def make_epub(data, module, lang):
         epub.userfiles[path] = page
         epub.spine.append(path)
 
-    _write_readme(epub, lang)
+    _write_readme(bns, epub, ln, gn, lang)
+    #_write_readme(epub, lang)
 
     return epub
 
@@ -142,8 +143,8 @@ def _make_suttas(bns, module, marks: list[epubpacker.Mark], docs, refs, branch: 
             if is_leaf(obj) and need_join(obj): # 这是最后一个目录 且 短经很多
                 doc_path = posixpath.join("", *new_branch) + ".xhtml"
                 html, body = make_doc(doc_path, lang, new_branch[-1])
-                h = body.ekid("h{}".format(len(new_branch)))
-                h.kids.append(new_branch[-1])
+                #h = body.ekid("h{}".format(len(new_branch)))
+                #h.kids.append(new_branch[-1])
 
                 for index, (sub_name, sub_obj) in enumerate(obj, start=1):
                     title = get_sutta_name(sub_obj.root)
@@ -202,23 +203,26 @@ def write_one_doc(bns, branch, doc_path, sutta_id, body, obj: xl.Xml, refs, ln, 
     h.attrs["class"] = "sutta_title"
     h.attrs["id"] = sutta_id
 
-    sne = xl.Element("span", {"class": "sutta_num"})
+    sne = xl.Element("span", {"class": "sutta_nums"})
 
     sutta_num = get_sutta_num(obj.root)
     sutta_num_sc = get_sutta_num_sc(obj.root)
 
-    if sutta_num is not None:
-        #x = suttanum_ref.make_suttanum_xml(sutta_num, bns)
-        #print(x[1].to_str())
-        sne.kids.append(sutta_num)
+
+    if sutta_num_sc is not None:
+        sc_a = xl.Element("a", {"href": "https://suttacentral.net/" + sutta_num_sc.replace(" ","")}, [sutta_num_sc])
+        sc_a.attrs["class"] = "sutta_num_sc"
+        sne.kids.append(sc_a)
 
     if sutta_num and sutta_num_sc:
         sne.kids.append("/")
 
-    if sutta_num_sc is not None:
-        sc_a = xl.Element("a", {"href": "https://suttacentral.net/" + sutta_num_sc.replace(" ","")}, [sutta_num_sc])
-        # sc_a.attrs["class"] = "sutta_num"
-        sne.kids.append(sc_a)
+    if sutta_num is not None:
+        span = xl.Element("span", {"class": "sutta_num_abo"})
+        span.kids.append(sutta_num)
+        #x = suttanum_ref.make_suttanum_xml(sutta_num, bns)
+        #print(x[1].to_str())
+        sne.kids.append(span)
 
     if sutta_num and sutta_num_sc:
         h.kids.append(sne)
@@ -274,6 +278,10 @@ def _xml_es_to_html(bns, es: ES, root, ln, gn: pyabo2.note.GlobalNotes, doc_path
                 new_es.append(e)
             elif e.tag == "a" and "href" in e.attrs.keys() and "target" in e.attrs.keys():
                 new_es.append(e)
+            elif e.tag == "a":
+                a = xl.Element("a", attrs=e.attrs)
+                a.kids.extend(_xml_es_to_html(bns, e.kids, root, ln, gn, doc_path, lang))
+                new_es.append(a)
             elif e.tag == "span" and "style" in e.attrs.keys():
                 new_es.append(e)
             elif len(e.kids) == 0:
@@ -283,6 +291,7 @@ def _xml_es_to_html(bns, es: ES, root, ln, gn: pyabo2.note.GlobalNotes, doc_path
                 raise Exception("Unknown element type")
 
         elif isinstance(e, str):
+            #print("str:", e)
             new_es.extend(tag_str.str_to_es(lang.c(e)))
             #new_es.extend(suttanum_ref.make_suttanum_xml(lang.c(e), bns))
 
@@ -482,7 +491,8 @@ def _write_cover(epub, cover_image_path, lang):
     epub.userfiles[base_name] = open(cover_image_path, "rb").read()
     cover_doc_path = "cover.xhtml"
     html, body = make_doc(cover_doc_path, lang, "封面")
-    body.attrs["style"] = "text-align: center;"
+    #body.attrs["style"] = "text-align: center;"
+    body.attrs["class"] = "cover"
 
     _img = body.ekid("img", {"src": relpath(base_name, cover_doc_path),
                              "alt": "Cover Image",
@@ -498,11 +508,11 @@ def _write_homage(bns, _module, marks, docs, ln, gn, lang):
     html, body = make_doc(doc_path, lang, lang.c("禮敬世尊"))
     body.attrs["class"] = "homage"
 
-    outdiv = body.ekid("div", {"class": "homage_out"})
-    indiv = outdiv.ekid("div", {"class": "homage_in"})
+    #outdiv = body.ekid("div", {"class": "homage_out"})
+    #indiv = outdiv.ekid("div", {"class": "homage_in"})
 
     kids = xl.parse("""<p>對那位<gn id="12">世尊</gn>、<gn id="5">阿羅漢</gn>、<gn id="6">遍正覺者</gn>禮敬</p>""").root.kids
-    p = indiv.ekid("p")
+    p = body.ekid("p")
     p.kids.extend(_xml_es_to_html(bns, kids, html, ln, gn, doc_path, lang))
     #indiv.kids.append())
 
@@ -550,17 +560,17 @@ def _write_fanli(bns, epub, ln, gn, lang):
 
 
 _lines = (
-    ("此汉译佛经数据来源于", xl.Element("a", {"href": "https://agama.buddhason.org"}, ["莊春江讀經站"]),"，一切相关权利归于译者。"),
-    ("原译文是繁体中文，简体版由程序转换，可能会出现转换错误。电子书目录以及经文标题部分可能有一些修改，正文部分与原页面相同，但可能丢失了一部分链接和格式等元数据。",
+    ["此汉译佛经数据来源于", xl.Element("a", {"href": "https://agama.buddhason.org"}, ["莊春江讀經站"]),"，一切相关权利归于译者。"],
+    ["原译文是繁体中文，简体版由程序转换，可能会出现转换错误。电子书目录以及经文标题部分可能有一些修改，正文部分与原页面相同，但可能丢失了一部分链接和格式等元数据。",
      "页面标题的经号里，以小数点隔离书籍缩写与数字的是原经号，如：Ud.1。无小数点的是suttacentral.net网站风格的经号，如：Ud1.1，点击可以打开suttacentral.net网站对应的其它语言译文的页面。",
-     "部分书籍没有整理出对应的经号，已有的经号有可能会有对应错误。如有发现，请帮忙指正，谢谢！"),
-    ("要获取最新制成的电子书，请访问项目主页：",
-     xl.Element("a", {"href": "{}".format(_project_link)}, [_project_link])),
+     "部分书籍没有整理出对应的经号，已有的经号有可能会有对应错误。如有发现，请帮忙指正，谢谢！"],
+    ["要获取最新制成的电子书，请访问项目主页：",
+     xl.Element("a", {"href": "{}".format(_project_link)}, [_project_link])],
     #("如果打不开上面的链接，请尝试这个云盘链接：", xl.Element("a", {"href": "{}".format(_yunpan_link)}, [_yunpan_link])),
-    ("若难以下载电子书，或者有对此电子书相关的其它问题，请联系我：", xl.Element("a", {"href": "mailto:{}".format(_my_mail)}, [_my_mail]))
+    ["若难以下载电子书，或者有对此电子书相关的其它问题，请联系我：", xl.Element("a", {"href": "mailto:{}".format(_my_mail)}, [_my_mail])]
 )
 
-def _write_readme(epub, lang):
+def _write_readme(bns, epub, ln, gn, lang):
     doc_path = "readme.xhtml"
     html, body = make_doc(doc_path, lang, "电子书说明")
 
@@ -568,7 +578,8 @@ def _write_readme(epub, lang):
 
     _h1 = body.ekid("h1", {"class": "title"}, ["电子书说明"])
     for line in _lines:
-        _p = body.ekid("p", kids=list(line))
+        _p = body.ekid("p", kids=_xml_es_to_html(bns, line, html, ln, gn, doc_path, lang))
+
 
     htmlstr = xl.Xml(root=html).to_str(do_pretty=True, dont_do_tags=["p"])
     epub.userfiles[doc_path] = htmlstr
