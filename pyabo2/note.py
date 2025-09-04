@@ -114,6 +114,6 @@ class LocalNotes(GlobalNotes):
         return self._notes
 
     def add(self, note):
-        _id = str(len(note) + 1)
+        _id = str(len(self.notes) + 1)
         self.notes[_id] = note
         return self.get_link(_id)

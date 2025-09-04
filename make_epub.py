@@ -3,6 +3,9 @@ import os
 import tempfile
 from datetime import datetime
 
+import pyabo2.sn
+import pyabo2.an
+
 import pyabo2.kn
 import pyabo2.epub
 
@@ -15,7 +18,7 @@ date = datetime.today().strftime('%Y.%m.%d')
 
 def main():
 
-    for m in pyabo2.kn.all_modules:
+    for m in [pyabo2.an] + list(pyabo2.kn.all_modules):
     #for m in [pyabo2.kn.pv]:
         try:
             load_from_htm = getattr(m, "load_from_htm")
@@ -26,7 +29,11 @@ def main():
         for lang in pyabo2.ebook_utils.TC(), pyabo2.ebook_utils.SC():
             epub = pyabo2.epub.make_epub(data, m, lang)
             filename = "{}_莊_{}_{}{}.epub".format(lang.c(m.name_han), lang.zh, date, lang.c("製"))
-            full_path = os.path.join(temp_td.name, filename)
+            if m in pyabo2.kn.all_modules:
+                full_path = os.path.join(temp_td.name, "小部(不全)", filename)
+            else:
+                full_path = os.path.join(temp_td.name, filename)
+            os.makedirs(os.path.dirname(full_path), exist_ok=True)
             epub.write(full_path)
 
 

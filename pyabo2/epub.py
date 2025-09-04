@@ -266,6 +266,7 @@ def _xml_es_to_html(bns, es: ES, root, ln, gn: pyabo2.note.GlobalNotes, doc_path
                 new_es.append(a)
 
             elif e.tag == "ln":
+                #todo
                 a = xl.Element("a", attrs={"epub:type": "noteref"})
                 _id = e.attrs["id"]
                 link = _get_ln_link_by_id(root, ln, _id)
@@ -273,6 +274,7 @@ def _xml_es_to_html(bns, es: ES, root, ln, gn: pyabo2.note.GlobalNotes, doc_path
                 a.attrs["href"] = href
                 a.attrs["class"] = "noteref"
                 a.kids.extend(_xml_es_to_html(bns, e.kids, root, ln, gn, doc_path, lang))
+                new_es.append(a)
 
             elif e.tag == "a" and "href" in e.attrs.keys() and "id" in e.attrs.keys():
                 new_es.append(e)
@@ -283,6 +285,8 @@ def _xml_es_to_html(bns, es: ES, root, ln, gn: pyabo2.note.GlobalNotes, doc_path
                 a.kids.extend(_xml_es_to_html(bns, e.kids, root, ln, gn, doc_path, lang))
                 new_es.append(a)
             elif e.tag == "span" and "style" in e.attrs.keys():
+                new_es.append(e)
+            elif e.tag == "span" and e.attrs.get("class") == "sutra_name":
                 new_es.append(e)
             elif len(e.kids) == 0:
                 pass
@@ -562,7 +566,7 @@ def _write_fanli(bns, epub, ln, gn, lang):
 _lines = (
     ["此汉译佛经数据来源于", xl.Element("a", {"href": "https://agama.buddhason.org"}, ["莊春江讀經站"]),"，一切相关权利归于译者。"],
     ["原译文是繁体中文，简体版由程序转换，可能会出现转换错误。电子书目录以及经文标题部分可能有一些修改，正文部分与原页面相同，但可能丢失了一部分链接和格式等元数据。",
-     "页面标题的经号里，以小数点隔离书籍缩写与数字的是原经号，如：Ud.1。无小数点的是suttacentral.net网站风格的经号，如：Ud1.1，点击可以打开suttacentral.net网站对应的其它语言译文的页面。",
+     "页面标题的经号里，以小数点隔离书籍缩写与数字的是原经号，如：Ud.1。无小数点的是 suttacentral.net 网站风格的经号，如：Ud 1.1，点击可以打开其它语言版本的页面。",
      "部分书籍没有整理出对应的经号，已有的经号有可能会有对应错误。如有发现，请帮忙指正，谢谢！"],
     ["要获取最新制成的电子书，请访问项目主页：",
      xl.Element("a", {"href": "{}".format(_project_link)}, [_project_link])],

@@ -191,7 +191,7 @@ def htm_line_to_xml_line(htm_line, funs=None):
     line = []
     for oe in htm_line:
         try:
-            line.extend(_do_e(oe, funs or [do_str, do_global_note, do_local_note, do_a, do_styled_span]))
+            line.extend(_do_e(oe, funs or [do_str, do_global_note, do_local_note, do_a, do_styled_span, do_sutra_name_span]))
         except TypeError:
             raise Exception((type(oe), oe))
     return line
@@ -263,6 +263,13 @@ def do_styled_span(e):
     if isinstance(e, xl.Element) and e.tag == "span" and e.attrs.get("style") == "color: #800000":
         new_kids = htm_line_to_xml_line(e.kids, [do_str, do_global_note, do_local_note, do_a, do_styled_span, do_br])
         e.kids = new_kids
+        return True, [e]
+    else:
+        return False, e
+
+
+def do_sutra_name_span(e):
+    if isinstance(e, xl.Element) and e.tag == "span" and e.attrs.get("class") == "sutra_name":
         return True, [e]
     else:
         return False, e
