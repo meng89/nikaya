@@ -20,6 +20,11 @@ def read_page(file_path, style=1):
     full_path = os.path.join(config.DOWNLOAD_DIR, file_path)
     mtime = os.path.getmtime(full_path)
     data = open(full_path, "r").read()
+
+    # todo report bug
+    if file_path in ("AN/AN0437.htm", "AN/AN0993.htm"):
+        data = data.replace("<aonMouseover", "<a onMouseover")
+
     soup = bs4.BeautifulSoup(data, 'html5lib')
     root = xl.parse(str(soup)).root
 

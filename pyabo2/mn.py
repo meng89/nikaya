@@ -17,36 +17,42 @@ htmls = ["MN/MN{:0>3d}.htm".format(x) for x in range(1, 153)]
 
 def load_from_htm():
     data = []
-    pin = []
-    pin_name = None
-    sutta_serial = 0
+    jd = None
+    pin = None
+
     for htm in htmls:
         root, mtime, body_lines, notes, div_nikaya = pyabo2.page_parsing.read_page(htm, 2)
 
-        p = re.compile(r"^優陀那(\d+)經/(.+)\((\d)\.(.+品)\)\(莊春江譯\)(.*)$")
-        matches = pyabo2.utils.match_line(body_lines, [p])
-        assert len(matches) == 1
+        # 中部1經/根本法門經(根本法門品[1])(莊春江譯)[MA.106, AA.44.6]
+        p = re.compile(r"^中部(\d+)經/(\S+經\S*?)\(\S+\)\(莊春江譯\)(.*)")
+        matched = pyabo2.utils.match_line(body_lines, [p])
+        assert len(matched) == 1
+        m = matched[0][0]
+        start = end = m.group(1)
+        name = m.group(2)
+        relevant = m.group(3)
 
-        m = matches[0][0]
+        source_title_line, head_lines, sutta_body_lines = pyabo2.utils.split_sutta(body_lines, matched)[0]
 
-        pin_serial = m.group(3)
-        new_pin_name = m.group(4)
+        jd_m = re.compile(r"^(\S+經典)")
+        jd_matched = pyabo2.utils.match_line(head_lines, [jd_m])
+        if jd_matched:
+            assert len(jd_matched) == 1
+            m = jd_matched[0][0]
+            jd_name = m.group(1)
+            jd = []
+            data.append((jd_name, jd))
+            pin = None
 
-        # todo report bug
-        if new_pin_name == "天生失明品":
-            new_pin_name = "天生失明者品"
 
-        if pin_name != new_pin_name:
-            pin_name = new_pin_name
+        pin_m = re.compile(r"^\d+\.(\S+品)")
+        pin_matched = pyabo2.utils.match_line(head_lines, [pin_m])
+        if pin_matched:
+            assert len(pin_matched) == 1
+            m = pin_matched[0][0]
+            pin_name = m.group(1)
             pin = []
-            pin_name_whole = pin_serial + "." + new_pin_name
-            data.append((pin_name_whole, pin))
-            sutta_serial = 0
-
-        suttas = pyabo2.utils.split_sutta(body_lines, matches)
-        assert len(suttas) == 1
-
-        title_line, head_lines, sutta_body_lines = suttas[0]
+            jd.append((pin_name, pin))
 
         body = pyabo2.page_parsing.htm_lines_to_xml_lines(sutta_body_lines)
         body = pyabo2.page_parsing.lines_to_body(body)
@@ -54,26 +60,24 @@ def load_from_htm():
         head = pyabo2.page_parsing.htm_lines_to_xml_lines(head_lines)
         head = pyabo2.page_parsing.lines_to_head(head)
 
-        sutta_serial += 1
+        sutta_num_abo = "MN.{}".format(start)
 
-        sutta_num = "Ud.{}".format(m.group(1))
-
-        sutta_num_sc = "Ud {}.{}".format(pin_serial, sutta_serial)
+        sutta_num_sc = "MN {}".format(start)
 
         sutta_nums = [
-            (None, sutta_num),
+            (None, sutta_num_abo),
             ("SC", sutta_num_sc)
         ]
 
         xml = pyabo2.utils.make_xml(source_page=htm,
                                     sutta_nums=sutta_nums,
-                                    start=str(sutta_serial),
-                                    end=str(sutta_serial),
+                                    start=start,
+                                    end=end,
                                     mtime=mtime,
                                     ctime=None,
-                                    source_title=pyabo2.utils.strip_crlf(matches[0][2]),
-                                    relevant=m.group(5),
-                                    title_line=[m.group(2)],
+                                    source_title=pyabo2.utils.strip_crlf(matched[0][2]),
+                                    relevant=relevant,
+                                    title_line=[name],
                                     head=head,
                                     body=body,
                                     notes=notes)

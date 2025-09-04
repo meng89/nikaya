@@ -3,8 +3,8 @@ import os
 import tempfile
 from datetime import datetime
 
-import pyabo2.sn
-import pyabo2.an
+
+from pyabo2 import sn, mn, dn, an
 
 import pyabo2.kn
 import pyabo2.epub
@@ -12,31 +12,35 @@ import pyabo2.epub
 import pyabo2.ebook_utils
 
 
-temp_td = tempfile.TemporaryDirectory(prefix="AAA_pyabo_")
 
-date = datetime.today().strftime('%Y.%m.%d')
 
 def main():
+    temp_td = tempfile.TemporaryDirectory(prefix="AAA_莊春江汉译经藏_")
+    date = datetime.today().strftime('%Y.%m.%d')
 
-    for m in [pyabo2.an] + list(pyabo2.kn.all_modules):
-    #for m in [pyabo2.kn.pv]:
+    for m in [sn, mn, dn, an] + list(pyabo2.kn.all_modules):
         try:
             load_from_htm = getattr(m, "load_from_htm")
         except AttributeError:
             continue
         data = load_from_htm()
 
-        for lang in pyabo2.ebook_utils.TC(), pyabo2.ebook_utils.SC():
+        for zh_name, lang in [("莊春江漢譯經藏繁體epub", pyabo2.ebook_utils.TC()), ("莊春江汉译经藏简体epub", pyabo2.ebook_utils.SC())]:
+
             epub = pyabo2.epub.make_epub(data, m, lang)
             filename = "{}_莊_{}_{}{}.epub".format(lang.c(m.name_han), lang.zh, date, lang.c("製"))
+            dirname = os.path.join(temp_td.name, zh_name)
             if m in pyabo2.kn.all_modules:
-                full_path = os.path.join(temp_td.name, "小部(不全)", filename)
+                full_path = os.path.join(dirname, "小部(不全)", filename)
             else:
-                full_path = os.path.join(temp_td.name, filename)
+                full_path = os.path.join(dirname, filename)
             os.makedirs(os.path.dirname(full_path), exist_ok=True)
             epub.write(full_path)
+
+    print("电子书临时目录在：", temp_td.name)
+    input("按回车键删目录并退出")
+    temp_td.cleanup()
 
 
 if __name__ == '__main__':
     main()
-    input("Press any key to exit")
