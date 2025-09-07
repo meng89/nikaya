@@ -12,8 +12,6 @@ import pyabo2.epub
 import pyabo2.ebook_utils
 
 
-
-
 def main():
     temp_td = tempfile.TemporaryDirectory(prefix="AAA_莊春江汉译经藏_")
     date = datetime.today().strftime('%Y.%m.%d')
@@ -27,7 +25,7 @@ def main():
 
         for zh_name, lang in [("莊春江漢譯經藏繁體epub", pyabo2.ebook_utils.TC()), ("莊春江汉译经藏简体epub", pyabo2.ebook_utils.SC())]:
 
-            epub = pyabo2.epub.make_epub(data, m, lang)
+            epub = pyabo2.epub.build_epub(data, m, lang)
             filename = "{}_莊_{}_{}{}.epub".format(lang.c(m.name_han), lang.zh, date, lang.c("製"))
             dirname = os.path.join(temp_td.name, zh_name)
             if m in pyabo2.kn.all_modules:

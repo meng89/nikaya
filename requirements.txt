@@ -4,6 +4,8 @@ requests[socks]
 python-dateutil
 boltons
 
+fpdf2
+
 jinja2
 flask
 OpenCC

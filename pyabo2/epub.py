@@ -20,7 +20,7 @@ from . import suttanum_ref
 from . import tag_str
 
 
-def make_epub(data, module, lang):
+def build_epub(data, module, lang):
     epub = epubpacker.Epub()
 
     epub.meta.titles = [lang.c(module.name_han)]
