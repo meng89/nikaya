@@ -205,7 +205,7 @@ def write_one_doc(bns, branch, doc_path, sutta_id, body, obj: xl.Xml, refs, ln, 
 
     sne = xl.Element("span", {"class": "sutta_nums"})
 
-    sutta_num = get_sutta_num(obj.root)
+    sutta_num_abo = get_sutta_num_abo(obj.root)
     sutta_num_sc = get_sutta_num_sc(obj.root)
 
 
@@ -214,17 +214,17 @@ def write_one_doc(bns, branch, doc_path, sutta_id, body, obj: xl.Xml, refs, ln, 
         sc_a.attrs["class"] = "sutta_num_sc"
         sne.kids.append(sc_a)
 
-    if sutta_num and sutta_num_sc:
+    if sutta_num_abo and sutta_num_sc:
         sne.kids.append("/")
 
-    if sutta_num is not None:
+    if sutta_num_abo is not None:
         span = xl.Element("span", {"class": "sutta_num_abo"})
-        span.kids.append(sutta_num)
+        span.kids.append(sutta_num_abo)
         #x = suttanum_ref.make_suttanum_xml(sutta_num, bns)
         #print(x[1].to_str())
         sne.kids.append(span)
 
-    if sutta_num and sutta_num_sc:
+    if sutta_num_abo and sutta_num_sc:
         h.kids.append(sne)
         h.kids.append("　")
 
@@ -322,7 +322,7 @@ def get_sutta_name(root: xl.Element):
     # input(x)
     return x
 
-def get_sutta_num(root: xl.Element):
+def get_sutta_num_abo(root: xl.Element):
     for sutta_num in root.find_descendants("sutta_num"):
         if sutta_num.attrs.get("type") is None:
             return sutta_num.kids[0]
