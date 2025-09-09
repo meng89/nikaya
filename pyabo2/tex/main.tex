@@ -1,4 +1,4 @@
-\setuppapersize [A4]
+\setuppapersize [$size]
 
 \enableregime[utf]
 \mainlanguage[cn]
@@ -48,20 +48,13 @@
 \setupinteraction[focus=standard] % 重要功能！添加上后才能连接到位置！
 \setupinteraction[state=start,style=normal]
 \setupinteraction[
-    title={相應部},
-    author={莊春江(譯)},
-    subtitle={佛教},
-    keyword={南傳佛教,尼柯耶,經藏},
-    creator={https://github.com/meng89/nikaya/tree/dev},
+    title={$title},
+    author={$author},
+    %subtitle={$subtitle},
+    keyword={$keyword},
+    creator={https://github.com/meng89/nikaya},
 ]
-\startmode [sc]
-  \setupinteraction[
-    title={相应部},
-    author={莊春江(译)},
-    subtitle={佛教},
-    keyword={南传佛教,尼柯耶,经藏},
-  ]
-\stopmode
+
 % PDF 属性信息
 %%%%%%%%%%%%%%%
 
@@ -150,7 +143,7 @@
 
 \define\newline{\par}
 
-\definestartstop[ReadNote][style=\tfa,]
+\definestartstop[Readme][style=\tfa,]
 
 \definestartstop[Note]
   [style=\small,
@@ -180,26 +173,13 @@
 
 
 \startstandardmakeup
-\bookmark[tobias]{封面}
-  \raggedcenter
-  \vfill
-  \blank[-3*big]
-  \definedfont[SansBold at 140pt]\setstrut \strut \doifmodeelse{sc}{相应部}{相應部}
-  \blank[-3*big]
-  \definedfont[SansBold at 45pt]\setstrut \strut Saṃyutta ~ Nikāya
-  \blank[3*big]
-  \definedfont[Sans at 25pt] \setstrut \strut \doifmodeelse{sc}{机转简体版}{傳統中文版}
-  \blank[18*big]
-  \definedfont[Sans at 20pt] \setstrut \strut 莊春江 ~ \doifmodeelse{sc}{译}{譯}
-  \blank[-2*small]
-  \definedfont[SansBold at 21pt] \setstrut \strut $date
-  \vfill
+\externalfigure[$cover_image][width=\paperwidth, height=\paperheight]
 \stopstandardmakeup
 
 
 \startstandardmakeup
 \part{凡例}
-\input{read_note.tex}
+\input{fanli.tex}
 \stopstandardmakeup
 
 
@@ -239,9 +219,9 @@ $homage
                    \goto{https://agama.buddhason.org}[url(https://agama.buddhason.org)]}]
                  [{\tfa \it \pagenumber}]
 
-\input{$localnotes}
-\input{$globalnotes}
-\page
+%\input{$localnotes}
+%\input{$globalnotes}
+%\page
 
 
 %\appendix[title={\doifmodeelse{sc}{附录二：巴利语经文}{附錄二：巴利語經文}}]
@@ -250,6 +230,6 @@ $homage
 
 
 \appendix[title={制作说明}]
-\input{creator_note.tex}
+\input{readme.tex}
 
 \stopdocument

@@ -10,9 +10,8 @@ import urllib.parse
 import xl
 
 import config
-import pyabo
 
-from . import epub, note
+from . import epub, note, ebook_utils
 
 main_filename = "main.tex"
 suttas_filename = "suttas.tex"
@@ -22,53 +21,112 @@ fonttex_filename = "type-imp-myfonts.tex"
 creator_note_filename = "creator_note.tex"
 read_note_filename = "read_note.tex"
 
+paper_map = {
+    "A4": (2480, 3508)
+}
+
 
 def build_pdf(full_path, data, module, lang, size):
-    bns = []
-    sources_dir = full_path + "_work"
+    bns = [module.short]
+    work_dir = full_path + "_work"
+    out_dir = full_path + "_out"
 
-    with open(os.path.join(sources_dir, main_filename), "w", encoding="utf-8") as f:
-        write_main(f, bns, lang, size)
+    branch = []
+    w, h = paper_map[size]
+    cover_image = ebook_utils.make_cover(module, data, lang, w, h)
 
-    with open(os.path.join(sources_dir, suttas_filename), "w", encoding="utf-8") as f:
-        branch = []
-        gn = note.get_gn()
-        _make_suttas(f, data, branch, bns, gn, lang)
+    write_main(work_dir, module, bns, lang, size, cover_image)
+
+    f = open(os.path.join(work_dir, "suttas.tex"), "w", encoding="utf-8")
+    _make_suttas(f, data, branch, bns, lang)
+    f.close()
+
+    write_fanli(work_dir)
+    write_zzsm(work_dir)
 
 
-def write_main(file: typing.TextIO, bns, lang, size):
+def write_fontstex(work_dir, fonts_dir):
+    fonttex = open(os.path.join(config.TEX_DIR, "type-imp-myfonts.tex"), "r", encoding="utf-8").read()
+    replace_map = {}
+    for fontname in re.findall("file:(.*(?:ttf|otf))", fonttex):
+        realfontpath = findfile(fonts_dir, os.path.basename(fontname))
+        if os.name == "nt":
+            realfontpath = ntrelpath(realfontpath, work_dir)
+        replace_map[fontname] = realfontpath
+
+    for fontname, realfontpath in replace_map.items():
+        fonttex = fonttex.replace(fontname, realfontpath.replace("\\", "/"))
+
+    with open(os.path.join(work_dir, fonttex_filename), "w", encoding="utf-8") as new_fonttex_file:
+        new_fonttex_file.write(fonttex)
+
+def findfile(start, name):
+    for relpath, dirs, files in os.walk(start):
+        if name in files:
+            full_path = os.path.join(start, relpath, name)
+            return os.path.normpath(os.path.abspath(full_path))
+    raise FileNotFoundError
+
+def ntrelpath(path1, path2):
+    import ntpath
+    try:
+        path = ntpath.relpath(path1, ntpath.dirname(path2))
+    except ValueError:
+        path = path1
+    return path
+
+
+def write_main(work_dir, module, bns, lang, size, cover_image):
+
     # homage = dopdf.join_to_tex(nikaya.homage_line, bns, c)
     main_t = open(os.path.join(config.TEX_DIR, main_filename), "r", encoding='utf-8').read()
-    strdate = datetime.today().strftime('%Y-%m-%d')
+    date = datetime.today().strftime('%Y-%m-%d')
     main = string.Template(main_t).substitute(
-        date=strdate,
+        size=size,
+        title=lang.c(module.name_han),
+        author="莊春江" + lang.c("譯"),
+        keyword=lang.c("上座部佛教、南傳佛教、經藏、尼柯耶、" + module.name_han),
+        date=date,
+
+        cover_image=cover_image,
         suttas=suttas_filename,
         homage=lang.c("對那位世尊、阿羅漢、遍正覺者禮敬"),
     )
-    file.write(main)
+    f = open(os.path.join(work_dir, main_filename), "w", encoding="utf-8")
+    f.write(main)
 
-def write_fanli(file):
+
+def write_fanli(work_dir):
+    f = open(os.path.join(work_dir, "fanli.tex"), "w", encoding="utf-8")
+    f.write("\\startReadme")
     for line in epub.FANLI:
-        file.write(line)
+        f.write(line)
+        f.write("\\blank")
+    f.write("\\endReadme")
 
-def write_zzsm(file, bns, lang):
+
+def write_zzsm(work_dir):
+    f = open(os.path.join(work_dir, "readme.tex"), "w", encoding="utf-8")
+    f.write("\\startReadme")
     for line in epub.ZZSM:
-        file.write(_xml_to_tex(bns, line, lang))
-        file.write("\\blank\n")
+        f.write(_xml_to_tex([], line, ebook_utils.Lang()))
+        f.write("\\blank\n")
+    f.write("\\startReadme")
 
-def _make_suttas(file: typing.TextIO, data, branch, bns, gn, lang):
+
+def _make_suttas(f, data, branch, bns, lang):
     for name, obj in data:
         new_branch = branch + [name]
         if isinstance(obj, list):
-            _make_suttas(file, obj, new_branch, bns, gn, lang)
+            _make_suttas(f, obj, new_branch, bns, lang)
         else:
-            _make_sutta(file, obj, new_branch, bns, gn, lang)
+            _make_sutta(f, obj, new_branch, bns, lang)
 
     if epub.is_leaf(data):
-        file.write("\\page")
+        f.write("\\page")
 
 
-def _make_sutta(file: typing.TextIO, obj, branch, bns, gn, lang):
+def _make_sutta(file: typing.TextIO, obj, branch, bns, lang):
     sutta_num_abo = epub.get_sutta_num_abo(obj.root)
     sutta_num_sc = epub.get_sutta_num_sc(obj.root)
     sutta_name = epub.get_sutta_name(obj.root)

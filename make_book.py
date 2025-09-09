@@ -36,7 +36,7 @@ def main():
 
     if True:
         print_temprootdir()
-        for xc in (TC(), SC()):
+        for xc in (): #(TC(), SC()):
             sn2epub.make(xc, temprootdir_td.name, books_dir, config.EPUBCHECK)
             mn2epub.make(xc, temprootdir_td.name, books_dir, config.EPUBCHECK)
             dn2epub.make(xc, temprootdir_td.name, books_dir, config.EPUBCHECK)

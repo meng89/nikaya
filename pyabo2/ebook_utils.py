@@ -1,6 +1,5 @@
 import os
 import string
-import abc
 
 import opencc
 
@@ -19,7 +18,7 @@ _table = [
 ]
 
 
-def convert2sc(s):
+def _convert2sc(s):
     if s:
         converter = opencc.OpenCC('tw2sp.json')
         return converter.convert(s)
@@ -29,7 +28,7 @@ def convert2sc(s):
 
 def convert_all(s):
     new_sc_s = ""
-    for c in convert2sc(s):
+    for c in _convert2sc(s):
         new_sc_s += _convert_punctuation(c)
     return new_sc_s
 
@@ -41,37 +40,30 @@ def _convert_punctuation(c):
     return c
 
 
-class Lang(abc.ABC):
-    @property
-    @abc.abstractmethod
-    def c(self):
-        pass
+class Lang:
+    def c(self, s):
+        return s
 
     @property
-    @abc.abstractmethod
     def xml(self):
-        pass
+        return None
 
     @property
-    @abc.abstractmethod
     def zh(self):
-        pass
+        return None
 
     @property
-    @abc.abstractmethod
     def en(self):
-        pass
+        return None
 
     @property
-    @abc.abstractmethod
     def han_version(self):
-        pass
+        return None
 
 
 class TC(Lang):
-    @property
-    def c(self):
-        return do_nothing
+    def c(self, s):
+        return s
 
     @property
     def xml(self):
@@ -91,9 +83,8 @@ class TC(Lang):
 
 
 class SC(Lang):
-    @property
-    def c(self):
-        return convert2sc
+    def c(self, s):
+        return _convert2sc(s)
 
     @property
     def xml(self):
