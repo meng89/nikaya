@@ -112,11 +112,12 @@ class SC(Lang):
         return "简体版"
 
 
-def make_cover(module, data, lang: Lang):
+def make_cover(module, data, lang: Lang, width=1600, height=2560):
     translated_date = read_mtime(data)
     filename = "{}_{}_{}_{}".format(module.name_han, lang.zh, translated_date, today())
     xhtml_filename = filename + ".xhtml"
-    image_filename = filename + ".png"
+
+    image_filename = "{}_{}x{}".format(width, height, ".png")
 
     os.makedirs(config.COVER_DIR, exist_ok=True)
 
@@ -158,7 +159,7 @@ def make_cover(module, data, lang: Lang):
 
         hti = HtI(browser_executable=config.BROWSER, output_path=config.COVER_DIR)
                   #custom_flags=["--disable-software-rasterizer"])
-        hti.screenshot(html_str=doc_str, size=(1600, 2560), save_as=image_filename)
+        hti.screenshot(html_str=doc_str, size=(width, height), save_as=image_filename)
 
     return image_path
 

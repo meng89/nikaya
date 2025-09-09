@@ -32,6 +32,7 @@ def main():
                 full_path = os.path.join(dirname, "小部(不全)", filename)
             else:
                 full_path = os.path.join(dirname, filename)
+
             os.makedirs(os.path.dirname(full_path), exist_ok=True)
             epub.write(full_path)
 

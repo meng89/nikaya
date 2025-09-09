@@ -236,7 +236,7 @@ def write_one_doc(bns, branch, doc_path, sutta_id, body, obj: xl.Xml, refs, ln, 
     assert len(serialized_nodes) <= 1
 
     a = h.ekid("a", {"class": "sutta_name"})
-    a.attrs["href"] = urllib.parse.urljoin(config.ABO_WEBSITE,get_source_page(obj.root))
+    a.attrs["href"] = urllib.parse.urljoin(config.ABO_WEBSITE, get_source_page(obj.root))
     if serialized_nodes:
         name = "{}/{}".format(serialized_nodes[0], branch[-1])
     else:
@@ -530,22 +530,22 @@ _my_mail = "observerchan@gmail.com"
 
 
 
-_fanli = (
-    "1.巴利語經文與經號均依 tipitaka.org (緬甸版)。",
+FANLI = (
+    ["1.巴利語經文與經號均依 tipitaka.org (緬甸版)。"],
 
-    "2.巴利語經文之譯詞，依拙編《簡要巴漢辭典》，詞性、語態儘量維持與巴利語原文相同，並採「直譯」原則。"
-    "譯文之「性、數、格、語態」儘量符合原文，「呼格」(稱呼；呼叫某人)以標點符號「！」表示。",
+    ["2.巴利語經文之譯詞，依拙編《簡要巴漢辭典》，詞性、語態儘量維持與巴利語原文相同，並採「直譯」原則。"
+     "譯文之「性、數、格、語態」儘量符合原文，「呼格」(稱呼；呼叫某人)以標點符號「！」表示。"],
 
-    "3.註解中作以比對的英譯，採用Bhikkhu Ñaṇamoli and Bhikkhu Bodhi,Wisdom Publication,1995年版譯本為主。",
+    ["3.註解中作以比對的英譯，採用Bhikkhu Ñaṇamoli and Bhikkhu Bodhi,Wisdom Publication,1995年版譯本為主。"],
 
-    "4.《顯揚真義》(Sāratthappakāsinī, 核心義理的說明)為《相應部》的註釋書，"
-    "《破斥猶豫》(Papañcasūdaṇī, 虛妄的破壞)為《中部》的註釋書，"
-    "《吉祥悅意》(Sumaṅgalavilāsinī, 善吉祥的優美)為《長部》的註釋書，"
-    "《滿足希求》(Manorathapūraṇī, 心願的充滿)為《增支部》的註釋書，"
-    "《勝義光明》(paramatthajotikā, 最上義的說明)為《小部/經集》等的註釋書，"
-    "《勝義燈》(paramatthadīpanī, 最上義的註釋)為《小部/長老偈》等的註釋書。",
+    ["4.《顯揚真義》(Sāratthappakāsinī, 核心義理的說明)為《相應部》的註釋書，"
+     "《破斥猶豫》(Papañcasūdaṇī, 虛妄的破壞)為《中部》的註釋書，"
+     "《吉祥悅意》(Sumaṅgalavilāsinī, 善吉祥的優美)為《長部》的註釋書，"
+     "《滿足希求》(Manorathapūraṇī, 心願的充滿)為《增支部》的註釋書，"
+     "《勝義光明》(paramatthajotikā, 最上義的說明)為《小部/經集》等的註釋書，"
+     "《勝義燈》(paramatthadīpanī, 最上義的註釋)為《小部/長老偈》等的註釋書。"],
 
-    "5.前後相關或對比的詞就可能以「；」區隔強調，而不只限於句或段落。"
+    ["5.前後相關或對比的詞就可能以「；」區隔強調，而不只限於句或段落。"]
 )
 
 def _write_fanli(bns, epub, ln, gn, lang):
@@ -554,7 +554,7 @@ def _write_fanli(bns, epub, ln, gn, lang):
     body.attrs["class"] = "fanli"
     _h1 = body.ekid("h1", {"class": "title"}, ["凡例"])
 
-    for one in _fanli:
+    for one in FANLI:
         _p = body.ekid("p", kids=_xml_es_to_html(bns, [one], html, ln, gn, doc_path, lang))
 
     htmlstr = xl.Xml(root=html).to_str(do_pretty=True, dont_do_tags=["p"])
@@ -563,7 +563,7 @@ def _write_fanli(bns, epub, ln, gn, lang):
     epub.mark.kids.append(epubpacker.Mark("凡例", doc_path))
 
 
-_lines = (
+ZZSM = (
     ["此汉译佛经数据来源于", xl.Element("a", {"href": "https://agama.buddhason.org"}, ["莊春江讀經站"]),"，一切相关权利归于译者。"],
     ["原译文是繁体中文，简体版由程序转换，可能会出现转换错误。电子书目录以及经文标题部分可能有一些修改，正文部分与原页面相同，但可能丢失了一部分链接和格式等元数据。",
      "页面标题的经号里，以小数点隔离书籍缩写与数字的是原经号，如：Ud.1。无小数点的是 suttacentral.net 网站风格的经号，如：Ud 1.1，点击可以打开其它语言版本的页面。",
@@ -576,19 +576,19 @@ _lines = (
 
 def _write_readme(bns, epub, ln, gn, lang):
     doc_path = "readme.xhtml"
-    html, body = make_doc(doc_path, lang, "电子书说明")
+    html, body = make_doc(doc_path, lang, lang.c("製作說明"))
 
     body.attrs["class"] = "readme"
 
-    _h1 = body.ekid("h1", {"class": "title"}, ["电子书说明"])
-    for line in _lines:
+    _h1 = body.ekid("h1", {"class": "title"}, [lang.c("製作說明")])
+    for line in ZZSM:
         _p = body.ekid("p", kids=_xml_es_to_html(bns, line, html, ln, gn, doc_path, lang))
 
 
     htmlstr = xl.Xml(root=html).to_str(do_pretty=True, dont_do_tags=["p"])
     epub.userfiles[doc_path] = htmlstr
     epub.spine.append(doc_path)
-    epub.mark.kids.append(epubpacker.Mark(lang.c("电子书说明"), doc_path))
+    epub.mark.kids.append(epubpacker.Mark(lang.c("製作說明"), doc_path))
 
 
 def get_uuid(s):

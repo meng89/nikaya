@@ -181,9 +181,19 @@
 
 \startstandardmakeup
 \bookmark[tobias]{封面}
-
-\externalfigure[cover][width=\paperwidth, height=\paperheight]
-
+  \raggedcenter
+  \vfill
+  \blank[-3*big]
+  \definedfont[SansBold at 140pt]\setstrut \strut \doifmodeelse{sc}{相应部}{相應部}
+  \blank[-3*big]
+  \definedfont[SansBold at 45pt]\setstrut \strut Saṃyutta ~ Nikāya
+  \blank[3*big]
+  \definedfont[Sans at 25pt] \setstrut \strut \doifmodeelse{sc}{机转简体版}{傳統中文版}
+  \blank[18*big]
+  \definedfont[Sans at 20pt] \setstrut \strut 莊春江 ~ \doifmodeelse{sc}{译}{譯}
+  \blank[-2*small]
+  \definedfont[SansBold at 21pt] \setstrut \strut $date
+  \vfill
 \stopstandardmakeup
 
 
