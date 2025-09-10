@@ -1,0 +1,39 @@
+\setupinteraction[state=start,focus=standard]
+
+\setupinteractionscreen[option=bookmark]
+\enabledirectives[references.bookmarks.preroll]
+
+% 第二个方括号里的放置需要被看到的章节类型。这样理解：需要被看到，所以把上级展开。ps：上级的上级不会被展开。
+\placebookmarks[title,subject,subsubject][subsubject]
+
+\setuphead[title][incrementnumber=list]
+\setuphead[subject][incrementnumber=list]
+\setuphead[subsubject][incrementnumber=list]
+
+\usecolors[crayola]
+
+\define[2]\suttaNumLink{\setupinteraction[color=MidnightBlue, contrastcolor=MidnightBlue]\in{#1}[#2]}
+
+\starttext
+  \starttitle[title=title1]
+
+    \startsubject[title=subject1]
+
+      \startsubsubject[title=subsubject1, reference=xxx]
+      \stopsubsubject
+
+      \startsubsubject[title=subsubject2, reference=SNx1x1]
+
+      %{\setupinteraction[color=PineGreen]\at{sn 1.1}[xxx]}
+      \suttaNumLink{sn_1_1}{SNx1x1}
+      %\in{sn }{kk}[SN.1.1]
+
+      \stopsubsubject
+
+    \stopsubject
+
+
+  \stoptitle
+
+
+\stoptext
