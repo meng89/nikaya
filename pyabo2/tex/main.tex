@@ -60,51 +60,16 @@
 
 %%%%%%%%%%%%
 % PDF书签
-\definelist[tobias]
+%\definelist[tobias]
 
-\placebookmarks[appendix,part,chapter,section,subsection,tobias][chapter][number=no]
+%\placebookmarks[appendix,part,chapter,section,subsection,tobias][chapter][number=no]
+
+\placebookmarks[title,subject,subsubject,subsubsubject,subsubsubsubject,subsubsubsubsubject]
 
 \setupinteractionscreen[option=bookmark]
 \enabledirectives[references.bookmarks.preroll]
 
-
-\defineresetset[default][1,0,0][1] %% reset part,  but not chapter, section
-\setuphead[sectionresetset=default]
-
-\defineheadplacement[activityhead][vertical]#1#2{%
-  \labeltext{\currenthead}\hskip\numberheaddistance #1%
-}
-% PDF书签
-%%%%%%%%%%%
-
-
-\setuphead[part]      [number=no,alternative=middle,style=\tfd\bf\ss,placehead=yes,header=empty,footer=empty]
-
-
-%为什么有下面这一大段，是为了自定义标题格式，为了分开number和名字，为了自动给sutta加上 SN.x.x 这样的label
-\defineheadalternative
-  [centered]
-  [alternative=vertical,
-   renderingsetup=headrenderings:centered]
-\startsetups[headrenderings:centered]
-    \vbox {
-        \headsetupspacing
-        \veryraggedcenter
-        \let\\\endgraf
-        \let\crlf\endgraf
-        \fakeheadnumbercontent
-        % \headnumbercontent -> 1.1.1 ，不喜欢这个样式
-        \begstrut
-        \somenamedheadnumber{chapter}{current}. \headtextcontent
-        \endstrut
-    }
-\stopsetups
-
-
-\setuphead[chapter]   [alternative=centered, style=\tfc\bf\ss,page=no,header=empty,footer=empty]
-\setuphead[section]   [number=no,alternative=middle,style=\tfb\bf\ss]
-\setuphead[subsection][style=\tf\bf\ss,]
-
+\enabledirectives[backend.pdf.fixhighlight]
 
 %\lettertilde
 \define[3]\pian{\part[title=#1,bookmark={#1(#2~#3)},]}
@@ -140,32 +105,6 @@
 \define[1]\NoteKeywordBhikkhuNanamoli{{#1}}
 
 
-\define\newline{\par}
-
-\definestartstop[Readme][style=\tfa,]
-
-\definestartstop[Note]
-  [style=\small,
-      before=\blank\startpacked,
-   after=\stoppacked\blank]
-
-
-\definesymbol [none] []
-\defineitemgroup [noteitems]
-\setupitemgroup [noteitems][each] [packed] [distance=-10em,symbol=none,inner={\switchtobodyfont[10pt]}]
-
-
-\definemakeup [homage] [align=middle, style=\tfd,]
-
-%%%%%%
-% 附录
-\definehead
-  [appendix]
-  [part]
-  [style={\tfb \bf \ss},
-      before={},
-      after={\blank[3*big]},
-      number=no,]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \startdocument
@@ -176,29 +115,15 @@
 \stopstandardmakeup
 
 
-\startstandardmakeup
-\part{凡例}
 \input{fanli.tex}
-\stopstandardmakeup
 
 
-\startmakeup[homage]
-
-\doifmodeelse{sc}{\bookmark[tobias]{礼敬世尊}}{\bookmark[tobias]{禮敬世尊}}
-
-\vfill
-\blank[-25*big]
 $homage
-\vfill
-\stopmakeup
-
 
 \input{$suttas}
-\page
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 附录一：注解
-\appendix[title={\doifmodeelse{sc}{注解}{註解}}]
 
 \setupheader
   [text]
@@ -211,15 +136,7 @@ $homage
    after={\stopframed},
   ]
 
-\setupheadertexts[]
-\setupheadertexts[{\tf\bf\ss \getmarking[appendix]}][]
-\setupfootertexts[]
-\setupfootertexts[{\setupinteraction[color=Black]
-                   \goto{https://agama.buddhason.org}[url(https://agama.buddhason.org)]}]
-                 [{\tfa \it \pagenumber}]
 
-
-\appendix[title={制作说明}]
 \input{readme.tex}
 
 \stopdocument

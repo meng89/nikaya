@@ -14,8 +14,26 @@
 
 \define[2]\suttaNumLink{\setupinteraction[color=MidnightBlue, contrastcolor=MidnightBlue]\in{#1}[#2]}
 
+
+\enabledirectives[backend.pdf.fixhighlight]
+
+\definecolor[pdfhighlight:Hraban][r=.8,g=1,b=1]
+\definecolor[pdfhighlight:Hans]  [r=1,g=.8,b=1]
+\definecolor[pdfhighlight:Ton]   [r=1,g=1,b=.8]
+
+\setupcomment[
+  author=Editor,
+  color=pdfhighlight:Editor,
+  location=rightmargin,
+  symbol=Comment,
+]
+
+
 \starttext
-  \starttitle[title=title1]
+  \starttitle[
+      title=\goto{SN 1.1}[url(https://suttacentral.net/SN1.1)]/SN.1.1 \goto{ztxy/blzdgj}[url(https://agama.buddhason.org/SN/SN0001.htm)],
+      bookmark=blzdgj,
+  ]
 
     \startsubject[title={\goto{xixihaha}[url(https://github.com/meng89/nikaya)]}, bookmark=666]
 
@@ -35,5 +53,26 @@
 
   \stoptitle
 
+ test \PDFhighlight[Hraban][My comment]{\samplefile{tufte}} test \blank
+
+ test \PDFhighlight[Hans]{what a mess} test \page
+
+ test \PDFhighlight[ ][I would prefer the other one.]{\samplefile{ward}} test \page
+
+Here is an example: by saying
+
+
+Regular 1
+\startcomment
+1. This won't be published, but attached as a comment
+\stopcomment
+Regular 2
+\startcomment[commentname]
+2. This won't be published, but attached as a comment
+\stopcomment
+Regular 3
+\startcomment[commentname][]
+3. This won't be published, but attached as a comment
+\stopcomment
 
 \stoptext

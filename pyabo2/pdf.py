@@ -66,6 +66,7 @@ def build_pdf(full_path, data, module, lang, size):
             input("出错！")
         else:
             print("完成！")
+            input("hh")
             shutil.copy(os.path.join(work_dir, "main.pdf"), full_path)
             if not config.DEBUG:
                 os.removedirs(work_dir)
@@ -154,10 +155,10 @@ _map = {
 }
 def startsec(depth, title, bookmark, reference=None):
     s =  "\\start{}[\n".format(_map[depth])
-    s += "    title={},\n".format(title)
-    s += "    bookmark={},\n".format(bookmark)
+    s += "    title={{{}}},\n".format(title)
+    s += "    bookmark={{{}}},\n".format(bookmark)
     if reference:
-        s += "    reference={},\n".format(reference)
+        s += "    reference={{{}}},\n".format(reference)
     s += "]\n"
     return s
 
@@ -184,13 +185,16 @@ def write_data(f, data_name, data, depth, parent_branch, bns, lang):
 
 
     if epub.is_leaf(data):
-        f.write("\\page\n")
+        pass
+        #f.write("\\page\n")
 
 
 def write_sutta(file: typing.TextIO, obj, depth, branch, bns, lang):
     sutta_num_abo = epub.get_sutta_num_abo(obj.root)
     sutta_num_sc = epub.get_sutta_num_sc(obj.root)
     sutta_name = epub.get_sutta_name(obj.root)
+
+    source_url = urllib.parse.urljoin(config.ABO_WEBSITE, epub.get_source_page(obj.root))
 
     if sutta_num_sc is not None:
         #url = "https://suttacentral.net/" + sutta_num_sc.replace(" ","")
@@ -218,12 +222,11 @@ def write_sutta(file: typing.TextIO, obj, depth, branch, bns, lang):
     else:
         name = sutta_name
 
-    tex_name = ("\\goto{{{}}}[url()]".format(name,
-                                             urllib.parse.urljoin(config.ABO_WEBSITE, epub.get_source_page(obj.root))))
+    tex_name = ("\\goto{{{}}}[url({})]".format(name, source_url))
 
     title = num + " " + tex_name
 
-    file.write(startsec(depth, title, tex_name))
+    file.write(startsec(depth, title, sutta_name))
 
     xml_body = obj.root.find_descendants("body")[0]
     for xml_p in xml_body.find_descendants("p"):
@@ -248,10 +251,13 @@ def _xml_to_tex(bns, es, lang, root=None):
                         s += "\\footnote{" + _xml_to_tex(bns, _note.kids, lang, root) + "}"
 
             elif x.tag == "gn":
-                s += _xml_to_tex(bns, x.kids, lang, root)
+                _text = _xml_to_tex(bns, x.kids, lang, root)
+                _text = lang.c(_text)
                 gn = note.get_gn()
-                es = gn.get_es(x.attrs["id"])
-                s += "\\footnote{" + _xml_to_tex(bns, es, lang, root) + "}"
+                _note = gn.get_es(x.attrs["id"])
+                _note = _xml_to_tex(bns, _note, lang, root)
+                _note = lang.c(_note)
+                s += "\\PDFhighlight[{}][{}]{{{}}}".format(lang.c("註解"), _note, _text)
         else:
             print()
             print(x.to_str())
