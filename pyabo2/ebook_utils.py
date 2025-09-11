@@ -104,11 +104,11 @@ class SC(Lang):
 
 
 def make_cover(module, data, lang: Lang, width=1600, height=2560):
-    translated_date = read_mtime(data)
-    filename = "{}_{}_{}_{}".format(module.name_han, lang.zh, translated_date, today())
+    # translated_date = read_mtime(data)
+    filename = "{}_{}_{}".format(module.name_han, lang.zh, today())
     xhtml_filename = filename + ".xhtml"
 
-    image_filename = "{}_{}x{}".format(width, height, ".png")
+    image_filename = "{}_{}x{}.png".format(filename, width, height)
 
     os.makedirs(config.COVER_DIR, exist_ok=True)
 
@@ -141,7 +141,7 @@ def make_cover(module, data, lang: Lang, width=1600, height=2560):
                                pali=module.name_pali,
                                version=lang.han_version,
                                translator="莊春江" + lang.c("譯"),
-                               translated=lang.c(translated_date + " 更新"),
+                               # translated=lang.c(translated_date + " 更新"),
                                created=lang.c(today() + " 製作"),
                                )
 

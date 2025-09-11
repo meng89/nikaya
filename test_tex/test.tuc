@@ -202,9 +202,9 @@ utilitydata.structures.lists.collected={
    ["used"]="standard",
   },
   ["titledata"]={
-   ["bookmark"]="subject1",
+   ["bookmark"]="666",
    ["label"]="section",
-   ["title"]="subject1",
+   ["title"]="\\goto {xixihaha}[url(https://github.com/meng89/nikaya)]",
   },
  },
  {
@@ -266,7 +266,8 @@ if not utilitydata.structures then utilitydata.structures = { } end
 if not utilitydata.structures.references then utilitydata.structures.references = { } end
 
 utilitydata.structures.references.referred={
- { 1, 2 },
+ { 1, 1 },
+ { 1, 3 },
 }
 
 if not utilitydata.job then utilitydata.job = { } end

@@ -32,7 +32,7 @@ FONTS_DIR = "/mnt/data/software/fonts"
 # FONTS_DIR = r"D:\fonts"
 
 # ConTeXt 目录
-CONTEXT_BIN_PATH = "~/context-lmtx/tex/texmf-linux-64/bin"
+CONTEXT_BIN_PATH = "/mnt/data/software/context"
 # CONTEXT_BIN_PATH = r"D:\context-win64\tex\texmf-win64\bin"
 
 # EPUBCheck 路径
@@ -49,3 +49,5 @@ LOG_PATH = os.path.join(PROJECT_ROOT, "abo_log.txt")
 #BROWSER = "/opt/firefox/firefox"
 BROWSER = "google-chrome-stable"
 COVER_DIR = os.path.join(_RESOURCE_DIR, "Cover")
+
+DEBUG = True

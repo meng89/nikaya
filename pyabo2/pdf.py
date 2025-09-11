@@ -2,6 +2,8 @@ import typing
 import re
 import os
 import string
+import subprocess
+import shutil
 
 from datetime import datetime
 
@@ -13,13 +15,9 @@ import config
 
 from . import epub, note, ebook_utils
 
-main_filename = "main.tex"
-suttas_filename = "suttas.tex"
-localnotes_filename = "localnotes.tex"
-globalnotes_filename = "globalnotes.tex"
-fonttex_filename = "type-imp-myfonts.tex"
-creator_note_filename = "creator_note.tex"
-read_note_filename = "read_note.tex"
+MAIN = "main.tex"
+FONT = "type-imp-myfonts.tex"
+SUTTAS = "suttas.tex"
 
 paper_map = {
     "A4": (2480, 3508)
@@ -30,6 +28,8 @@ def build_pdf(full_path, data, module, lang, size):
     bns = [module.short]
     work_dir = full_path + "_work"
     out_dir = full_path + "_out"
+    os.makedirs(work_dir, exist_ok=True)
+    os.makedirs(out_dir, exist_ok=True)
 
     branch = []
     w, h = paper_map[size]
@@ -37,19 +37,49 @@ def build_pdf(full_path, data, module, lang, size):
 
     write_main(work_dir, module, bns, lang, size, cover_image)
 
-    f = open(os.path.join(work_dir, "suttas.tex"), "w", encoding="utf-8")
-    _make_suttas(f, data, branch, bns, lang)
+    f = open(os.path.join(work_dir, SUTTAS), "w")
+    write_data(f, module.short, data, 1, branch, bns, lang)
     f.close()
 
-    write_fanli(work_dir)
+    write_fontstex(work_dir)
+
+    write_fanli(work_dir, bns, lang)
     write_zzsm(work_dir)
 
+    my_env = os.environ.copy()
+    if os.name == "posix":
+        my_env["PATH"] = os.path.expanduser(config.CONTEXT_BIN_PATH) + ":" + my_env["PATH"]
+    elif os.name == "nt":
+        my_env["PATH"] = os.path.expanduser(config.CONTEXT_BIN_PATH) + ";" + my_env["PATH"]
 
-def write_fontstex(work_dir, fonts_dir):
+    compile_cmd = "context --path={} {}/{} --mode={}".format(work_dir, work_dir, MAIN, lang.en)
+
+    stdout_file = open(os.path.join(out_dir, "cmd_stdout"), "w", encoding="utf-8")
+    stderr_file = open(os.path.join(out_dir, "cmd_stderr"), "w", encoding="utf-8")
+
+    def _run():
+        print("运行:", compile_cmd, end=" ", flush=True)
+        p = subprocess.Popen(compile_cmd, cwd=out_dir, shell=True, env=my_env,
+                             stdout=stdout_file, stderr=stderr_file)
+        p.communicate()
+        if p.returncode != 0:
+            input("出错！")
+        else:
+            print("完成！")
+            shutil.copy(os.path.join(work_dir, "main.pdf"), full_path)
+            if not config.DEBUG:
+                os.removedirs(work_dir)
+                os.removedirs(out_dir)
+    _run()
+    stdout_file.close()
+    stderr_file.close()
+
+
+def write_fontstex(work_dir):
     fonttex = open(os.path.join(config.TEX_DIR, "type-imp-myfonts.tex"), "r", encoding="utf-8").read()
     replace_map = {}
     for fontname in re.findall("file:(.*(?:ttf|otf))", fonttex):
-        realfontpath = findfile(fonts_dir, os.path.basename(fontname))
+        realfontpath = findfile(config.FONTS_DIR, os.path.basename(fontname))
         if os.name == "nt":
             realfontpath = ntrelpath(realfontpath, work_dir)
         replace_map[fontname] = realfontpath
@@ -57,7 +87,7 @@ def write_fontstex(work_dir, fonts_dir):
     for fontname, realfontpath in replace_map.items():
         fonttex = fonttex.replace(fontname, realfontpath.replace("\\", "/"))
 
-    with open(os.path.join(work_dir, fonttex_filename), "w", encoding="utf-8") as new_fonttex_file:
+    with open(os.path.join(work_dir, FONT), "w", encoding="utf-8") as new_fonttex_file:
         new_fonttex_file.write(fonttex)
 
 def findfile(start, name):
@@ -79,7 +109,7 @@ def ntrelpath(path1, path2):
 def write_main(work_dir, module, bns, lang, size, cover_image):
 
     # homage = dopdf.join_to_tex(nikaya.homage_line, bns, c)
-    main_t = open(os.path.join(config.TEX_DIR, main_filename), "r", encoding='utf-8').read()
+    main_t = open(os.path.join(config.TEX_DIR, MAIN), "r", encoding='utf-8').read()
     date = datetime.today().strftime('%Y-%m-%d')
     main = string.Template(main_t).substitute(
         size=size,
@@ -89,44 +119,75 @@ def write_main(work_dir, module, bns, lang, size, cover_image):
         date=date,
 
         cover_image=cover_image,
-        suttas=suttas_filename,
+        suttas=SUTTAS,
         homage=lang.c("對那位世尊、阿羅漢、遍正覺者禮敬"),
     )
-    f = open(os.path.join(work_dir, main_filename), "w", encoding="utf-8")
+    f = open(os.path.join(work_dir, MAIN), "w", encoding="utf-8")
     f.write(main)
 
 
-def write_fanli(work_dir):
+def write_fanli(work_dir, bns, lang):
     f = open(os.path.join(work_dir, "fanli.tex"), "w", encoding="utf-8")
-    f.write("\\startReadme")
+    f.write(startsec(1, "凡例", "凡例"))
     for line in epub.FANLI:
-        f.write(line)
-        f.write("\\blank")
-    f.write("\\endReadme")
+        f.write(_xml_to_tex(bns, line, lang))
+        f.write("\n\\blank\n\n")
+    f.write(stopsec(1))
 
 
 def write_zzsm(work_dir):
     f = open(os.path.join(work_dir, "readme.tex"), "w", encoding="utf-8")
-    f.write("\\startReadme")
+    f.write(startsec(1, "制作说明", "制作说明"))
     for line in epub.ZZSM:
         f.write(_xml_to_tex([], line, ebook_utils.Lang()))
-        f.write("\\blank\n")
-    f.write("\\startReadme")
+        f.write("\n\\blank\n")
+    f.write(stopsec(1))
 
 
-def _make_suttas(f, data, branch, bns, lang):
+_map = {
+    1: "title",
+    2: "subject",
+    3: "subsubject",
+    4: "subsubsubject",
+    5: "subsubsubsubject",
+    6: "subsubsubsubsubject",
+}
+def startsec(depth, title, bookmark, reference=None):
+    s =  "\\start{}[\n".format(_map[depth])
+    s += "    title={},\n".format(title)
+    s += "    bookmark={},\n".format(bookmark)
+    if reference:
+        s += "    reference={},\n".format(reference)
+    s += "]\n"
+    return s
+
+def stopsec(depth):
+    return "\\stop{}\n\n".format(_map[depth])
+
+
+def write_data(f, data_name, data, depth, parent_branch, bns, lang):
+    new_branch = parent_branch + [data_name]
+
     for name, obj in data:
-        new_branch = branch + [name]
         if isinstance(obj, list):
-            _make_suttas(f, obj, new_branch, bns, lang)
+            if epub.need_attach_range(name, obj):
+                start, end = epub.read_range(obj)
+                bookmark = "{}({}～{})".format(name, start, end)
+            else:
+                bookmark = name
+            f.write(startsec(depth, name, bookmark))
+            write_data(f, name, obj, depth + 1, new_branch, bns, lang)
+            f.write(stopsec(depth))
+
         else:
-            _make_sutta(f, obj, new_branch, bns, lang)
+            write_sutta(f, obj, depth + 1, new_branch, bns, lang)
+
 
     if epub.is_leaf(data):
-        f.write("\\page")
+        f.write("\\page\n")
 
 
-def _make_sutta(file: typing.TextIO, obj, branch, bns, lang):
+def write_sutta(file: typing.TextIO, obj, depth, branch, bns, lang):
     sutta_num_abo = epub.get_sutta_num_abo(obj.root)
     sutta_num_sc = epub.get_sutta_num_sc(obj.root)
     sutta_name = epub.get_sutta_name(obj.root)
@@ -146,36 +207,30 @@ def _make_sutta(file: typing.TextIO, obj, branch, bns, lang):
         num = ""
 
     serialized_nodes = []
-    for node in branch[0, -1]:
+    for node in branch:
         m = re.match(r"^\d+\.(.+)$", node)
         if m:
             serialized_nodes.append(m.group(1))
     assert len(serialized_nodes) <= 1
 
     if serialized_nodes:
-        name = "{}/{}".format(serialized_nodes[0], branch[-1])
+        name = "{}/{}".format(serialized_nodes[0], sutta_name)
     else:
-        name = branch[-1]
-    if name is not None:
-        name = "\\goto{{{}}}[url()]".format(name,
-                                            urllib.parse.urljoin(config.ABO_WEBSITE, epub.get_source_page(obj.root)))
+        name = sutta_name
 
-    #file.write("\\startcenter")
+    tex_name = ("\\goto{{{}}}[url()]".format(name,
+                                             urllib.parse.urljoin(config.ABO_WEBSITE, epub.get_source_page(obj.root))))
 
-    file.write("\\subsubsubject{")
+    title = num + " " + tex_name
 
-    if num:
-        file.write(num)
-        file.write(" ")
-    file.write(name)
-
-    file.write("}")
-    #file.write("\\endcenter")
+    file.write(startsec(depth, title, tex_name))
 
     xml_body = obj.root.find_descendants("body")[0]
     for xml_p in xml_body.find_descendants("p"):
         file.write(_xml_to_tex(bns, xml_p.kids, lang, obj.root))
         file.write("\n\n")
+
+    file.write(stopsec(depth))
 
 
 def _xml_to_tex(bns, es, lang, root=None):
@@ -202,3 +257,11 @@ def _xml_to_tex(bns, es, lang, root=None):
             print(x.to_str())
             raise Exception
     return s
+
+
+def get_max_depth(data, depth = 0):
+    max_depth = 0
+    for _, obj in data:
+        if isinstance(obj, list):
+            max_depth = max(max_depth, get_max_depth(obj, depth + 1))
+    return max_depth

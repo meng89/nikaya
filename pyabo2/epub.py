@@ -54,7 +54,7 @@ def build_epub(data, module, lang):
     _write_fanli(bns, epub, ln, gn, lang)
     _write_homage(bns, module, epub.mark.kids, docs, ln, gn, lang)
 
-    _make_suttas(bns, module, epub.mark.kids, docs, refs, [], data, ln, gn, lang)
+    _make_suttas(bns, module, epub.mark.kids, docs, refs, [], module.short, data, ln, gn, lang)
 
     _inbookref_to_href(docs)
 
@@ -126,67 +126,47 @@ def _get_id(id_, e: xl.Element):
 #     2.天子相應
 
 
-def _make_suttas(bns, module, marks: list[epubpacker.Mark], docs, refs, branch: list, data, ln, gn, lang):
+def _make_suttas(bns, module, marks: list[epubpacker.Mark], docs, refs, parent_branch: list, data_name, data, ln, gn, lang):
     first_doc_path = None
+    if data_name is not None:
+        my_branch = parent_branch + [data_name]
+    else:
+        my_branch = parent_branch[:]
 
     for name, obj in data:
         if isinstance(obj, list):
-            new_branch = branch + [name]
+            new_branch = my_branch + [name]
+
             if need_attach_range(name, obj):
                 start, end = read_range(obj)
                 name2 = "{}({}～{})".format(name, start, end)
             else:
                 name2 = name
+
             mark = epubpacker.Mark(lang.c(name2))
             marks.append(mark)
 
             if is_leaf(obj) and need_join(obj): # 这是最后一个目录 且 短经很多
+                _branch = my_branch + [name]
                 doc_path = posixpath.join("", *new_branch) + ".xhtml"
                 html, body = make_doc(doc_path, lang, new_branch[-1])
-                #h = body.ekid("h{}".format(len(new_branch)))
-                #h.kids.append(new_branch[-1])
 
-                for index, (sub_name, sub_obj) in enumerate(obj, start=1):
-                    title = get_sutta_name(sub_obj.root)
-                    start, end = get_sutta_range(sub_obj.root)
-                    if start == end:
-                        _range = start
-                    else:
-                        _range = start + "～" + end
-
-                    new_branch2 = new_branch + [title]
-                    #input(new_branch2)
-
-                    sutta_id = "sutta{}".format(index)
-                    write_one_doc(bns, new_branch2, doc_path, sutta_id, body, sub_obj, refs, ln, gn, lang)
-
-                    sutta_mark = epubpacker.Mark("{}.{}".format(_range, lang.c(title)), "{}#{}".format(doc_path, sutta_id))
-                    #sutta_mark.href = "{}#{}".format(doc_path, sutta_id)
-                    #marks.append(sutta_mark)
+                for count, (sub_name, sub_obj) in enumerate(obj, start=1):
+                    sutta_id = "sutta{}".format(count)
+                    _, _, sutta_mark = write_sutta(bns, parent_branch, sutta_id, sub_obj, refs, ln, gn, lang, html, body, doc_path)
                     mark.kids.append(sutta_mark)
 
                 docs.append((doc_path, html))
 
-
             else:
-                doc_path = _make_suttas(bns, module, mark.kids, docs, refs, new_branch, obj, ln, gn, lang)
+                doc_path = _make_suttas(bns, module, mark.kids, docs, refs, my_branch, name, obj, ln, gn, lang)
             mark.href = doc_path
 
 
         else:
-            title = get_sutta_name(obj.root)
-            start, end = get_sutta_range(obj.root)
-            if start == end:
-                _range = start
-            else:
-                _range = start + "～" + end
-
-            new_branch = branch + [title]
-            doc_path = posixpath.join("",*new_branch) + ".xhtml"
-            html, body = make_doc(doc_path, lang, title)
-            write_one_doc(bns, new_branch, doc_path, "sutta1", body, obj, refs, ln, gn, lang)
+            doc_path, html, mark = write_sutta(bns, my_branch, "sutta1", obj, refs, ln, gn, lang)
             docs.append((doc_path, html))
-            marks.append(epubpacker.Mark("{}.{}".format(_range, lang.c(title)), href=doc_path + "#sutta1"))
+            marks.append(mark)
 
         if first_doc_path is None:
             first_doc_path = doc_path
@@ -195,10 +175,16 @@ def _make_suttas(bns, module, marks: list[epubpacker.Mark], docs, refs, branch: 
 
 
 
-def write_one_doc(bns, branch, doc_path, sutta_id, body, obj: xl.Xml, refs, ln, gn, lang):
-    level = len(branch)
-    if level < 3:
-        level = 3
+def write_sutta(bns, parent_branch, sutta_id, obj: xl.Xml, refs, ln, gn, lang, html=None, body=None, doc_path=None):
+    sutta_name = get_sutta_name(obj.root)
+    my_branch = parent_branch + [sutta_name]
+
+    if doc_path is None:
+        doc_path = posixpath.join("",*my_branch) + ".xhtml"
+        html, body = make_doc(doc_path, lang, sutta_name)
+
+    level = max(len(my_branch), 3)
+    
     h = body.ekid("h" + str(level))
     h.attrs["class"] = "sutta_title"
     h.attrs["id"] = sutta_id
@@ -207,7 +193,6 @@ def write_one_doc(bns, branch, doc_path, sutta_id, body, obj: xl.Xml, refs, ln, 
 
     sutta_num_abo = get_sutta_num_abo(obj.root)
     sutta_num_sc = get_sutta_num_sc(obj.root)
-
 
     if sutta_num_sc is not None:
         sc_a = xl.Element("a", {"href": "https://suttacentral.net/" + sutta_num_sc.replace(" ","")}, [sutta_num_sc])
@@ -227,9 +212,9 @@ def write_one_doc(bns, branch, doc_path, sutta_id, body, obj: xl.Xml, refs, ln, 
     if sutta_num_abo and sutta_num_sc:
         h.kids.append(sne)
         h.kids.append("　")
-
+#####################################################
     serialized_nodes = []
-    for node in branch[0: -1]:
+    for node in parent_branch:
         m = re.match(r"^\d+\.(.+)$", node)
         if m:
             serialized_nodes.append(m.group(1))
@@ -238,9 +223,9 @@ def write_one_doc(bns, branch, doc_path, sutta_id, body, obj: xl.Xml, refs, ln, 
     a = h.ekid("a", {"class": "sutta_name"})
     a.attrs["href"] = urllib.parse.urljoin(config.ABO_WEBSITE, get_source_page(obj.root))
     if serialized_nodes:
-        name = "{}/{}".format(serialized_nodes[0], branch[-1])
+        name = "{}/{}".format(serialized_nodes[0], sutta_name)
     else:
-        name = branch[-1]
+        name = sutta_name
 
     a.kids.append(lang.c(name))
 
@@ -248,6 +233,16 @@ def write_one_doc(bns, branch, doc_path, sutta_id, body, obj: xl.Xml, refs, ln, 
     for xml_p in xml_body.find_descendants("p"):
         html_p = body.ekid("p")
         html_p.kids.extend(_xml_es_to_html(bns, xml_p.kids, obj.root, ln, gn, doc_path, lang))
+
+
+    start, end = get_sutta_range(obj.root)
+    if start == end:
+        _range = start
+    else:
+        _range = start + "～" + end
+
+    mark = epubpacker.Mark("{}.{}".format(_range, lang.c(sutta_name)), href="{}#{}".format(doc_path, sutta_id))
+    return doc_path, html, mark
 
 
 ES = list[xl.Element | str]
