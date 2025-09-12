@@ -36,9 +36,9 @@
    after={\stopframed},
   ]
 \setupheadertexts[]
-\setupheadertexts[{\tf\bf\ss \somenamedheadnumber{chapter}{current}. \getmarking[chapter]}][]
+%\setupheadertexts[{\tf\bf\ss \somenamedheadnumber{chapter}{current}. \getmarking[chapter]}][]
 \setupfootertexts[]
-\setupfootertexts[{\ss \doifmodeelse{sc}{点击标题可打开最新修订经文网页}{點擊標題閱讀最新訂正經文}}][{\tfa \it \pagenumber}]
+\setupfootertexts[][{\tfa \it \pagenumber}]
 % 页脚页眉
 %%%%%%%%%%%
 
@@ -65,6 +65,13 @@
 %\placebookmarks[appendix,part,chapter,section,subsection,tobias][chapter][number=no]
 
 \placebookmarks[title,subject,subsubject,subsubsubject,subsubsubsubject,subsubsubsubsubject]
+\setuphead[title][incrementnumber=list]
+\setuphead[subject][incrementnumber=list]
+\setuphead[subsubject][incrementnumber=list]
+\setuphead[subsubsubject][incrementnumber=list]
+\setuphead[subsubsubsubject][incrementnumber=list]
+\setuphead[subsubsubsubsubject][incrementnumber=list]
+
 
 \setupinteractionscreen[option=bookmark]
 \enabledirectives[references.bookmarks.preroll]
@@ -105,15 +112,32 @@
 \define[1]\NoteKeywordBhikkhuNanamoli{{#1}}
 
 
+\definecolor[pdfhighlight:莊春江][r=1,g=1,b=1]
+
+
+
+\useexternalfigure[cover][$cover_image]
+\defineoverlay[cover][{\externalfigure[cover]}]
+
+\startsetups Background:cover
+\setupbackgrounds[page][background=cover]
+\stopsetups
+
+\startsetups Background:off
+% 只要把 background 设置成无法识别的，就会没有背景。
+\setupbackgrounds[page][background=laskjfsalkfjasldfkjlaksfjdaslkfjlasdkfjaslkfjaslkfjslkdjflaskjdf]
+\stopsetups
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \startdocument
 
+\setups[Background:cover]
 
 \startstandardmakeup
-\externalfigure[$cover_image][width=\paperwidth, height=\paperheight]
+
 \stopstandardmakeup
 
+\setups[Background:off]
 
 \input{fanli.tex}
 

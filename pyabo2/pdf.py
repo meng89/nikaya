@@ -245,10 +245,19 @@ def _xml_to_tex(bns, es, lang, root=None):
         elif isinstance(x, xl.Element):
             if x.tag == "ln":
                 assert root is not None
-                s += _xml_to_tex(bns, x.kids, lang, root)
-                for _note in root.find_descendants("notes")[0].kids:
-                    if _note.attrs.get("id") == x.attrs["id"]:
-                        s += "\\footnote{" + _xml_to_tex(bns, _note.kids, lang, root) + "}"
+                #s += _xml_to_tex(bns, x.kids, lang, root)
+                _text = _xml_to_tex(bns, x.kids, lang, root)
+                _text = lang.c(_text)
+                _note = None
+                for _note_e in root.find_descendants("notes")[0].kids:
+                    if _note_e.attrs.get("id") == x.attrs["id"]:
+                        _note = _xml_to_tex(bns, _note_e.kids, lang, root)
+                        _note = lang.c(_note)
+                        #s += "\\footnote{" + _xml_to_tex(bns, _note.kids, lang, root) + "}"
+                if _note:
+                    s += "\\PDFhighlight[莊春江][{}]{{{}}}".format(_note, _text)
+                else:
+                    s += _text
 
             elif x.tag == "gn":
                 _text = _xml_to_tex(bns, x.kids, lang, root)
@@ -257,7 +266,8 @@ def _xml_to_tex(bns, es, lang, root=None):
                 _note = gn.get_es(x.attrs["id"])
                 _note = _xml_to_tex(bns, _note, lang, root)
                 _note = lang.c(_note)
-                s += "\\PDFhighlight[{}][{}]{{{}}}".format(lang.c("註解"), _note, _text)
+                #lang.c("註解")
+                s += "\\PDFhighlight[莊春江][{}]{{{}}}".format(_note, _text)
         else:
             print()
             print(x.to_str())
