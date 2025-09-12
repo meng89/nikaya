@@ -1,5 +1,24 @@
 \setupinteraction[state=start,focus=standard]
 
+
+\setuplayout[
+  topspace=0pt,
+  top=0pt,
+  topdistance=0pt,
+  header=0pt,
+  headerdistance=0pt,
+  bottom=0pt,
+  bottomdistance=0pt,
+  footer=0pt,
+  footerdistance=0pt,
+  leftedge=0pt,
+  leftedgedistance=0pt,
+  leftmargin=0pt,
+  rightmargin=0pt,
+  rightedgedistance=0pt,
+  rightedge=0pt,
+]
+
 \setupinteractionscreen[option=bookmark]
 \enabledirectives[references.bookmarks.preroll]
 
@@ -29,50 +48,13 @@
 ]
 
 
+\definetextbackground[underline]
+  [location=text, voffset=-2pt,alternative=1,background=,frame=off]
+
 \starttext
-  \starttitle[
-      title=\goto{SN 1.1}[url(https://suttacentral.net/SN1.1)]/SN.1.1 \goto{ztxy/blzdgj}[url(https://agama.buddhason.org/SN/SN0001.htm)],
-      bookmark=blzdgj,
-  ]
 
-    \startsubject[title={\goto{xixihaha}[url(https://github.com/meng89/nikaya)]}, bookmark=666]
-
-      \startsubsubject[title=subsubject1, reference=xxx]
-      \stopsubsubject
-
-      \startsubsubject[title=subsubject2, reference=SNx1x1]
-
-      %{\setupinteraction[color=PineGreen]\at{sn 1.1}[xxx]}
-      \suttaNumLink{sn_1_1}{SNx1x1}
-      %\in{sn }{kk}[SN.1.1]
-
-      \stopsubsubject
-
-    \stopsubject
-
-
-  \stoptitle
-
- test \PDFhighlight[Hraban][My comment]{\samplefile{tufte}} test \blank
-
- test \PDFhighlight[Hans]{what a mess} test \page
-
- test \PDFhighlight[ ][I would prefer the other one.]{\samplefile{ward}} test \page
-
-Here is an example: by saying
-
-
-Regular 1
-\startcomment
-1. This won't be published, but attached as a comment
-\stopcomment
-Regular 2
-\startcomment[commentname]
-2. This won't be published, but attached as a comment
-\stopcomment
-Regular 3
-\startcomment[commentname][]
-3. This won't be published, but attached as a comment
-\stopcomment
+\startunderline Some underlined \overstrike{crossed out} text.\stopunderline
 
 \stoptext
+
+

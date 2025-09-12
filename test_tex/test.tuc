@@ -36,33 +36,38 @@ if not utilitydata.job then utilitydata.job = { } end
 if not utilitydata.job.positions then utilitydata.job.positions = { } end
 
 utilitydata.job.positions.collected={
+ ["b"]={
+  ["tbg:1"]={
+   ["d"]=265592,
+   ["h"]=682953,
+   ["k"]=1,
+   ["n"]=1,
+   ["p"]=1,
+   ["r"]="textarea:1",
+   ["s"]={},
+   ["x"]=4661756,
+   ["y"]=54594558,
+  },
+ },
+ ["e"]={
+  ["tbg:1"]={
+   ["d"]=265592,
+   ["h"]=682953,
+   ["k"]=1,
+   ["n"]=1,
+   ["p"]=1,
+   ["r"]="textarea:1",
+   ["x"]=16355864,
+   ["y"]=54594558,
+  },
+ },
  ["p"]={
   {
    ["i"]=1,
-   ["par"]=5162,
-  },
-  {
-   ["i"]=1,
-   ["par"]=5782,
-  },
-  {
-   ["i"]=2,
    ["p"]=1,
-   ["y"]=36130056,
+   ["r"]="textarea:1",
+   ["y"]=54594558,
   },
-  35181511,
-  25933198,
-  {
-   ["i"]=2,
-   ["p"]=2,
-   ["y"]=46204089,
-  },
-  {
-   ["i"]=2,
-   ["p"]=3,
-   ["y"]=46204089,
-  },
-  45255544,
  },
  ["page"]={
   {
@@ -78,22 +83,16 @@ utilitydata.job.positions.collected={
    {
     ["d"]=265592,
     ["h"]=682953,
-    ["hs"]=0,
-    ["x"]=0,
-   },
-   {
-    ["d"]=265592,
-    ["h"]=682953,
     ["hs"]=27969941,
     ["x"]=4661756,
    },
   },
   ["x_y_w_h"]={
    {
-    ["h"]=39158627,
+    ["h"]=46617009,
     ["w"]=27969941,
     ["x"]=4661756,
-    ["y"]=7831894,
+    ["y"]=8763981,
    },
   },
   ["y_w_h_d"]={},
@@ -103,16 +102,14 @@ utilitydata.job.positions.collected={
    ["i"]=1,
    ["p"]=1,
   },
-  2,
-  3,
  },
- ["user"]={
-  ["md:h"]={
-   {
-    ["x"]=4661756,
-   },
+ ["textarea"]={
+  {
+   ["i"]=1,
+   ["p"]=1,
   },
  },
+ ["user"]={},
 }
 
 if not utilitydata.job then utilitydata.job = { } end
@@ -125,7 +122,6 @@ if not utilitydata.job then utilitydata.job = { } end
 if not utilitydata.job.pagestates then utilitydata.job.pagestates = { } end
 
 utilitydata.job.pagestates.collected={
- ["margintext"]={ 3, 3, 3 },
 }
 
 if not utilitydata.structures then utilitydata.structures = { } end
@@ -138,42 +134,6 @@ if not utilitydata.structures then utilitydata.structures = { } end
 if not utilitydata.structures.sections then utilitydata.structures.sections = { } end
 
 utilitydata.structures.sections.collected={
- {
-  ["block"]="bodypart",
-  ["conversionset"]="default",
-  ["hidenumber"]=true,
-  ["language"]="en",
-  ["numbers"]=1,
-  ["separatorset"]="default",
-  ["set"]="all",
- },
- {
-  ["block"]="bodypart",
-  ["conversionset"]="default",
-  ["hidenumber"]=true,
-  ["language"]="en",
-  ["numbers"]=2,
-  ["separatorset"]="default",
-  ["set"]="all",
- },
- {
-  ["block"]="bodypart",
-  ["conversionset"]="default",
-  ["hidenumber"]=true,
-  ["language"]="en",
-  ["numbers"]=3,
-  ["separatorset"]="default",
-  ["set"]="all",
- },
- {
-  ["block"]="bodypart",
-  ["conversionset"]="default",
-  ["hidenumber"]=true,
-  ["language"]="en",
-  ["numbers"]=3,
-  ["separatorset"]="default",
-  ["set"]="all",
- },
 }
 
 if not utilitydata.structures then utilitydata.structures = { } end
@@ -181,7 +141,7 @@ if not utilitydata.structures.counters then utilitydata.structures.counters = { 
 
 utilitydata.structures.counters.collected={
  ["chemical"]={
-  { 0, 0 },
+  { 0 },
  },
  ["combination"]={
   { 0 },
@@ -190,28 +150,28 @@ utilitydata.structures.counters.collected={
   { 0 },
  },
  ["figure"]={
-  { 0, 0 },
+  { 0 },
  },
  ["float"]={
-  { 0, 0 },
+  { 0 },
  },
  ["footnote"]={
   { 0 },
  },
  ["formula"]={
-  { 0, 0 },
+  { 0 },
  },
  ["graphic"]={
-  { 0, 0 },
+  { 0 },
  },
  ["intermezzo"]={
-  { 0, 0 },
+  { 0 },
  },
  ["itemgroup:itemize"]={
-  { 0, 0 },
+  { 0 },
  },
  ["itemgroup:itemize:note"]={
-  { 0, 0 },
+  { 0 },
  },
  ["linenote"]={
   { 0 },
@@ -220,25 +180,25 @@ utilitydata.structures.counters.collected={
   { 0 },
  },
  ["paragraph"]={
-  { 0, 0 },
+  { 0 },
  },
  ["publicationnote"]={
   { 0 },
  },
  ["realpage"]={
-  { 3 },
+  { 1 },
  },
  ["subpage"]={
-  { 3 },
+  { 1 },
  },
  ["table"]={
-  { 0, 0 },
+  { 0 },
  },
  ["textnote:note"]={
   { 0 },
  },
  ["userpage"]={
-  { 3 },
+  { 1 },
  },
 }
 
@@ -246,80 +206,6 @@ if not utilitydata.structures then utilitydata.structures = { } end
 if not utilitydata.structures.lists then utilitydata.structures.lists = { } end
 
 utilitydata.structures.lists.collected={
- {
-  ["metadata"]=4,
-  ["numberdata"]=5,
-  ["references"]={
-   ["block"]="bodypart",
-   ["internal"]=1,
-   ["realpage"]=1,
-   ["section"]=1,
-   ["used"]="standard",
-   ["x"]=32631697,
-   ["y"]=45810149,
-  },
-  ["titledata"]={
-   ["bookmark"]="blzdgj",
-   ["label"]="chapter",
-   ["title"]="\\goto {SN 1.1}[url(https://suttacentral.net/SN1.1)]/SN.1.1 \\goto {ztxy/blzdgj}[url(https://agama.buddhason.org/SN/SN0001.htm)]",
-  },
- },
- {
-  ["metadata"]=6,
-  ["numberdata"]=7,
-  ["references"]={
-   ["block"]="bodypart",
-   ["internal"]=2,
-   ["realpage"]=1,
-   ["section"]=2,
-   ["used"]="standard",
-   ["x"]=32631697,
-   ["y"]=43043221,
-  },
-  ["titledata"]={
-   ["bookmark"]="666",
-   ["label"]="section",
-   ["title"]="\\goto {xixihaha}[url(https://github.com/meng89/nikaya)]",
-  },
- },
- {
-  ["metadata"]=8,
-  ["numberdata"]=9,
-  ["references"]={
-   ["block"]="bodypart",
-   ["internal"]=3,
-   ["realpage"]=1,
-   ["reference"]="xxx",
-   ["section"]=3,
-   ["used"]="standard",
-   ["x"]=32631697,
-   ["y"]=40416615,
-  },
-  ["titledata"]={
-   ["bookmark"]="subsubject1",
-   ["label"]="subsection",
-   ["title"]="subsubject1",
-  },
- },
- {
-  ["metadata"]=8,
-  ["numberdata"]=9,
-  ["references"]={
-   ["block"]="bodypart",
-   ["internal"]=4,
-   ["realpage"]=1,
-   ["reference"]="SNx1x1",
-   ["section"]=4,
-   ["used"]="standard",
-   ["x"]=32631697,
-   ["y"]=37790009,
-  },
-  ["titledata"]={
-   ["bookmark"]="subsubject2",
-   ["label"]="subsection",
-   ["title"]="subsubject2",
-  },
- },
 }
 
 if not utilitydata.structures then utilitydata.structures = { } end
@@ -329,22 +215,8 @@ utilitydata.structures.pages.collected={
  {
   ["block"]="bodypart",
   ["number"]=1,
-  ["numberdata"]=10,
-  ["prefixdata"]=11,
-  ["state"]="start",
- },
- {
-  ["block"]="bodypart",
-  ["number"]=2,
-  ["numberdata"]=10,
-  ["prefixdata"]=11,
-  ["state"]="start",
- },
- {
-  ["block"]="bodypart",
-  ["number"]=3,
-  ["numberdata"]=10,
-  ["prefixdata"]=11,
+  ["numberdata"]=1,
+  ["prefixdata"]=2,
   ["state"]="start",
  },
 }
@@ -359,8 +231,6 @@ if not utilitydata.structures then utilitydata.structures = { } end
 if not utilitydata.structures.references then utilitydata.structures.references = { } end
 
 utilitydata.structures.references.referred={
- { 1, 1 },
- { 1, 5 },
 }
 
 if not utilitydata.job then utilitydata.job = { } end
@@ -420,9 +290,6 @@ if not utilitydata.job then utilitydata.job = { } end
 if not utilitydata.job.meshedup then utilitydata.job.meshedup = { } end
 
 utilitydata.job.meshedup.collected={
- {
-  ["/Border 4 0 R /C [ 0.8 1 1 ] /Contents (My comment) /F 4 /LMTX_QP1243 true /NM (LMTX:1) /Subtype /Highlight /T (Hraban)"]={ 93.490764005098072, 531.18797672789538, 496.05995643777243, 544.16549511597134, 70.8670002140411, 516.76840206160489, 496.05995643777243, 529.74592044968085, 70.8670002140411, 502.34882739531446, 496.05995643777243, 515.32634578339037, 70.8670002140411, 487.929252729024, 496.05995643777243, 500.90677111709994, 70.8670002140411, 473.50967806273349, 496.05995643777243, 486.48719645080945, 70.8670002140411, 459.090103396443, 496.05995643777243, 472.06762178451896, 70.8670002140411, 444.67052873015257, 496.05995643777243, 457.64804711822853, 70.8670002140411, 430.25095406386208, 496.05995643777243, 443.22847245193805, 70.8670002140411, 415.8313793975716, 208.75385517201121, 428.80889778564756 },
- },
 }
 
 if not utilitydata.job then utilitydata.job = { } end
@@ -439,57 +306,6 @@ utilitydata.job.embedded.collected={
 
 utilitydata.job.packed={
  ["index"]={
-  { 0, 0 },
-  { 0, 0, 0 },
-  { 0, 0, 0, 0 },
-  {
-   ["catcodes"]=9,
-   ["coding"]="tex",
-   ["kind"]="section",
-   ["level"]=2,
-   ["name"]="title",
-  },
-  {
-   ["block"]="bodypart",
-   ["conversionset"]="default",
-   ["hidenumber"]=true,
-   ["language"]="en",
-   ["numbers"]=1,
-   ["separatorset"]="default",
-   ["set"]="all",
-  },
-  {
-   ["catcodes"]=9,
-   ["coding"]="tex",
-   ["kind"]="section",
-   ["level"]=3,
-   ["name"]="subject",
-  },
-  {
-   ["block"]="bodypart",
-   ["conversionset"]="default",
-   ["hidenumber"]=true,
-   ["language"]="en",
-   ["numbers"]=2,
-   ["separatorset"]="default",
-   ["set"]="all",
-  },
-  {
-   ["catcodes"]=9,
-   ["coding"]="tex",
-   ["kind"]="section",
-   ["level"]=4,
-   ["name"]="subsubject",
-  },
-  {
-   ["block"]="bodypart",
-   ["conversionset"]="default",
-   ["hidenumber"]=true,
-   ["language"]="en",
-   ["numbers"]=3,
-   ["separatorset"]="default",
-   ["set"]="all",
-  },
   {
    ["conversionset"]="pagenumber",
   },

@@ -1,5 +1,9 @@
 \setuppapersize [$size]
 
+
+\input{setuplayout.tex}
+
+
 \enableregime[utf]
 \mainlanguage[cn]
 \language[cn]
@@ -25,20 +29,20 @@
 
 %%%%%%%%%%%%
 % 页脚页眉
-\setupheader
-  [text]
-  [before={\startframed[frame=off,bottomframe=on,framecolor=black,]},
-   after={\stopframed},
-  ]
-\setupfooter
-  [text]
-  [before={\startframed[frame=off,bottomframe=off,topframe=on,framecolor=black,]},
-   after={\stopframed},
-  ]
-\setupheadertexts[]
+%\setupheader
+%  [text]
+%  [before={\startframed[frame=off,bottomframe=on,framecolor=black,]},
+%   after={\stopframed},
+%  ]
+%\setupfooter
+%  [text]
+%  [before={\startframed[frame=off,bottomframe=off,topframe=on,framecolor=black,]},
+%  after={\stopframed},
+%  ]
+%\setupheadertexts[]
 %\setupheadertexts[{\tf\bf\ss \somenamedheadnumber{chapter}{current}. \getmarking[chapter]}][]
-\setupfootertexts[]
-\setupfootertexts[][{\tfa \it \pagenumber}]
+%\setupfootertexts[]
+%\setupfootertexts[][{\tfa \it \pagenumber}]
 % 页脚页眉
 %%%%%%%%%%%
 
@@ -112,7 +116,7 @@
 \define[1]\NoteKeywordBhikkhuNanamoli{{#1}}
 
 
-\definecolor[pdfhighlight:莊春江][r=1,g=1,b=1]
+\definecolor[pdfhighlight:莊春江][r=.95,g=.95,b=.95,]
 
 
 
@@ -125,7 +129,7 @@
 
 \startsetups Background:off
 % 只要把 background 设置成无法识别的，就会没有背景。
-\setupbackgrounds[page][background=laskjfsalkfjasldfkjlaksfjdaslkfjlasdkfjaslkfjaslkfjslkdjflaskjdf]
+\setupbackgrounds[page][background=,]
 \stopsetups
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -141,10 +145,11 @@
 
 \input{fanli.tex}
 
-
+\page
 $homage
+\page
 
-\input{$suttas}
+\input{suttas.tex}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 附录一：注解

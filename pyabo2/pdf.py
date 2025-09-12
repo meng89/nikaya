@@ -19,12 +19,59 @@ MAIN = "main.tex"
 FONT = "type-imp-myfonts.tex"
 SUTTAS = "suttas.tex"
 
-paper_map = {
+cover_size_map = {
     "A4": (2480, 3508)
 }
 
+ELECTRONIC="E"
+PAPER="P"
 
-def build_pdf(full_path, data, module, lang, size):
+type_map = {
+    ("A4", ELECTRONIC): {
+        "topspace": "0pt",
+        "top":"0pt",
+        "topdistance":"0pt",
+        "header":"0pt",
+        "headerdistance":"0pt",
+        "bottomspace":"0pt",
+
+        "bottom":"0pt",
+        "bottomdistance":"0pt",
+        "footer":"0pt",
+        "footerdistance":"0pt",
+
+        "leftedge":"0pt",
+        "leftedgedistance":"0pt",
+        "leftmargin":"0pt",
+        "leftmargindistance":"0pt",
+
+        "rightmargindistance":"0pt",
+        "rightmargin":"0pt",
+        "rightedgedistance":"0pt",
+        "rightedge":"0pt",
+
+        "cutspace":"0pt",
+        #"backspace":"0pt",
+
+        "textwidth":"600pt",
+        "height":"800pt",
+    },
+    ("A4", "P"): None
+
+}
+
+def write_setuplayout(work_dir, size, medium):
+    f = open(os.path.join(work_dir, "setuplayout.tex"), "w")
+    d = type_map[(size, medium)]
+    f.write("\n\\setuplayout[\n")
+    for k, v in d.items():
+        if v is None:
+            continue
+        f.write("  {}={},\n".format(k, v))
+    f.write("]\n")
+
+
+def build_pdf(full_path, data, module, lang, size, medium=ELECTRONIC):
     bns = [module.short]
     work_dir = full_path + "_work"
     out_dir = full_path + "_out"
@@ -32,7 +79,7 @@ def build_pdf(full_path, data, module, lang, size):
     os.makedirs(out_dir, exist_ok=True)
 
     branch = []
-    w, h = paper_map[size]
+    w, h = cover_size_map[size]
     cover_image = ebook_utils.make_cover(module, data, lang, w, h)
 
     write_main(work_dir, module, bns, lang, size, cover_image)
@@ -40,6 +87,8 @@ def build_pdf(full_path, data, module, lang, size):
     f = open(os.path.join(work_dir, SUTTAS), "w")
     write_data(f, module.short, data, 1, branch, bns, lang)
     f.close()
+
+    write_setuplayout(work_dir, size, medium)
 
     write_fontstex(work_dir)
 
@@ -120,7 +169,6 @@ def write_main(work_dir, module, bns, lang, size, cover_image):
         date=date,
 
         cover_image=cover_image,
-        suttas=SUTTAS,
         homage=lang.c("對那位世尊、阿羅漢、遍正覺者禮敬"),
     )
     f = open(os.path.join(work_dir, MAIN), "w", encoding="utf-8")
@@ -255,7 +303,7 @@ def _xml_to_tex(bns, es, lang, root=None):
                         _note = lang.c(_note)
                         #s += "\\footnote{" + _xml_to_tex(bns, _note.kids, lang, root) + "}"
                 if _note:
-                    s += "\\PDFhighlight[莊春江][{}]{{{}}}".format(_note, _text)
+                    s += "\\underdot{{\\PDFhighlight[莊春江][{{{}}}]{{{}}}}}".format(_note, _text)
                 else:
                     s += _text
 
@@ -267,7 +315,7 @@ def _xml_to_tex(bns, es, lang, root=None):
                 _note = _xml_to_tex(bns, _note, lang, root)
                 _note = lang.c(_note)
                 #lang.c("註解")
-                s += "\\PDFhighlight[莊春江][{}]{{{}}}".format(_note, _text)
+                s += "\\underdot{{\\PDFhighlight[莊春江][{{{}}}]{{{}}}}}".format(_note, _text)
         else:
             print()
             print(x.to_str())

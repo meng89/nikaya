@@ -17,7 +17,7 @@ def main():
     temp_td = tempfile.TemporaryDirectory(prefix="AAA_莊春江汉译经藏_")
     date = datetime.today().strftime('%Y.%m.%d')
 
-    for m in [sn, mn, dn, an] + list(pyabo2.kn.all_modules):
+    for m in [mn, dn, an, sn] + list(pyabo2.kn.all_modules):
         try:
             load_from_htm = getattr(m, "load_from_htm")
         except AttributeError:
