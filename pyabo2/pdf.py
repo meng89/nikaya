@@ -29,32 +29,32 @@ PAPER="P"
 type_map = {
     ("A4", ELECTRONIC): {
         "topspace": "0pt",
-        "top":"0pt",
-        "topdistance":"0pt",
-        "header":"0pt",
-        "headerdistance":"0pt",
-        "bottomspace":"0pt",
+        "top": "0pt",
+        "topdistance": "0pt",
+        "header": "0pt",
+        "headerdistance": "0pt",
+        "bottomspace": "0pt",
 
-        "bottom":"0pt",
-        "bottomdistance":"0pt",
-        "footer":"0pt",
-        "footerdistance":"0pt",
+        "bottom": "0pt",
+        "bottomdistance": "0pt",
+        "footer": "0pt",
+        "footerdistance": "0pt",
 
-        "leftedge":"0pt",
-        "leftedgedistance":"0pt",
-        "leftmargin":"0pt",
-        "leftmargindistance":"0pt",
+        "leftedge": "0pt",
+        "leftedgedistance": "0pt",
+        "leftmargin": "0pt",
+        "leftmargindistance": "0pt",
 
-        "rightmargindistance":"0pt",
-        "rightmargin":"0pt",
-        "rightedgedistance":"0pt",
-        "rightedge":"0pt",
+        "rightmargindistance": "0pt",
+        "rightmargin": "0pt",
+        "rightedgedistance": "0pt",
+        "rightedge": "0pt",
 
-        "cutspace":"0pt",
+        #"cutspace":"0pt",
         #"backspace":"0pt",
 
-        "textwidth":"600pt",
-        "height":"800pt",
+        "textwidth": "500pt",
+        "height": "700pt",
     },
     ("A4", "P"): None
 
@@ -92,8 +92,9 @@ def build_pdf(full_path, data, module, lang, size, medium=ELECTRONIC):
 
     write_fontstex(work_dir)
 
-    write_fanli(work_dir, bns, lang)
-    write_zzsm(work_dir)
+    _write_fanli(work_dir, bns, lang)
+    _write_homage(work_dir, bns, lang)
+    _write_zzsm(work_dir)
 
     my_env = os.environ.copy()
     if os.name == "posix":
@@ -174,8 +175,15 @@ def write_main(work_dir, module, bns, lang, size, cover_image):
     f = open(os.path.join(work_dir, MAIN), "w", encoding="utf-8")
     f.write(main)
 
+def _write_cover(work_dir, module, data, lang, size):
+    w, h = cover_size_map[size]
+    cover_image = ebook_utils.make_cover(module, data, lang, w, h)
+    f = open(os.path.join(work_dir, "cover.tex"), "w", encoding="utf-8")
+    f.write("""
+    
+    """)
 
-def write_fanli(work_dir, bns, lang):
+def _write_fanli(work_dir, bns, lang):
     f = open(os.path.join(work_dir, "fanli.tex"), "w", encoding="utf-8")
     f.write(startsec(1, "凡例", "凡例"))
     for line in epub.FANLI:
@@ -183,8 +191,23 @@ def write_fanli(work_dir, bns, lang):
         f.write("\n\\blank\n\n")
     f.write(stopsec(1))
 
+def _write_homage(work_dir, bns, lang):
+    f = open(os.path.join(work_dir, "homage.tex"), "w", encoding="utf-8")
+    es = epub.get_homage_xml_es()
 
-def write_zzsm(work_dir):
+    #f.write("\\bookmark[mylist]{{{}}}\n".format(lang.c("禮敬世尊")))
+    f.write("""
+    \\startstandardmakeup
+    \\bookmark[mylist]{{{}}}
+    \\vfill % 在内容前添加弹性空间
+    \\startalignment[center]
+    {{{}}}
+    \\stopalignment
+    \\vfill % 在内容后添加弹性空间
+    \\stopstandardmakeup\n""".format(lang.c("禮敬世尊"), _xml_to_tex(bns, es, lang)))
+
+
+def _write_zzsm(work_dir):
     f = open(os.path.join(work_dir, "readme.tex"), "w", encoding="utf-8")
     f.write(startsec(1, "制作说明", "制作说明"))
     for line in epub.ZZSM:
@@ -242,6 +265,12 @@ def write_sutta(file: typing.TextIO, obj, depth, branch, bns, lang):
     sutta_num_sc = epub.get_sutta_num_sc(obj.root)
     sutta_name = epub.get_sutta_name(obj.root)
 
+    start, end = epub.get_sutta_range(obj.root)
+    if start == end:
+        _range = start
+    else:
+        _range = "{}-{}".format(start, end)
+
     source_url = urllib.parse.urljoin(config.ABO_WEBSITE, epub.get_source_page(obj.root))
 
     if sutta_num_sc is not None:
@@ -274,7 +303,7 @@ def write_sutta(file: typing.TextIO, obj, depth, branch, bns, lang):
 
     title = num + " " + tex_name
 
-    file.write(startsec(depth, title, sutta_name))
+    file.write(startsec(depth, title, _range + "." + sutta_name))
 
     xml_body = obj.root.find_descendants("body")[0]
     for xml_p in xml_body.find_descendants("p"):
@@ -303,7 +332,7 @@ def _xml_to_tex(bns, es, lang, root=None):
                         _note = lang.c(_note)
                         #s += "\\footnote{" + _xml_to_tex(bns, _note.kids, lang, root) + "}"
                 if _note:
-                    s += "\\underdot{{\\PDFhighlight[莊春江][{{{}}}]{{{}}}}}".format(_note, _text)
+                    s += "\\PDFhighlight[莊春江][{{{}}}]{{{}}}".format(_note, _text)
                 else:
                     s += _text
 
@@ -315,7 +344,7 @@ def _xml_to_tex(bns, es, lang, root=None):
                 _note = _xml_to_tex(bns, _note, lang, root)
                 _note = lang.c(_note)
                 #lang.c("註解")
-                s += "\\underdot{{\\PDFhighlight[莊春江][{{{}}}]{{{}}}}}".format(_note, _text)
+                s += "\\PDFhighlight[莊春江][{{{}}}]{{{}}}".format(_note, _text)
         else:
             print()
             print(x.to_str())

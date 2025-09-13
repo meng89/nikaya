@@ -68,7 +68,8 @@
 
 %\placebookmarks[appendix,part,chapter,section,subsection,tobias][chapter][number=no]
 
-\placebookmarks[title,subject,subsubject,subsubsubject,subsubsubsubject,subsubsubsubsubject]
+\definelist[mylist]
+\placebookmarks[title,subject,subsubject,subsubsubject,subsubsubsubject,subsubsubsubsubject,mylist]
 \setuphead[title][incrementnumber=list]
 \setuphead[subject][incrementnumber=list]
 \setuphead[subsubject][incrementnumber=list]
@@ -116,7 +117,7 @@
 \define[1]\NoteKeywordBhikkhuNanamoli{{#1}}
 
 
-\definecolor[pdfhighlight:莊春江][r=.95,g=.95,b=.95,]
+\definecolor[pdfhighlight:莊春江][r=.93,g=.93,b=.93,]
 
 
 
@@ -138,16 +139,15 @@
 \setups[Background:cover]
 
 \startstandardmakeup
-
+\bookmark[mylist]{封面}
+\vfill
 \stopstandardmakeup
 
 \setups[Background:off]
 
 \input{fanli.tex}
 
-\page
-$homage
-\page
+\input{homage.tex}
 
 \input{suttas.tex}
 

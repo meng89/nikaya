@@ -501,6 +501,8 @@ def _write_cover(epub, cover_image_path, lang):
     epub.mark.kids.append(epubpacker.Mark("封面", cover_doc_path))
     epub.spine.append(cover_doc_path)
 
+def get_homage_xml_es():
+    return xl.parse("""<p>對那位<gn id="12">世尊</gn>、<gn id="5">阿羅漢</gn>、<gn id="6">遍正覺者</gn>禮敬</p>""").root.kids
 
 def _write_homage(bns, _module, marks, docs, ln, gn, lang):
     doc_path = "homage.xhtml"
@@ -510,7 +512,7 @@ def _write_homage(bns, _module, marks, docs, ln, gn, lang):
     #outdiv = body.ekid("div", {"class": "homage_out"})
     #indiv = outdiv.ekid("div", {"class": "homage_in"})
 
-    kids = xl.parse("""<p>對那位<gn id="12">世尊</gn>、<gn id="5">阿羅漢</gn>、<gn id="6">遍正覺者</gn>禮敬</p>""").root.kids
+    kids = get_homage_xml_es()
     p = body.ekid("p")
     p.kids.extend(_xml_es_to_html(bns, kids, html, ln, gn, doc_path, lang))
     #indiv.kids.append())
