@@ -20,7 +20,7 @@ from . import suttanum_ref
 from . import tag_str
 
 
-def build_epub(data, module, lang):
+def build_epub(full_path, data, module, lang, exit_after_done=False):
     epub = epubpacker.Epub()
 
     epub.meta.titles = [lang.c(module.name_han)]
@@ -37,12 +37,6 @@ def build_epub(data, module, lang):
     epub.meta.others.append(xl.Element("meta", {"refines": "#c01", "property": "collection-type"}, ["series"]))
 
     epub.userfiles[css.css1_path] = css.css1[lang.en]
-    #epub.userfiles[css.css2_path] = css.css2[lang.en]
-    #epub.userfiles[js.js1_path] = js.js1
-    #epub.userfiles["_css/user_css1.css"] = "/* 第一个自定义 CSS 文件 */\n\n"
-    #epub.userfiles["_css/user_css2.css"] = "/* 第二个自定义 CSS 文件 */\n\n"
-    #epub.userfiles["_js/user_js1.js"] = "// 第一个自定义 JS 文件\n\n"
-    #epub.userfiles["_js/user_js2.js"] = "// 第二个自定义 JS 文件\n\n"
 
     ln = pyabo2.note.LocalNotes()
     gn = pyabo2.note.get_gn()
@@ -75,7 +69,10 @@ def build_epub(data, module, lang):
     _write_readme(bns, epub, ln, gn, lang)
     #_write_readme(epub, lang)
 
-    return epub
+    epub.write(full_path)
+
+    if exit_after_done:
+        exit()
 
 # refs = [("PS/Ps1.html", "id", "PS/PS.1.xhtml", "id2")]
 
@@ -551,8 +548,9 @@ def _write_fanli(bns, epub, ln, gn, lang):
     body.attrs["class"] = "fanli"
     _h1 = body.ekid("h1", {"class": "title"}, ["凡例"])
 
-    for one in FANLI:
-        _p = body.ekid("p", kids=_xml_es_to_html(bns, [one], html, ln, gn, doc_path, lang))
+    for line in FANLI:
+        _p = body.ekid("p")
+        _p.kids.extend(_xml_es_to_html(bns, line, html, ln, gn, doc_path, lang))
 
     htmlstr = xl.Xml(root=html).to_str(do_pretty=True, dont_do_tags=["p"])
     epub.userfiles[doc_path] = htmlstr
@@ -562,13 +560,13 @@ def _write_fanli(bns, epub, ln, gn, lang):
 
 ZZSM = (
     ["此汉译佛经数据来源于", xl.Element("a", {"href": "https://agama.buddhason.org"}, ["莊春江讀經站"]),"，一切相关权利归于译者。"],
-    ["原译文是繁体中文，简体版由程序转换，可能会出现转换错误。电子书目录以及经文标题部分可能有一些修改，正文部分与原页面相同，但可能丢失了一部分链接和格式等元数据。",
-     "页面标题的经号里，以小数点隔离书籍缩写与数字的是原经号，如：Ud.1。无小数点的是 suttacentral.net 网站风格的经号，如：Ud 1.1，点击可以打开其它语言版本的页面。",
-     "部分书籍没有整理出对应的经号，已有的经号有可能会有对应错误。如有发现，请帮忙指正，谢谢！"],
+    ["原文是繁体中文，简体版由程序转换，可能会出现转换错误。电子书目录以及经文标题部分可能有一些修改，正文部分与原页面相同，但可能丢失了一部分链接和格式等元数据。"],
+    ["点击经文的汉字标题会打开莊春江读经站的经文原始页面，原始页面有巴利语对照，以及与经文相关的其它经文链接。经文标题里以小数点隔离书籍缩写与数字的是原经号，如：SN.1.1 ，无小数点的是 suttacentral.net 网站风格的经号，如：SN 1.1 ，点击后者这样的经号可以打开含有其它语言译文的网站页面。",
+     "部分书籍没有整理出对应的经号，已有的经号有可能会有对应错误。若您发现有这样的错误，请联系我，谢谢！"],
     ["要获取最新制成的电子书，请访问项目主页：",
      xl.Element("a", {"href": "{}".format(_project_link)}, [_project_link])],
     #("如果打不开上面的链接，请尝试这个云盘链接：", xl.Element("a", {"href": "{}".format(_yunpan_link)}, [_yunpan_link])),
-    ["若难以下载电子书，或者有对此电子书相关的其它问题，请联系我：", xl.Element("a", {"href": "mailto:{}".format(_my_mail)}, [_my_mail])]
+    ["若难以下载电子书，或者有对此电子书相关的其它问题，也请联系我：", xl.Element("a", {"href": "mailto:{}".format(_my_mail)}, [_my_mail])]
 )
 
 def _write_readme(bns, epub, ln, gn, lang):
@@ -580,7 +578,6 @@ def _write_readme(bns, epub, ln, gn, lang):
     _h1 = body.ekid("h1", {"class": "title"}, [lang.c("製作說明")])
     for line in ZZSM:
         _p = body.ekid("p", kids=_xml_es_to_html(bns, line, html, ln, gn, doc_path, lang))
-
 
     htmlstr = xl.Xml(root=html).to_str(do_pretty=True, dont_do_tags=["p"])
     epub.userfiles[doc_path] = htmlstr

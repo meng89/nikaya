@@ -88,7 +88,9 @@ def take_comp(div_comp: xl.Element):
             if m:
                 note = xl.Element("note")
                 note.attrs["id"] = m.group(1)
-                note.kids.extend(span.kids)
+
+                for line in kids_to_lines(span.kids):
+                    note.kids.extend(htm_line_to_xml_line(line))
                 notes.kids.append(note)
 
     return notes
@@ -232,7 +234,7 @@ def do_str(e):
 
 def do_global_note(e):
     if isinstance(e, xl.Element) and e.tag == "a" and "onmouseover" in e.attrs.keys():
-        m = re.match(r"^note\(this,(\d+)\);$", e.attrs["onmouseover"])
+        m = re.match(r"^note\(this,(\d+)\);?$", e.attrs["onmouseover"])
         if m:
             twgn = xl.Element("gn") # text with global note
             twgn.attrs["id"] = m.group(1)
@@ -244,7 +246,7 @@ def do_global_note(e):
 
 def do_local_note(e):
     if isinstance(e, xl.Element) and e.tag == "a" and "onmouseover" in e.attrs.keys():
-        m = re.match(r"^local\(this,(\d+)\);$", e.attrs["onmouseover"])
+        m = re.match(r"^local\(this,(\d+)\);?$", e.attrs["onmouseover"])
         if m:
             twln = xl.Element("ln") # text with local note
             twln.attrs["id"] = m.group(1)
@@ -258,8 +260,8 @@ def do_a(e):
     if isinstance(e, xl.Element) and e.tag == "a":
         new_kids = htm_line_to_xml_line(e.kids)
         #e.kids.clear()
-        e.kids = new_kids
-        return True, [e]
+        #e.kids = new_kids
+        return True, new_kids
     else:
         return False, e
 
@@ -267,8 +269,8 @@ def do_a(e):
 def do_styled_span(e):
     if isinstance(e, xl.Element) and e.tag == "span" and e.attrs.get("style") == "color: #800000":
         new_kids = htm_line_to_xml_line(e.kids, [do_str, do_global_note, do_local_note, do_a, do_styled_span, do_br])
-        e.kids = new_kids
-        return True, [e]
+        #e.kids = new_kids
+        return True, new_kids
     else:
         return False, e
 

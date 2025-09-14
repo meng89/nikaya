@@ -73,7 +73,7 @@ def load_from_htm():
 
 
         head_lines = pyabo2.page_parsing.htm_lines_to_xml_lines(head_lines)
-        head = pyabo2.page_parsing.lines_to_body(head_lines)
+        head = pyabo2.page_parsing.lines_to_head(head_lines)
 
         body = pyabo2.page_parsing.htm_lines_to_xml_lines(body_lines)
         body = pyabo2.page_parsing.lines_to_body(body)

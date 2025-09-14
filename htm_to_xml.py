@@ -7,8 +7,10 @@ from pyabo2 import sn, mn, dn, an
 import pyabo2.kn
 import base
 
+import pyabo2.kn.su
 
 def main():
+    #for module in [pyabo2.kn.su]:
     for module in [sn, mn, dn, an] + list(pyabo2.kn.all_modules):
         try:
             load_from_htm = getattr(module, "load_from_htm")

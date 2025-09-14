@@ -40,6 +40,16 @@ tibetan_table = [
     (0x0f00, 0x0fff),
 ]
 
+def count(string):
+    cjk_count = 0
+    other_count = 0
+    for c in string:
+        if is_cjk(c):
+            cjk_count += 1
+        else:
+            other_count += 1
+    return cjk_count, other_count
+
 
 def is_cjk(c):
     for begin, end in cjk_table:

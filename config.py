@@ -50,4 +50,4 @@ LOG_PATH = os.path.join(PROJECT_ROOT, "abo_log.txt")
 BROWSER = "google-chrome-stable"
 COVER_DIR = os.path.join(_RESOURCE_DIR, "Cover")
 
-DEBUG = True
+DEBUG = False

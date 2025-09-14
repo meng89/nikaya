@@ -39,10 +39,37 @@
 %  [before={\startframed[frame=off,bottomframe=off,topframe=on,framecolor=black,]},
 %  after={\stopframed},
 %  ]
-%\setupheadertexts[]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                          Header and Footer
+%
+%\setupheader
+%  [text]
+%  [before={\startframed[frame=off,bottomframe=on,topframe=off,framecolor=black,]},
+%   after={\stopframed},
+%  ]
+%\setupfooter
+%  [text]
+%  [before={\startframed[frame=off,bottomframe=off,topframe=on,framecolor=black,]},
+%   after={\stopframed},
+%  ]
+
+
+\startsetups mainheaderfooter
+\setupheadertexts[]
 %\setupheadertexts[{\tf\bf\ss \somenamedheadnumber{chapter}{current}. \getmarking[chapter]}][]
-%\setupfootertexts[]
-%\setupfootertexts[][{\tfa \it \pagenumber}]
+\setupfootertexts[{\tfa \it \pagenumber}]
+\stopsetups
+
+
+\startsetups clearheaderfooter
+\setupheadertexts[]
+\setupfootertexts[]
+\stopsetups
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % 页脚页眉
 %%%%%%%%%%%
 
@@ -70,12 +97,15 @@
 
 \definelist[mylist]
 \placebookmarks[title,subject,subsubject,subsubsubject,subsubsubsubject,subsubsubsubsubject,mylist]
-\setuphead[title][incrementnumber=list]
-\setuphead[subject][incrementnumber=list]
-\setuphead[subsubject][incrementnumber=list]
-\setuphead[subsubsubject][incrementnumber=list]
-\setuphead[subsubsubsubject][incrementnumber=list]
-\setuphead[subsubsubsubsubject][incrementnumber=list]
+\setuphead[title][incrementnumber=list, style=\tfd\bf\ss, alternative=middle] %\tfd
+\setuphead[subject][incrementnumber=list, style=\tfc\bf\ss, alternative=middle]
+\setuphead[subsubject][incrementnumber=list, style=\tfb\bf\ss, alternative=middle]
+\setuphead[subsubsubject][incrementnumber=list, style=\tfa\bf\ss, alternative=middle]
+\setuphead[subsubsubsubject][incrementnumber=list, style=\tfa\bf\ss, alternative=middle]
+\setuphead[subsubsubsubsubject][incrementnumber=list, style=\tfa\bf\ss, alternative=middle]
+
+
+%\setuphead[part]      [number=no,alternative=middle,,placehead=yes,header=empty,footer=empty]
 
 
 \setupinteractionscreen[option=bookmark]
@@ -83,38 +113,6 @@
 
 \enabledirectives[backend.pdf.fixhighlight]
 
-%\lettertilde
-\define[3]\pian{\part[title=#1,bookmark={#1(#2~#3)},]}
-\define[2]\xiangying{\chapter[title=#2, bookmark=#1. #2,]}
-\define[3]\pin{\section[title=#1,bookmark=#1(#2~#3)]}
-\define[4]\sutta{\subsection[reference=SN.\somenamedheadnumber{chapter}{current}.#1,
-     title={\goto{{\startlua if #1==#2 then context("#1") else context("#1\\lettertilde#2") end \stoplua}. #3}[url(#4)]}]}
-
-
-% 绿
-\define[1]\suttaref{\setupinteraction[color=PineGreen]\goto{#1}[#1]}
-% 黄
-\define[2]\ccchref{\setupinteraction[color=FuzzyWuzzy]\goto{#1}[url(#2)]}
-% 蓝
-\define[2]\twnr{\setupinteraction[color=MidnightBlue]\goto{#1}[#2]}
-
-
-\define[1]\noteTitle{\part[title=#1]}
-
-
-\define[1]\subnoteref{\textreference[#1]{\null}}
-
-%%%%%%%
-%
-\define[1]\NoteSubKeyHead{{\it #1}}
-\define[1]\NoteKeywordAgamaHead{{#1}}
-\define[1]\NoteKeywordNikayaHead{{#1}}
-
-\define[1]\NoteSubEntryKey{{\sl #1}}
-\define[1]\NoteKeywordAgama{{#1}}
-\define[1]\NoteKeywordNikaya{{#1}}
-\define[1]\NoteKeywordBhikkhuBodhi{{#1}}
-\define[1]\NoteKeywordBhikkhuNanamoli{{#1}}
 
 
 \definecolor[pdfhighlight:莊春江][r=.93,g=.93,b=.93,]
@@ -129,42 +127,33 @@
 \stopsetups
 
 \startsetups Background:off
-% 只要把 background 设置成无法识别的，就会没有背景。
+% 只要把 background 留空或这设置成无效的名字，就会没有背景
 \setupbackgrounds[page][background=,]
 \stopsetups
 
+%\showframe
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \startdocument
+\setups[clearheaderfooter]
+%\setuppagenumber[number=1]
 
 \setups[Background:cover]
-
-\startstandardmakeup
 \bookmark[mylist]{封面}
-\vfill
-\stopstandardmakeup
-
+\null
+\page
 \setups[Background:off]
 
 \input{fanli.tex}
 
 \input{homage.tex}
 
+\setups[mainheaderfooter]
+
 \input{suttas.tex}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 附录一：注解
-
-\setupheader
-  [text]
-  [before={\startframed[frame=off,bottomframe=on,topframe=off,framecolor=black,]},
-   after={\stopframed},
-  ]
-\setupfooter
-  [text]
-  [before={\startframed[frame=off,bottomframe=off,topframe=on,framecolor=black,]},
-   after={\stopframed},
-  ]
-
+\setups[clearheaderfooter]
 
 \input{readme.tex}
 

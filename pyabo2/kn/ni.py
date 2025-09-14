@@ -6,8 +6,8 @@ import pyabo2.utils
 
 # 与 SC 经号差别较大
 
-name_han = "大義釋" # 大与小
-name_pali = "Mahāniddesa"
+name_han = "義釋" #
+name_pali = "Niddesa"
 short = "Ni"
 
 
