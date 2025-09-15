@@ -6,39 +6,12 @@ import opencc
 import config
 
 
-def do_nothing(x):
-    return x
-
-
 _table = [
     ("「", "“"),
     ("」", "”"),
     ("『", "‘"),
     ("』", "’"),
 ]
-
-
-def _convert2sc(s):
-    if s:
-        converter = opencc.OpenCC('tw2sp.json')
-        return converter.convert(s)
-    else:
-        return s
-
-
-def convert_all(s):
-    new_sc_s = ""
-    for c in _convert2sc(s):
-        new_sc_s += _convert_punctuation(c)
-    return new_sc_s
-
-
-def _convert_punctuation(c):
-    for tp, sp in _table:
-        if tp == c:
-            return sp
-    return c
-
 
 class Lang:
     def c(self, s):
@@ -83,8 +56,14 @@ class TC(Lang):
 
 
 class SC(Lang):
+    def __init__(self):
+        self._converter = opencc.OpenCC('tw2sp.json')
+
     def c(self, s):
-        return _convert2sc(s)
+        if s:
+            return self._converter.convert(s)
+        else:
+            return s
 
     @property
     def xml(self):

@@ -339,7 +339,10 @@ def write_sutta(file: typing.TextIO, obj, depth, branch, bns, lang, add_page):
 
     tex_name = ("\\goto{{{}}}[url({})]".format(name, source_url))
 
-    title = num + " " + tex_name
+    if num:
+        title = num + " " + tex_name
+    else:
+        title = _range + "." + tex_name
 
     file.write(startsec(depth, lang.c(title), _range + "." + lang.c(sutta_name)))
 
@@ -357,7 +360,7 @@ def _xml_to_tex(bns, es, lang, root=None):
     for x in es:
         if isinstance(x, str):
             _s = lang.c(x)
-            _s = _s.replace("{", "\\{").replace("}", "\\}").replace("[", "\\[").replace("]", "\\]")
+            _s = _s.replace("{", "\\{").replace("}", "\\}").replace("[", "\\[").replace("]", "\\]").replace("#", "\\#")
             s += _s
 
         elif isinstance(x, xl.Element):
