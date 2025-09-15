@@ -2,6 +2,7 @@ import abc
 from abc import ABC
 
 import xl
+from pyabo2 import dp
 
 
 cjk_table = [
@@ -129,7 +130,7 @@ def _split2basestr(s, out_type):
             last += c
 
         else:
-            print("unknown character:", repr(c))
+            dp("unknown character:", repr(c))
             basestrs.append(c)
 
     _reset_last()
@@ -181,6 +182,3 @@ class TibetanStr(BaseStr):
     @property
     def _xml_class(self):
         return "tib"
-
-
-

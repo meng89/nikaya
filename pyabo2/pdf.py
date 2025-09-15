@@ -360,7 +360,6 @@ def _xml_to_tex(bns, es, lang, root=None):
             _s = _s.replace("{", "\\{").replace("}", "\\}").replace("[", "\\[").replace("]", "\\]")
             s += _s
 
-
         elif isinstance(x, xl.Element):
             if x.tag == "ln":
                 assert root is not None
@@ -370,7 +369,8 @@ def _xml_to_tex(bns, es, lang, root=None):
                 _note = None
                 for _note_e in root.find_descendants("notes")[0].kids:
                     if _note_e.attrs.get("id") == x.attrs["id"]:
-                        _note = _xml_to_tex(bns, _note_e.kids, lang, root)
+                        #_note = _xml_to_tex(bns, _note_e.kids, lang, root)
+                        _note = utils.line_to_txt(_note_e.kids)
                         _note = lang.c(_note)
                         #s += "\\footnote{" + _xml_to_tex(bns, _note.kids, lang, root) + "}"
                 if _note:
@@ -383,7 +383,8 @@ def _xml_to_tex(bns, es, lang, root=None):
                 _text = lang.c(_text)
                 gn = note.get_gn()
                 _note = gn.get_es(x.attrs["id"])
-                _note = _xml_to_tex(bns, _note, lang, root)
+                _note = utils.line_to_txt(_note)
+                #_note = _xml_to_tex(bns, _note, lang, root)
                 _note = lang.c(_note)
                 #lang.c("註解")
                 s += "\\PDFhighlight[莊春江][{{{}}}]{{{}}}".format(_note, _text)
@@ -391,7 +392,7 @@ def _xml_to_tex(bns, es, lang, root=None):
                 "\\par\n"
             elif x.tag == "a":
                 #print(x.to_str())
-                "\goto{莊春江工作站}[url(https://agama.buddhason.org)]"
+                "\\goto{莊春江工作站}[url(https://agama.buddhason.org)]"
                 s += "\\goto{" + _xml_to_tex(bns, x.kids, lang, root) + "}[url(" + x.attrs["href"] + ")]"
 
             elif x.tag == "span" and x.attrs.get("class") == "sutra_name":

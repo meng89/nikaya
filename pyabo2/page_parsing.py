@@ -3,11 +3,9 @@ import re
 import bs4
 import xl
 
+import config
 
-try:
-    import user_config as config
-except ImportError:
-    import config as config
+from pyabo2 import dp
 
 
 def read_page(file_path, style=1):
@@ -15,8 +13,7 @@ def read_page(file_path, style=1):
     if style == 2:
         read_page_fun = _read_page2
 
-
-    print("read_page:", file_path)
+    dp("read_page:", file_path)
     full_path = os.path.join(config.DOWNLOAD_DIR, file_path)
     mtime = os.path.getmtime(full_path)
     data = open(full_path, "r").read()

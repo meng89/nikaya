@@ -3,9 +3,10 @@ import os
 import tempfile
 from datetime import datetime
 import time
+import sys
+import config
 
 from multiprocessing import Process
-
 
 from pyabo2 import sn, mn, dn, an
 
@@ -14,26 +15,37 @@ import pyabo2.epub
 import pyabo2.pdf
 
 import pyabo2.ebook_utils
-from pyabo2.kn import ps
+
+def sp(s):
+    for c in s:
+        print(c, end='', flush=True)
+        time.sleep(0.02)
 
 
-def main():
+def main(nopdf, noepub):
+    pdf_jobs = []
+    epub_jobs = []
+
+
+
+
     temp_td = tempfile.TemporaryDirectory(prefix="AAA_莊春江汉译经藏_")
     date = datetime.today().strftime('%Y.%m.%d')
 
-    jobs = []
-
-    #for m in list(pyabo2.kn.all_modules) + [dn, mn, sn, an]:
-    for m in list(pyabo2.kn.all_modules) + [sn, an, mn, dn]:
+    all_modules = [sn, an, mn, dn] + list(pyabo2.kn.all_modules)
+    for count, m in enumerate(all_modules, start=1):
         try:
             load_from_htm = getattr(m, "load_from_htm")
         except AttributeError:
             continue
+        sp("Loading data: {:2}/{} {}".format(count, len(all_modules), m.name_han))
         data = load_from_htm()
+        sp(" ✅\n")
+        time.sleep(0.5)
 
         for zh_name, lang in [("莊春江漢譯經藏_繁體PDF", pyabo2.ebook_utils.TC()), ("莊春江汉译经藏_简体PDF", pyabo2.ebook_utils.SC())]:
-        #for zh_name, lang in [("莊春江汉译经藏_简体PDF", pyabo2.ebook_utils.SC())]:
-            #continue
+            if nopdf:
+                continue
             for size in ("A4",):
                 zh_name = zh_name + "_" + size
 
@@ -44,14 +56,11 @@ def main():
                 else:
                     full_path = os.path.join(dirname, filename)
                 os.makedirs(os.path.dirname(full_path), exist_ok=True)
-                #pyabo2.pdf.build_pdf(full_path, data, m, lang, size)
-                jobs.append((filename, pyabo2.pdf.build_pdf, (full_path, data, m, lang, size, True)))
-                #p = Process(target=pyabo2.pdf.build_pdf, args=(full_path, data, m, lang, size, True))
-                #p.start()
-                #ps.append((filename, p))
-
+                job = (filename, pyabo2.pdf.build_pdf, (full_path, data, m, lang, size, True))
+                pdf_jobs.append(job)
         for zh_name, lang in [("莊春江漢譯經藏_繁體EPUB", pyabo2.ebook_utils.TC()), ("莊春江汉译经藏_简体EPUB", pyabo2.ebook_utils.SC())]:
-        #for zh_name, lang in [("莊春江汉译经藏_简体EPUB", pyabo2.ebook_utils.SC())]:
+            if noepub:
+                continue
             filename = "{}_莊_{}_{}{}.epub".format(lang.c(m.name_han), lang.zh, date, lang.c("製"))
             dirname = os.path.join(temp_td.name, zh_name)
             if m in pyabo2.kn.all_modules:
@@ -61,53 +70,15 @@ def main():
 
             os.makedirs(os.path.dirname(full_path), exist_ok=True)
 
-            #pyabo2.epub.build_epub(full_path, data, m, lang)
-            jobs.append((filename, pyabo2.epub.build_epub, (full_path, data, m, lang, True)))
-            #p = Process(target=pyabo2.epub.build_epub, args=(full_path, data, m, lang, True))
-            #p.start()
-            #ps.append((filename, p))
+            epub_jobs.append((filename, pyabo2.epub.build_epub, (full_path, data, m, lang, True)))
 
-    processes = []
 
-    #for filename, func, args in jobs:
-    #    p = Process(target=func, args=args)
-    #    p.start()
-    #    processes.append((filename, p))
 
-    total = len(jobs)
-    task = os.cpu_count() + os.cpu_count() // 4
-    finished = 0
     while True:
-        while len(processes) < task and len(jobs) > 0:
-            try:
-                filename, func, args = jobs.pop(0)
-                p = Process(target=func, args=args)
-                p.start()
-                processes.append((filename, p))
-            except IndexError:
-                continue
+        if jobs:
+            if run_job(jobs[0])
+                #sp("Running: {:2}, Finished: {:2}/{} ({:3}%)     ".format(len(processes), finished, total, int((finished/total) * 100)))
 
-        last_time = time.time()
-        new_processes = []
-
-        for filename, process in processes:
-            process.join(timeout=0.01)
-            if process.is_alive():
-                new_processes.append((filename, process))
-            else:
-                finished += 1
-                print(filename + " ✅️")
-        processes = new_processes
-
-        if len(processes) == 0:
-            break
-        else:
-            cur_time = time.time()
-            sleep_time = 1 - (cur_time - last_time)
-            if sleep_time > 0:
-                time.sleep(sleep_time)
-
-            print(" "*60 + "running: {}, finished: {}/{}".format(len(processes), finished, total))
 
     print("\n\n")
     print("电子书临时目录在：", temp_td.name)
@@ -117,5 +88,43 @@ def main():
     temp_td.cleanup()
 
 
+finished = 0
+def run_job(running_jobs):
+    new_running = []
+    for name, p in running_jobs:
+        if p.is_alive():
+            new_running.append((name, p))
+        else:
+            finished += 1
+
+    running = new_running
+
+    while True:
+        if len(jobs) < 0 or len(running) == os.cpu_count() + os.cpu_count() // 4:
+            break
+
+    task = os.cpu_count() + os.cpu_count() // 4
+    if len(running) < task:
+        filename, func, args = job
+        p = Process(target=func, args=args)
+        p.start()
+        running.append((filename, p))
+        return True
+    else:
+        jobs.insert(0, job)
+        return False
+
+
 if __name__ == '__main__':
-    main()
+    sys_args = [arg.lower() for arg in sys.argv[1:]]
+    _nopdf = False
+    _noepub = False
+    if "debug" in sys_args:
+        config.DEBUG = True
+    if "nopdf" in sys_args:
+        _nopdf = True
+    if "noepub" in sys_args:
+        _noepub = True
+    main(_nopdf, _noepub)
+
+
