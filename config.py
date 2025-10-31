@@ -40,7 +40,7 @@ EPUBCHECK = "/mnt/data/software/epubcheck-5.2.1/epubcheck.jar"
 # EPUBCHECK = r"D:\epubcheck-4.2.6\epubcheck.jar"
 
 # 电子书存放目录
-TEX_DIR = os.path.join(PROJECT_ROOT, "pyabo2", "tex")
+TEX_DIR = os.path.join(PROJECT_ROOT, "abo", "tex")
 
 BOOKS_DIR = os.path.join(PROJECT_ROOT, "_books")
 

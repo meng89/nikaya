@@ -1,7 +1,3 @@
-#KISS
-#KISS
-#KISS
-
 from typing import List, Tuple, Union
 import os
 import re
@@ -9,7 +5,7 @@ import shutil
 
 import xl
 
-import pyabo2.utils
+import abo.utils
 
 
 def _split(name):
@@ -62,6 +58,6 @@ def write_to_disk(path, data: list, delete_existed=False):
         if isinstance(obj, list):
             write_to_disk(sub_path, obj)
         elif isinstance(obj, xl.Xml):
-            s = obj.to_str(do_pretty=True, try_self_closing=True, dont_do_tags=pyabo2.utils.WRITE_DONT_DO_TAGS)
+            s = obj.to_str(do_pretty=True, try_self_closing=True, dont_do_tags=abo.utils.WRITE_DONT_DO_TAGS)
             with open(sub_path + ".xml", "w") as f:
                 f.write(s)
