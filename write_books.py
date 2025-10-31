@@ -141,5 +141,3 @@ if __name__ == '__main__':
     if "noepub" in sys_args:
         _noepub = True
     main(_nopdf, _noepub)
-
-
