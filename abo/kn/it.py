@@ -39,7 +39,7 @@ def load_from_htm():
 
         title_line, head_lines, sutta_body_lines = suttas[0]
 
-        pin_matchs = abo.utils.match_line(head_lines, [re.compile("^(?:\d\.)?(.+品)$")])
+        pin_matchs = abo.utils.match_line(head_lines, [re.compile(r"^(?:\d\.)?(.+品)$")])
         if pin_matchs:
             assert len(pin_matchs) == 1
             pin_m = pin_matchs[0][0]

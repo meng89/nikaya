@@ -39,6 +39,11 @@ CONTEXT_BIN_PATH = "/mnt/data/software/context"
 EPUBCHECK = "/mnt/data/software/epubcheck-5.2.1/epubcheck.jar"
 # EPUBCHECK = r"D:\epubcheck-4.2.6\epubcheck.jar"
 
+XMLP5A_DIR = "/mnt/data/projects/xml-p5a/"
+
+SIMPLE_DOC_DIR = os.path.join(PROJECT_ROOT, "resources", "simple_doc")
+SIMPLE_DOC2_DIR = os.path.join(PROJECT_ROOT, "resources", "simple_doc2")
+
 # 电子书存放目录
 TEX_DIR = os.path.join(PROJECT_ROOT, "abo", "tex")
 

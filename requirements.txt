@@ -3,6 +3,7 @@ html5lib
 requests[socks]
 python-dateutil
 boltons
+cn2an
 
 fpdf2
 

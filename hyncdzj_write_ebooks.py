@@ -8,8 +8,8 @@ import config
 
 from multiprocessing import Process
 
-from book_module import sn, mn, dn, an
-from book_module import (kn_ap, kn_bv, kn_cp, kn_ps, kn_pv, kn_ud, kn_vv, kn_dhp, kn_iti, kn_jat, kn_khp, kn_snp,
+from hyncdzj_book_module import sn, mn, dn, an
+from hyncdzj_book_module import (kn_ap, kn_bv, kn_cp, kn_ps, kn_pv, kn_ud, kn_vv, kn_dhp, kn_iti, kn_jat, kn_khp, kn_snp,
                          kn_thag, kn_thig, kn_nid1, kn_nid2)
 
 import hyncdzj.base
