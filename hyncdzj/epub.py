@@ -25,7 +25,7 @@ def build_epub(full_path, data, modules: list, lang, exit_after_done=False):
     epub = epubpacker.Epub()
     titles = []
     for module in modules:
-        titles.append(lang.c(module.name_han))
+        titles.append(lang.c(module.info.name))
     epub.meta.titles = titles
 
     # epub.meta.creators = ["莊春江({})".format(lang.c("譯"))] #todo
@@ -50,10 +50,10 @@ def build_epub(full_path, data, modules: list, lang, exit_after_done=False):
     #_write_homage(module, epub.mark.kids, docs, ln, gn, lang) #todo
     if len(modules) == 1:
         module = modules[0]
-        _make_suttas(module, epub.mark.kids, docs, [], module.short, data, notes, lang)
+        _make_suttas(module, epub.mark.kids, docs, [], module.info.abbr, data, notes, lang)
     elif len(modules) > 1:
         for module in modules:
-            _make_suttas(module, epub.mark.kids, docs, [], module.short, data, notes, lang)
+            _make_suttas(module, epub.mark.kids, docs, [], module.info.abbr, data, notes, lang)
 
 
     for path, xml in docs:

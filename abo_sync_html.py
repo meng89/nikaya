@@ -33,7 +33,7 @@ def r_mtime(session):
 
 def sync(filename,  session, fresh_time=None, check_mtime=True):
     url = urllib.parse.urljoin(config.ABO_WEBSITE, filename)
-    file_path = os.path.join(config.DOWNLOAD_DIR, filename)
+    file_path = os.path.join(config.ABO_DOWNLOAD_DIR, filename)
 
     # 没有文件时，要下载
     if not os.path.exists(file_path):
@@ -56,7 +56,7 @@ def sync(filename,  session, fresh_time=None, check_mtime=True):
                     print("Not same mtimes:", filename)
                     download(filename, session)
                 else:
-                    file_path = os.path.join(config.DOWNLOAD_DIR, filename)
+                    file_path = os.path.join(config.ABO_DOWNLOAD_DIR, filename)
                     with open(file_path, "rb") as f:
                         data = f.read()
                     os.remove(file_path)
@@ -81,7 +81,7 @@ def download(filename, session):
         r = session.get(url)
 
     mtime = r_mtime(r)
-    file_path = os.path.join(config.DOWNLOAD_DIR, filename)
+    file_path = os.path.join(config.ABO_DOWNLOAD_DIR, filename)
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
     try:
         os.remove(file_path)
@@ -97,7 +97,7 @@ def download(filename, session):
 
 
 def get_others(filename):
-    htm_str = open(os.path.join(config.DOWNLOAD_DIR, filename), "r").read()
+    htm_str = open(os.path.join(config.ABO_DOWNLOAD_DIR, filename), "r").read()
     soup = bs4.BeautifulSoup(htm_str, 'html5lib')
     root = xl.parse(str(soup)).root
     paths = get_paths(root)

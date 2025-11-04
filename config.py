@@ -1,30 +1,28 @@
-# 如果只是想自己制作电子书而不是开发此程序的话，需复制这个文件为 user_config.py，再修改复制后的文件。
-
 import os.path
 
-PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
-CACHE_DIR = os.path.join(PROJECT_ROOT, "cache")
-os.makedirs(CACHE_DIR, exist_ok=True)
 
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 ABO_WEBSITE = "https://agama.buddhason.org"
 
-# 莊春江工作站目录
-INDEX_DIR = "/mnt/data/Buddhism/abo_2025.07.09/agama.buddhason.org/"
-# INDEX_DIR = r"D:\abo_2022.03.34\agama.buddhason.org\"
 
+RESOURCE_DIR = os.path.join(PROJECT_ROOT, "resource")
 
-_RESOURCE_DIR = os.path.join(PROJECT_ROOT, "resource")
+ABO_RESOURCE_DIR = os.path.join(RESOURCE_DIR, "abo")
+ABO_COVER_DIR = os.path.join(ABO_RESOURCE_DIR, "cover")
+ABO_DOWNLOAD_DIR = os.path.join(ABO_RESOURCE_DIR, "htm")
+ABO_XML_DIR = os.path.join(ABO_RESOURCE_DIR, "xml")
 
-DOWNLOAD_DIR = os.path.join(_RESOURCE_DIR, "htm")
-XML_DIR = os.path.join(_RESOURCE_DIR, "xml")
+ABO_TEX_DIR = os.path.join(PROJECT_ROOT, "abo", "tex")
 
-TIMESTAMP = os.path.join(_RESOURCE_DIR, "timestamp.csv")
+HYNCDZJ_RESOURCE_DIR = os.path.join(RESOURCE_DIR, "hyndzj")
+SIMPLE_DOC_DIR = os.path.join(HYNCDZJ_RESOURCE_DIR, "simple_doc")
+SIMPLE_DOC2_DIR = os.path.join(HYNCDZJ_RESOURCE_DIR, "simple_doc2")
+
 
 SOCKS5_PROXY = "127.0.0.1:1080"
 #SOCKS5_PROXY = None
 # 经文缓存目录
-CACHE_DIR = os.path.join(PROJECT_ROOT, "cache")
 
 # 字体文件目录
 # FONTS_DIR = os.path.join(PROJECT_ROOT, "fonts")
@@ -41,18 +39,11 @@ EPUBCHECK = "/mnt/data/software/epubcheck-5.2.1/epubcheck.jar"
 
 XMLP5A_DIR = "/mnt/data/projects/xml-p5a/"
 
-SIMPLE_DOC_DIR = os.path.join(PROJECT_ROOT, "resources", "simple_doc")
-SIMPLE_DOC2_DIR = os.path.join(PROJECT_ROOT, "resources", "simple_doc2")
-
-# 电子书存放目录
-TEX_DIR = os.path.join(PROJECT_ROOT, "abo", "tex")
-
-BOOKS_DIR = os.path.join(PROJECT_ROOT, "_books")
 
 LOG_PATH = os.path.join(PROJECT_ROOT, "abo_log.txt")
 
 #BROWSER = "/opt/firefox/firefox"
 BROWSER = "google-chrome-stable"
-COVER_DIR = os.path.join(_RESOURCE_DIR, "Cover")
+
 
 DEBUG = False
