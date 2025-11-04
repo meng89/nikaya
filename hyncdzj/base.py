@@ -5,14 +5,11 @@ import shutil
 import re
 import os
 
+from typing import List, Tuple, Union
+
 import opencc
 
 import xl
-import config
-
-from typing import List, Tuple, Union
-
-
 
 
 def to_sc(s):
@@ -195,7 +192,7 @@ def write_to_disk(path, data: Folder):
     os.makedirs(path, exist_ok=True)
     width = len(str(len(data)))
     for i, (name, obj) in enumerate(data, 1):
-        file_name = f"{i:>{width}}_{name}"
+        file_name = f"{i:>0{width}}_{name}"
         sub_path = os.path.join(path, file_name)
         if isinstance(obj, list):
             write_to_disk(sub_path, obj)
@@ -231,6 +228,7 @@ def load_from_disk(path) -> list:
 
 
 def _split(name):
+    print(repr(name))
     return re.match(r"^(\d+)_(.*?)(\.xml)?$", name)
 
 

@@ -17,7 +17,7 @@ import hyncdzj.note
 from . import css
 #from . import ebook_utils
 #from . import suttanum_ref
-from . import tag_str
+from public_modules import tag_str
 
 
 

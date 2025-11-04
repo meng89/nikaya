@@ -2,7 +2,7 @@ import re
 import os
 import types
 
-import p5a
+import hyncdzj.p5a
 
 import xl
 
@@ -751,7 +751,7 @@ def split_elements_twn(elements: list[xl.Element], next_index):
 
 
 def load_book_by_module(m: types.ModuleType):
-    xmls = p5a.get_xmls_by_serial(m.info.serial)
+    xmls = hyncdzj.p5a.get_xmls_by_serial(m.info.serial)
 
     book_div = xl.Element("cb:div")
     mulu = book_div.ekid("cb:mulu")

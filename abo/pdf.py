@@ -12,7 +12,8 @@ import urllib.parse
 import xl
 
 import config
-from . import epub, note, ebook_utils, tag_str, utils
+from . import epub, note, ebook_utils, utils
+from public_modules import tag_str
 
 MAIN = "main.tex"
 FONT = "type-imp-myfonts.tex"

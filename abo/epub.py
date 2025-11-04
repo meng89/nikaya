@@ -14,10 +14,9 @@ import xl
 import config
 import abo.utils
 import abo.note
-from . import css, js
+from . import css
 from . import ebook_utils
-from . import suttanum_ref
-from . import tag_str
+from public_modules import tag_str
 
 
 def build_epub(full_path, data, module, lang, exit_after_done=False):

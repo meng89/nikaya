@@ -2,7 +2,7 @@ import abc
 from abc import ABC
 
 import xl
-from abo import dp
+from public_modules.dp import dp
 
 
 cjk_table = [
