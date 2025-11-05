@@ -24,7 +24,7 @@ Entry = Tuple[str, Union[xl.Xml, List["Entry"]]]
 Folder = List[Entry]
 
 
-def load_from_disk(path) -> list:
+def load_from_disks(path) -> list:
     data = []
     entries = os.listdir(path)
     entries.sort(key=split_serial)
@@ -42,7 +42,7 @@ def load_from_disk(path) -> list:
             v = xl.parse(open(entry_path, "r").read())
         else:
             raise Exception("Unknow File: {}".format(entry_path))
-        print(name)
+
         data.append((name, v))
     return data
 

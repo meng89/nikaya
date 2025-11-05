@@ -38,7 +38,7 @@ class GlobalNotes:
             return self._notes
 
         for html in htmls:
-            data = open(os.path.join(config.DOWNLOAD_DIR, html), "r").read()
+            data = open(os.path.join(config.ABO_DOWNLOAD_DIR, html), "r").read()
             soup = bs4.BeautifulSoup(data, 'html5lib')
             root = xl.parse(str(soup)).root
             for div in root.find_descendants("div"):

@@ -115,7 +115,7 @@ def main(nopdf, noepub):
 
             os.makedirs(os.path.dirname(full_path), exist_ok=True)
 
-            jobs.append((filename, hyncdzj.epub.build_epub, (full_path, data, m, lang, True)))
+            jobs.append((filename, hyncdzj.epub.build_epub, (full_path, data, [m], lang, True)))
             total += 1
             try_run_job()
 

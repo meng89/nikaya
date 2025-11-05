@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-import copy
 import dataclasses
 import shutil
 import re
@@ -217,13 +215,12 @@ def load_from_disk(path) -> list:
             v = xl.parse(open(entry_path, "r").read(),ignore_blank=True, unignore_blank_parent_tags=[""])
         else:
             raise Exception("Unknow File: {}".format(entry_path))
-        print(name)
+
         data.append((name, v))
     return data
 
 
 def _split(name):
-    print(repr(name))
     return re.match(r"^(\d+)_(.*?)(\.xml)?$", name)
 
 

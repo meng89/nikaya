@@ -5,7 +5,7 @@ import xl
 
 import config
 
-from abo import dp
+from public_modules.dp import dp
 
 
 def read_page(file_path, style=1):
@@ -14,7 +14,7 @@ def read_page(file_path, style=1):
         read_page_fun = _read_page2
 
     dp("read_page:", file_path)
-    full_path = os.path.join(config.DOWNLOAD_DIR, file_path)
+    full_path = os.path.join(config.ABO_DOWNLOAD_DIR, file_path)
     mtime = os.path.getmtime(full_path)
     data = open(full_path, "r").read()
 

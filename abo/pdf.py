@@ -150,7 +150,7 @@ def build_pdf(full_path, data, module, lang, size, exit_after_done=False, medium
 
 
 def write_fontstex(work_dir):
-    fonttex = open(os.path.join(config.TEX_DIR, "type-imp-myfonts.tex"), "r", encoding="utf-8").read()
+    fonttex = open(os.path.join(config.ABO_TEX_DIR, "type-imp-myfonts.tex"), "r", encoding="utf-8").read()
     replace_map = {}
     for fontname in re.findall("file:(.*(?:ttf|otf))", fonttex):
         realfontpath = findfile(config.FONTS_DIR, os.path.basename(fontname))
@@ -183,7 +183,7 @@ def ntrelpath(path1, path2):
 def write_main(work_dir, module, bns, lang, size, cover_image):
 
     # homage = dopdf.join_to_tex(nikaya.homage_line, bns, c)
-    main_t = open(os.path.join(config.TEX_DIR, MAIN), "r", encoding='utf-8').read()
+    main_t = open(os.path.join(config.ABO_TEX_DIR, MAIN), "r", encoding='utf-8').read()
     date = datetime.today().strftime('%Y-%m-%d')
     main = string.Template(main_t).substitute(
         size=size,

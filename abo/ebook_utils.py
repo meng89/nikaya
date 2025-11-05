@@ -89,9 +89,9 @@ def make_cover(module, data, lang: Lang, width=1600, height=2560):
 
     image_filename = "{}_{}x{}.png".format(filename, width, height)
 
-    os.makedirs(config.COVER_DIR, exist_ok=True)
+    os.makedirs(config.ABO_COVER_DIR, exist_ok=True)
 
-    image_path = os.path.join(config.COVER_DIR, image_filename)
+    image_path = os.path.join(config.ABO_COVER_DIR, image_filename)
 
     if not os.path.exists(image_path):
         _template_str = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "cover.xhtml")).read()
@@ -124,10 +124,10 @@ def make_cover(module, data, lang: Lang, width=1600, height=2560):
                                created=lang.c(today() + " 製作"),
                                )
 
-        open(os.path.join(config.COVER_DIR, xhtml_filename), "w").write(doc_str)
+        open(os.path.join(config.ABO_COVER_DIR, xhtml_filename), "w").write(doc_str)
         from html2image import Html2Image as HtI
 
-        hti = HtI(browser_executable=config.BROWSER, output_path=config.COVER_DIR)
+        hti = HtI(browser_executable=config.BROWSER, output_path=config.ABO_COVER_DIR)
                   #custom_flags=["--disable-software-rasterizer"])
         hti.screenshot(html_str=doc_str, size=(width, height), save_as=image_filename)
 
