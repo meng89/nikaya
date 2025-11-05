@@ -21,14 +21,6 @@ def piece_key():
     return str(uuid4())
 
 
-dont_do_tags = ["dir", "h1", "s", "p"]
-
-# SN/
-# SN/_meta.xml
-# SN/大篇/2 觉知相应/转轮品/SN 46.41
-# SN/大篇/2 觉知相应/觉知总摄品/SN 46.51 食.xml
-
-
 class Meta:
     def __init__(self, e):
         self._e = e
@@ -185,7 +177,10 @@ Folder = List[Entry]
 
 
 def write_to_disk(path, data: Folder):
-    _dont_do_tags = ["p"]
+    dont_do_tags = ["p"]
+    for x in range(1, 100):
+        dont_do_tags.append("n" + str(x))
+
     if os.path.exists(path):
         shutil.rmtree(path)
 
