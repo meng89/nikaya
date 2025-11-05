@@ -18,7 +18,7 @@ def main():
             pass
         else:
             data = load_from_htm()
-            base.write_to_disk(os.path.join(config.XML_DIR, module.short), data, True)
+            base.write_to_disk(os.path.join(config.ABO_XML_DIR, module.short), data, True)
 
 if __name__ == "__main__":
     main()

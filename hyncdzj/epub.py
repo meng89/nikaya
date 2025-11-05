@@ -347,6 +347,11 @@ def read_start(obj):
     else:
         return sub_obj.root.find_descendants("start")[0].kids[0]
 
+def read_start2(obj):
+    for sub_name, sub_obj in obj:
+
+
+
 def read_end(obj):
     sub_name, sub_obj = obj[-1]
     if isinstance(sub_obj, list):
