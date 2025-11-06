@@ -351,7 +351,8 @@ def read_start(obj):
 
         if start is not None:
             return start
-    raise Exception("Start not found")
+
+    return None
 
 
 def read_end(obj: list):
@@ -367,7 +368,7 @@ def read_end(obj: list):
                 end = read_end(sub_obj)
         if end is not None:
             return end
-    raise Exception("End not found")
+    return None
 
 
 def is_serialized_folder(name, obj):
@@ -386,8 +387,7 @@ def need_join(obj):
         xml: xl.Xml
         line_count = 0
         root = xml.root
-        body = root.find_kids("body")[0]
-        for p in body.find_kids("p"):
+        for p in xml.root.find_kids("p"):
             txt = hyncdzj.utils.line_to_txt(p.kids)
             line_count += math.ceil(len(txt)/40)
 
