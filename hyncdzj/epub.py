@@ -336,32 +336,38 @@ def need_attach_range(name, obj):
 def read_range(obj):
     return read_start(obj), read_end(obj)
 
+
 def read_start(obj):
-    sub_name, sub_obj = obj[0]
-    if isinstance(sub_obj, list):
-        m = re.match(r"^(\d+)\..+$", sub_name)
-        if m:
-            return m.group(1)
-        else:
-            return read_start(sub_obj)
-    else:
-        return sub_obj.root.find_descendants("start")[0].kids[0]
-
-def read_start2(obj):
+    start = None
     for sub_name, sub_obj in obj:
-
-
-
-def read_end(obj):
-    sub_name, sub_obj = obj[-1]
-    if isinstance(sub_obj, list):
-        m = re.match(r"^(\d+)\..+$", sub_name)
+        m1 = re.match(r"(\d+)\..+$", sub_name)
+        m2 = re.match(r"^(\d+)-\d+\..+$", sub_name)
+        m = m1 or m2
         if m:
-            return m.group(1)
+            start = m.group(1)
         else:
-            return read_end(sub_obj)
-    else:
-        return sub_obj.root.find_descendants("end")[0].kids[0]
+            if isinstance(sub_obj, list):
+                start = read_start(sub_obj)
+
+        if start is not None:
+            return start
+    raise Exception("Start not found")
+
+
+def read_end(obj: list):
+    end = None
+    for sub_name, sub_obj in obj[::-1]:
+        m1 = re.match(r"(\d+)\..+$", sub_name)
+        m2 = re.match(r"^\d+-(\d+)\..+$", sub_name)
+        m = m1 or m2
+        if m:
+            end = m.group(1)
+        else:
+            if isinstance(sub_obj, list):
+                end = read_end(sub_obj)
+        if end is not None:
+            return end
+    raise Exception("End not found")
 
 
 def is_serialized_folder(name, obj):
