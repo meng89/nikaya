@@ -11,7 +11,7 @@ import urllib.parse
 import epubpacker
 import xl
 
-import config
+from . import base
 import hyncdzj.utils
 import hyncdzj.note
 from . import css
@@ -140,7 +140,7 @@ def _make_suttas(module, marks: list[epubpacker.Mark], docs, parent_branch: list
 
 
         else:
-            doc_path, html, mark = write_sutta(my_branch, "sutta1", obj, notes, lang)
+            doc_path, html, mark = write_sutta(my_branch, "sutta1", name, obj, notes, lang)
             docs.append((doc_path, html))
             marks.append(mark)
 
@@ -151,8 +151,8 @@ def _make_suttas(module, marks: list[epubpacker.Mark], docs, parent_branch: list
 
 
 
-def write_sutta(parent_branch, sutta_id, obj: xl.Xml, notes, lang, html=None, body=None, doc_path=None):
-    sutta_name = get_sutta_name(obj.root)
+def write_sutta(parent_branch, sutta_id, name, obj: xl.Xml, notes, lang, html=None, body=None, doc_path=None):
+    sutta_name = base.get_sutta_name(name)
     my_branch = parent_branch + [sutta_name]
 
     if doc_path is None:
@@ -287,10 +287,6 @@ def get_sutta_range(root: xl.Element):
     end = root.find_descendants("end")[0].kids[0]
     return start, end
 
-def get_sutta_name(root: xl.Element):
-    x = root.find_descendants("title")[0].kids[0]
-    # input(x)
-    return x
 
 def get_sutta_num_abo(root: xl.Element):
     for sutta_num in root.find_descendants("sutta_num"):
@@ -384,6 +380,7 @@ def need_join(obj):
     large_page = 0
 
     for name, xml in obj:
+        print(name)
         xml: xl.Xml
         line_count = 0
         root = xml.root

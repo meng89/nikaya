@@ -25,7 +25,7 @@ jobs =  []
 running = []
 finished = 0
 
-max_processes = os.cpu_count()
+max_processes = 1#os.cpu_count()
 def try_run_job(do_print=True):
     global running, finished
 
@@ -67,7 +67,7 @@ def main(nopdf, noepub):
     temp_td = tempfile.TemporaryDirectory(prefix="AAA_汉译南传大藏经_")
     date = datetime.today().strftime('%Y.%m.%d')
 
-    all_modules = [sn, an, mn, dn] # + pyabo2.kn.all_modules
+    all_modules = [sn,]# an, mn, dn] # + pyabo2.kn.all_modules
     #all_modules = [pyabo2.kn.mi]
     for count, m in enumerate(all_modules, start=1):
         print("Loading data: {:2}/{} {}".format(count, len(all_modules), m.info.name), end="", flush=True)

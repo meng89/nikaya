@@ -200,18 +200,18 @@ def write_to_disk(path, data: Folder):
 def load_from_disk(path) -> list:
     data = []
     entries = os.listdir(path)
-    entries.sort(key=split_serial)
+    entries.sort(key=split_serial_from_filename)
     for entry in entries:
         entry_path = os.path.join(path, entry)
 
         if os.path.isdir(entry_path):
-            name = split_name(entry)
+            name = split_name_from_filename(entry)
             v = load_from_disk(entry_path)
 
         elif os.path.isfile(entry_path):
             name = os.path.basename(entry_path)
             #name = os.path.splitext(name)[0]
-            name = split_name(name)
+            name = split_name_from_filename(name)
             v = xl.parse(open(entry_path, "r").read(),ignore_blank=True, unignore_blank_parent_tags=[""])
         else:
             raise Exception("Unknow File: {}".format(entry_path))
@@ -224,10 +224,18 @@ def _split(name):
     return re.match(r"^(\d+)_(.*?)(\.xml)?$", name)
 
 
-def split_serial(name):
+def split_serial_from_filename(name):
     return _split(name).group(1)
 
 
-def split_name(name):
+def split_name_from_filename(name):
     return _split(name).group(2)
 
+
+
+def get_sutta_name(name):
+    m = re.match(r"^(\d+)\.(.*)$", name)
+    if not m:
+        print(name)
+        exit()
+    return m.group(2)
