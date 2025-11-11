@@ -618,11 +618,11 @@ def move_place_by_level2(div:xl.Element, divs:dict):
 
 ########################################################################################################################
 
-def make_data(div: xl.Element):
+def make_raw_data(div: xl.Element):
     data = []
     if has_sub_div(div):
         for kid in div.kids[2:]:
-            mulu, sub_data = make_data(kid)
+            mulu, sub_data = make_raw_data(kid)
             data.append((mulu, sub_data))
 
     else:
@@ -640,7 +640,8 @@ def make_data(div: xl.Element):
 def get_mulu_str(div):
     assert is_mulu(div.kids[0])
     try:
-        return div.kids[0].kids[0]
+        mulu = div.kids[0].kids[0]
+        return mulu
     except IndexError:
         return ""
 
@@ -747,7 +748,11 @@ def split_elements_twn(elements: list[xl.Element], next_index):
     return new_es, new_next_index, notes
 
 
-
+def trans_raw_data(raw_data: base.Folder):
+    data = []
+    for name, obj in raw_data:
+        if isinstance()
+        new_name = (None, None, name)
 
 
 def load_book_by_module(m: types.ModuleType):
@@ -783,8 +788,12 @@ def load_book_by_module(m: types.ModuleType):
 
 
     #name, book = make_tree(book_div)
-    name, data = make_data(book_div)
-    data = split_folder_twn(data)
+    name, raw_data = make_raw_data(book_div)
+    raw_data = split_folder_twn(raw_data)
+
+    if hasattr(m, "trans_raw_data"):
+        data = m.trans_raw_data(raw_data)
+    else:
 
 
     if hasattr(m, "change"):
