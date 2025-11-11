@@ -174,6 +174,7 @@ Entry = Tuple[str, Union[xl.Xml, List["Entry"]]]
 Folder = List[Entry]
 
 
+
 def write_to_disk(path, data: Folder):
     dont_do_tags = ["p"]
     for x in range(1, 100):
