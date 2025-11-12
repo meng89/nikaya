@@ -18,7 +18,7 @@ def change_name_fun(name):
         return name
 
 
-def change(data):
+def change_old(data):
     xy_seril_map = []
     doc_seril_map = []
 
@@ -106,6 +106,72 @@ def _change_name(d, xy_index, xy_seril_map: list, j_seril_map: list):
     return new_data, xy_index
 
 
+def change(raw_data, xiangying_index=0):
+    data = []
+    for name, obj in raw_data:
+        name_group, new_xiangying_index = name_to_group(name, xiangying_index)
+        if isinstance(obj, list):
+            sub_data = change(obj, new_xiangying_index)
+        else:
+            sub_data = obj
+        data.append((name_group, sub_data))
+    return data
+
+
+def name_to_group(name: str, xiangying_index):
+    if name == "":
+        return (None, None, None), xiangying_index
+
+    if name.endswith("篇"):
+        return (None, None, name), xiangying_index
+
+    m = re.match(r"^第[一二三四五六七八九十〇]+　(\S+)$", name)
+    if m:
+        new_name = m.group(1)
+        if new_name.endswith("相應"):
+            return (xiangying_index + 1, xiangying_index + 1, new_name), xiangying_index + 1
+        else:
+            return (None, None, new_name), xiangying_index
+
+    # '〔一〕瀑流'
+    m = re.match(r"^〔([一二三四五六七八九十〇]+)〕　?(\S+)?$", name)
+    if m:
+        start = end = cn2an.cn2an(m.group(1), "normal")
+        return (start, end, None), xiangying_index
+
+    # '〔二一〕第一\u3000依劍'
+    # '〔一六八〕第四、五、六\u3000欲念（四、五、六）'
+    # '〔一七四〕第廿二～廿四\u3000過去（四～六）'
+    # '〔三〕第三\u3000舍利弗——拘絺羅\u3000第一（住者）'
+    m = re.match(r"^〔([一二三四五六七八九十〇]+)〕第[一二三四五六七八九十〇、～廿卅]+　?(.+)?$", name)
+    if m:
+        start = cn2an.cn2an(m.group(1), "normal")
+        end = cn2an.cn2an(m.group(2), "normal")
+        new_name = m.group(3)
+        return (start, end, new_name), xiangying_index
+
+    #'〔七二～八〇〕第二～第十\u3000不知（之一）'
+    #'〔二五～二六〕第三～四\u3000無常（一～二）'
+    #'〔一一～二〇〕第十一\u3000布施利益（一）'
+    #'〔五六、五七〕第四、第五\u3000諸漏（一～二）'
+    m = re.match(r"^〔([一二三四五六七八九十〇]+)[～、]([一二三四五六七八九十〇]+)〕[第一二三四五六七八九十〇～、]+　?(\S+)?$", name)
+
+    if m:
+        start = cn2an.cn2an(m.group(1), "normal")
+        end = cn2an.cn2an(m.group(2), "normal")
+        new_name = m.group(3)
+        return(start, end, new_name), xiangying_index
+
+    if name == "〔三八～四三〕第八　父、第九　兄弟、第十　姊妹、第十一　子、第十二　女、第十三　妻":
+        start = 38
+        end = 43
+        new_name = "父、兄弟、姊妹、子、女、妻"
+        return (start, end, new_name), xiangying_index
+
+    raise Exception(repr(name))
+
+
+
 def _change_j_name(xy_seril_map: list, d: list, j_seril_map: list):
 
     new_list = []
@@ -125,7 +191,7 @@ def _change_j_name(xy_seril_map: list, d: list, j_seril_map: list):
             new_list.append((name, obj))
 
         if isinstance(obj, list):
-            _change_j_name(xy_seril_map, obj, j_seril_map)
+            new_sub_list = _change_j_name(xy_seril_map, obj, j_seril_map)
             #todo
 
     return new_list
