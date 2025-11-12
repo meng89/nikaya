@@ -17,6 +17,7 @@ def change_name_fun(name):
     else:
         return name
 
+
 def change(data):
     xy_seril_map = []
     doc_seril_map = []
@@ -105,11 +106,13 @@ def _change_name(d, xy_index, xy_seril_map: list, j_seril_map: list):
     return new_data, xy_index
 
 
-def _change_j_name(xy_seril_map: list, d: base.Folder, j_seril_map: list):
+def _change_j_name(xy_seril_map: list, d: list, j_seril_map: list):
+
     new_list = []
     for name, obj in d:
         result = _find_j_range(obj, j_seril_map)
         if result is not None:
+
             start, end = result
             xy_index = _find_xy_index(xy_seril_map, obj)
             new_name = "SN {}.{}".format(xy_index, start)
@@ -117,11 +120,13 @@ def _change_j_name(xy_seril_map: list, d: base.Folder, j_seril_map: list):
                 new_name = new_name + "～" + str(end)
             new_name += " " + name
             new_list.append((new_name, obj))
+            print(new_name)
         else:
             new_list.append((name, obj))
 
         if isinstance(obj, list):
             _change_j_name(xy_seril_map, obj, j_seril_map)
+            #todo
 
     return new_list
 

@@ -751,8 +751,13 @@ def split_elements_twn(elements: list[xl.Element], next_index):
 def trans_raw_data(raw_data: base.Folder):
     data = []
     for name, obj in raw_data:
-        if isinstance()
+        if isinstance(obj, list):
+            sub_data = trans_raw_data(obj)
+        else:
+            sub_data = obj
         new_name = (None, None, name)
+        data.append((new_name, sub_data))
+    return data
 
 
 def load_book_by_module(m: types.ModuleType):
@@ -790,17 +795,20 @@ def load_book_by_module(m: types.ModuleType):
     #name, book = make_tree(book_div)
     name, raw_data = make_raw_data(book_div)
     raw_data = split_folder_twn(raw_data)
+    if hasattr(m, "change_name_fun"):
+        raw_data = change_book_name_by_given_fun(raw_data, m.change_name_fun)
 
-    if hasattr(m, "trans_raw_data"):
-        data = m.trans_raw_data(raw_data)
-    else:
+
+    #if hasattr(m, "trans_raw_data"):
+    #    data = m.trans_raw_data(raw_data)
+    #else:
+    #    data = raw_data
+    data = raw_data
 
 
     if hasattr(m, "change"):
         data = m.change(data)
 
-    if hasattr(m, "change_name_fun"):
-        data = change_book_name_by_given_fun(data, m.change_name_fun)
 
     data = merge_same_name(data)
 
