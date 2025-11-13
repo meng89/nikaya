@@ -798,16 +798,9 @@ def load_book_by_module(m: types.ModuleType):
     if hasattr(m, "change_name_fun"):
         raw_data = change_book_name_by_given_fun(raw_data, m.change_name_fun)
 
-
-    #if hasattr(m, "trans_raw_data"):
-    #    data = m.trans_raw_data(raw_data)
-    #else:
-    #    data = raw_data
-    data = raw_data
-
-
     if hasattr(m, "change"):
-        data = m.change(data)
+        data = m.change(raw_data)
+    else:
 
 
     data = merge_same_name(data)
