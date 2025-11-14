@@ -748,7 +748,7 @@ def split_elements_twn(elements: list[xl.Element], next_index):
     return new_es, new_next_index, notes
 
 
-def trans_raw_data(raw_data: base.Folder):
+def trans_raw_data(raw_data: list):
     data = []
     for name, obj in raw_data:
         if isinstance(obj, list):
@@ -801,7 +801,7 @@ def load_book_by_module(m: types.ModuleType):
     if hasattr(m, "change"):
         data = m.change(raw_data)
     else:
-
+        data = trans_raw_data(raw_data)
 
     data = merge_same_name(data)
 
