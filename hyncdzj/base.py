@@ -174,8 +174,53 @@ Entry = Tuple[str, Union[xl.Xml, List["Entry"]]]
 Folder = List[Entry]
 
 
+def namegroup_to_filename(namegroup: tuple) -> str:
+    start, end, name = namegroup
+    if isinstance(start, int):
+        assert isinstance(end, int)
+        if start == end:
+            range_ = str(start)
+        else:
+            range_ = str(start) + "-" + str(end)
 
-def write_to_disk(path, data: Folder):
+    elif start is None:
+        assert end is None
+        range_ = None
+    else:
+        raise Exception
+
+    if range_ is None and name is None:
+        filename = ""
+    elif range_ is not None and name is None:
+        filename = range_
+    elif range_ is not None and name is not None:
+        filename = range_ + "." + name
+    else:
+        raise Exception
+
+    return filename
+
+
+def filename_to_namegroup(filename: str) -> tuple:
+    m = re.match(r"(\d)\.(\S+)(?:\.xml)?$", filename)
+    if m:
+        return int(m.group(1)), int(m.group(1)), m.group(2)
+
+    m = re.match(r"(\d)-(\d)\.(\S+)(?:\.xml)?$", filename)
+    if m:
+        return int(m.group(1)), int(m.group(2)), m.group(3)
+
+    m = re.match(r"(\S+)(?:\.xml)?$", filename)
+    if m:
+        return None, None, m.group(1)
+    m = re.match(r"(?:\.xml)?$", filename)
+    if m:
+        return None, None, None
+
+    raise Exception
+
+
+def write_to_disk(path, data: list):
     dont_do_tags = ["p"]
     for x in range(1, 100):
         dont_do_tags.append("n" + str(x))
@@ -185,8 +230,10 @@ def write_to_disk(path, data: Folder):
 
     os.makedirs(path, exist_ok=True)
     width = len(str(len(data)))
-    for i, (name, obj) in enumerate(data, 1):
-        file_name = f"{i:>0{width}}_{name}"
+    for i, (name_group, obj) in enumerate(data, 1):
+        filename = namegroup_to_filename(name_group)
+
+        file_name = f"{i:>0{width}}_{filename}"
         sub_path = os.path.join(path, file_name)
         if isinstance(obj, list):
             write_to_disk(sub_path, obj)

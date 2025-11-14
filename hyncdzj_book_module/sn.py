@@ -13,8 +13,6 @@ info = base.Info(6, "相應部", ("通妙", "雲庵"), "SN")
 def change_name_fun(name):
     m = re.match(r"(\S+篇)", name)
     if m:
-        if name != m.group(1):
-            print(repr(name), repr(m.group(1)))
         return m.group(1)
     else:
         return name

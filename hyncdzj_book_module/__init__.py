@@ -8,7 +8,7 @@ lv = ("律藏", [sv, kd, pv])
 
 from . import dn, mn, sn, an
 jing = ("經藏", [dn, mn, sn, an] + dh_modules)
-jing = ("經藏", [sn])
+#jing = ("經藏", [sn])
 from . import ds, vb, dt, pp, ya, patthana, kv
 lun = ("論藏", (ds, vb, dt, pp, ya, patthana, kv))
 
@@ -16,4 +16,4 @@ from . import mil, dipavamsa, mahavamsa, culavamsa, visuddhimagga, samantapasadi
 wai = ("藏外", [mil, dipavamsa, mahavamsa, culavamsa, visuddhimagga, samantapasadika, abhidhammatthasangaha, dhammalipi])
 
 categories = (lv, jing, lun, wai)
-categories = (jing, )
+#categories = (jing, )
