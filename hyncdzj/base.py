@@ -248,42 +248,27 @@ def write_to_disk(path, data: list):
 def load_from_disk(path) -> list:
     data = []
     entries = os.listdir(path)
-    entries.sort(key=split_serial_from_filename)
+    entries.sort(key=split_file_serial_from_filename)
     for entry in entries:
         entry_path = os.path.join(path, entry)
 
-        if os.path.isdir(entry_path):
-            name = split_name_from_filename(entry)
-            v = load_from_disk(entry_path)
+        namegroup = filename_to_namegroup(extract_filename_from_filename(entry))
 
+        if os.path.isdir(entry_path):
+            v = load_from_disk(entry_path)
         elif os.path.isfile(entry_path):
-            name = os.path.basename(entry_path)
-            #name = os.path.splitext(name)[0]
-            name = split_name_from_filename(name)
             v = xl.parse(open(entry_path, "r").read(),ignore_blank=True, unignore_blank_parent_tags=[""])
         else:
             raise Exception("Unknow File: {}".format(entry_path))
 
-        data.append((name, v))
+        data.append((namegroup, v))
     return data
 
 
-def _split(name):
-    return re.match(r"^(\d+)_(.*?)(\.xml)?$", name)
+
+def split_file_serial_from_filename(name):
+    return re.match(r"^(\d+)_(.*?)(\.xml)?$", name).group(1)
 
 
-def split_serial_from_filename(name):
-    return _split(name).group(1)
-
-
-def split_name_from_filename(name):
-    return _split(name).group(2)
-
-
-
-def get_sutta_name(name):
-    m = re.match(r"^(\d+)\.(.*)$", name)
-    if not m:
-        print(name)
-        exit()
-    return m.group(2)
+def extract_filename_from_filename(name):
+    return re.match(r"^\d+_(.*?)(?:\.xml)?$", name).group(1)
