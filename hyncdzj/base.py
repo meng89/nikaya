@@ -185,17 +185,26 @@ def namegroup_to_filename(namegroup: tuple) -> str:
 
     elif start is None:
         assert end is None
-        range_ = None
+        range_ = ""
     else:
         raise Exception
 
-    if range_ is None and name is None:
+    if name is None:
+        name = ""
+
+    if range_ == "" and  name == "":
         filename = ""
-    elif range_ is not None and name is None:
+    elif range_ == "" and name != "":
+        filename = name
+
+    elif range_ != "" and name == "":
         filename = range_
-    elif range_ is not None and name is not None:
+    elif range_ != "" and name != "":
         filename = range_ + "." + name
+
+
     else:
+        print(namegroup, repr(range_), repr(name))
         raise Exception
 
     return filename
@@ -267,8 +276,11 @@ def load_from_disk(path) -> list:
 
 
 def split_file_serial_from_filename(name):
-    return re.match(r"^(\d+)_(.*?)(\.xml)?$", name).group(1)
-
+    x = re.match(r"^(\d+)_(.*?)(\.xml)?$", name).group(1)
+    assert x is not None
+    return x
 
 def extract_filename_from_filename(name):
-    return re.match(r"^\d+_(.*?)(?:\.xml)?$", name).group(1)
+    x = re.match(r"^\d+_(.*?)(?:\.xml)?$", name).group(1)
+    assert x is not None
+    return x
