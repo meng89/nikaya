@@ -109,20 +109,22 @@ def _make_suttas(module, marks: list[epubpacker.Mark], docs, parent_branch: list
     else:
         my_branch = parent_branch[:]
 
-    for name, obj in data:
+    for namegroup, obj in data:
+        start, end, name = namegroup
         if isinstance(obj, list):
             new_branch = my_branch + [name]
 
-            if need_attach_range(name, obj):
-                start, end = read_range(obj)
-                name2 = "{}({}～{})".format(name, start, end)
+            if start is None and isinstance(obj, list):
+                # 有偈篇 和 芦苇品 这样的文件夹可以在后面添加经号范围。当然有偈篇包含的是其下的相应的范围，芦苇品包含的是其下面的经文范围
+                obj_range_start, obj_range_end = read_range(obj)
+                name2 = "{}({}～{})".format(name, obj_range_start, obj_range_end)
             else:
                 name2 = name
 
             mark = epubpacker.Mark(lang.c(name2))
             marks.append(mark)
 
-            if is_leaf(obj) and need_join(obj): # 这是最后一个目录 且 短经很多
+            if is_leaf(obj) and is_join_needed(obj): # 这是最后一个目录 且 短经很多
                 _branch = my_branch + [name]
                 doc_path = posixpath.join("", *new_branch) + ".xhtml"
                 html, body = make_doc(doc_path, lang, new_branch[-1])
@@ -320,27 +322,16 @@ def get_path(data, obj, path=None):
     return None
 
 
-
-
-def need_attach_range(name, obj):
-    # 有偈篇 和 芦苇品 这样的文件夹可以在后面添加经号范围。当然有偈篇包含的是其下的相应的范围，芦苇品包含的是其下面的经文范围
-    if isinstance(obj, list) and not re.match(r"^\d+\..+$", name):
-        return True
-    else:
-        return False
-
 def read_range(obj):
     return read_start(obj), read_end(obj)
 
 
 def read_start(obj):
     start = None
-    for sub_name, sub_obj in obj:
-        m1 = re.match(r"(\d+)\..+$", sub_name)
-        m2 = re.match(r"^(\d+)-\d+\..+$", sub_name)
-        m = m1 or m2
-        if m:
-            start = m.group(1)
+    for sub_namegroup, sub_obj in obj:
+        sub_start, _sub_end, _sub_name = sub_namegroup
+        if sub_start is not None:
+            start = sub_start
         else:
             if isinstance(sub_obj, list):
                 start = read_start(sub_obj)
@@ -353,12 +344,10 @@ def read_start(obj):
 
 def read_end(obj: list):
     end = None
-    for sub_name, sub_obj in obj[::-1]:
-        m1 = re.match(r"(\d+)\..+$", sub_name)
-        m2 = re.match(r"^\d+-(\d+)\..+$", sub_name)
-        m = m1 or m2
-        if m:
-            end = m.group(1)
+    for sub_namegroup, sub_obj in obj[::-1]:
+        _sub_start, sub_end, _sub_name = sub_namegroup
+        if sub_end is not None:
+            end = sub_end
         else:
             if isinstance(sub_obj, list):
                 end = read_end(sub_obj)
@@ -373,7 +362,7 @@ def is_serialized_folder(name, obj):
     return False
 
 
-def need_join(obj):
+def is_join_needed(obj):
     # 检查是否需要把这里面的所有页面都合并在一起
     # 因为有些经文字太少，一些（哪些?）阅读器没有拼页功能，导致频繁翻页，上下相关的经文不在一个页面上。
     small_page = 0
