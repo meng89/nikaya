@@ -219,14 +219,17 @@ def filename_to_namegroup(filename: str) -> tuple:
     if m:
         return int(m.group(1)), int(m.group(2)), m.group(3)
 
-    m = re.match(r"(\S+)(?:\.xml)?$", filename)
+    m = re.match(r"(.+)(?:\.xml)?$", filename)
     if m:
         return None, None, m.group(1)
+
     m = re.match(r"(?:\.xml)?$", filename)
     if m:
         return None, None, None
 
-    raise Exception
+
+
+    raise Exception(repr(filename))
 
 
 def write_to_disk(path, data: list):

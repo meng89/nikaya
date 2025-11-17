@@ -86,4 +86,7 @@ def name_to_group(name: str, xiangying_index):
         new_name = "父、兄弟、姊妹、子、女、妻"
         return (start, end, new_name), xiangying_index
 
+    if name == "第五十二～五十四\u3000不現見（二～四）":
+        return (52, 54, "不現見（二～四）"), xiangying_index
+
     return (None, None, name), xiangying_index
