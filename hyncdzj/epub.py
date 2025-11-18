@@ -124,7 +124,7 @@ def _make_suttas(module, marks: list[epubpacker.Mark], docs, parent_branch: list
             mark = epubpacker.Mark(lang.c(name2))
             marks.append(mark)
 
-            if is_leaf(obj) and is_join_needed(obj): # 这是最后一个目录 且 短经很多
+            if is_leaf(namegroup, obj) and is_join_needed(obj): # 这是最后一个目录 且 短经很多
                 _branch = my_branch + [name]
                 doc_path = posixpath.join("", *new_branch) + ".xhtml"
                 html, body = make_doc(doc_path, lang, new_branch[-1])
@@ -153,9 +153,8 @@ def _make_suttas(module, marks: list[epubpacker.Mark], docs, parent_branch: list
 
 
 
-def write_sutta(parent_branch, sutta_id, name, obj: xl.Xml, notes, lang, html=None, body=None, doc_path=None):
-    sutta_name = base.get_sutta_name(name)
-    my_branch = parent_branch + [sutta_name]
+def write_sutta(parent_branch, sutta_id, sutta_name, obj: xl.Xml, notes, lang, html=None, body=None, doc_path=None):
+    my_branch = parent_branch + [sutta_name or "none"]
 
     if doc_path is None:
         doc_path = posixpath.join("",*my_branch) + ".xhtml"
@@ -200,11 +199,11 @@ def write_sutta(parent_branch, sutta_id, name, obj: xl.Xml, notes, lang, html=No
 
     span = h.ekid("span", {"class": "sutta_name"})
     if serialized_nodes:
-        name = "{}/{}".format(serialized_nodes[0], sutta_name)
+        namegroup = "{}/{}".format(serialized_nodes[0], sutta_name)
     else:
-        name = sutta_name
+        namegroup = sutta_name
 
-    span.kids.append(lang.c(name))
+    span.kids.append(lang.c(namegroup))
 
     xml_body = obj.root.find_descendants("body")[0]
     for xml_p in xml_body.find_descendants("p"):
@@ -390,15 +389,29 @@ def is_join_needed(obj):
         return True
 
 
-
-def is_leaf(obj):
-    if isinstance(obj, list):
-        if isinstance(obj[0][1], xl.Xml):
-            return True
-        else:
-            return False
-    else:
+def is_leaf(namegroup, obj):
+    if namegroup[0] is not None:
         return False
+    if not isinstance(obj, list):
+        return False
+
+    file_count = 0
+    dir_count = 0
+
+    for (sub_start, sub_end, sub_name), sub_obj in obj:
+        if isinstance(sub_obj, list):
+            dir_count += 1
+        elif isinstance(sub_obj, xl.Xml) and sub_name is not None:
+            file_count += 1
+
+    if dir_count == 0:
+        return False
+
+    if file_count > 0:
+        return True
+
+    return False
+
 
 
 
