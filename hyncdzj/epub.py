@@ -142,7 +142,7 @@ def _make_suttas(module, marks: list[epubpacker.Mark], docs, parent_branch: list
 
 
         else:
-            doc_path, html, mark = write_sutta(my_branch, "sutta1", name, obj, notes, lang)
+            doc_path, html, mark = write_sutta(my_branch, "sutta1", namegroup, obj, notes, lang)
             docs.append((doc_path, html))
             marks.append(mark)
 
@@ -153,7 +153,10 @@ def _make_suttas(module, marks: list[epubpacker.Mark], docs, parent_branch: list
 
 
 
-def write_sutta(parent_branch, sutta_id, sutta_name, obj: xl.Xml, notes, lang, html=None, body=None, doc_path=None):
+def write_sutta(parent_branch, sutta_id, namegroup, obj: xl.Xml, notes, lang, html=None, body=None, doc_path=None):
+
+    start, end, sutta_name = namegroup
+
     my_branch = parent_branch + [sutta_name or "none"]
 
     if doc_path is None:
@@ -205,13 +208,11 @@ def write_sutta(parent_branch, sutta_id, sutta_name, obj: xl.Xml, notes, lang, h
 
     span.kids.append(lang.c(namegroup))
 
-    xml_body = obj.root.find_descendants("body")[0]
-    for xml_p in xml_body.find_descendants("p"):
+    doc = obj.root
+    for xml_p in doc.find_descendants("p"):
         html_p = body.ekid("p")
         html_p.kids.extend(xml_es_to_html(xml_p.kids, obj.root, notes, doc_path, lang))
 
-
-    start, end = get_sutta_range(obj.root)
     if start == end:
         _range = start
     else:
@@ -281,12 +282,6 @@ def _get_note_by_key(root: xl.Element, key: str):
                 return e.kids
 
     raise Exception("Note not found")
-
-
-def get_sutta_range(root: xl.Element):
-    start = root.find_descendants("start")[0].kids[0]
-    end = root.find_descendants("end")[0].kids[0]
-    return start, end
 
 
 def get_sutta_num_abo(root: xl.Element):

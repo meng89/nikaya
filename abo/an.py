@@ -1,9 +1,7 @@
-import os.path
 import re
 
 import xl
 
-import base
 import abo.page_parsing
 import abo.utils
 
