@@ -131,7 +131,7 @@ def _make_suttas(module, marks: list[epubpacker.Mark], docs, parent_branch: list
 
                 for count, (sub_name, sub_obj) in enumerate(obj, start=1):
                     sutta_id = "sutta{}".format(count)
-                    _, _, sutta_mark = write_sutta(parent_branch, sutta_id, sub_obj, notes, lang, html, body, doc_path)
+                    _, _, sutta_mark = write_sutta(data, parent_branch, sutta_id, namegroup, sub_obj, notes, lang, html, body, doc_path)
                     mark.kids.append(sutta_mark)
 
                 docs.append((doc_path, html))
@@ -152,8 +152,7 @@ def _make_suttas(module, marks: list[epubpacker.Mark], docs, parent_branch: list
     return first_doc_path
 
 
-
-def write_sutta(parent_branch, sutta_id, namegroup, obj: xl.Xml, notes, lang, html=None, body=None, doc_path=None):
+def write_sutta(data, short, parent_branch, sutta_id, namegroup, obj: xl.Xml, notes, lang, html=None, body=None, doc_path=None):
 
     start, end, sutta_name = namegroup
 
@@ -171,27 +170,16 @@ def write_sutta(parent_branch, sutta_id, namegroup, obj: xl.Xml, notes, lang, ht
 
     sne = xl.Element("span", {"class": "sutta_nums"})
 
-    sutta_num_abo = get_sutta_num_abo(obj.root)
-    sutta_num_sc = get_sutta_num_sc(obj.root)
+    nums, names = get_sutta_nums_and_names(data, obj)
 
-    if sutta_num_sc is not None:
-        sc_a = xl.Element("a", {"href": "https://suttacentral.net/" + sutta_num_sc.replace(" ","")}, [sutta_num_sc])
+    nums_str = ".".join([str(num) for num in nums])
+    names_str = "/".join(names)
+
+    if nums_str:
+        sc_a = xl.Element("a", {"href": "https://suttacentral.net/" + short + nums_str}, [short + nums_str])
         sc_a.attrs["class"] = "sutta_num_sc"
         sne.kids.append(sc_a)
 
-    if sutta_num_abo and sutta_num_sc:
-        sne.kids.append("/")
-
-    if sutta_num_abo is not None:
-        span = xl.Element("span", {"class": "sutta_num_abo"})
-        span.kids.append(sutta_num_abo)
-        #x = suttanum_ref.make_suttanum_xml(sutta_num, bns)
-        #print(x[1].to_str())
-        sne.kids.append(span)
-
-    if sutta_num_abo and sutta_num_sc:
-        h.kids.append(sne)
-        h.kids.append("　")
     #####################################################
     serialized_nodes = []
     for node in parent_branch:
@@ -284,17 +272,33 @@ def _get_note_by_key(root: xl.Element, key: str):
     raise Exception("Note not found")
 
 
-def get_sutta_num_abo(root: xl.Element):
-    for sutta_num in root.find_descendants("sutta_num"):
-        if sutta_num.attrs.get("type") is None:
-            return sutta_num.kids[0]
+def get_sutta_nums_and_names(data, obj):
+    names = []
+    nums = []
+    v = get_sutta_num_sc2(data, obj)
+    if v is not None:
+        for start, end, name in v:
+            nums.append((start, end))
+            names.append(name)
+    return nums, names
+
+def get_sutta_num_sc2(data, obj):
+    for namegroup, obj2 in data:
+        start, end, name = namegroup
+        if obj2 is obj:
+            if start is not None:
+                return namegroup
+            else:
+                return None
+
+        if isinstance(obj2, list):
+            v = get_sutta_num_sc(obj2, obj)
+            if v is not None:
+                return namegroup, v
+            else:
+                continue
     return None
 
-def get_sutta_num_sc(root: xl.Element):
-    for sutta_num in root.find_descendants("sutta_num"):
-        if sutta_num.attrs.get("type") == "SC":
-            return sutta_num.kids[0]
-    return None
 
 def get_source_page(root: xl.Element):
     return root.find_descendants("source_page")[0].kids[0]
@@ -357,16 +361,31 @@ def is_serialized_folder(name, obj):
 
 
 def is_join_needed(obj):
+    small_page, large_page = count_page(obj)
+    try:
+        if small_page / large_page > 1:
+            return True
+        else:
+            return False
+    except ZeroDivisionError:
+        return True
+
+
+def count_page(obj):
     # 检查是否需要把这里面的所有页面都合并在一起
     # 因为有些经文字太少，一些（哪些?）阅读器没有拼页功能，导致频繁翻页，上下相关的经文不在一个页面上。
     small_page = 0
     large_page = 0
 
-    for name, xml in obj:
-        print(name)
-        xml: xl.Xml
+    for name, obj in obj:
+        if isinstance(obj, list):
+            small_page2, large_page2 = count_page(obj)
+            small_page += small_page2
+            large_page += large_page2
+            continue
+
+        xml = obj
         line_count = 0
-        root = xml.root
         for p in xml.root.find_kids("p"):
             txt = hyncdzj.utils.line_to_txt(p.kids)
             line_count += math.ceil(len(txt)/40)
@@ -375,13 +394,8 @@ def is_join_needed(obj):
             small_page += 1
         else:
             large_page += 1
-    try:
-        if small_page / large_page > 1:
-            return True
-        else:
-            return False
-    except ZeroDivisionError:
-        return True
+
+    return small_page, large_page
 
 
 def is_leaf(namegroup, obj):
