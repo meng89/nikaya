@@ -48,12 +48,10 @@ def build_epub(full_path, data, modules: list, lang, exit_after_done=False):
 
     #_write_cover(epub, ebook_utils.make_cover(module, data, lang), lang) #todo
     #_write_homage(module, epub.mark.kids, docs, ln, gn, lang) #todo
-    if len(modules) == 1:
-        module = modules[0]
-        _make_suttas(module, epub.mark.kids, docs, [], module.info.abbr, data, notes, lang)
-    elif len(modules) > 1:
-        for module in modules:
-            _make_suttas(module, epub.mark.kids, docs, [], module.info.abbr, data, notes, lang)
+
+
+    for module in modules:
+        _make_suttas(module, epub.mark.kids, docs, [(None, None, module.info.name)], data, notes, lang)
 
 
     for path, xml in docs:
@@ -102,17 +100,20 @@ def _get_id(id_, e: xl.Element):
 #     2.天子相應
 
 
-def _make_suttas(module, marks: list[epubpacker.Mark], docs, parent_branch: list, data_name, data, notes, lang):
+def _make_suttas(module, marks: list[epubpacker.Mark], docs, parent_branch: list, data, notes, lang):
+    short = module.info.abbr
+
     first_doc_path = None
-    if data_name is not None:
-        my_branch = parent_branch + [data_name]
-    else:
-        my_branch = parent_branch[:]
+    #if data_name is not None:
+    #    my_branch = parent_branch + [data_name]
+    #else:
+    #    my_branch = parent_branch[:]
 
     for namegroup, obj in data:
         start, end, name = namegroup
+        my_branch = parent_branch + [namegroup]
+
         if isinstance(obj, list):
-            new_branch = my_branch + [name]
 
             if start is None and isinstance(obj, list):
                 # 有偈篇 和 芦苇品 这样的文件夹可以在后面添加经号范围。当然有偈篇包含的是其下的相应的范围，芦苇品包含的是其下面的经文范围
@@ -125,24 +126,23 @@ def _make_suttas(module, marks: list[epubpacker.Mark], docs, parent_branch: list
             marks.append(mark)
 
             if is_leaf(namegroup, obj) and is_join_needed(obj): # 这是最后一个目录 且 短经很多
-                _branch = my_branch + [name]
-                doc_path = posixpath.join("", *new_branch) + ".xhtml"
-                html, body = make_doc(doc_path, lang, new_branch[-1])
+                #_branch = my_branch + [name]
+                doc_path = branch_to_doc_path(my_branch)
+                html, body = make_doc(doc_path, lang, name)
 
                 for count, (sub_name, sub_obj) in enumerate(obj, start=1):
                     sutta_id = "sutta{}".format(count)
-                    _, _, sutta_mark = write_sutta(data, parent_branch, sutta_id, namegroup, sub_obj, notes, lang, html, body, doc_path)
+                    _, _, sutta_mark = write_sutta(short, parent_branch, sutta_id, sub_obj, notes, lang, html, body, doc_path)
                     mark.kids.append(sutta_mark)
 
                 docs.append((doc_path, html))
 
             else:
-                doc_path = _make_suttas(module, mark.kids, docs, my_branch, name, obj, notes, lang)
+                doc_path = _make_suttas(module, mark.kids, docs, my_branch, obj, notes, lang)
             mark.href = doc_path
 
-
         else:
-            doc_path, html, mark = write_sutta(my_branch, "sutta1", namegroup, obj, notes, lang)
+            doc_path, html, mark = write_sutta(short, my_branch, "sutta1", obj, notes, lang)
             docs.append((doc_path, html))
             marks.append(mark)
 
@@ -152,11 +152,9 @@ def _make_suttas(module, marks: list[epubpacker.Mark], docs, parent_branch: list
     return first_doc_path
 
 
-def write_sutta(data, short, parent_branch, sutta_id, namegroup, obj: xl.Xml, notes, lang, html=None, body=None, doc_path=None):
+def write_sutta(short, my_branch, sutta_id, obj: xl.Xml, notes, lang, html=None, body=None, doc_path=None):
 
-    start, end, sutta_name = namegroup
-
-    my_branch = parent_branch + [sutta_name or "none"]
+    start, end, sutta_name = my_branch[-1]
 
     if doc_path is None:
         doc_path = posixpath.join("",*my_branch) + ".xhtml"
@@ -170,10 +168,9 @@ def write_sutta(data, short, parent_branch, sutta_id, namegroup, obj: xl.Xml, no
 
     sne = xl.Element("span", {"class": "sutta_nums"})
 
-    nums, names = get_sutta_nums_and_names(data, obj)
+    nums, names = branch_to_nums_and_names(my_branch)
 
     nums_str = ".".join([str(num) for num in nums])
-    names_str = "/".join(names)
 
     if nums_str:
         sc_a = xl.Element("a", {"href": "https://suttacentral.net/" + short + nums_str}, [short + nums_str])
@@ -181,20 +178,15 @@ def write_sutta(data, short, parent_branch, sutta_id, namegroup, obj: xl.Xml, no
         sne.kids.append(sc_a)
 
     #####################################################
-    serialized_nodes = []
-    for node in parent_branch:
-        m = re.match(r"^\d+\.(.+)$", node)
-        if m:
-            serialized_nodes.append(m.group(1))
-    assert len(serialized_nodes) <= 1
+
 
     span = h.ekid("span", {"class": "sutta_name"})
-    if serialized_nodes:
-        namegroup = "{}/{}".format(serialized_nodes[0], sutta_name)
+    if names:
+        h_names = "/".join(names)
     else:
-        namegroup = sutta_name
+        h_names = sutta_name
 
-    span.kids.append(lang.c(namegroup))
+    span.kids.append(lang.c(h_names))
 
     doc = obj.root
     for xml_p in doc.find_descendants("p"):
@@ -272,32 +264,23 @@ def _get_note_by_key(root: xl.Element, key: str):
     raise Exception("Note not found")
 
 
-def get_sutta_nums_and_names(data, obj):
-    names = []
+def branch_to_doc_path(branch: list):
+    filenames = []
+    for namegroup in branch:
+        filename = base.namegroup_to_filename(namegroup)
+        filenames.append(filename)
+    return posixpath.join("", *filenames) + ".xhtml"
+
+
+def branch_to_nums_and_names(branch: list):
     nums = []
-    v = get_sutta_num_sc2(data, obj)
-    if v is not None:
-        for start, end, name in v:
+    names = []
+    for namegroup in branch:
+        start, end, name = namegroup
+        if start is not None:
             nums.append((start, end))
             names.append(name)
     return nums, names
-
-def get_sutta_num_sc2(data, obj):
-    for namegroup, obj2 in data:
-        start, end, name = namegroup
-        if obj2 is obj:
-            if start is not None:
-                return namegroup
-            else:
-                return None
-
-        if isinstance(obj2, list):
-            v = get_sutta_num_sc(obj2, obj)
-            if v is not None:
-                return namegroup, v
-            else:
-                continue
-    return None
 
 
 def get_source_page(root: xl.Element):
@@ -352,12 +335,6 @@ def read_end(obj: list):
         if end is not None:
             return end
     return None
-
-
-def is_serialized_folder(name, obj):
-    if isinstance(obj, list) and re.match(r"^(\d+)\..+$", name):
-        return True
-    return False
 
 
 def is_join_needed(obj):
@@ -420,8 +397,6 @@ def is_leaf(namegroup, obj):
         return True
 
     return False
-
-
 
 
 def make_doc(doc_path, lang, title=None):
