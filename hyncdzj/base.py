@@ -174,8 +174,13 @@ Entry = Tuple[str, Union[xl.Xml, List["Entry"]]]
 Folder = List[Entry]
 
 
-def namegroup_to_filename(namegroup: tuple) -> str:
-    start, end, name = namegroup
+NameGroup = Tuple[int|None, int|None, str|None]
+
+FullNameGroup = Tuple[int, int|None, int|None, str|None]
+
+
+def fullnamegroup_to_filename(namegroup: FullNameGroup, index_width=0) -> str:
+    file_index, start, end, name = namegroup
     if isinstance(start, int):
         assert isinstance(end, int)
         if start == end:
@@ -207,27 +212,26 @@ def namegroup_to_filename(namegroup: tuple) -> str:
         print(namegroup, repr(range_), repr(name))
         raise Exception
 
-    return filename
+    file_name = f"{file_index:>0{index_width}}_{filename}"
+    return file_name
 
 
-def filename_to_namegroup(filename: str) -> tuple:
-    m = re.match(r"(\d)\.(\S+)(?:\.xml)?$", filename)
+def filename_to_namegroup(filename: str) -> FullNameGroup:
+    m = re.match(r"(\d+)_(\d)\.(\S+)(?:\.xml)?$", filename)
     if m:
-        return int(m.group(1)), int(m.group(1)), m.group(2)
+        return int(m.group(1)), int(m.group(2)), int(m.group(2)), m.group(3)
 
-    m = re.match(r"(\d)-(\d)\.(\S+)(?:\.xml)?$", filename)
+    m = re.match(r"(\d+)_(\d)-(\d)\.(\S+)(?:\.xml)?$", filename)
     if m:
-        return int(m.group(1)), int(m.group(2)), m.group(3)
+        return int(m.group(1)), int(m.group(2)), int(m.group(3)), m.group(4)
 
-    m = re.match(r"(.+)(?:\.xml)?$", filename)
+    m = re.match(r"(\d+)_(.+)(?:\.xml)?$", filename)
     if m:
-        return None, None, m.group(1)
+        return int(m.group(1)), None, None, m.group(2)
 
-    m = re.match(r"(?:\.xml)?$", filename)
+    m = re.match(r"(\d+)_(?:\.xml)?$", filename)
     if m:
-        return None, None, None
-
-
+        return int(m.group(1)), None, None, None
 
     raise Exception(repr(filename))
 
@@ -243,9 +247,7 @@ def write_to_disk(path, data: list):
     os.makedirs(path, exist_ok=True)
     width = len(str(len(data)))
     for i, (name_group, obj) in enumerate(data, 1):
-        filename = namegroup_to_filename(name_group)
-
-        file_name = f"{i:>0{width}}_{filename}"
+        file_name = fullnamegroup_to_filename(name_group, width)
         sub_path = os.path.join(path, file_name)
         if isinstance(obj, list):
             write_to_disk(sub_path, obj)
@@ -260,11 +262,10 @@ def write_to_disk(path, data: list):
 def load_from_disk(path) -> list:
     data = []
     entries = os.listdir(path)
-    entries.sort(key=split_file_serial_from_filename)
     for entry in entries:
         entry_path = os.path.join(path, entry)
 
-        namegroup = filename_to_namegroup(extract_filename_from_filename(entry))
+        fullnamegroup = filename_to_namegroup(entry)
 
         if os.path.isdir(entry_path):
             v = load_from_disk(entry_path)
@@ -272,8 +273,9 @@ def load_from_disk(path) -> list:
             v = xl.parse(open(entry_path, "r").read(),ignore_blank=True, unignore_blank_parent_tags=[""])
         else:
             raise Exception("Unknow File: {}".format(entry_path))
+        data.append((fullnamegroup, v))
 
-        data.append((namegroup, v))
+    data.sort()
     return data
 
 

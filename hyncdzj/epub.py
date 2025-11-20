@@ -50,8 +50,8 @@ def build_epub(full_path, data, modules: list, lang, exit_after_done=False):
     #_write_homage(module, epub.mark.kids, docs, ln, gn, lang) #todo
 
 
-    for module in modules:
-        _make_suttas(module, epub.mark.kids, docs, [(None, None, module.info.name)], data, notes, lang)
+    for index, module in enumerate(modules, start=1):
+        _make_suttas(module, epub.mark.kids, docs, [(index, None, None, module.info.name)], data, notes, lang)
 
 
     for path, xml in docs:
@@ -110,7 +110,7 @@ def _make_suttas(module, marks: list[epubpacker.Mark], docs, parent_branch: list
     #    my_branch = parent_branch[:]
 
     for namegroup, obj in data:
-        start, end, name = namegroup
+        file_index, start, end, name = namegroup
         my_branch = parent_branch + [namegroup]
 
         if isinstance(obj, list):
@@ -154,10 +154,10 @@ def _make_suttas(module, marks: list[epubpacker.Mark], docs, parent_branch: list
 
 def write_sutta(short, my_branch, sutta_id, obj: xl.Xml, notes, lang, html=None, body=None, doc_path=None):
 
-    start, end, sutta_name = my_branch[-1]
+    file_index, start, end, sutta_name = my_branch[-1]
 
     if doc_path is None:
-        doc_path = posixpath.join("",*my_branch) + ".xhtml"
+        doc_path = branch_to_doc_path(my_branch)
         html, body = make_doc(doc_path, lang, sutta_name)
 
     level = max(len(my_branch), 3)
@@ -188,6 +188,7 @@ def write_sutta(short, my_branch, sutta_id, obj: xl.Xml, notes, lang, html=None,
 
     span.kids.append(lang.c(h_names))
 
+    print(doc_path)
     doc = obj.root
     for xml_p in doc.find_descendants("p"):
         html_p = body.ekid("p")
@@ -242,9 +243,11 @@ def xml_es_to_html(es: ES, root, notes: hyncdzj.note.Notes, doc_path, lang) -> E
             elif m_n:
                 pass
 
+            elif e.tag == "a":
+                new_es.append(e)
+
             else:
-                print(e.to_str())
-                raise Exception("Unknown element type")
+                raise Exception("Unknown element type: {}".format(repr(e.to_str())))
 
         elif isinstance(e, str):
             #print("str:", e)
@@ -267,7 +270,7 @@ def _get_note_by_key(root: xl.Element, key: str):
 def branch_to_doc_path(branch: list):
     filenames = []
     for namegroup in branch:
-        filename = base.namegroup_to_filename(namegroup)
+        filename = base.fullnamegroup_to_filename(namegroup)
         filenames.append(filename)
     return posixpath.join("", *filenames) + ".xhtml"
 
@@ -276,31 +279,11 @@ def branch_to_nums_and_names(branch: list):
     nums = []
     names = []
     for namegroup in branch:
-        start, end, name = namegroup
+        file_index, start, end, name = namegroup
         if start is not None:
             nums.append((start, end))
             names.append(name)
     return nums, names
-
-
-def get_source_page(root: xl.Element):
-    return root.find_descendants("source_page")[0].kids[0]
-
-
-def get_path(data, obj, path=None):
-    path = path or []
-    for _, sub_obj in data:
-
-        if obj is sub_obj:
-            return path
-
-        if isinstance(sub_obj, list):
-            path.append(sub_obj)
-            path2 = get_path(sub_obj, obj, path)
-            if path2:
-                return path2
-
-    return None
 
 
 def read_range(obj):
@@ -310,7 +293,7 @@ def read_range(obj):
 def read_start(obj):
     start = None
     for sub_namegroup, sub_obj in obj:
-        sub_start, _sub_end, _sub_name = sub_namegroup
+        _file_index, sub_start, _sub_end, _sub_name = sub_namegroup
         if sub_start is not None:
             start = sub_start
         else:
@@ -326,7 +309,7 @@ def read_start(obj):
 def read_end(obj: list):
     end = None
     for sub_namegroup, sub_obj in obj[::-1]:
-        _sub_start, sub_end, _sub_name = sub_namegroup
+        _file_index, _sub_start, sub_end, _sub_name = sub_namegroup
         if sub_end is not None:
             end = sub_end
         else:
@@ -376,7 +359,7 @@ def count_page(obj):
 
 
 def is_leaf(namegroup, obj):
-    if namegroup[0] is not None:
+    if namegroup[1] is not None:
         return False
     if not isinstance(obj, list):
         return False
@@ -384,19 +367,16 @@ def is_leaf(namegroup, obj):
     file_count = 0
     dir_count = 0
 
-    for (sub_start, sub_end, sub_name), sub_obj in obj:
+    for (file_index, sub_start, sub_end, sub_name), sub_obj in obj:
         if isinstance(sub_obj, list):
             dir_count += 1
         elif isinstance(sub_obj, xl.Xml) and sub_name is not None:
             file_count += 1
 
     if dir_count == 0:
-        return False
-
-    if file_count > 0:
         return True
-
-    return False
+    else:
+        return False
 
 
 def make_doc(doc_path, lang, title=None):

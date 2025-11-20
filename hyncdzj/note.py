@@ -24,7 +24,7 @@ class Notes:
         return self._get_page_path(length) + "#{}".format(length)
 
     def get_pages(self, lang):
-        import hyncdzj.epub
+        from . import epub
         xhtmls = []
         last_page_path = None
         last_ol = None
@@ -36,9 +36,9 @@ class Notes:
             if _path != last_page_path:
                 last_page_path = _path
                 title = self.note_name+"第{}页".format(self._get_page_index(index))
-                html, body = hyncdzj.epub.make_doc(last_page_path, lang, lang.c(title))
+                html, body = epub.make_doc(last_page_path, lang, lang.c(title))
                 body.attrs["class"] = "note"
-                last_html = html
+                #last_html = html
                 h1 = body.ekid("h1")
                 h1.kids.append(title)
                 section = body.ekid("section")
@@ -50,9 +50,9 @@ class Notes:
                 xhtmls.append((title, last_page_path, last_html))
 
             li = last_ol.ekid("li")
-            li.attrs["id"] = index
+            li.attrs["id"] = str(index)
             p = li.ekid("p")
-            p.kids.extend(hyncdzj.epub.xml_es_to_html(note, last_html, lang, self, last_page_path, lang))
+            p.kids.extend(epub.xml_es_to_html(note, last_html, self, last_page_path, lang))
 
         pages = []
         for title, path, xhtml in xhtmls:
