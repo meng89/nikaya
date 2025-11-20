@@ -247,7 +247,7 @@ def write_to_disk(path, data: list):
     os.makedirs(path, exist_ok=True)
     width = len(str(len(data)))
     for i, (name_group, obj) in enumerate(data, 1):
-        file_name = fullnamegroup_to_filename(name_group, width)
+        file_name = fullnamegroup_to_filename(tuple([i] + list(name_group)), width)
         sub_path = os.path.join(path, file_name)
         if isinstance(obj, list):
             write_to_disk(sub_path, obj)
