@@ -114,11 +114,18 @@ def _make_suttas(module, marks: list[epubpacker.Mark], docs, parent_branch: list
         my_branch = parent_branch + [namegroup]
 
         if isinstance(obj, list):
+            if start is not None:
+                if start == end:
+                    name2 = str(start) + "." + (name or "none1")
+                else:
+                    name2 = str(start) + "-" + str(end) + "." + (name or "none1")
 
-            if start is None and isinstance(obj, list):
+            elif start is None and isinstance(obj, list):
                 # 有偈篇 和 芦苇品 这样的文件夹可以在后面添加经号范围。当然有偈篇包含的是其下的相应的范围，芦苇品包含的是其下面的经文范围
                 obj_range_start, obj_range_end = read_range(obj)
+
                 name2 = "{}({}～{})".format(name, obj_range_start, obj_range_end)
+
             else:
                 name2 = name
 
@@ -130,9 +137,9 @@ def _make_suttas(module, marks: list[epubpacker.Mark], docs, parent_branch: list
                 doc_path = branch_to_doc_path(my_branch)
                 html, body = make_doc(doc_path, lang, name)
 
-                for count, (sub_name, sub_obj) in enumerate(obj, start=1):
+                for count, (sub_namegroup, sub_obj) in enumerate(obj, start=1):
                     sutta_id = "sutta{}".format(count)
-                    _, _, sutta_mark = write_sutta(short, parent_branch, sutta_id, sub_obj, notes, lang, html, body, doc_path)
+                    _, _, sutta_mark = write_sutta(short, my_branch + [sub_namegroup], sutta_id, sub_obj, notes, lang, html, body, doc_path)
                     mark.kids.append(sutta_mark)
 
                 docs.append((doc_path, html))
@@ -162,42 +169,43 @@ def write_sutta(short, my_branch, sutta_id, obj: xl.Xml, notes, lang, html=None,
 
     level = max(len(my_branch), 3)
 
-    h = body.ekid("h" + str(level))
-    h.attrs["class"] = "sutta_title"
-    h.attrs["id"] = sutta_id
+    title_h = body.ekid("h" + str(level))
+    title_h.attrs["class"] = "sutta_title"
+    title_h.attrs["id"] = sutta_id
 
-    sne = xl.Element("span", {"class": "sutta_nums"})
-
-    nums, names = branch_to_nums_and_names(my_branch)
+    num_span = title_h.ekid("span", {"class": "sutta_num_sc"})
+    num_tuples, names = branch_to_nums_and_names(my_branch)
+    nums = []
+    for _start, _end in num_tuples:
+        if _start == _end:
+            nums.append(str(_start))
+        else:
+            nums.append(str(_start) + "～" + str(_end))
 
     nums_str = ".".join([str(num) for num in nums])
 
     if nums_str:
         sc_a = xl.Element("a", {"href": "https://suttacentral.net/" + short + nums_str}, [short + nums_str])
         sc_a.attrs["class"] = "sutta_num_sc"
-        sne.kids.append(sc_a)
+        num_span.kids.append(sc_a)
 
-    #####################################################
+    if nums_str:
+        title_h.kids.append("　")
 
-
-    span = h.ekid("span", {"class": "sutta_name"})
+    name_span = title_h.ekid("span", {"class": "sutta_name"})
     if names:
-        h_names = "/".join(names)
+        h_names = "/".join([n if n else "" for n in names])
     else:
-        h_names = sutta_name
+        h_names = sutta_name or "none"
+    name_span.kids.append(lang.c(h_names))
 
-    span.kids.append(lang.c(h_names))
-
-    print(doc_path)
-    doc = obj.root
-    for xml_p in doc.find_descendants("p"):
-        html_p = body.ekid("p")
-        html_p.kids.extend(xml_es_to_html(xml_p.kids, obj.root, notes, doc_path, lang))
+    es = xml_es_to_html(obj.root.kids, obj.root, notes, doc_path, lang)
+    body.kids.extend(es)
 
     if start == end:
-        _range = start
+        _range = str(start)
     else:
-        _range = start + "～" + end
+        _range = str(start) + "～" + str(end)
 
     mark = epubpacker.Mark("{}.{}".format(_range, lang.c(sutta_name)), href="{}#{}".format(doc_path, sutta_id))
     return doc_path, html, mark
@@ -206,6 +214,7 @@ def write_sutta(short, my_branch, sutta_id, obj: xl.Xml, notes, lang, html=None,
 ES = list[xl.Element | str]
 
 def xml_es_to_html(es: ES, root, notes: hyncdzj.note.Notes, doc_path, lang) -> ES:
+
     new_es = []
     for e in es:
         if isinstance(e, xl.Element):
@@ -228,17 +237,44 @@ def xml_es_to_html(es: ES, root, notes: hyncdzj.note.Notes, doc_path, lang) -> E
 
                 new_es.append(a)
 
+            elif e.tag == "p":
+                new_es.extend(xml_es_to_html(e.kids, root, notes, doc_path, lang))
+
             elif e.tag == "j":
+
+                div = xl.Element("div", attrs={"class": "jizi"})
+                person = ""
+                len_person = 0
                 if "p" in e.attrs.keys():
+                    person = e.attrs["p"] + "：　"
+                    len_person = len(person)
+
+                for index, p_e in enumerate(e.kids):
+                    _es = []
+                    def _add(_es2):
+                        if len(_es) > 0 and isinstance(_es[-1], str) and len(_es2) > 0 and isinstance(_es2[0], str):
+                            _es_tail = _es[-1]
+                            _es.pop(-1)
+                            _es2_head = _es2[0]
+                            _es2.pop(0)
+                            _es.append(_es_tail + _es2_head)
+                            _es.extend(_es2)
+                        else:
+                            _es.extend(_es2)
+
+                    if index == 0:
+                        _es.append(person)
+                        if p_e.kids[0][0] == "「":
+                            len_person += 1
+                    else:
+                        _add(["　" * len_person])
+                    _add(p_e.kids)
                     p = xl.Element("p")
-                    p.kids.append(e.attrs["p"])
-                    p.attrs["class"] = "person"
-                    new_es.append(p)
-                for p_e in e.kids:
-                    p = xl.Element("p")
-                    p.attrs["class"] = "ji"
-                    p.kids.extend(xml_es_to_html(p_e.kids, root, notes, doc_path, lang))
-                    new_es.append(p)
+                    _es3 = xml_es_to_html(_es, root, notes, doc_path, lang)
+                    p.kids.extend(_es3)
+                    _es = []
+                    div.kids.append(p)
+                new_es.append(div)
 
             elif m_n:
                 pass
@@ -283,10 +319,18 @@ def branch_to_nums_and_names(branch: list):
         if start is not None:
             nums.append((start, end))
             names.append(name)
+
     return nums, names
 
 
 def read_range(obj):
+    start = read_start(obj)
+    end = read_end(obj)
+    if not isinstance(start, int) or not isinstance(end, int):
+        print()
+        print([x for x,y in obj])
+        print(repr(start), repr(end))
+
     return read_start(obj), read_end(obj)
 
 
@@ -307,16 +351,16 @@ def read_start(obj):
 
 
 def read_end(obj: list):
-    end = None
     for sub_namegroup, sub_obj in obj[::-1]:
         _file_index, _sub_start, sub_end, _sub_name = sub_namegroup
         if sub_end is not None:
-            end = sub_end
+            return sub_end
         else:
             if isinstance(sub_obj, list):
                 end = read_end(sub_obj)
-        if end is not None:
-            return end
+                if end is not None:
+                    return end
+
     return None
 
 

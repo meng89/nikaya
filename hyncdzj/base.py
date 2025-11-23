@@ -217,19 +217,37 @@ def fullnamegroup_to_filename(namegroup: FullNameGroup, index_width=0) -> str:
 
 
 def filename_to_namegroup(filename: str) -> FullNameGroup:
-    m = re.match(r"(\d+)_(\d)\.(\S+)(?:\.xml)?$", filename)
+    if filename.endswith(".xml"):
+        filename = filename[:-4]
+
+    # 1_1.xxx
+    m = re.match(r"(\d+)_(\d+)\.(.+)$", filename)
     if m:
         return int(m.group(1)), int(m.group(2)), int(m.group(2)), m.group(3)
 
-    m = re.match(r"(\d+)_(\d)-(\d)\.(\S+)(?:\.xml)?$", filename)
+    # 1_1
+    m = re.match(r"(\d+)_(\d+)$", filename)
+    if m:
+        return int(m.group(1)), int(m.group(2)), int(m.group(2)), None
+
+
+    # 1_1-2.xxx
+    m = re.match(r"(\d+)_(\d+)-(\d+)\.(.+)$", filename)
     if m:
         return int(m.group(1)), int(m.group(2)), int(m.group(3)), m.group(4)
 
-    m = re.match(r"(\d+)_(.+)(?:\.xml)?$", filename)
+    # 1_1-2
+    m = re.match(r"(\d+)_(\d+)-(\d+)$", filename)
     if m:
+        return int(m.group(1)), int(m.group(2)), int(m.group(3)), None
+
+    # 1_xxx
+    m = re.match(r"(\d+)_(.+)$", filename)
+    if m and True:
         return int(m.group(1)), None, None, m.group(2)
 
-    m = re.match(r"(\d+)_(?:\.xml)?$", filename)
+    # 1_
+    m = re.match(r"(\d+)_$", filename)
     if m:
         return int(m.group(1)), None, None, None
 
