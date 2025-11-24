@@ -264,7 +264,7 @@ def xml_es_to_html(es: ES, root, notes: hyncdzj.note.Notes, doc_path, lang) -> E
 
                     if index == 0:
                         _es.append(person)
-                        if p_e.kids[0][0] == "「":
+                        if isinstance(p_e.kids[0], str) and p_e.kids[0][0] == "「":
                             len_person += 1
                     else:
                         _add(["　" * len_person])
@@ -286,9 +286,7 @@ def xml_es_to_html(es: ES, root, notes: hyncdzj.note.Notes, doc_path, lang) -> E
                 raise Exception("Unknown element type: {}".format(repr(e.to_str())))
 
         elif isinstance(e, str):
-            #print("str:", e)
             new_es.extend(tag_str.str_to_es(lang.c(e)))
-            #new_es.extend(suttanum_ref.make_suttanum_xml(lang.c(e), bns))
 
     return new_es
 
@@ -324,13 +322,6 @@ def branch_to_nums_and_names(branch: list):
 
 
 def read_range(obj):
-    start = read_start(obj)
-    end = read_end(obj)
-    if not isinstance(start, int) or not isinstance(end, int):
-        print()
-        print([x for x,y in obj])
-        print(repr(start), repr(end))
-
     return read_start(obj), read_end(obj)
 
 
