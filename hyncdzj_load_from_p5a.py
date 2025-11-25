@@ -651,17 +651,19 @@ def get_head_kids(div):
 
 ########################################################################################################################
 
-def change_book_name_by_given_fun(d: base.Folder, change_name_fun):
+def change_book_name_by_given_fun(d: list, change_name_fun):
     new_list = []
     for name, obj in d:
-        if name in ("", None):
+        if name in ["", None]:
             new_list.append((name, obj))
             continue
 
         new_name = change_name_fun(name)
         if isinstance(obj, list):
-            change_book_name_by_given_fun(obj, change_name_fun)
-        new_list.append((new_name, obj))
+            new_obj = change_book_name_by_given_fun(obj, change_name_fun)
+        else:
+            new_obj = obj
+        new_list.append((new_name, new_obj))
 
     return new_list
 

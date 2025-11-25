@@ -6,6 +6,8 @@ import time
 import sys
 import config
 
+import multiprocessing
+multiprocessing.set_start_method("fork") # only POSIX
 from multiprocessing import Process
 
 from hyncdzj_book_module import sn, mn, dn, an
