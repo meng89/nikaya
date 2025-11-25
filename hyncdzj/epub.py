@@ -238,7 +238,9 @@ def xml_es_to_html(es: ES, root, notes: hyncdzj.note.Notes, doc_path, lang) -> E
                 new_es.append(a)
 
             elif e.tag == "p":
-                new_es.extend(xml_es_to_html(e.kids, root, notes, doc_path, lang))
+                p = xl.Element("p")
+                p.kids.extend(xml_es_to_html(e.kids, root, notes, doc_path, lang))
+                new_es.append(p)
 
             elif e.tag == "j":
 
