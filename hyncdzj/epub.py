@@ -283,7 +283,8 @@ def xml_es_to_html(es: ES, root, notes: hyncdzj.note.Notes, doc_path, lang) -> E
 
             elif e.tag == "a":
                 new_es.append(e)
-
+            elif e.tag == "list":
+                new_es.append(e)
             else:
                 raise Exception("Unknown element type: {}".format(repr(e.to_str())))
 
@@ -417,8 +418,8 @@ def is_leaf(namegroup, obj):
 
 
 def make_doc(doc_path, lang, title=None):
-    html = xl.Element("html", {"xmlns:epub": "https://www.idpf.org/2007/ops",
-                               "xmlns": "https://www.w3.org/1999/xhtml",
+    html = xl.Element("html", {"xmlns:epub": "http://www.idpf.org/2007/ops",
+                               "xmlns": "http://www.w3.org/1999/xhtml",
                                "xml:lang": lang.xml,
                                "lang": lang.xml})
     head = html.ekid("head")

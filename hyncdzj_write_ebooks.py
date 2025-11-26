@@ -13,7 +13,8 @@ from multiprocessing import Process
 from hyncdzj_book_module import sn, mn, dn, an
 from hyncdzj_book_module import (kn_ap, kn_bv, kn_cp, kn_ps, kn_pv, kn_ud, kn_vv, kn_dhp, kn_iti, kn_jat, kn_khp, kn_snp,
                          kn_thag, kn_thig, kn_nid1, kn_nid2)
-
+all_modules = [sn, an, mn, dn] + [kn_ap, kn_bv, kn_cp, kn_ps, kn_pv, kn_ud, kn_vv, kn_dhp, kn_iti, kn_jat, kn_khp, kn_snp,
+                         kn_thag, kn_thig, kn_nid1, kn_nid2]
 import hyncdzj.base
 import hyncdzj.epub
 #import hyncdzj.pdf
@@ -69,7 +70,7 @@ def main(nopdf, noepub):
     temp_td = tempfile.TemporaryDirectory(prefix="AAA_汉译南传大藏经_")
     date = datetime.today().strftime('%Y.%m.%d')
 
-    all_modules = [sn, an, mn, dn] # + pyabo2.kn.all_modules
+    #all_modules = [sn, an, mn, dn] # + pyabo2.kn.all_modules
     #all_modules = [pyabo2.kn.mi]
     for count, m in enumerate(all_modules, start=1):
         print("Loading data: {:2}/{} {}".format(count, len(all_modules), m.info.name), end="", flush=True)
