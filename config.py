@@ -18,7 +18,7 @@ ABO_TEX_DIR = os.path.join(PROJECT_ROOT, "abo", "tex")
 HYNCDZJ_RESOURCE_DIR = os.path.join(RESOURCE_DIR, "hyndzj")
 SIMPLE_DOC_DIR = os.path.join(HYNCDZJ_RESOURCE_DIR, "simple_doc")
 SIMPLE_DOC2_DIR = os.path.join(HYNCDZJ_RESOURCE_DIR, "simple_doc2")
-
+os.makedirs(SIMPLE_DOC2_DIR, exist_ok=True)
 
 SOCKS5_PROXY = "127.0.0.1:1080"
 #SOCKS5_PROXY = None
