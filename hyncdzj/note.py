@@ -13,14 +13,14 @@ class Notes:
 
     @staticmethod
     def _get_page_index(note_id):
-        return math.ceil(int(note_id) / 100)
+        return math.ceil(int(note_id + 1) / 100)
 
     def _get_page_path(self, note_id):
         return "note/{}{}.xhtml".format(self._filename, self._get_page_index(note_id))
 
     def add_note(self, es: list):
-        self._notes.append(es)
         length = len(self._notes)
+        self._notes.append(es)
         return self._get_page_path(length) + "#{}".format(length)
 
     def get_pages(self, lang):

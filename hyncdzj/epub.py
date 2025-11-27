@@ -248,8 +248,12 @@ def xml_es_to_html(es: ES, root, notes: hyncdzj.note.Notes, doc_path, lang) -> E
                 person = ""
                 len_person = 0
                 if "p" in e.attrs.keys():
-                    person = e.attrs["p"] + "：　"
-                    len_person = len(person)
+                    person = e.attrs["p"] + "　"
+
+                else:
+                    person = "　" * 6
+
+                len_person = len(person)
 
                 for index, p_e in enumerate(e.kids):
                     _es = []

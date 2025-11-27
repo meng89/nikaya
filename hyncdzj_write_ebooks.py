@@ -74,14 +74,20 @@ def main(nopdf, noepub):
     #all_modules = [pyabo2.kn.mi]
     for count, m in enumerate(all_modules, start=1):
         print("Loading data: {:2}/{} {}".format(count, len(all_modules), m.info.name), end="", flush=True)
-        simple2_path = os.path.join(config.SIMPLE_DOC2_DIR, m.info.name)
-        if os.path.exists(simple2_path):
-            data = hyncdzj.base.load_from_disk(simple2_path)
-            filled = True
+        simple_filled_path = os.path.join(config.SIMPLE_FILLED_DIR, m.info.name)
+        simple_filling_path = os.path.join(config.SIMPLE_FILLING_DIR, m.info.name)
+
+        if os.path.exists(simple_filled_path):
+            data = hyncdzj.base.load_from_disk(simple_filled_path)
+            tag = "已充填"
+        elif os.path.exists(simple_filling_path):
+            data = hyncdzj.base.load_from_disk(simple_filling_path)
+            tag = "充填中"
         else:
             simple_path = os.path.join(config.SIMPLE_DOC_DIR, m.info.name)
             data = hyncdzj.base.load_from_disk(simple_path)
-            filled = False
+            tag = "原版"
+
         print(" ✅")
         time.sleep(0.1)
 
@@ -108,8 +114,8 @@ def main(nopdf, noepub):
             if noepub:
                 continue
             filename = "{}_元亨寺_{}_{}{}".format(lang.c(m.info.name), lang.zh, date, lang.c("製"))
-            if filled:
-                filename += "_充填版"
+            if tag:
+                filename += "_{}".format(tag)
             filename += ".epub"
 
             dirname = os.path.join(temp_td.name, zh_name)

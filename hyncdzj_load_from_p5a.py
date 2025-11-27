@@ -304,7 +304,7 @@ def lg_fun(e):
                     #          他眠於五醒
                     #          染塵依於五
                     #          依五而得清
-                    m = re.match(r"^〔(.+)：〕(.+)$", _lkid)
+                    m = re.match(r"^(〔.+：〕)(.+)$", _lkid)
                     if m:
                         assert person is None  # 每个偈子仅有一位咏颂人
                         person = m.group(1)
