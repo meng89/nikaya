@@ -254,6 +254,17 @@ def filename_to_namegroup(filename: str) -> FullNameGroup:
     raise Exception(repr(filename))
 
 
+def add_line_feed(x: xl.Xml):
+    doc = x.root
+    n_index = 0
+    for index, e in enumerate(doc.kids):
+        if not e.tag.startswith("n"):
+            n_index = index
+        else:
+            break
+    doc.kids.insert(n_index, "\n\n\n")
+
+
 def write_to_disk(path, data: list):
     dont_do_tags = ["p"]
     for x in range(1, 100):
