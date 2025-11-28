@@ -254,20 +254,16 @@ def filename_to_namegroup(filename: str) -> FullNameGroup:
     raise Exception(repr(filename))
 
 
-def add_line_feed(x: xl.Xml):
-    doc = x.root
-    n_index = 0
+def add_space_before_note(doc: xl.Element):
     for index, e in enumerate(doc.kids):
-        if not e.tag.startswith("n"):
-            n_index = index
-        else:
-            break
-    doc.kids.insert(n_index, "\n\n\n")
+        if isinstance(e, xl.Element) and e.tag.startswith("n"):
+            doc.kids.insert(index, " ")
+            return
 
 
 def write_to_disk(path, data: list):
     dont_do_tags = ["p"]
-    for x in range(1, 100):
+    for x in range(1, 1000):
         dont_do_tags.append("n" + str(x))
 
     if os.path.exists(path):
@@ -281,6 +277,7 @@ def write_to_disk(path, data: list):
         if isinstance(obj, list):
             write_to_disk(sub_path, obj)
         elif isinstance(obj, xl.Element):
+            add_space_before_note(obj)
             s = obj.to_str(do_pretty=True, try_self_closing=True, dont_do_tags=dont_do_tags)
             with open(sub_path + ".xml", "w") as f:
                 f.write(s)
