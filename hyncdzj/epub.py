@@ -298,6 +298,12 @@ def xml_es_to_html(es: ES, root, notes: hyncdzj.note.Notes, doc_path, lang) -> E
     return new_es
 
 
+def xxxx (es):
+    for e in es:
+        if isinstance(e, str):
+            print(repr(e))
+
+
 def _get_note_by_key(root: xl.Element, key: str):
     for e in root.kids:
         m_n = re.match(r"^n(\d+)$", e.tag)

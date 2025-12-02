@@ -5,6 +5,7 @@ _css1 = """
 .cjk {
     font-family: "Noto Serif CJK TC";
     font-weight: 400;
+    font-feature-settings: "kern" 0, "palt" 0, "chws" 0;
 }
 
 .lat {
