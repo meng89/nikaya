@@ -277,7 +277,7 @@ def xml_es_to_html(es: ES, root, notes: hyncdzj.note.Notes, doc_path, lang) -> E
                     _add(p_e.kids)
                     p = xl.Element("p")
                     _es3 = xml_es_to_html(_es, root, notes, doc_path, lang)
-                    p.kids.extend(_es3)
+                    p.kids.extend(join_html_zwnj(_es3))
                     _es = []
                     div.kids.append(p)
                 new_es.append(div)
@@ -298,10 +298,17 @@ def xml_es_to_html(es: ES, root, notes: hyncdzj.note.Notes, doc_path, lang) -> E
     return new_es
 
 
-def xxxx (es):
+def join_html_zwnj(es):
+    new_es = []
     for e in es:
         if isinstance(e, str):
-            print(repr(e))
+            for char in e:
+                new_es.append(char)
+                new_es.append(xl.HtmlZWNJ())
+        elif isinstance(e, xl.Element):
+            e.kids[:] = join_html_zwnj(e.kids)
+            new_es.append(e)
+    return new_es
 
 
 def _get_note_by_key(root: xl.Element, key: str):
