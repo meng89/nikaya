@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh" >
+<head>
+    <meta charset="UTF-8"></meta>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+    <title>电子书封面</title>
+    <style>
+        /* 1. 基础设置与响应式字体单位 */
+        :root {
+            /* 定义基础字体大小变量，使用vw实现字体随屏幕宽度变化 */
+            --font-size-xl: 12vw; /* 特大（用于书名） */
+            --font-size-lg: 3.5vw; /* 大（用于系列名） */
+            --font-size-md: 2.5vw; /* 中（用于信息） */
+            --font-size-sm: 1.8vw; /* 小（用于页脚） */
+        }
+
+        /* 2. 封面容器样式 - Flexbox 布局 */
+        body {
+            /* 封面占据整个页面/屏幕 */
+            width: 100%;
+            height: 100vh; /* 确保高度占满视口 */
+            margin: 0;
+            padding: 0;
+            display: flex; /* 启用 Flexbox */
+            flex-direction: column; /* 垂直排列子元素：上中下 */
+            justify-content: space-between; /* 子元素垂直分散对齐 */
+            align-items: stretch; /* 子元素水平拉伸 */
+            background-color: #f7f7f7; /* 浅灰色背景，模拟纸质感 */
+            color: #333; /* 标准文字颜色 */
+            font-family: 'Songti SC', 'STSong', serif; /* 默认宋体或衬线字体 */
+        }
+
+        /* 3. 顶部信息（系列名、译者） */
+        .header {
+            padding: 5vw 0; /* 上下内边距 */
+            text-align: right; /* 靠右对齐 */
+            padding-right: 5vw;
+        }
+
+        .series-name {
+            font-size: var(--font-size-lg);
+            font-weight: normal;
+            margin-bottom: 0.5em;
+            letter-spacing: 0.2em; /* 增加字距 */
+        }
+
+        .translator {
+            font-size: var(--font-size-md);
+            letter-spacing: 0.1em;
+        }
+
+        /* 4. 书名区域 */
+        .title-area {
+            /* Flexbox 居中对齐 */
+            display: flex;
+            justify-content: center; /* 水平居中 */
+            align-items: center; /* 垂直居中 */
+            flex-grow: 1; /* 占据中间剩余空间 */
+        }
+
+        .book-title {
+            font-size: var(--font-size-xl);
+            font-weight: bold;
+            line-height: 1.1; /* 行高略微紧凑 */
+            /* 关键：设置竖排文本 */
+            writing-mode: vertical-rl; /* 竖排，从右往左 */
+            text-orientation: upright; /* 汉字保持正立 */
+            letter-spacing: 0.2em; /* 增加字间距 */
+            padding: 0 5vw; /* 左右内边距 */
+        }
+
+        /* 5. 底部信息（制书时间） */
+        .footer {
+            text-align: center;
+            padding: 5vw 0;
+            font-size: var(--font-size-sm);
+            color: #666; /* 颜色略浅 */
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1 class="series-name">元亨寺汉译南传大藏经</h1>
+    <p class="translator">译者：元亨寺汉译南传大藏经翻译组</p>
+</div>
+
+<div class="title-area">
+    <h2 class="book-title">
+        长部·第一经
+    </h2>
+</div>
+
+<div class="footer">
+    <p>电子书制作时间：2025年12月</p>
+</div>
+
+</body>
+</html>
