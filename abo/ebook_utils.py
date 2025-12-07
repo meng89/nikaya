@@ -82,7 +82,7 @@ class SC(Lang):
         return "简体版"
 
 
-def make_cover(module, data, lang: Lang, width=1600, height=2560):
+def make_cover(module, lang: Lang, width=1600, height=2560):
     # translated_date = read_mtime(data)
     filename = "{}_{}_{}".format(module.name_han, lang.zh, today())
     xhtml_filename = filename + ".xhtml"

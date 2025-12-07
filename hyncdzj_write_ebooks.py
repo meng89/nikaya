@@ -19,8 +19,14 @@ import hyncdzj.base
 import hyncdzj.epub
 #import hyncdzj.pdf
 
+import hyncdzj_book_module
+
 import hyncdzj.ebook_utils
 
+all_modules = []
+for _, ms in hyncdzj_book_module.categories:
+    for _m in ms:
+        all_modules.append(_m)
 
 
 total = 0
@@ -73,6 +79,7 @@ def main(nopdf, noepub):
     #all_modules = [sn, an, mn, dn] # + pyabo2.kn.all_modules
     #all_modules = [pyabo2.kn.mi]
     for count, m in enumerate(all_modules, start=1):
+
         print("Loading data: {:2}/{} {}".format(count, len(all_modules), m.info.name), end="", flush=True)
         simple_filled_path = os.path.join(config.SIMPLE_FILLED_DIR, m.info.name)
         simple_filling_path = os.path.join(config.SIMPLE_FILLING_DIR, m.info.name)

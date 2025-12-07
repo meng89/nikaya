@@ -97,7 +97,7 @@ def build_pdf(full_path, data, module, lang, size, exit_after_done=False, medium
 
     branch = []
     w, h = cover_size_map[size]
-    cover_image = ebook_utils.make_cover(module, data, lang, w, h)
+    cover_image = ebook_utils.make_cover(module, lang, w, h)
 
     write_main(work_dir, module, bns, lang, size, cover_image)
 

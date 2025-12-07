@@ -43,7 +43,8 @@ def build_epub(full_path, data, module, lang, exit_after_done=False):
     refs = []
     bns = [module.short]
 
-    _write_cover(epub, ebook_utils.make_cover(module, data, lang), lang)
+    cover_image_path = ebook_utils.make_cover(module, lang)
+    _write_cover(epub, cover_image_path, lang)
     _write_fanli(bns, epub, ln, gn, lang)
     _write_homage(bns, module, epub.mark.kids, docs, ln, gn, lang)
 

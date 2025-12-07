@@ -24,7 +24,7 @@ Entry = Tuple[str, Union[xl.Xml, List["Entry"]]]
 Folder = List[Entry]
 
 
-def load_from_disks(path) -> list:
+def load_from_disk(path) -> list:
     data = []
     entries = os.listdir(path)
     entries.sort(key=split_serial)

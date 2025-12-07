@@ -289,6 +289,8 @@ def xml_es_to_html(es: ES, root, notes: hyncdzj.note.Notes, doc_path, lang) -> E
                 new_es.append(e)
             elif e.tag == "list":
                 new_es.append(e)
+            elif e.tag == "table":
+                new_es.append(e)
             else:
                 raise Exception("Unknown element type: {}".format(repr(e.to_str())))
 

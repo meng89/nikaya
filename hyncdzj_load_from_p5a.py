@@ -762,6 +762,31 @@ def trans_raw_data(raw_data: list):
     return data
 
 
+def raw_string_to_p(data):
+    new_data = []
+    for namegroup, obj in data:
+        if isinstance(obj, list):
+            new_obj = raw_string_to_p(obj)
+        elif isinstance(obj, xl.Element):
+            new_obj = xl.Element(obj.tag)
+            s = ""
+            for x in obj.kids:
+                if isinstance(x, str):
+                    s += x
+                else:
+                    if s != "":
+                        new_obj.kids.append(xl.Element("p", kids=[s]))
+                        s = ""
+                    new_obj.kids.append(x)
+            if s != "":
+                new_obj.kids.append(xl.Element("p", kids=[s]))
+
+        else:
+            raise Exception(type(obj))
+        new_data.append((namegroup, new_obj))
+    return new_data
+
+
 def load_book_by_module(m: types.ModuleType):
     xmls = hyncdzj.p5a.get_xmls_by_serial(m.info.serial)
 
@@ -808,5 +833,7 @@ def load_book_by_module(m: types.ModuleType):
     data = merge_same_name(data)
 
     data = remove_single_root(data)
+
+    data = raw_string_to_p(data)
 
     return name, data

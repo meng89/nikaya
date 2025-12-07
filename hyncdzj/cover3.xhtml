@@ -1,96 +1,119 @@
-<!DOCTYPE html>
-<html lang="zh" xmlns="http://www.w3.org/1999/xhtml">>
+<html lang="zh" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>电子书封面 - 竖排版</title>
+    <title/>
     <style>
-        /* 1. 基础设置与响应式字体单位 */
-        :root {
-            /* 字体大小使用vw，实现响应式放大缩小 */
-            --font-size-main-title: 12vw; /* 书名 */
-            --font-size-side-info: 3.5vw;  /* 系列名和译者名 */
-            --font-size-footer: 1.8vw;    /* 制书时间 */
+
+
+        html {
+            margin: 0;
+            border: 0px solid yellow;
         }
 
-        /* 2. 封面容器样式 - Flexbox 布局 */
+
         body {
-            width: 100%;
+            background-color: #20855D;
+            color: #5e1633;
             height: 100vh;
             margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column; /* 垂直排列：主体内容(title-section)和页脚(footer) */
-            justify-content: space-between;
-            align-items: stretch;
-            background-color: #f7f7f7;
-            color: #333;
-            font-family: 'Songti SC', 'STSong', serif;
+
+            border: 0px solid red;
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            grid-template-rows: 10fr 1fr;
         }
 
-        /* 3. 中间主体内容区域 - 包含系列名、书名和译者 */
-        .title-section {
-            /* 占据中心大部分空间 */
-            flex-grow: 1;
-            /* 关键：使用 Flexbox 进行水平布局和垂直居中 */
-            display: flex;
-            justify-content: center; /* 子元素水平居中对齐 */
-            align-items: center;    /* 子元素垂直居中对齐 */
-            padding: 5vw; /* 增加内边距避免贴边 */
+        .series {
+            grid-column-start: 1;
+            grid-column-end: 2;
+            grid-row-start: 1;
+            grid-row-end: 2;
+
+            justify-items: start;
+            text-align: left;
+            display: grid;
+            writing-mode: vertical-lr;
+
+            border: 1px solid black;
+            font-size: 6vw;
+
         }
 
-        /* 4. 通用竖排侧边信息样式 (系列名和译者) */
-        .side-info {
-            font-size: var(--font-size-side-info);
-            font-weight: normal;
-            line-height: 1.1;
-            /* 设置竖排文本 */
-            writing-mode: vertical-rl; /* 竖排，从右往左 */
-            text-orientation: upright; /* 汉字保持正立 */
-            letter-spacing: 0.1em;
-            padding: 0 2vw; /* 侧边信息与书名间的距离 */
-        }
 
-        /* 5. 书名样式 */
-        .book-title {
-            font-size: var(--font-size-main-title);
+        .book_name {
+            grid-column-start: 2;
+            grid-column-end: 3;
+            grid-row-start: 1;
+            grid-row-end: 2;
+
+
+            border: 1px solid red;
+
+            font-size: 18vw;
             font-weight: bold;
-            line-height: 1.1;
             /* 设置竖排文本 */
+
+            display: grid;
+            align-items: center;
+            justify-content: center;
             writing-mode: vertical-rl;
-            text-orientation: upright;
-            letter-spacing: 0.2em;
-            padding: 0 2vw; /* 确保书名自身也有足够的空间 */
+
+
         }
 
-        /* 6. 底部信息（制书时间） */
-        .footer {
-            text-align: center;
-            padding: 5vw 0;
-            font-size: var(--font-size-footer);
-            color: #666;
+
+        .translator{
+            grid-column-start: 3;
+            grid-column-end: 4;
+            grid-row-start: 1;
+            grid-row-end: 2;
+
+            font-size: 6vw;
+            border: 1px solid black;
+            writing-mode: vertical-rl;
+            display: grid;
+
+            align-items: center;
+            justify-content: center;
+
         }
+
+
+        .footer {
+            grid-column-start: 1;
+            grid-column-end: 4;
+            grid-row-start: 2;
+            grid-row-end: 3;
+
+            display: grid;
+            border: 1px solid yellow;
+            align-items: center;
+            text-align: center;
+            justify-content: center;
+            font-size: 4vw;
+        }
+
     </style>
 </head>
+
+
 <body>
 
-<div class="title-section">
-    <h3 class="side-info series-name">
-        汉译南传大藏经·经藏
-    </h3>
+    <div class="series">
+        元亨寺　汉译南传大藏经·经藏·小部
+    </div>
 
-    <h2 class="book-title">
-        长部·第一经
-    </h2>
+    <div class="book_name">
+        攝阿毘達磨義論
+    </div>
 
-    <p class="side-info translator">
-        译者：元亨寺汉译南传大藏经翻译组
-    </p>
-</div>
+    <div class="translator">
+        人名一、人名二译
+    </div>
 
-<div class="footer">
-    <p>电子书制作时间：2025年12月</p>
-</div>
+    <div class="footer">
+        基于 CBETA 数字化成果　2025年12月05日制　简体版
+    </div>
 
 </body>
 </html>
