@@ -22,19 +22,17 @@ from public_modules import tag_str
 
 
 
-def build_epub(full_path, data, book_name, modules: list, lang, exit_after_done=False):
+def build_epub(full_path, data, module, lang, tag, exit_after_done=False):
     epub = epubpacker.Epub()
-    titles = []
-    for module in modules:
-        titles.append(lang.c(module.info.name))
-    epub.meta.titles = titles
+    title = module.info.name
+    epub.meta.titles = [title]
 
     # epub.meta.creators = ["莊春江({})".format(lang.c("譯"))] #todo
     #ts = ebook_utils.read_timestamp(data)
     #epub.meta.date = datetime.fromtimestamp(ts).astimezone().strftime("%Y-%m-%dT%H:%M:%SZ")
     epub.meta.languages = [lang.xml, "pi", "en-US"]
 
-    my_uuid = get_uuid("".join(titles) + lang.en)
+    my_uuid = get_uuid(title + lang.en)
     epub.meta.identifier = my_uuid.urn
 
     epub.meta.others.append(xl.Element("meta", {"property": "belongs-to-collection", "id": "c01"},
@@ -47,12 +45,11 @@ def build_epub(full_path, data, book_name, modules: list, lang, exit_after_done=
     docs = []
     #bns = [module.short]
 
-    _write_cover(epub, ebook_utils.make_cover_image(module, data, lang), lang)
+    _write_cover(epub, ebook_utils.make_cover_image(module, lang, tag), lang)
     #_write_homage(module, epub.mark.kids, docs, ln, gn, lang) #todo
 
 
-    for index, module in enumerate(modules, start=1):
-        _make_suttas(module, epub.mark.kids, docs, [(index, None, None, module.info.name)], data, notes, lang)
+    _make_suttas(module, epub.mark.kids, docs, [(1, None, None, module.info.name)], data, notes, lang)
 
 
     for path, xml in docs:

@@ -1,7 +1,7 @@
 <html lang="zh" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8"/>
-    <title>Cover</title>
+    <title/>
     <style>
 
         html {
@@ -10,14 +10,13 @@
         }
 
         body {
-            display: grid;
             background-color: #20855D;
             color: #5e1633;
             height: 100vh;
             margin: 0;
 
             border: 0px solid red;
-
+            display: grid;
             grid-template-columns: 1fr 2fr 1fr;
             grid-template-rows: 10fr 1fr;
         }
@@ -28,9 +27,9 @@
             grid-row-start: 1;
             grid-row-end: 2;
 
-            display: grid;
             justify-items: start;
             text-align: left;
+            display: grid;
             writing-mode: vertical-lr;
 
             border: 1px solid black;
@@ -40,21 +39,19 @@
 
 
         .book_name {
-            font-family: "Noto Serif CJK TC Black";
             grid-column-start: 2;
             grid-column-end: 3;
             grid-row-start: 1;
             grid-row-end: 2;
 
-            display: grid;
+
             border: 1px solid red;
 
             font-size: 18vw;
             font-weight: bold;
+            /* 设置竖排文本 */
 
-            line-height: 18vw;
-            /* letter-spacing: 36vw; */
-
+            display: grid;
             align-items: center;
             justify-content: center;
             writing-mode: vertical-rl;
@@ -69,11 +66,10 @@
             grid-row-start: 1;
             grid-row-end: 2;
 
-            display: grid;
             font-size: 6vw;
             border: 1px solid black;
             writing-mode: vertical-rl;
-
+            display: grid;
 
             align-items: center;
             justify-content: center;
@@ -101,22 +97,21 @@
 
 <body>
 
-<div class="series">
-    $series
-</div>
+    <div class="series">
+        $series
+    </div>
 
-<div class="book_name">
-    $book_name
-</div>
+    <div class="book_name">
+        $book_name
+    </div>
 
-<div class="translator">
-    $translator
-</div>
+    <div class="translator">
+        $translator
+    </div>
 
-<div class="footer">
-    $footer
-</div>
-
+    <div class="footer">
+        $footer
+    </div>
 
 </body>
 </html>

@@ -93,7 +93,7 @@ def main(nopdf, noepub):
         else:
             simple_path = os.path.join(config.SIMPLE_DOC_DIR, m.info.name)
             data = hyncdzj.base.load_from_disk(simple_path)
-            tag = "原版"
+            tag = None
 
         print(" ✅")
         time.sleep(0.1)
@@ -131,7 +131,7 @@ def main(nopdf, noepub):
 
             os.makedirs(os.path.dirname(full_path), exist_ok=True)
 
-            jobs.append((filename, hyncdzj.epub.build_epub, (full_path, data, [m], lang, True)))
+            jobs.append((filename, hyncdzj.epub.build_epub, (full_path, data, m, lang, tag, True)))
             total += 1
             try_run_job()
 

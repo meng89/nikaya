@@ -94,9 +94,9 @@ def make_series(module):
     raise Exception
 
 
-def make_cover_image(module, lang: Lang, version=None, width=1600, height=2560):
+def make_cover_image(module, lang: Lang, tag=None, width=1600, height=2560):
     # translated_date = read_mtime(data)
-    filename = "{}_{}_{}".format(module.name_han, lang.zh, today())
+    filename = "{}_{}_{}".format(module.info.name, lang.zh, today())
     xhtml_filename = filename + ".xhtml"
 
     image_filename = "{}_{}x{}.png".format(filename, width, height)
@@ -115,12 +115,12 @@ def make_cover_image(module, lang: Lang, version=None, width=1600, height=2560):
         t = string.Template(template_str)
 
         footer = "基于 CBETA 数字化成果" + today() + lang.c("製")
-        if version:
-            footer += " " + version
+        if tag:
+            footer += " " + tag
         footer += lang.han_version
 
         doc_str = t.substitute(
-            series = lang.c(make_series),
+            series = lang.c(make_series(module)),
             book_name=module.info.name,
             translator = "、".join(module.info.translators) + lang.c("譯"),
             footer = footer
@@ -129,8 +129,7 @@ def make_cover_image(module, lang: Lang, version=None, width=1600, height=2560):
         open(os.path.join(config.HYNCDZJ_COVER_DIR, xhtml_filename), "w").write(doc_str)
         from html2image import Html2Image as HtI
 
-        hti = HtI(browser_executable=config.BROWSER, output_path=config.HYNCDZJ_COVER_DIR)
-                  #custom_flags=["--disable-software-rasterizer"])
+        hti = HtI(browser_executable=config.BROWSER, output_path=config.HYNCDZJ_COVER_DIR, custom_flags=['--virtual-time-budget=1000'])
         hti.screenshot(html_str=doc_str, size=(width, height), save_as=image_filename)
 
     return image_path
