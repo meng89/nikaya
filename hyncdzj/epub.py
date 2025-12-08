@@ -12,6 +12,7 @@ import epubpacker
 import xl
 
 from . import base
+from . import ebook_utils
 import hyncdzj.utils
 import hyncdzj.note
 from . import css
@@ -21,7 +22,7 @@ from public_modules import tag_str
 
 
 
-def build_epub(full_path, data, modules: list, lang, exit_after_done=False):
+def build_epub(full_path, data, book_name, modules: list, lang, exit_after_done=False):
     epub = epubpacker.Epub()
     titles = []
     for module in modules:
@@ -46,7 +47,7 @@ def build_epub(full_path, data, modules: list, lang, exit_after_done=False):
     docs = []
     #bns = [module.short]
 
-    #_write_cover(epub, ebook_utils.make_cover(module, data, lang), lang) #todo
+    _write_cover(epub, ebook_utils.make_cover_image(module, data, lang), lang)
     #_write_homage(module, epub.mark.kids, docs, ln, gn, lang) #todo
 
 

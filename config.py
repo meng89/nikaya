@@ -16,6 +16,7 @@ ABO_XML_DIR = os.path.join(ABO_RESOURCE_DIR, "xml")
 ABO_TEX_DIR = os.path.join(PROJECT_ROOT, "abo", "tex")
 
 HYNCDZJ_RESOURCE_DIR = os.path.join(RESOURCE_DIR, "hyndzj")
+HYNCDZJ_COVER_DIR = os.path.join(HYNCDZJ_RESOURCE_DIR, "cover")
 SIMPLE_DOC_DIR = os.path.join(HYNCDZJ_RESOURCE_DIR, "simple_doc")
 SIMPLE_FILLING_DIR = os.path.join(HYNCDZJ_RESOURCE_DIR, "simple_充填中")
 os.makedirs(SIMPLE_FILLING_DIR, exist_ok=True)
