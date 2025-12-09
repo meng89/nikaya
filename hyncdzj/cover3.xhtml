@@ -1,7 +1,7 @@
 <html lang="zh" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8"/>
-    <title/>
+    <title>Cover</title>
     <style>
 
         html {
@@ -10,8 +10,8 @@
         }
 
         body {
-            background-color: #20855D;
-            color: #5e1633;
+            background-color: orange;
+            color: #073c9f;
             height: 100vh;
             margin: 0;
 
@@ -22,14 +22,15 @@
         }
 
         .series {
+            font-family: "Source Han Sans CN";
             grid-column-start: 1;
             grid-column-end: 2;
             grid-row-start: 1;
             grid-row-end: 2;
 
+            display: grid;
             justify-items: start;
             text-align: left;
-            display: grid;
             writing-mode: vertical-lr;
 
             border: 1px solid black;
@@ -39,45 +40,48 @@
 
 
         .book_name {
+            font-family: "Source Han Sans CN";
             grid-column-start: 2;
             grid-column-end: 3;
             grid-row-start: 1;
             grid-row-end: 2;
 
-
             border: 1px solid red;
 
             font-size: 18vw;
-            font-weight: bold;
-            /* 设置竖排文本 */
 
             display: grid;
             align-items: center;
             justify-content: center;
+            text-align: center;
             writing-mode: vertical-rl;
-
 
         }
 
 
-        .translator{
+        .translator {
+            font-family: "Source Han Sans TW";
             grid-column-start: 3;
             grid-column-end: 4;
             grid-row-start: 1;
             grid-row-end: 2;
 
+            display: grid;
             font-size: 6vw;
             border: 1px solid black;
             writing-mode: vertical-rl;
-            display: grid;
 
             align-items: center;
             justify-content: center;
 
         }
 
+        .translate {
+            font-family: "Source Han Sans CN";
+
 
         .footer {
+            font-family: "Source Han Sans CN";
             grid-column-start: 1;
             grid-column-end: 4;
             grid-row-start: 2;
@@ -91,27 +95,40 @@
             font-size: 4vw;
         }
 
+        .space {
+            letter-spacing: 1em;
+        }
+
+        p {
+            border: 1px solid blue;
+            align-items: center;
+            text-align: left;
+            justify-content: center;
+        }
+
+
     </style>
 </head>
 
 
 <body>
 
-    <div class="series">
-        $series
-    </div>
+<div class="series">
+    <p>元亨寺　汉译南传大藏经·律藏</p>
+</div>
 
-    <div class="book_name">
-        $book_name
-    </div>
+<div class="book_name">
+    <p>經<span class="space">&#8204;</span>分<span class="space">&#8204;</span>別</p>
+</div>
 
-    <div class="translator">
-        $translator
-    </div>
+<div class="translator">
+    <p>通妙<span class="translate">译</span></p>
+</div>
 
-    <div class="footer">
-        $footer
-    </div>
+<div class="footer">
+    <p>基于 CBETA 數位化成果2025年12月09日制简体版</p>
+</div>
+
 
 </body>
 </html>

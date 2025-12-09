@@ -1,15 +1,13 @@
 <html lang="zh" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8"/>
-    <title/>
+    <title> Cover2 </title>
     <style>
-
 
         html {
             margin: 0;
             border: 0px solid yellow;
         }
-
 
         body {
             background-color: #20855D;
@@ -24,14 +22,15 @@
         }
 
         .series {
+
             grid-column-start: 1;
             grid-column-end: 2;
             grid-row-start: 1;
             grid-row-end: 2;
 
+            display: grid;
             justify-items: start;
             text-align: left;
-            display: grid;
             writing-mode: vertical-lr;
 
             border: 1px solid black;
@@ -41,11 +40,11 @@
 
 
         .book_name {
+
             grid-column-start: 2;
             grid-column-end: 3;
             grid-row-start: 1;
             grid-row-end: 2;
-
 
             border: 1px solid red;
 
@@ -56,13 +55,14 @@
             display: grid;
             align-items: center;
             justify-content: center;
+            text-align: center;
             writing-mode: vertical-rl;
 
 
         }
 
 
-        .translator{
+        .translator {
             grid-column-start: 3;
             grid-column-end: 4;
             grid-row-start: 1;
@@ -80,17 +80,29 @@
 
 
         .footer {
+
+            display: grid;
             grid-column-start: 1;
             grid-column-end: 4;
             grid-row-start: 2;
             grid-row-end: 3;
 
-            display: grid;
             border: 1px solid yellow;
             align-items: center;
             text-align: center;
             justify-content: center;
-            font-size: 4vw;
+            font-size: 3.5vw;
+        }
+
+        .space {
+            letter-spacing: 1em;
+        }
+
+        p {
+            border: 1px solid red;
+            align-items: center;
+            text-align: left;
+            justify-content: center;
         }
 
     </style>
@@ -100,19 +112,19 @@
 <body>
 
     <div class="series">
-        元亨寺　汉译南传大藏经·经藏·小部
+        <p>元亨寺　汉译南传大藏经·经藏·小部</p>
     </div>
 
     <div class="book_name">
-        攝阿毘達磨義論
+        <p>攝<span class="space">&#8204;</span>阿</p>
     </div>
 
     <div class="translator">
-        人名一、人名二译
+        <p>人名一、人名二译</p>
     </div>
 
     <div class="footer">
-        基于 CBETA 数字化成果　2025年12月05日制　简体版
+        <p>基于 CBETA 数字化成果　2025年12月05日制　简体版</p>
     </div>
 
 </body>

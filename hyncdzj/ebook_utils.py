@@ -96,41 +96,47 @@ def make_series(module):
 
 
 def xxx(m):
+    name = m.info.name
+    if name.endswith("經"):
+        name = name[:-1]
+
     if m in hyncdzj_book_module.jing[1] or m in hyncdzj_book_module.dh_modules or m in hyncdzj_book_module.wai[1]:
-        background_color = "#20855D"
-        font_color = "#5E1633"
-        book_name_font_size = "18vw"
+        background_color = "#4ea455"
+        font_color = "#5F005A"
+        book_name_font_size = "30vw"
 
     elif m in hyncdzj_book_module.lv[1]:
         background_color = "orange"
         font_color = "#073c9f"
-        book_name_font_size = "18vw"
+        book_name_font_size = "30vw"
 
     elif m in hyncdzj_book_module.lun[1]:
-        background_color = "#263CAB"
-        font_color = "#ab9526"
-        book_name_font_size = "18vw"
+        background_color = "#228fbd"
+        font_color = "#5c1c01"
+        book_name_font_size = "30vw"
     else:
-        print("hehe:", m.info.name)
-        print()
         raise Exception(m.info.name)
 
     if m in hyncdzj_book_module.dh_modules or m in hyncdzj_book_module.wai[1]:
-        book_name_font_size = "10vw"
+        background_color = "#abc476"
+        font_color = "#71356c"
+        book_name_font_size = "20vw"
 
 
-    book_name_latter_spacing = "0em"
-    match len(m.info.name):
+    book_name_space_margin = "0em"
+    match len(name):
         case 2:
-            book_name_latter_spacing = "2em"
+            book_name_space_margin = "0.7em"
         case 3:
-            book_name_latter_spacing = "1em"
+            book_name_space_margin = "0.3em"
         case 4:
-            book_name_latter_spacing = "0.5em"
+            book_name_space_margin = "0.1em"
+        case 5:
+            book_name_space_margin = "0.1em"
         case _:
-            book_name_latter_spacing = "0em"
+            book_name_space_margin = "0em"
 
-    return background_color, font_color, book_name_font_size, book_name_latter_spacing
+    return name, background_color, font_color, book_name_font_size, book_name_space_margin
 
 
 
@@ -156,31 +162,38 @@ def make_cover_image(module, lang: Lang, tag=None, width=1600, height=2560):
 
         t = string.Template(template_str)
 
-        footer = "基于 CBETA 數位化成果" + today() + lang.c("製")
+        footer2_list = [today() + lang.c("製")]
         if tag:
-            footer += " " + tag
-        footer += lang.han_version
+            footer2_list.append(lang.c(tag))
+
+        if isinstance(lang, SC):
+            footer2_list.append("简体版")
+        else:
+            footer2_list.append("傳統漢字版")
+
+        footer2 = "　".join(footer2_list)
 
         if isinstance(lang, SC):
             font_name = "Source Han Sans CN"
         else:
             font_name = "Source Han Sans TW"
 
-        background_color, font_color, book_name_font_size, book_name_latter_spacing = xxx(module)
+        new_name, background_color, font_color, book_name_font_size, book_name_space_margin = xxx(module)
         doc_str = t.substitute(
             background_color = background_color,
             font_color = font_color,
             series_font_name = font_name,
-            book_name_font_name = font_name,
+            book_name_font_name = font_name + " Medium",
             book_name_font_size = book_name_font_size,
-            book_name_latter_spacing = book_name_latter_spacing,
+            book_name_space_margin = book_name_space_margin,
             translate_font_name = font_name,
             footer_font_name = font_name,
             series = lang.c(make_series(module)),
-            book_name=module.info.name,
+            book_name="<span class=\"space\">&#8204;</span>".join(lang.c(new_name)),
             translator = "、".join(module.info.translators),
-            translate = lang.c("譯"),
-            footer = footer,
+            translate = "　" + lang.c("譯"),
+            footer1 = lang.c("基于 CBETA 數位化成果"),
+            footer2 = footer2,
         )
 
         open(os.path.join(config.HYNCDZJ_COVER_DIR, xhtml_filename), "w").write(doc_str)

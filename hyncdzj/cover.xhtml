@@ -5,62 +5,59 @@
     <style>
 
         html {
+            height: 100vh;
             margin: 0;
-            border: 0px solid yellow;
+            /*padding: 0px;*/
+            /*border: 10px solid blue;*/
         }
 
         body {
-            display: grid;
-
-            background-color: #20855D;
             background-color: $background_color;
-
-            color: #5e1633;
             color: $font_color;
-            / * height: 100vh; */
-            margin: 0;
+            height: 100vh;
+            margin: 0px;
+            /*padding: 0px;*/
 
             border: 0px solid red;
-
-            grid-template-columns: 1fr 2fr 1fr;
-            grid-template-rows: 10fr 1fr;
+            display: grid;
+            grid-template-columns: 2fr 4fr 2fr;
+            grid-template-rows: 9fr 1fr;
         }
 
         .series {
             font-family: "$series_font_name";
+
+            display: grid;
             grid-column-start: 1;
             grid-column-end: 2;
             grid-row-start: 1;
             grid-row-end: 2;
 
-            display: grid;
             justify-items: start;
             text-align: left;
             writing-mode: vertical-lr;
 
             border: 1px solid black;
-            font-size: 6vw;
+            font-size: 7vw;
 
         }
 
-
         .book_name {
-            letter-spacing: $book_name_latter_spacing;
-            margin-bottom: -$book_name_latter_spacing;
             font-family: "$book_name_font_name";
+
+            display: grid;
             grid-column-start: 2;
             grid-column-end: 3;
             grid-row-start: 1;
             grid-row-end: 2;
 
-            display: grid;
             border: 1px solid red;
 
             font-size: $book_name_font_size;
-            font-weight: bold;
 
             align-items: center;
             justify-content: center;
+            text-align: center;
             writing-mode: vertical-rl;
 
         }
@@ -68,39 +65,56 @@
 
         .translator {
             font-family: "Source Han Sans TW";
+
+            display: grid;
             grid-column-start: 3;
             grid-column-end: 4;
             grid-row-start: 1;
             grid-row-end: 2;
 
-            display: grid;
-            font-size: 6vw;
+            font-size: 9vw;
             border: 1px solid black;
             writing-mode: vertical-rl;
 
             align-items: center;
+            text-align: center;
             justify-content: center;
 
         }
 
         .translate {
-            font-family: "$translate_font_name"
+            font-family: "$translate_font_name";
+        }
 
 
-        .footer {
-            font-family: "$footer_font_name"
+        .footer {margin: 0px;
+            font-family: "$footer_font_name";
             grid-column-start: 1;
             grid-column-end: 4;
             grid-row-start: 2;
             grid-row-end: 3;
 
             display: grid;
-            border: 1px solid yellow;
+            border: 1px solid blue;
             align-items: center;
             text-align: center;
             justify-content: center;
             font-size: 4vw;
         }
+
+        .space {
+            margin: $book_name_space_margin;
+        }
+
+        p {
+            margin: 0;
+            border: 1px solid blue;
+            align-items: center;
+            text-align: center;
+            justify-content: center;
+        }
+        div{margin: 0px;}
+
 
     </style>
 </head>
@@ -109,21 +123,21 @@
 <body>
 
 <div class="series">
-    $series
+    <p>$series</p>
 </div>
 
 <div class="book_name">
-    $book_name
+    <p>$book_name</p>
 </div>
 
 <div class="translator">
-    $translator<span class="translate">$translate</span>
+    <p>$translator<span class="translate">$translate</span></p>
 </div>
 
 <div class="footer">
-    $footer
+    <p>$footer1</p>
+    <p>$footer2</p>
 </div>
-
 
 </body>
 </html>
