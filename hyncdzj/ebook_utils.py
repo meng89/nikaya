@@ -1,5 +1,8 @@
 import os
 import string
+import time
+
+import selenium.webdriver
 
 import opencc
 
@@ -196,12 +199,16 @@ def make_cover_image(module, lang: Lang, tag=None, width=1600, height=2560):
             footer2 = footer2,
         )
 
-        open(os.path.join(config.HYNCDZJ_COVER_DIR, xhtml_filename), "w").write(doc_str)
-        from html2image import Html2Image as HtI
+        cover_xhtml_path = os.path.join(config.HYNCDZJ_COVER_DIR, xhtml_filename)
+        open(cover_xhtml_path, "w").write(doc_str)
 
-        hti = HtI(browser_executable=config.BROWSER, output_path=config.HYNCDZJ_COVER_DIR, custom_flags=['--virtual-time-budget=1000'])
-        hti.screenshot(html_str=doc_str, size=(width, height), save_as=image_filename)
-
+        options = selenium.webdriver.ChromeOptions()
+        options.add_argument("--headless")
+        #options.add_argument("--start-maximized")
+        options.add_argument("--window-size=1600x2560")
+        driver = selenium.webdriver.Chrome(options=options)
+        driver.get("file://" + cover_xhtml_path)
+        driver.save_screenshot(image_path)
     return image_path
 
 
