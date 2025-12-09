@@ -94,6 +94,48 @@ def make_series(module):
     raise Exception
 
 
+
+def xxx(m):
+    if m in hyncdzj_book_module.jing[1] or m in hyncdzj_book_module.dh_modules or m in hyncdzj_book_module.wai[1]:
+        background_color = "#20855D"
+        font_color = "#5E1633"
+        book_name_font_size = "18vw"
+
+    elif m in hyncdzj_book_module.lv[1]:
+        background_color = "orange"
+        font_color = "#073c9f"
+        book_name_font_size = "18vw"
+
+    elif m in hyncdzj_book_module.lun[1]:
+        background_color = "#263CAB"
+        font_color = "#ab9526"
+        book_name_font_size = "18vw"
+    else:
+        print("hehe:", m.info.name)
+        print()
+        raise Exception(m.info.name)
+
+    if m in hyncdzj_book_module.dh_modules or m in hyncdzj_book_module.wai[1]:
+        book_name_font_size = "10vw"
+
+
+    book_name_latter_spacing = "0em"
+    match len(m.info.name):
+        case 2:
+            book_name_latter_spacing = "2em"
+        case 3:
+            book_name_latter_spacing = "1em"
+        case 4:
+            book_name_latter_spacing = "0.5em"
+        case _:
+            book_name_latter_spacing = "0em"
+
+    return background_color, font_color, book_name_font_size, book_name_latter_spacing
+
+
+
+
+
 def make_cover_image(module, lang: Lang, tag=None, width=1600, height=2560):
     # translated_date = read_mtime(data)
     filename = "{}_{}_{}".format(module.info.name, lang.zh, today())
@@ -114,16 +156,31 @@ def make_cover_image(module, lang: Lang, tag=None, width=1600, height=2560):
 
         t = string.Template(template_str)
 
-        footer = "基于 CBETA 数字化成果" + today() + lang.c("製")
+        footer = "基于 CBETA 數位化成果" + today() + lang.c("製")
         if tag:
             footer += " " + tag
         footer += lang.han_version
 
+        if isinstance(lang, SC):
+            font_name = "Source Han Sans CN"
+        else:
+            font_name = "Source Han Sans TW"
+
+        background_color, font_color, book_name_font_size, book_name_latter_spacing = xxx(module)
         doc_str = t.substitute(
+            background_color = background_color,
+            font_color = font_color,
+            series_font_name = font_name,
+            book_name_font_name = font_name,
+            book_name_font_size = book_name_font_size,
+            book_name_latter_spacing = book_name_latter_spacing,
+            translate_font_name = font_name,
+            footer_font_name = font_name,
             series = lang.c(make_series(module)),
             book_name=module.info.name,
-            translator = "、".join(module.info.translators) + lang.c("譯"),
-            footer = footer
+            translator = "、".join(module.info.translators),
+            translate = lang.c("譯"),
+            footer = footer,
         )
 
         open(os.path.join(config.HYNCDZJ_COVER_DIR, xhtml_filename), "w").write(doc_str)

@@ -11,9 +11,13 @@
 
         body {
             display: grid;
+
             background-color: #20855D;
+            background-color: $background_color;
+
             color: #5e1633;
-            height: 100vh;
+            color: $font_color;
+            / * height: 100vh; */
             margin: 0;
 
             border: 0px solid red;
@@ -23,6 +27,7 @@
         }
 
         .series {
+            font-family: "$series_font_name";
             grid-column-start: 1;
             grid-column-end: 2;
             grid-row-start: 1;
@@ -40,7 +45,9 @@
 
 
         .book_name {
-            font-family: "Noto Serif CJK TC Black";
+            letter-spacing: $book_name_latter_spacing;
+            margin-bottom: -$book_name_latter_spacing;
+            font-family: "$book_name_font_name";
             grid-column-start: 2;
             grid-column-end: 3;
             grid-row-start: 1;
@@ -49,21 +56,18 @@
             display: grid;
             border: 1px solid red;
 
-            font-size: 18vw;
+            font-size: $book_name_font_size;
             font-weight: bold;
-
-            line-height: 18vw;
-            /* letter-spacing: 36vw; */
 
             align-items: center;
             justify-content: center;
             writing-mode: vertical-rl;
 
-
         }
 
 
-        .translator{
+        .translator {
+            font-family: "Source Han Sans TW";
             grid-column-start: 3;
             grid-column-end: 4;
             grid-row-start: 1;
@@ -74,14 +78,17 @@
             border: 1px solid black;
             writing-mode: vertical-rl;
 
-
             align-items: center;
             justify-content: center;
 
         }
 
+        .translate {
+            font-family: "$translate_font_name"
+
 
         .footer {
+            font-family: "$footer_font_name"
             grid-column-start: 1;
             grid-column-end: 4;
             grid-row-start: 2;
@@ -110,7 +117,7 @@
 </div>
 
 <div class="translator">
-    $translator
+    $translator<span class="translate">$translate</span>
 </div>
 
 <div class="footer">
