@@ -34,7 +34,7 @@ jobs =  []
 running = []
 finished = 0
 
-max_processes = 1#os.cpu_count()
+max_processes = os.cpu_count()
 def try_run_job(do_print=True):
     global running, finished
 

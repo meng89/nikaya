@@ -11,9 +11,9 @@ options.add_argument("--headless")
 
 driver = selenium.webdriver.Firefox(options=options) # 确保你已安装 geckodriver
 #driver.set_window_position(0,0)
-driver.
-driver.set_window_size(1600,2560, windowHandle='current')
-driver.get("file:///mnt/data/projects/nikaya/resource/hyndzj/cover/經分別_简_2025年12月09日.xhtml")
+
+driver.set_window_size(1600,2560+86, windowHandle='current')
+driver.get("file:///mnt/data/projects/nikaya/resource/hyndzj/cover/經分別_简_2025年12月10日.xhtml")
 #time.sleep(2) # 等待页面加载
 
 # 截屏并保存文件

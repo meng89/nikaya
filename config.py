@@ -48,6 +48,7 @@ LOG_PATH = os.path.join(PROJECT_ROOT, "abo_log.txt")
 #BROWSER = "/opt/firefox/firefox"
 BROWSER = "google-chrome-stable"
 #BROWSER = "microsoft-edge-stable"
+WINDOW_HEIGHT_OFFSET = 86
 
 
 DEBUG = False

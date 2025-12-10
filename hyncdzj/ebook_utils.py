@@ -142,9 +142,6 @@ def xxx(m):
     return name, background_color, font_color, book_name_font_size, book_name_space_margin
 
 
-
-
-
 def make_cover_image(module, lang: Lang, tag=None, width=1600, height=2560):
     # translated_date = read_mtime(data)
     filename = "{}_{}_{}".format(module.info.name, lang.zh, today())
@@ -202,13 +199,14 @@ def make_cover_image(module, lang: Lang, tag=None, width=1600, height=2560):
         cover_xhtml_path = os.path.join(config.HYNCDZJ_COVER_DIR, xhtml_filename)
         open(cover_xhtml_path, "w").write(doc_str)
 
-        options = selenium.webdriver.ChromeOptions()
+        options = selenium.webdriver.FirefoxOptions()
         options.add_argument("--headless")
-        #options.add_argument("--start-maximized")
-        options.add_argument("--window-size=1600x2560")
-        driver = selenium.webdriver.Chrome(options=options)
+        #options.add_argument("--window-size=1600x2560")
+        driver = selenium.webdriver.Firefox(options=options)
+        driver.set_window_size(width, height + config.WINDOW_HEIGHT_OFFSET)
         driver.get("file://" + cover_xhtml_path)
         driver.save_screenshot(image_path)
+        driver.close()
     return image_path
 
 
