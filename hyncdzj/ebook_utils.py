@@ -1,13 +1,10 @@
 import os
 import string
-import time
 
 import selenium.webdriver
-
 import opencc
 
 import config
-
 import hyncdzj_book_module
 
 
@@ -192,8 +189,9 @@ def make_cover_image(module, lang: Lang, tag=None, width=1600, height=2560):
             book_name="<span class=\"space\">&#8204;</span>".join(lang.c(new_name)),
             translator = "、".join(module.info.translators),
             translate = "　" + lang.c("譯"),
-            footer1 = lang.c("基于 CBETA 數位化成果"),
-            footer2 = footer2,
+            footer1 = lang.c("基于 CBETA 資料"),
+            #footer2 = footer2,
+            footer2 = "xxxx年xx月xx日制　已充填　传统中文版"
         )
 
         cover_xhtml_path = os.path.join(config.HYNCDZJ_COVER_DIR, xhtml_filename)

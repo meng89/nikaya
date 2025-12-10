@@ -19,66 +19,65 @@
             /*padding: 0px;*/
 
             border: 0px solid red;
+
             display: grid;
             grid-template-columns: 2fr 4fr 2fr;
-            grid-template-rows: 9fr 1fr;
+            grid-template-rows: 13fr 1fr;
         }
 
         .series {
-            font-family: "$series_font_name";
-
-            display: grid;
             grid-column-start: 1;
             grid-column-end: 2;
             grid-row-start: 1;
             grid-row-end: 2;
 
+            display: grid;
+            align-items: left;
             justify-items: start;
-            text-align: left;
+            /* text-align: left; */
             writing-mode: vertical-lr;
 
-            border: 1px solid black;
             font-size: 7vw;
+            font-family: "$series_font_name";
+            border: 1px solid black;
 
         }
 
         .book_name {
-            font-family: "$book_name_font_name";
-
-            display: grid;
             grid-column-start: 2;
             grid-column-end: 3;
             grid-row-start: 1;
             grid-row-end: 2;
 
-            border: 1px solid red;
-
-            font-size: $book_name_font_size;
+            display: grid;
 
             align-items: center;
             justify-content: center;
             text-align: center;
             writing-mode: vertical-rl;
 
+            font-size: $book_name_font_size;
+            font-family: "$book_name_font_name";
+            border: 1px solid red;
+
         }
 
-
         .translator {
-            font-family: "Source Han Sans TW";
-
-            display: grid;
             grid-column-start: 3;
             grid-column-end: 4;
             grid-row-start: 1;
             grid-row-end: 2;
 
-            font-size: 9vw;
-            border: 1px solid black;
-            writing-mode: vertical-rl;
+            display: grid;
 
+            writing-mode: vertical-rl;
             align-items: center;
             text-align: center;
             justify-content: center;
+
+            font-size: 9vw;
+            font-family: "Source Han Sans TW";
+            border: 1px solid black;
 
         }
 
@@ -95,11 +94,13 @@
             grid-row-end: 3;
 
             display: grid;
-            border: 1px solid blue;
+            /* grid-template-columns: auto; */
+            /* grid-template-rows: auto auto; */
             align-items: center;
             text-align: center;
             justify-content: center;
-            font-size: 4vw;
+            font-size: 3.5vw;
+
         }
 
         .space {
@@ -115,6 +116,12 @@
         }
         div{margin: 0px;}
 
+        .footer1 {
+            border: 1px solid green;
+        }
+        .footer2 {
+            border: 1px solid blue;
+        }
 
     </style>
 </head>
@@ -135,7 +142,7 @@
 </div>
 
 <div class="footer">
-    $footer1　$footer2
+    <p>$footer1 $footer2</p>
 </div>
 
 </body>
