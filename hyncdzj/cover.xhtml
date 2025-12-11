@@ -3,17 +3,44 @@
     <meta charset="UTF-8"/>
     <title>Cover</title>
     <style>
+        :root {
+            --other_opacity: 0.8;
+        }
 
         html {
             height: 100vh;
+            width: 100vw;
             margin: 0;
         }
 
         body {
             height: 100vh;
+            width: 100vw;
             /* padding: 0px; */
             margin: 0px;
+            background-color: #009999;
             background-color: $background_color;
+
+        }
+
+
+        .middle {
+            width: 100vw;
+            height: 100vh;
+            z-index: 2;
+            position: absolute;
+            background-image: url("/mnt/data/projects/nikaya/hyncdzj/Original_Dharma_Wheel.svg");
+            background-position: 50% 3%;
+            background-size: 94vw;
+            background-repeat: no-repeat;
+            opacity: 0.1;
+        }
+
+        .top {
+            width: 100vw;
+            height: 100vh;
+            z-index: 3;
+            position: absolute;
             color: $font_color;
 
             display: grid;
@@ -31,7 +58,8 @@
             align-items: start;
             justify-items: start;
 
-            border: 2px solid red;
+            opacity: var(--other_opacity);
+            /* border: 2px solid red; */
         }
         .series {
             margin: 2vw;
@@ -52,7 +80,7 @@
             justify-content: center;
             text-align: center;
 
-            border: 2px solid red;
+            /* border: 2px solid red; */
         }
         .book_name {
             writing-mode: vertical-rl;
@@ -71,15 +99,16 @@
             grid-row-end: 2;
 
             display: grid;
-
             writing-mode: vertical-rl;
             align-items: center;
             text-align: center;
             justify-content: center;
 
+            opacity: var(--other_opacity);
             font-size: 9vw;
             font-family: "Source Han Sans TW Medium";
-            border: 1px solid black;
+
+            /* border: 1px solid black; */
         }
         .translate {
             font-family: "$translate_font_name";
@@ -99,7 +128,10 @@
             text-align: center;
             justify-content: center;
 
-            border: 2px solid red;
+            opacity: var(--other_opacity);
+            /* border: 2px solid red; */
+            margin: 0 2vw 0 2vw;
+            border-top: 0.2vh solid;
         }
         .footer {
             font-size: 3.5vw;
@@ -107,7 +139,7 @@
 
         span {
             margin: 0;
-            border: 2px solid blue;
+            /* border: 2px solid blue; */
         }
 
     </style>
@@ -116,20 +148,24 @@
 
 <body>
 
-<div class="series_c">
-    <span class="series">$series</span>
-</div>
+<div class="middle" />
 
-<div class="book_name_c">
-    <span class="book_name">$book_name</span>
-</div>
+<div class="top">
+    <div class="series_c">
+        <span class="series">$series</span>
+    </div>
 
-<div class="translator_c">
-    <span>$translator<span class="translate">$translate</span></span>
-</div>
+    <div class="book_name_c">
+        <span class="book_name">$book_name</span>
+    </div>
 
-<div class="footer_c">
-    <span class="footer">$footer</span>
+    <div class="translator_c">
+        <span>$translator<span class="translate">$translate</span></span>
+    </div>
+
+    <div class="footer_c">
+        <span class="footer">$footer</span>
+    </div>
 </div>
 
 </body>

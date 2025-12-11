@@ -2,107 +2,41 @@
 <head>
     <meta charset="UTF-8"/>
     <title> Cover2 </title>
+
     <style>
-
         html {
-            margin: 0;
-            border: 0px solid yellow;
+          margin: 0;
         }
-
         body {
-            background-color: #20855D;
-            color: #5e1633;
+        display: grid;
+           margin: 0;
+
+           width: 100vw;
             height: 100vh;
+            background-color: red;
+            z-index: 1;
+            position: absolute;
+
+        }
+
+        .middle {
+            width: 100vw;
+            height: 100vh;
+            z-index: 2;
+            position: absolute;
+            background-image: url("Original_Dharma_Wheel.svg");
+            opacity: 0.5;
+
+        }
+
+        .top {
             margin: 0;
-
-            border: 0px solid red;
-            display: grid;
-            grid-template-columns: 1fr 2fr 1fr;
-            grid-template-rows: 10fr 1fr;
-        }
-
-        .series {
-
-            grid-column-start: 1;
-            grid-column-end: 2;
-            grid-row-start: 1;
-            grid-row-end: 2;
-
-            display: grid;
-            justify-items: start;
-            text-align: left;
-            writing-mode: vertical-lr;
-
-            border: 1px solid black;
-            font-size: 6vw;
-
-        }
-
-
-        .book_name {
-
-            grid-column-start: 2;
-            grid-column-end: 3;
-            grid-row-start: 1;
-            grid-row-end: 2;
-
-            border: 1px solid red;
-
-            font-size: 18vw;
-            font-weight: bold;
-            /* 设置竖排文本 */
-
-            display: grid;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            writing-mode: vertical-rl;
-
-
-        }
-
-
-        .translator {
-            grid-column-start: 3;
-            grid-column-end: 4;
-            grid-row-start: 1;
-            grid-row-end: 2;
-
-            font-size: 6vw;
-            border: 1px solid black;
-            writing-mode: vertical-rl;
-            display: grid;
-
-            align-items: center;
-            justify-content: center;
-
-        }
-
-
-        .footer {
-
-            display: grid;
-            grid-column-start: 1;
-            grid-column-end: 4;
-            grid-row-start: 2;
-            grid-row-end: 3;
-
-            border: 1px solid yellow;
-            align-items: center;
-            text-align: center;
-            justify-content: center;
-            font-size: 3.5vw;
-        }
-
-        .space {
-            letter-spacing: 1em;
-        }
-
-        p {
-            border: 1px solid red;
-            align-items: center;
-            text-align: left;
-            justify-content: center;
+            width: 100vw;
+            height: 100vh;
+            z-index: 3;
+            position: absolute;
+            background-color:transparent;
+            border: 2px solid blue;
         }
 
     </style>
@@ -110,22 +44,8 @@
 
 
 <body>
-
-    <div class="series">
-        <p>元亨寺　汉译南传大藏经·经藏·小部</p>
-    </div>
-
-    <div class="book_name">
-        <p>攝<span class="space">&#8204;</span>阿</p>
-    </div>
-
-    <div class="translator">
-        <p>人名一、人名二译</p>
-    </div>
-
-    <div class="footer">
-        <p>基于 CBETA 数字化成果　2025年12月05日制　简体版</p>
-    </div>
-
+<div class="bottom"></div>
+<div class="middle" />
+<div class="top"> <h1>你好世界！你好世界！你好世界！你好世界！你好世界！你好世界！你好世界！你好世界！你好世界！你好世界！你好世界！你好世界！你好世界！你好世界！</h1></div>
 </body>
 </html>
