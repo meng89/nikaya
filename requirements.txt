@@ -1,21 +1,28 @@
-beautifulsoup4
-html5lib
+# pip 翻墙用 socks 协议代理
+# --proxy socks5://127.0.0.1:1080
 requests[socks]
-python-dateutil
-boltons
-cn2an
 
-fpdf2
-
-jinja2
-flask
-OpenCC
-
-pylatex
-pybtex
-
-
+# 用 html 设计封面
+# venv/lib/python3.14/site-packages/selenium/webdriver/common/linux/selenium-manager --browser firefox --proxy http://127.0.0.1:1081
+selenium
 html2image
 
+# 解析 格式不良的 html
+beautifulsoup4
+html5lib
+
+python-dateutil
+boltons
+
+# 汉字数字转换成阿拉伯数字
+cn2an
+
+
+# 简繁转换
+OpenCC
+
+# EPUB
 epubpacker@git+https://github.com/meng89/epubpacker@dev#egg=epubpacker
+
+# XML
 xl@git+https://github.com/meng89/xl@dev#egg=xl

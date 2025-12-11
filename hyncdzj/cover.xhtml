@@ -7,62 +7,64 @@
         html {
             height: 100vh;
             margin: 0;
-            /*padding: 0px;*/
-            /*border: 10px solid blue;*/
         }
 
         body {
+            height: 100vh;
+            /* padding: 0px; */
+            margin: 0px;
             background-color: $background_color;
             color: $font_color;
-            height: 100vh;
-            margin: 0px;
-            /*padding: 0px;*/
-
-            border: 0px solid red;
 
             display: grid;
             grid-template-columns: 2fr 4fr 2fr;
             grid-template-rows: 13fr 1fr;
         }
 
-        .series {
+        .series_c {
             grid-column-start: 1;
             grid-column-end: 2;
             grid-row-start: 1;
             grid-row-end: 2;
 
             display: grid;
-            align-items: left;
+            align-items: start;
             justify-items: start;
-            /* text-align: left; */
-            writing-mode: vertical-lr;
 
+            border: 2px solid red;
+        }
+        .series {
+            margin: 2vw;
+
+            writing-mode: vertical-lr;
             font-size: 7vw;
             font-family: "$series_font_name";
-            border: 1px solid black;
-
         }
 
-        .book_name {
+        .book_name_c {
             grid-column-start: 2;
             grid-column-end: 3;
             grid-row-start: 1;
             grid-row-end: 2;
 
             display: grid;
-
             align-items: center;
             justify-content: center;
             text-align: center;
-            writing-mode: vertical-rl;
 
+            border: 2px solid red;
+        }
+        .book_name {
+            writing-mode: vertical-rl;
             font-size: $book_name_font_size;
             font-family: "$book_name_font_name";
-            border: 1px solid red;
-
         }
 
-        .translator {
+        .space {
+            margin: $book_name_space_margin;
+        }
+
+        .translator_c {
             grid-column-start: 3;
             grid-column-end: 4;
             grid-row-start: 1;
@@ -76,17 +78,16 @@
             justify-content: center;
 
             font-size: 9vw;
-            font-family: "Source Han Sans TW";
+            font-family: "Source Han Sans TW Medium";
             border: 1px solid black;
-
         }
-
         .translate {
             font-family: "$translate_font_name";
         }
 
 
-        .footer {margin: 0px;
+        .footer_c {
+            margin: 0px;
             font-family: "$footer_font_name";
             grid-column-start: 1;
             grid-column-end: 4;
@@ -94,33 +95,19 @@
             grid-row-end: 3;
 
             display: grid;
-            /* grid-template-columns: auto; */
-            /* grid-template-rows: auto auto; */
             align-items: center;
             text-align: center;
             justify-content: center;
+
+            border: 2px solid red;
+        }
+        .footer {
             font-size: 3.5vw;
-
         }
 
-        .space {
-            margin: $book_name_space_margin;
-        }
-
-        p {
+        span {
             margin: 0;
-            border: 1px solid blue;
-            align-items: center;
-            text-align: center;
-            justify-content: center;
-        }
-        div{margin: 0px;}
-
-        .footer1 {
-            border: 1px solid green;
-        }
-        .footer2 {
-            border: 1px solid blue;
+            border: 2px solid blue;
         }
 
     </style>
@@ -129,20 +116,20 @@
 
 <body>
 
-<div class="series">
-    <p>$series</p>
+<div class="series_c">
+    <span class="series">$series</span>
 </div>
 
-<div class="book_name">
-    <p>$book_name</p>
+<div class="book_name_c">
+    <span class="book_name">$book_name</span>
 </div>
 
-<div class="translator">
-    <p>$translator<span class="translate">$translate</span></p>
+<div class="translator_c">
+    <span>$translator<span class="translate">$translate</span></span>
 </div>
 
-<div class="footer">
-    <p>$footer1 $footer2</p>
+<div class="footer_c">
+    <span class="footer">$footer</span>
 </div>
 
 </body>

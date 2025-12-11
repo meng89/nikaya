@@ -179,19 +179,17 @@ def make_cover_image(module, lang: Lang, tag=None, width=1600, height=2560):
         doc_str = t.substitute(
             background_color = background_color,
             font_color = font_color,
-            series_font_name = font_name,
-            book_name_font_name = font_name + " Medium",
+            series_font_name = font_name + " Medium",
+            book_name_font_name = font_name + " Heavy", # + Medium",
             book_name_font_size = book_name_font_size,
             book_name_space_margin = book_name_space_margin,
-            translate_font_name = font_name,
-            footer_font_name = font_name,
+            translate_font_name = font_name + " Medium",
+            footer_font_name = font_name + " Medium",
             series = lang.c(make_series(module)),
             book_name="<span class=\"space\">&#8204;</span>".join(lang.c(new_name)),
             translator = "、".join(module.info.translators),
             translate = "　" + lang.c("譯"),
-            footer1 = lang.c("基于 CBETA 資料"),
-            #footer2 = footer2,
-            footer2 = "xxxx年xx月xx日制　已充填　传统中文版"
+            footer = lang.c("基于 CBETA 資料") + "　" + footer2,
         )
 
         cover_xhtml_path = os.path.join(config.HYNCDZJ_COVER_DIR, xhtml_filename)
