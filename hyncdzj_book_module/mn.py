@@ -16,7 +16,7 @@ def change_name_fun(name):
     m = re.match(r"第([一二三四五六七八九十〇]+)　(\S+經)", name)
     if m:
         return "{}.{}".format(cn2an.cn2an(m.group(1), "normal"), m.group(2))
-
+    print(repr(name))
     return name
 
 

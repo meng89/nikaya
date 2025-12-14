@@ -121,8 +121,10 @@ def _make_suttas(module, marks: list[epubpacker.Mark], docs, parent_branch: list
             elif start is None and isinstance(obj, list):
                 # 有偈篇 和 芦苇品 这样的文件夹可以在后面添加经号范围。当然有偈篇包含的是其下的相应的范围，芦苇品包含的是其下面的经文范围
                 obj_range_start, obj_range_end = read_range(obj)
-
-                name2 = "{}({}～{})".format(name, obj_range_start, obj_range_end)
+                if obj_range_start is None:
+                    name2 = name
+                else:
+                    name2 = "{}({}～{})".format(name, obj_range_start, obj_range_end)
 
             else:
                 name2 = name
@@ -200,12 +202,18 @@ def write_sutta(short, my_branch, sutta_id, obj: xl.Xml, notes, lang, html=None,
     es = xml_es_to_html(obj.root.kids, obj.root, notes, doc_path, lang)
     body.kids.extend(es)
 
-    if start == end:
-        _range = str(start)
-    else:
-        _range = str(start) + "～" + str(end)
 
-    mark = epubpacker.Mark("{}.{}".format(_range, lang.c(sutta_name)), href="{}#{}".format(doc_path, sutta_id))
+    if start == end:
+        mark_range = start
+    else:
+        mark_range = "{}～{}".format(str(start), str(end))
+
+    if mark_range is not None:
+        mark_name = "{}.{}".format(mark_range, lang.c(sutta_name))
+    else:
+        mark_name = lang.c(sutta_name)
+
+    mark = epubpacker.Mark(mark_name, href="{}#{}".format(doc_path, sutta_id))
     return doc_path, html, mark
 
 
