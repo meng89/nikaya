@@ -12,3 +12,7 @@ def change_name_fun(name):
         return "{}.{}".format(cn2an.cn2an(m.group(1), "normal"), m.group(2))
     else:
         return name
+
+
+def merge_sutta(data):
+    pass

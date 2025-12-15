@@ -5,7 +5,7 @@ import selenium.webdriver
 import opencc
 
 import config
-import hyncdzj_book_module
+from hyncdzj import book_modules
 
 
 _table = [
@@ -85,10 +85,10 @@ class SC(Lang):
 
 
 def make_series(module):
-    for dire, ms in hyncdzj_book_module.categories:
+    for dire, ms in book_modules.categories:
         if module in ms:
             series = "元亨寺　漢譯南傳大藏經·" + dire
-            if module in hyncdzj_book_module.dh_modules:
+            if module in book_modules.dh_modules:
                 series += "·小部"
             return series
     raise Exception
@@ -100,24 +100,24 @@ def xxx(m):
     if name.endswith("經"):
         name = name[:-1]
 
-    if m in hyncdzj_book_module.jing[1] or m in hyncdzj_book_module.dh_modules or m in hyncdzj_book_module.wai[1]:
+    if m in book_modules.jing[1] or m in book_modules.dh_modules or m in book_modules.wai[1]:
         background_color = "#4ea455"
         font_color = "#5F005A"
         book_name_font_size = "30vw"
 
-    elif m in hyncdzj_book_module.lv[1]:
+    elif m in book_modules.lv[1]:
         background_color = "orange"
         font_color = "#073c9f"
         book_name_font_size = "30vw"
 
-    elif m in hyncdzj_book_module.lun[1]:
+    elif m in book_modules.lun[1]:
         background_color = "#228fbd"
         font_color = "#5c1c01"
         book_name_font_size = "30vw"
     else:
         raise Exception(m.info.name)
 
-    if m in hyncdzj_book_module.dh_modules or m in hyncdzj_book_module.wai[1]:
+    if m in book_modules.dh_modules or m in book_modules.wai[1]:
         background_color = "#abc476"
         font_color = "#71356c"
         book_name_font_size = "20vw"
@@ -172,18 +172,23 @@ def make_cover_image(module, lang: Lang, tag=None, width=1600, height=2560):
 
         if isinstance(lang, SC):
             font_name = "Source Han Sans CN"
+            book_name_font_name = "AR PL UKai CN"
         else:
             font_name = "Source Han Sans TW"
+            book_name_font_name = "AR PL UKai TW"
 
         new_name, background_color, font_color, book_name_font_size, book_name_space_margin = xxx(module)
+
+
         doc_str = t.substitute(
             background_color = background_color,
             font_color = font_color,
-            series_font_name = font_name + " Medium",
-            book_name_font_name = font_name + " Heavy", # + Medium",
+            series_font_name = font_name,
+            #book_name_font_name = font_name + " Heavy", # + Medium",
+            book_name_font_name = book_name_font_name,
             book_name_font_size = book_name_font_size,
             book_name_space_margin = book_name_space_margin,
-            translate_font_name = font_name + " Medium",
+            translate_font_name = font_name,
             footer_font_name = font_name + " Medium",
             series = lang.c(make_series(module)),
             book_name="<span class=\"space\">&#8204;</span>".join(lang.c(new_name)),

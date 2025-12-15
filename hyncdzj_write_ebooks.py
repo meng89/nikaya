@@ -10,8 +10,8 @@ import multiprocessing
 multiprocessing.set_start_method("fork") # only POSIX
 from multiprocessing import Process
 
-from hyncdzj_book_module import sn, mn, dn, an
-from hyncdzj_book_module import (kn_ap, kn_bv, kn_cp, kn_ps, kn_pv, kn_ud, kn_vv, kn_dhp, kn_iti, kn_jat, kn_khp, kn_snp,
+from hyncdzj.book_modules import sn, mn, dn, an
+from hyncdzj.book_modules import (kn_ap, kn_bv, kn_cp, kn_ps, kn_pv, kn_ud, kn_vv, kn_dhp, kn_iti, kn_jat, kn_khp, kn_snp,
                          kn_thag, kn_thig, kn_nid1, kn_nid2)
 all_modules = [sn, an, mn, dn] + [kn_ap, kn_bv, kn_cp, kn_ps, kn_pv, kn_ud, kn_vv, kn_dhp, kn_iti, kn_jat, kn_khp, kn_snp,
                          kn_thag, kn_thig, kn_nid1, kn_nid2]
@@ -19,12 +19,12 @@ import hyncdzj.base
 import hyncdzj.epub
 #import hyncdzj.pdf
 
-import hyncdzj_book_module
+from hyncdzj import book_modules
 
 import hyncdzj.ebook_utils
 
 all_modules = []
-for _, ms in hyncdzj_book_module.categories:
+for _, ms in book_modules.categories:
     for _m in ms:
         all_modules.append(_m)
 
