@@ -64,6 +64,7 @@ def main(nopdf, noepub):
     epub_jobs = []
 
     temp_td = tempfile.TemporaryDirectory(prefix="AAA_莊春江汉译经藏_")
+    config.ABO_COVER_DIR = os.path.join(temp_td.name, "cover")
     date = datetime.today().strftime('%Y.%m.%d')
 
     all_modules = [sn, an, mn, dn] + abo.kn.all_modules

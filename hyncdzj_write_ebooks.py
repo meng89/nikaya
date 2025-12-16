@@ -75,6 +75,7 @@ def main(nopdf, noepub):
     epub_jobs = []
 
     temp_td = tempfile.TemporaryDirectory(prefix="AAA_汉译南传大藏经_")
+    config.HYNCDZJ_COVER_DIR = os.path.join(temp_td.name, "cover")
     date = datetime.today().strftime('%Y.%m.%d')
 
     #all_modules = [sn, an, mn, dn] # + pyabo2.kn.all_modules
@@ -114,7 +115,7 @@ def main(nopdf, noepub):
                 full_path = os.path.join(dirname, filename)
 
                 os.makedirs(os.path.dirname(full_path), exist_ok=True)
-                job = (filename, pyabo2.pdf.build_pdf, (full_path, data, m, lang, size, True))
+                job = (filename, pyabo2.pdf.build_pdf, (full_path, data, m, lang, tag, size, True))
                 jobs.append(job)
                 total += 1
                 try_run_job()
@@ -129,11 +130,8 @@ def main(nopdf, noepub):
             filename += ".epub"
 
             dirname = os.path.join(temp_td.name, zh_name)
-
             full_path = os.path.join(dirname, filename)
-
             os.makedirs(os.path.dirname(full_path), exist_ok=True)
-
             jobs.append((filename, hyncdzj.epub.build_epub, (full_path, data, m, lang, tag, True)))
             total += 1
             try_run_job()

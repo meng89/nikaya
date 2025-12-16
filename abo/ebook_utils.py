@@ -1,6 +1,7 @@
 import os
 import string
 
+import selenium.webdriver
 import opencc
 
 import config
@@ -105,14 +106,14 @@ def make_cover(module, lang: Lang, width=1600, height=2560):
         if len(module.name_han) == 2:
             # 半角：&nbsp;
             # 全角：&emsp;
-            title_hant = module.name_han[0] + "&nbsp;&nbsp;" + module.name_han[1]
+            title_hant = module.name_han[0] + "&#160;&#160;" + module.name_han[1]
         else:
             title_hant = module.name_han
 
         if title_hant == "長老尼阿波陀那":
             title_hant = "長老尼<br/><nobr>阿波陀那</nobr>"
         elif title_hant == "長老阿波陀那":
-            title_hant = "長&nbsp;&nbsp;老<br/><nobr>阿波陀那</nobr>"
+            title_hant = "長&#160;&#160;老<br/><nobr>阿波陀那</nobr>"
         else:
             title_hant = "<nobr>{}</nobr>".format(title_hant)
 
@@ -124,12 +125,17 @@ def make_cover(module, lang: Lang, width=1600, height=2560):
                                created=lang.c(today() + " 製作"),
                                )
 
-        open(os.path.join(config.ABO_COVER_DIR, xhtml_filename), "w").write(doc_str)
-        from html2image import Html2Image as HtI
+        cover_xhtml_path = os.path.join(config.ABO_COVER_DIR, xhtml_filename)
+        open(cover_xhtml_path, "w").write(doc_str)
 
-        hti = HtI(browser_executable=config.BROWSER, output_path=config.ABO_COVER_DIR)
-                  #custom_flags=["--disable-software-rasterizer"])
-        hti.screenshot(html_str=doc_str, size=(width, height), save_as=image_filename)
+        options = selenium.webdriver.FirefoxOptions()
+        options.add_argument("--headless")
+        #options.add_argument("--window-size=1600x2560")
+        driver = selenium.webdriver.Firefox(options=options)
+        driver.set_window_size(width, height + config.WINDOW_HEIGHT_OFFSET)
+        driver.get("file://" + cover_xhtml_path)
+        driver.save_screenshot(image_path)
+        driver.close()
 
     return image_path
 
