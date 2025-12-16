@@ -5,6 +5,7 @@ from datetime import datetime
 import time
 import sys
 import config
+import shutil
 
 import multiprocessing
 multiprocessing.set_start_method("fork") # only POSIX
@@ -78,6 +79,7 @@ def main(nopdf, noepub):
 
     #all_modules = [sn, an, mn, dn] # + pyabo2.kn.all_modules
     #all_modules = [pyabo2.kn.mi]
+    dirs = []
     for count, m in enumerate(all_modules, start=1):
 
         print("Loading data: {:2}/{} {}".format(count, len(all_modules), m.info.name), end="", flush=True)
@@ -117,10 +119,11 @@ def main(nopdf, noepub):
                 total += 1
                 try_run_job()
 
-        for zh_name, lang in [("汉译南传大藏经_简体EPUB", hyncdzj.ebook_utils.SC()), ("漢譯南傳大藏經_繁體EPUB", hyncdzj.ebook_utils.TC())]:
-            if noepub:
-                continue
-            filename = "{}_元亨寺_{}_{}{}".format(lang.c(m.info.name), lang.zh, date, lang.c("製"))
+        for zh_name, lang in [("元亨寺_汉译南传大藏经_简体_EPUB_" + date, hyncdzj.ebook_utils.SC()),
+                              ("元亨寺_漢譯南傳大藏經_繁體_EPUB_" + date, hyncdzj.ebook_utils.TC())]:
+
+            dirs.append(zh_name)
+            filename = lang.c(m.info.name)
             if tag:
                 filename += "_{}".format(tag)
             filename += ".epub"
@@ -135,6 +138,7 @@ def main(nopdf, noepub):
             total += 1
             try_run_job()
 
+
     jobs.extend(epub_jobs)
 
     while jobs or running:
@@ -142,6 +146,11 @@ def main(nopdf, noepub):
         try_run_job(True)
 
     end_time = time.time()
+
+    for dir_name in dirs:
+        output_dirname = os.path.join(temp_td.name, dir_name)
+        shutil.make_archive(output_dirname, 'zip', output_dirname)
+
     print()
     print("用时: {:.2f}s".format(end_time - start_time))
 
