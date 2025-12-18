@@ -10,7 +10,7 @@ from hyncdzj import base
 import config
 
 
-def filter_(term: xl.Element or str):
+def filter_es(term: xl.Element or str):
     if isinstance(term, str):
         return term
 
@@ -24,9 +24,11 @@ def filter_(term: xl.Element or str):
         if isinstance(kid, xl.Element) and kid.tag in ("lb", "pb", "milestone"):
             pass
 
-        elif isinstance(kid, xl.Element) and kid.tag == "p" \
-                and len(kid.kids) == 1 and isinstance(kid.kids[0], str) and re.match(r"^[〇一二三四五六七八九十※～]+$",
-                                                                                     kid.kids[0]):
+        elif isinstance(kid, xl.Element) \
+                and kid.tag == "p" \
+                and len(kid.kids) == 1 \
+                and isinstance(kid.kids[0], str) \
+                and re.match(r"^[〇一二三四五六七八九十※～]+$", kid.kids[0]):
             pass
 
         elif isinstance(kid, str) and kid in ("\n", "\n\r"):
@@ -39,7 +41,7 @@ def filter_(term: xl.Element or str):
             pass
 
         else:
-            new_e.kids.append(filter_(kid))
+            new_e.kids.append(filter_es(kid))
 
     return new_e
 
@@ -805,7 +807,7 @@ def load_book_by_module(m: types.ModuleType):
         tei = xml.root
         text = tei.find_kids("text")[0]
         body = text.find_kids("body")[0]
-        body = filter_(body)
+        body = filter_es(body)
         book_div.kids.extend(body.kids)
 
     book_div = move_out_mulu_from_head(book_div)
