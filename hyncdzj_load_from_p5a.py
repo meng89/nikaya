@@ -10,15 +10,45 @@ from hyncdzj import base
 import config
 
 
-<<<<<<< HEAD
-def filter_(e: xl.Element | str):
+def filter_chinese_numerals_p(e):
+    if isinstance(e, xl.Element) \
+            and e.tag == "p" \
+            and len(e.kids) == 1 \
+            and isinstance(e.kids[0], str) \
+            and re.match(r"^[〇一二三四五六七八九十※～]+$", e.kids[0]):
+        return True, []
+    else:
+        return False, None
+
+def filter_lb_pb_milestone(e):
+    if isinstance(e, xl.Element) and e.tag in ("lb", "pb", "milestone"):
+        return True, []
+    else:
+        return False, None
+
+def filter_n_r(e):
+    if isinstance(e, str) and e in ("\n", "\n\r"):
+        return True, []
+    else:
+        return False, None
+
+def filter_str(e):
+    if isinstance(e, str):
+        return True, e.strip()
+    else:
+        return False, None
+
+def filter_comment(e):
+    if isinstance(e, xl.Element) and e.tag == "comment":
+        return True, []
+    else:
+        return False, None
+
+
+
+def filter_es(e: xl.Element | str):
     if isinstance(e, str):
         return e
-=======
-def filter_es(term: xl.Element or str):
-    if isinstance(term, str):
-        return term
->>>>>>> 7f6a68f4a3819e4059de3c9c28683969128500ab
 
     new_e = xl.Element(tag=e.tag)
     new_e.attrs.update(e.attrs)
