@@ -10,11 +10,10 @@ from hyncdzj import base
 import config
 
 
-def filter_(term: xl.Element or str):
-    if isinstance(term, str):
-        return term
+def filter_(e: xl.Element | str):
+    if isinstance(e, str):
+        return e
 
-    e = term
     new_e = xl.Element(tag=e.tag)
     new_e.attrs.update(e.attrs)
     for kid in e.kids:
