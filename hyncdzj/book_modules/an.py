@@ -25,7 +25,7 @@ def get_only_str(e):
         if isinstance(x, str):
             s += x
         elif isinstance(x, xl.Element) and x.tag == "ref":
-            s += get_only_str(e)
+            s += get_only_str(x)
     return s
 
 

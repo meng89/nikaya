@@ -262,7 +262,7 @@ def add_space_before_note(doc: xl.Element):
 
 
 def write_to_disk(path, data: list):
-    dont_do_tags = ["p"]
+    dont_do_tags = ["p", "sub"]
     for x in range(1, 1000):
         dont_do_tags.append("n" + str(x))
 
