@@ -80,7 +80,7 @@ def main(nopdf, noepub):
 
     #all_modules = [sn, an, mn, dn] # + pyabo2.kn.all_modules
     #all_modules = [pyabo2.kn.mi]
-    dirs = []
+    dirs = set()
     for count, m in enumerate(all_modules, start=1):
 
         print("Loading data: {:2}/{} {}".format(count, len(all_modules), m.info.name), end="", flush=True)
@@ -123,7 +123,7 @@ def main(nopdf, noepub):
         for zh_name, lang in [("元亨寺_汉译南传大藏经_简体_EPUB_" + date, hyncdzj.ebook_utils.SC()),
                               ("元亨寺_漢譯南傳大藏經_繁體_EPUB_" + date, hyncdzj.ebook_utils.TC())]:
 
-            dirs.append(zh_name)
+            dirs.add(zh_name)
             filename = lang.c(m.info.name)
             if tag:
                 filename += "_{}".format(tag)
@@ -145,6 +145,7 @@ def main(nopdf, noepub):
 
     end_time = time.time()
 
+    print(dirs)
     for dir_name in dirs:
         output_dirname = os.path.join(temp_td.name, dir_name)
         shutil.make_archive(output_dirname, 'zip', output_dirname)

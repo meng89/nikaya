@@ -34,15 +34,36 @@ def filter_n_r(e):
 
 def filter_str(e):
     if isinstance(e, str):
-        return True, e.strip()
+        return True, [e.strip()]
     else:
         return False, None
 
 def filter_comment(e):
-    if isinstance(e, xl.Element) and e.tag == "comment":
+    if isinstance(e, xl.Comment):
         return True, []
     else:
         return False, None
+
+default_filter_fun_list = [filter_lb_pb_milestone, filter_chinese_numerals_p, filter_n_r, filter_str, filter_comment]
+def filter_xml_body(e, fun_list=None):
+    fun_list = fun_list or default_filter_fun_list
+    if isinstance(e, str):
+        return e
+
+    new_e = xl.Element(tag=e.tag)
+    new_e.attrs.update(e.attrs)
+    for kid in e.kids:
+        result = False
+        for fun in fun_list:
+            result, value = fun(kid)
+            if result:
+                new_e.kids.extend(value)
+                break
+        if not result:
+            new_e.kids.append(filter_xml_body(kid, fun_list))
+
+    return new_e
+
 
 
 
@@ -97,7 +118,7 @@ def transform_elements(elements) -> list:
 def transform_element(element):
     for fun in (table_fun, unclear_fun, cbdiv_fun, cbmulu_fun, head_fun, string_fun,
                 lg_fun, p_fun, note_fun, app_fun, space_fun, ref_fun, g_fun,
-                label_fun, list_fun, item_fun):
+                label_fun, list_fun, item_fun,  sub_fun):
         result = fun(element)
         if result is not None:
             return result
@@ -105,6 +126,12 @@ def transform_element(element):
             continue
 
     raise Exception("Cannot handle this element:", element.to_str())
+
+def sub_fun(e):
+    if isinstance(e, xl.Element) and e.tag == "sub":
+        return [e]
+    else:
+        return None
 
 def table_fun(e):
     if not (isinstance(e, xl.Element) and e.tag == "table"):
@@ -842,7 +869,12 @@ def load_book_by_module(m: types.ModuleType):
         tei = xml.root
         text = tei.find_kids("text")[0]
         body = text.find_kids("body")[0]
-        body = filter_es(body)
+        #body = filter_es(body)
+        if hasattr(m, "filter_xml_body"):
+            body = m.filter_xml_body(body)
+        else:
+            body = filter_xml_body(body)
+
         book_div.kids.extend(body.kids)
 
     book_div = move_out_mulu_from_head(book_div)

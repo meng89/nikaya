@@ -4,7 +4,8 @@ requests[socks]
 
 # 用 html 设计封面
 # selenium-manager 下载 Firefox
-# venv/lib/python3.14/site-packages/selenium/webdriver/common/linux/selenium-manager --browser firefox --proxy http://127.0.0.1:1081
+# venv/lib/python3.14/site-packages/selenium/webdriver/common/linux/selenium-manager --browser firefox --debug --proxy http://127.0.0.1:1081
+
 selenium
 
 # 解析 格式不良的 html
