@@ -5,6 +5,7 @@ import uuid
 from datetime import datetime
 import math
 import posixpath
+from tokenize import maybe
 from urllib.parse import urlsplit
 import urllib.parse
 
@@ -97,12 +98,73 @@ def _get_id(id_, e: xl.Element):
 #             2.解脫經
 #     2.天子相應
 
-def write_tree(module, data, marks, docs, parent_branch, notes, lang):
+
+
+def write_tree(module, data, marks, docs, parent_namegroups, notes, lang):
     for namegroup, obj in data:
-        if is_join_needed(obj):
+        file_index, start, end, name = namegroup
 
-def write_doc(module, doc, marks, docs, parent_branch, notes, lang):
+        cur_namegroups = parent_namegroups + [namegroup]
+        doc_path = branch_to_doc_path(cur_namegroups)
+        maybe_html, maybe_body = make_doc(doc_path, lang, name)
 
+        mark = make_mark(namegroup, obj, lang)
+
+        # 小经合并到一个页面
+        if isinstance(obj, list) and is_leaf(namegroup, obj) and is_join_needed(obj):
+            marks.append(mark)
+            write_leaf_to_page(module, obj, mark.kids, docs, cur_namegroups, notes, lang, maybe_html, maybe_body)
+
+        elif isinstance(obj, xl.Xml):
+            marks.append(mark)
+            write_doc_to_page(module, obj, mark.kids, docs, cur_namegroups, notes, lang, maybe_html, maybe_body)
+
+        else:
+            assert isinstance(obj, list)
+            write_tree(module, obj, marks, docs, parent_namegroups, notes, lang)
+
+
+def write_leaf_to_page(module, data, marks, docs, parent_branch, notes, lang, html, body):
+    for namegroup, obj in data:
+
+        write_doc_to_page(module, obj, marks, docs, parent_branch, notes, lang, html, body)
+
+
+def write_doc_to_page(module, obj, marks, docs, parent_branch, notes, lang, html, body):
+
+    for e in obj.root.kids:
+        if isinstance(e, xl.Element) and re.match(r"^n\d+$", e.tag):
+            continue
+        elif isinstance(e, xl.Element) and e.tag == "sub":
+            mark = 
+        else:
+            html_es = xml_es_to_html([e], obj.root, notes, doc_path, lang)
+            body.kids.extend(html_es)
+
+
+
+def make_mark(namegroup, obj, lang):
+    fileindex, start, end, name = namegroup
+    if start is not None:
+        if start == end:
+            mark_name = str(start) + "." + (name or "none1")
+        else:
+            mark_name = str(start) + "-" + str(end) + "." + (name or "none1")
+
+    # 有偈篇 和 芦苇品 这样的文件夹可以在后面添加经号范围。当然有偈篇包含的是其下的相应的范围，芦苇品包含的是其下面的经文范围
+    elif start is None and isinstance(obj, list):
+
+        obj_range_start, obj_range_end = read_range(obj)
+        if obj_range_start is None:
+            mark_name = name
+        else:
+            mark_name = "{}({}～{})".format(name, obj_range_start, obj_range_end)
+
+    else:
+        mark_name = name
+
+    mark = epubpacker.Mark(lang.c(mark_name))
+    return mark
 
 
 def _make_suttas(module, marks: list[epubpacker.Mark], docs, parent_branch: list, data, notes, lang):
