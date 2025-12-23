@@ -97,6 +97,13 @@ def _get_id(id_, e: xl.Element):
 #             2.解脫經
 #     2.天子相應
 
+def write_tree(module, data, marks, docs, parent_branch, notes, lang):
+    for namegroup, obj in data:
+        if is_join_needed(obj):
+
+def write_doc(module, doc, marks, docs, parent_branch, notes, lang):
+
+
 
 def _make_suttas(module, marks: list[epubpacker.Mark], docs, parent_branch: list, data, notes, lang):
     short = module.info.abbr
