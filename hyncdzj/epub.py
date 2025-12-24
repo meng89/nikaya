@@ -136,11 +136,50 @@ def write_doc_to_page(module, obj, marks, docs, parent_branch, notes, lang, html
         if isinstance(e, xl.Element) and re.match(r"^n\d+$", e.tag):
             continue
         elif isinstance(e, xl.Element) and e.tag == "sub":
-            mark = 
+            nums, names = branch_to_nums_and_names(parent_branch)
+            serials = []
+            for start, end in names:
+                assert start == end
+                serials.append(start)
+            assert len(serials) == 1
+            sub_serial, sub_name = read_serial_from_sub(e)
+            if sub_serial is not None:
+                serials.append(sub_serial)
+            sub_title_serial = module.info.abbr + ".".join(serials)
+            sub_title_name = sub_name
+
+
+
         else:
             html_es = xml_es_to_html([e], obj.root, notes, doc_path, lang)
             body.kids.extend(html_es)
 
+# <sub>1</sub>
+# <sub>1.xxx</sub>
+# <sub><t3>1</t3></sub>
+# <sub><t3>1.xxx</t3></sub>
+# <sub>xxx</sub>
+def read_serial_from_sub(e):
+    s = read_text_from_sub(e)
+    m = re.match(r"^(\d+)$", s)
+    if m:
+        return m.group(1), None
+    m = re.match(r"^(\d+)\.(.+)$", s)
+    if m:
+        return m.group(1), None
+    m = re.match(r"^(.+)$", s)
+    if m:
+        return None, m.group(1)
+    return None
+
+def read_text_from_sub(e):
+    s = ""
+    for x in e.kids:
+        if isinstance(x, str):
+            s += x
+        else:
+            s += read_text_from_sub(x)
+    return s
 
 
 def make_mark(namegroup, obj, lang):
