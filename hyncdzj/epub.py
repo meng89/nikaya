@@ -71,6 +71,19 @@ def build_epub(full_path, data, module, lang, tag, exit_after_done=False):
     if exit_after_done:
         exit()
 
+def make_marks_href(marks):
+    for mark in marks:
+        make_mark_href(mark)
+
+
+def make_mark_href(mark):
+    for sub_mark in mark.kids:
+        sub_href = make_mark_href(sub_mark)
+        if mark.href is None:
+            mark.href = sub_href
+    return mark.href
+
+
 # refs = [("PS/Ps1.html", "id", "PS/PS.1.xhtml", "id2")]
 
 
@@ -108,34 +121,46 @@ def write_tree(module, data, marks, docs, parent_namegroups, notes, lang):
         doc_path = branch_to_doc_path(cur_namegroups)
         maybe_html, maybe_body = make_doc(doc_path, lang, name)
 
-        mark = make_mark(namegroup, obj, lang)
+        mark_name = make_mark_name(namegroup, obj)
+        mark = epubpacker.Mark(mark_name)
+        marks.append(mark)
 
         # 小经合并到一个页面
         if isinstance(obj, list) and is_leaf(namegroup, obj) and is_join_needed(obj):
+            docs.append((doc_path, maybe_html))
             marks.append(mark)
-            write_leaf_to_page(module, obj, mark.kids, docs, cur_namegroups, notes, lang, maybe_html, maybe_body)
+            write_leaf_to_page(module, obj, mark.kids, docs, cur_namegroups, notes, lang, doc_path, maybe_html, maybe_body)
 
         elif isinstance(obj, xl.Xml):
+            docs.append((doc_path, maybe_html))
             marks.append(mark)
-            write_doc_to_page(module, obj, mark.kids, docs, cur_namegroups, notes, lang, maybe_html, maybe_body)
+            write_doc_to_page(module, obj, mark.kids, docs, cur_namegroups, notes, lang, doc_path, maybe_html, maybe_body)
 
         else:
             assert isinstance(obj, list)
             write_tree(module, obj, marks, docs, parent_namegroups, notes, lang)
 
 
-def write_leaf_to_page(module, data, marks, docs, parent_branch, notes, lang, html, body):
-    for namegroup, obj in data:
+def write_leaf_to_page(module, data, marks, docs, parent_branch, notes, lang, doc_path, html, body):
+    for count, (namegroup, obj) in enumerate(data, start=1):
+        doc_id = "doc_" + str(count)
+        write_doc_to_page(module, obj, marks, docs, parent_branch, notes, lang, doc_path, html, body, doc_id)
 
-        write_doc_to_page(module, obj, marks, docs, parent_branch, notes, lang, html, body)
 
+def write_doc_to_page(module, obj, marks, docs, parent_branch, notes, lang, doc_path, html, body, doc_id):
+    heading = body.ekid("h2")
+    heading.attrs["class"] = "doc_title"
+    heading.attrs["id"] = doc_id
 
-def write_doc_to_page(module, obj, marks, docs, parent_branch, notes, lang, html, body):
+    def trans_es(es):
+        return xml_es_to_html(es, obj.root, notes, doc_path, lang)
 
     for e in obj.root.kids:
         if isinstance(e, xl.Element) and re.match(r"^n\d+$", e.tag):
-            continue
+            break
+
         elif isinstance(e, xl.Element) and e.tag == "sub":
+            h_sub = xl.Element("h3", {"class": "sub"})
             nums, names = branch_to_nums_and_names(parent_branch)
             serials = []
             for start, end in names:
@@ -145,10 +170,21 @@ def write_doc_to_page(module, obj, marks, docs, parent_branch, notes, lang, html
             sub_serial, sub_name = read_serial_from_sub(e)
             if sub_serial is not None:
                 serials.append(sub_serial)
-            sub_title_serial = module.info.abbr + ".".join(serials)
-            sub_title_name = sub_name
+                sub_title_serial = module.info.abbr + ".".join(serials)
+                a = xl.Element("a", {"href": "https://suttacentral.net/" + sub_title_serial})
+                a.kids.append(sub_title_serial)
+                h_sub.kids.append(a)
 
+            sub_name_es = trans_es(read_name_es_from_sub(e))
+            if sub_name_es:
+                if sub_serial is not None:
+                    h_sub.kids.append(" ")
+                h_sub.kids.append(sub_name_es)
 
+        elif isinstance(e, xl.Element) and e.tag.startswith("sub"):
+            level = int(e.tag[3:])
+            h_sub = xl.Element("h", {"class" :"sub"})
+            h_sub.kids.append(trans_es(e.kids))
 
         else:
             html_es = xml_es_to_html([e], obj.root, notes, doc_path, lang)
@@ -181,29 +217,41 @@ def read_text_from_sub(e):
             s += read_text_from_sub(x)
     return s
 
+def read_name_es_from_sub(e):
+    y = False
+    name_es = []
+    for x in e.kids:
+        if not y and isinstance(x, str) and x in "1234567890.":
+            pass
+        else:
+            y = True
+            name_es.append(x)
+    return name_es
 
-def make_mark(namegroup, obj, lang):
+
+def make_mark_name(namegroup, obj):
     fileindex, start, end, name = namegroup
     if start is not None:
         if start == end:
-            mark_name = str(start) + "." + (name or "none1")
+            range_ = str(start)
         else:
-            mark_name = str(start) + "-" + str(end) + "." + (name or "none1")
+            range_ = str(start) + "～" + str(end)
+
+        if name is not None:
+            mark_name = range_ + "." + name
+        else:
+            mark_name = range_
 
     # 有偈篇 和 芦苇品 这样的文件夹可以在后面添加经号范围。当然有偈篇包含的是其下的相应的范围，芦苇品包含的是其下面的经文范围
     elif start is None and isinstance(obj, list):
-
         obj_range_start, obj_range_end = read_range(obj)
         if obj_range_start is None:
             mark_name = name
         else:
             mark_name = "{}({}～{})".format(name, obj_range_start, obj_range_end)
-
     else:
         mark_name = name
-
-    mark = epubpacker.Mark(lang.c(mark_name))
-    return mark
+    return mark_name
 
 
 def _make_suttas(module, marks: list[epubpacker.Mark], docs, parent_branch: list, data, notes, lang):
