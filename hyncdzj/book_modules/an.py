@@ -8,6 +8,8 @@ info = base.Info(7, "增支部", ("葉慶春", "關世謙", "郭哲彰"), "AN")
 
 def _p(e):
     kids_s = get_only_str(e)
+    m = re.match(r"^([〇一二三四五六七八九十]+)$", kids_s)
+
     if isinstance(e, xl.Element) \
             and e.tag == "p" \
             and len(e.kids) >= 1 \

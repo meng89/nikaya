@@ -151,8 +151,41 @@ def write_leaf_to_page(module, data, marks, docs, parent_branch, notes, lang, do
         write_doc_to_page(module, obj, marks, docs, parent_branch, notes, lang, doc_path, html, body, doc_id)
 
 
-def make_heading_name(namegroups):
-    num_tuples, names = branch_to_nums_and_names(namegroups)
+def make_heading(module, namegroups, heading_level):
+    serials = []
+    names = []
+    last_start = None
+    for (file_index, start, end, name) in namegroups:
+        if start is not None:
+            serials.append((start, end))
+            names.append(name)
+        last_start = start
+
+    heading = xl.Element("h{}".format(heading_level))
+    if last_start is not None:
+        ranges = []
+        for _start, _end in serials:
+            if _start == _end:
+                ranges.append(str(_start))
+            else:
+                ranges.append(str(_start) + "～" + str(_end))
+
+        range_str = ".".join(ranges)
+        name_str = "/".join(names)
+
+        range_and_name = module.short + range_str
+        a = xl.Element("a", {"href": "https://suttacentral.net/" + range_and_name}, [range_str])
+        heading.kids.append(a)
+        heading.kids.append("　")
+        heading.kids.append(name_str)
+    else:
+        heading.kids.append(names[-1])
+
+    return heading
+
+
+
+
     nums = []
     for _start, _end in num_tuples:
         if _start == _end:
