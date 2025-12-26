@@ -129,16 +129,20 @@ def write_tree(module, data, marks, docs, parent_namegroups, notes, lang):
         if isinstance(obj, list) and is_leaf(namegroup, obj) and is_join_needed(obj):
             docs.append((doc_path, maybe_html))
             marks.append(mark)
+            heading = maybe_body.ekid("h1")
+            heading.attrs["class"] = "doc_title"
+            heading.attrs["id"] = "node"
+            heading.kids.append(lang.c(name))
             write_leaf_to_page(module, obj, mark.kids, docs, cur_namegroups, notes, lang, doc_path, maybe_html, maybe_body)
 
         elif isinstance(obj, xl.Xml):
             docs.append((doc_path, maybe_html))
             marks.append(mark)
-            write_doc_to_page(module, obj, mark.kids, docs, cur_namegroups, notes, lang, doc_path, maybe_html, maybe_body)
+            write_doc_to_page(module, obj, mark.kids, docs, cur_namegroups, notes, lang, doc_path, maybe_html, maybe_body, "doc_1")
 
         else:
             assert isinstance(obj, list)
-            write_tree(module, obj, marks, docs, parent_namegroups, notes, lang)
+            write_tree(module, obj, marks, docs, cur_namegroups, notes, lang)
 
 
 def write_leaf_to_page(module, data, marks, docs, parent_branch, notes, lang, doc_path, html, body):
@@ -147,11 +151,34 @@ def write_leaf_to_page(module, data, marks, docs, parent_branch, notes, lang, do
         write_doc_to_page(module, obj, marks, docs, parent_branch, notes, lang, doc_path, html, body, doc_id)
 
 
-def write_doc_to_page(module, obj, marks, docs, parent_branch, notes, lang, doc_path, html, body, doc_id):
+def make_heading_name(namegroups):
+    num_tuples, names = branch_to_nums_and_names(namegroups)
+    nums = []
+    for _start, _end in num_tuples:
+        if _start == _end:
+            nums.append(str(_start))
+        else:
+            nums.append(str(_start) + "～" + str(_end))
+
+    nums_str = ".".join([str(num) for num in nums])
+
+    if nums_str:
+        sc_a = xl.Element("a", {"href": "https://suttacentral.net/" + short + nums_str}, [short + nums_str])
+        sc_a.attrs["class"] = "sutta_num_sc"
+        num_span.kids.append(sc_a)
+
+    if nums_str:
+        title_h.kids.append("　")
+
+
+
+
+def write_doc_to_page(module, obj, marks, docs, cur_namegroups, notes, lang, doc_path, html, body, doc_id):
+    file_index, start, end, sutta_name = cur_namegroups[-1]
+    mark = epubpacker.Mark(make_mark_name(lang, obj))
     heading = body.ekid("h2")
     heading.attrs["class"] = "doc_title"
     heading.attrs["id"] = doc_id
-
     def trans_es(es):
         return xml_es_to_html(es, obj.root, notes, doc_path, lang)
 
