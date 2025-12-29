@@ -315,3 +315,10 @@ def extract_filename_from_filename(name):
     x = re.match(r"^\d+_(.*?)(?:\.xml)?$", name).group(1)
     assert x is not None
     return x
+
+
+def print_tree(data, indent=2):
+    for namegroup, obj in data:
+        print(" "*indent + repr(namegroup))
+        if isinstance(obj, list):
+            print_tree(obj, indent + 2)

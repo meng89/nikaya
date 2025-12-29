@@ -79,7 +79,7 @@ def main(nopdf, noepub):
     date = datetime.today().strftime('%Y.%m.%d')
 
     #all_modules = [sn, an, mn, dn] # + pyabo2.kn.all_modules
-    #all_modules = [pyabo2.kn.mi]
+    #all_modules = [sn]
     dirs = set()
     for count, m in enumerate(all_modules, start=1):
 
@@ -100,6 +100,8 @@ def main(nopdf, noepub):
 
         print(" ✅")
         time.sleep(0.1)
+
+        # hyncdzj.base.print_tree(data)
 
         for zh_name, lang in [("汉译南传大藏经_简体PDF", hyncdzj.ebook_utils.SC()), ("漢譯南傳大藏經_繁體PDF", hyncdzj.ebook_utils.TC())]:
             continue #todo
@@ -135,7 +137,6 @@ def main(nopdf, noepub):
             jobs.append((filename, hyncdzj.epub.build_epub, (full_path, data, m, lang, tag, True)))
             total += 1
             try_run_job()
-
 
     jobs.extend(epub_jobs)
 
