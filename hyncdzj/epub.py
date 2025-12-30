@@ -127,22 +127,23 @@ def write_tree(module, data, marks, docs, parent_namegroups, notes, lang):
         # 短经合并到一个页面
         if isinstance(obj, list) and is_leaf(namegroup, obj) and is_join_needed(obj):
             docs.append((doc_path, html))
-            mark, heading, _ = make_mark_and_heading(module, cur_namegroups, 1)
+            mark, heading, _ = make_mark_and_heading(module, cur_namegroups, obj, 1)
             marks.append(mark)
             # body.kids.append(heading)
             write_leaf_to_page(module, obj, mark.kids, cur_namegroups, notes, lang, doc_path, html, body)
 
         elif isinstance(obj, xl.Xml):
             docs.append((doc_path, html))
-            mark, heading, _ = make_mark_and_heading(module, cur_namegroups, 2)
+            mark, heading, _ = make_mark_and_heading(module, cur_namegroups, obj, 2)
             marks.append(mark)
             heading.attrs["id"] = "doc_1"
             mark.href = doc_path + "#doc_1"
+            body.kids.append(heading)
             write_doc_to_page(module, obj, mark.kids, cur_namegroups, notes, lang, doc_path, html, body, "doc_1")
 
         else:
             assert isinstance(obj, list)
-            mark, heading, _ = make_mark_and_heading(module, cur_namegroups, 1)
+            mark, heading, _ = make_mark_and_heading(module, cur_namegroups, obj, 1)
             marks.append(mark)
             write_tree(module, obj, mark.kids, docs, cur_namegroups, notes, lang)
 
@@ -151,7 +152,7 @@ def write_leaf_to_page(module, data, marks, parent_branch, notes, lang, doc_path
     for count, (namegroup, obj) in enumerate(data, start=1):
         cur_namegroups = parent_branch + [namegroup]
         doc_id = "doc_" + str(count)
-        mark, heading, _ = make_mark_and_heading(module, cur_namegroups, 2)
+        mark, heading, _ = make_mark_and_heading(module, cur_namegroups, obj, 2)
         marks.append(mark)
         heading.attrs["id"] = doc_id
         mark.href = doc_path + "#" + doc_id
@@ -167,7 +168,7 @@ def write_doc_to_page(module, obj, marks, cur_namegroups, notes, lang, doc_path,
 
         elif isinstance(e, xl.Element) and e.tag == "sub":
             name_group = sub_to_namegroup(e)
-            mark, heading, is_serial = make_mark_and_heading(module, cur_namegroups + [name_group], 3)
+            mark, heading, is_serial = make_mark_and_heading(module, cur_namegroups + [name_group], obj, 3)
             heading.attrs["class"] = "sub"
             heading.attrs["id"] = "sub_" + str(sub_count)
             if is_serial:
@@ -179,7 +180,7 @@ def write_doc_to_page(module, obj, marks, cur_namegroups, notes, lang, doc_path,
 
         elif isinstance(e, xl.Element) and e.tag.startswith("sub"):
             name_group = sub_to_namegroup(e)
-            mark, heading, is_serial = make_mark_and_heading(module, cur_namegroups + [name_group], 3)
+            mark, heading, is_serial = make_mark_and_heading(module, cur_namegroups + [name_group], obj, 3)
             heading.attrs["class"] = "sub"
             heading.attrs["id"] = "sub_" + str(sub_count)
             mark.href = doc_path + "#" + heading.attrs["id"]
@@ -192,7 +193,17 @@ def write_doc_to_page(module, obj, marks, cur_namegroups, notes, lang, doc_path,
             body.kids.extend(html_es)
 
 
-def make_mark_and_heading(module, namegroups, heading_level):
+def make_mark_and_heading(module, namegroups, obj, heading_level):
+    file_index, start, end, name = namegroups[-1]
+    if start is None:
+        range_start, range_end = read_range2(obj)
+        if range_start is None:
+            mark_range = ""
+        else:
+            mark_range = "({}～{})".format(range_start, range_end)
+    else:
+        mark_range = ""
+
     heading = xl.Element("h{}".format(heading_level))
     serials = []
     serial_names = []
@@ -224,13 +235,57 @@ def make_mark_and_heading(module, namegroups, heading_level):
         heading.kids.append(name_str)
         is_serial = True
 
-        mark = epubpacker.Mark(ranges[-1] + "." + or_kong(serial_names[-1]))
+        mark = epubpacker.Mark(ranges[-1] + "." + or_kong(serial_names[-1]) + mark_range)
     else:
         heading.kids.append(or_kong(names[-1]))
-        mark = epubpacker.Mark(or_kong(names[-1]))
+        mark = epubpacker.Mark(or_kong(names[-1]) + mark_range)
         is_serial = False
 
     return mark, heading, is_serial
+
+
+def read_range2(obj):
+    return read_start2(obj), read_end2(obj)
+
+
+def read_start2(obj):
+    if isinstance(obj, xl.Xml):
+        for e in obj.root.kids:
+            if isinstance(e, xl.Element) and e.tag.startswith("sub"):
+                _file_index, start, _end, _name = sub_to_namegroup(e)
+                if start is not None:
+                    return start
+        return None
+    # is isinstance(obj, list)
+    for sub_namegroup, sub_obj in obj:
+        _file_index, start, _end, _name = sub_namegroup
+        if start is not None:
+            return start
+        else:
+            start = read_start2(sub_obj)
+            if start is not None:
+                return start
+    return None
+
+def read_end2(obj: list):
+    if isinstance(obj, xl.Xml):
+        for e in obj.root.kids[::-1]:
+            if isinstance(e, xl.Element) and e.tag.startswith("sub"):
+                _file_index, _start, end, _name = sub_to_namegroup(e)
+                if end is not None:
+                    return end
+        return None
+
+    for sub_namegroup, sub_obj in obj[::-1]:
+        _file_index, _start, end, _name = sub_namegroup
+        if end is not None:
+            return end
+        else:
+            end = read_end2(sub_obj)
+            if end is not None:
+                return end
+
+    return None
 
 
 # <sub>1</sub>

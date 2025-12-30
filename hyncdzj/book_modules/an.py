@@ -1,5 +1,7 @@
 import re
 
+import cn2an
+
 import xl
 
 from hyncdzj import base
@@ -7,7 +9,11 @@ from hyncdzj import base
 info = base.Info(7, "增支部", ("葉慶春", "關世謙", "郭哲彰"), "AN")
 
 def change_name_fun(name):
-    re.match(r"^(([一二三四五六七八九十]+)集)[上|下]?$", name)
+    m = re.match(r"^(([一二三四五六七八九十]+)集)[上|下]?$", name)
+    if m:
+        return "{}.{}".format(cn2an.cn2an(m.group(2), "normal"), m.group(1))
+    else:
+        return name
 
 def _p(e):
     kids_s = get_only_str(e)
