@@ -1,13 +1,11 @@
-import copy
 import os
 import re
 import uuid
-from datetime import datetime
 import math
 import posixpath
-from tokenize import maybe
 from urllib.parse import urlsplit
-import urllib.parse
+
+import cn2an
 
 import epubpacker
 import xl
@@ -261,12 +259,20 @@ def read_serial_from_sub(e):
     return None
 
 def read_text_from_sub(e):
+    s = read_text_from_sub2(e)
+    try:
+        s2 = str(cn2an.cn2an(s, "normal"))
+    except ValueError:
+        s2 = s
+    return s2
+
+def read_text_from_sub2(e):
     s = ""
     for x in e.kids:
         if isinstance(x, str):
             s += x
         else:
-            s += read_text_from_sub(x)
+            s += read_text_from_sub2(x)
     return s
 
 def read_name_es_from_sub(e):

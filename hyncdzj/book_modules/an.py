@@ -6,6 +6,9 @@ from hyncdzj import base
 
 info = base.Info(7, "增支部", ("葉慶春", "關世謙", "郭哲彰"), "AN")
 
+def change_name_fun(name):
+    re.match(r"^(([一二三四五六七八九十]+)集)[上|下]?$", name)
+
 def _p(e):
     kids_s = get_only_str(e)
     m = re.match(r"^([〇一二三四五六七八九十]+)$", kids_s)
