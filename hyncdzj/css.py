@@ -1,3 +1,6 @@
+import string
+
+
 from hyncdzj.ebook_utils import TC, SC
 
 
@@ -23,6 +26,7 @@ h1, h2, h3, h4, h5, h6, h7, .sutta_title {
     font-family: "Noto Sans CJK TC";
     font-weight: 600;
     color: inherit;
+    text-align: center;
 }
 .sutta_nums {
 /*
@@ -77,6 +81,11 @@ body.homage {
 
 
 """
+
+tc_template = string.Template(_css1)
+tc_string = tc_template.substitute(
+
+)
 
 css1 = {
     TC().en: _css1,

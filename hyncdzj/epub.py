@@ -15,8 +15,6 @@ from . import ebook_utils
 import hyncdzj.utils
 import hyncdzj.note
 from . import css
-#from . import ebook_utils
-#from . import suttanum_ref
 from public_modules import tag_str
 
 
@@ -50,7 +48,7 @@ def build_epub(full_path, data, module, lang, tag, exit_after_done=False):
 
     # _make_suttas(module, epub.mark.kids, docs, [(1, None, None, module.info.name)], data, notes, lang)
 
-    write_tree(module, data, epub.mark.kids, docs, [(1, None, None, module.info.name)], notes, lang)
+    write_tree(module, data, epub.mark.kids, docs, [(1, None, None, module.info.name)], notes, lang, [])
 
     for path, xml in docs:
         xml: xl.Xml
@@ -116,36 +114,65 @@ def or_kong(x):
     return x or "【空】"
 
 
-def write_tree(module, data, marks, docs, parent_namegroups, notes, lang):
+class IdGenerate:
+    def __init__(self):
+        self._serial = 1
+    def get_one(self):
+        _id = "id{}".format(self._serial)
+        self._serial += 1
+        return _id
+
+
+def write_tree(module, data, marks, docs, parent_namegroups, notes, lang, marks_and_headings):
     for namegroup, obj in data:
         file_index, start, end, name = namegroup
-
         cur_namegroups = parent_namegroups + [namegroup]
+
         doc_path = branch_to_doc_path(cur_namegroups)
         html, body = make_doc(doc_path, lang, name)
+        id_generate = IdGenerate()
+
 
         # 短经合并到一个页面
         if isinstance(obj, list) and is_leaf(namegroup, obj) and is_join_needed(obj):
-            docs.append((doc_path, html))
             mark, heading, _ = make_mark_and_heading(module, cur_namegroups, obj, 1)
+            marks_and_headings.append((mark, heading))
             marks.append(mark)
-            # body.kids.append(heading)
+            body.kids.append(heading)
+            docs.append((doc_path, html))
+
+            for m, h in marks_and_headings:
+                _id = id_generate.get_one()
+                h.attrs["id"] = _id
+                body.kids.append(h)
+                m.href = "{}#{}".format(doc_path, _id)
+            marks_and_headings.clear()
+
             write_leaf_to_page(module, obj, mark.kids, cur_namegroups, notes, lang, doc_path, html, body)
 
         elif isinstance(obj, xl.Xml):
             docs.append((doc_path, html))
             mark, heading, _ = make_mark_and_heading(module, cur_namegroups, obj, 2)
+            marks_and_headings.append((mark, heading))
             marks.append(mark)
-            heading.attrs["id"] = "doc_1"
-            mark.href = doc_path + "#doc_1"
             body.kids.append(heading)
+
+            docs.append((doc_path, html))
+            for m, h in marks_and_headings:
+                _id = id_generate.get_one()
+                h.attrs["id"] = _id
+                body.kids.append(h)
+                m.href = "{}#{}".format(doc_path, _id)
+            marks_and_headings.clear()
+
             write_doc_to_page(module, obj, mark.kids, cur_namegroups, notes, lang, doc_path, html, body, "doc_1")
 
         else:
             assert isinstance(obj, list)
             mark, heading, _ = make_mark_and_heading(module, cur_namegroups, obj, 1)
             marks.append(mark)
-            write_tree(module, obj, mark.kids, docs, cur_namegroups, notes, lang)
+            marks_and_headings.append((mark, heading))
+            write_tree(module, obj, mark.kids, docs, cur_namegroups, notes, lang, marks_and_headings)
 
 
 def write_leaf_to_page(module, data, marks, parent_branch, notes, lang, doc_path, html, body):
@@ -341,151 +368,6 @@ def read_name_es_from_sub(e):
             name_es.append(x)
     return name_es
 
-
-def make_mark_name(namegroup, obj):
-    fileindex, start, end, name = namegroup
-    if start is not None:
-        if start == end:
-            range_ = str(start)
-        else:
-            range_ = str(start) + "～" + str(end)
-
-        if name is not None:
-            mark_name = range_ + "." + name
-        else:
-            mark_name = range_
-
-    # 有偈篇 和 芦苇品 这样的文件夹可以在后面添加经号范围。当然有偈篇包含的是其下的相应的范围，芦苇品包含的是其下面的经文范围
-    elif start is None and isinstance(obj, list):
-        obj_range_start, obj_range_end = read_range(obj)
-        if obj_range_start is None:
-            mark_name = name
-        else:
-            mark_name = "{}({}～{})".format(name, obj_range_start, obj_range_end)
-    else:
-        mark_name = name
-    return mark_name
-
-
-def _make_suttas(module, marks: list[epubpacker.Mark], docs, parent_branch: list, data, notes, lang):
-    short = module.info.abbr
-
-    first_doc_path = None
-    #if data_name is not None:
-    #    my_branch = parent_branch + [data_name]
-    #else:
-    #    my_branch = parent_branch[:]
-
-    for namegroup, obj in data:
-        file_index, start, end, name = namegroup
-        my_branch = parent_branch + [namegroup]
-
-        if isinstance(obj, list):
-            if start is not None:
-                if start == end:
-                    name2 = str(start) + "." + (name or "none1")
-                else:
-                    name2 = str(start) + "-" + str(end) + "." + (name or "none1")
-
-            elif start is None and isinstance(obj, list):
-                # 有偈篇 和 芦苇品 这样的文件夹可以在后面添加经号范围。当然有偈篇包含的是其下的相应的范围，芦苇品包含的是其下面的经文范围
-                obj_range_start, obj_range_end = read_range(obj)
-                if obj_range_start is None:
-                    name2 = name
-                else:
-                    name2 = "{}({}～{})".format(name, obj_range_start, obj_range_end)
-
-            else:
-                name2 = name
-
-            mark = epubpacker.Mark(lang.c(name2))
-            marks.append(mark)
-
-            if is_leaf(namegroup, obj) and is_join_needed(obj): # 这是最后一个目录 且 短经很多
-                #_branch = my_branch + [name]
-                doc_path = branch_to_doc_path(my_branch)
-                html, body = make_doc(doc_path, lang, name)
-
-                for count, (sub_namegroup, sub_obj) in enumerate(obj, start=1):
-                    sutta_id = "sutta{}".format(count)
-                    _, _, sutta_mark = write_sutta(short, my_branch + [sub_namegroup], sutta_id, sub_obj, notes, lang, html, body, doc_path)
-                    mark.kids.append(sutta_mark)
-
-                docs.append((doc_path, html))
-
-            else:
-                doc_path = _make_suttas(module, mark.kids, docs, my_branch, obj, notes, lang)
-            mark.href = doc_path
-
-        else:
-            doc_path, html, mark = write_sutta(short, my_branch, "sutta1", obj, notes, lang)
-            docs.append((doc_path, html))
-            marks.append(mark)
-
-        if first_doc_path is None:
-            first_doc_path = doc_path
-
-    return first_doc_path
-
-
-def write_sutta(short, my_branch, sutta_id, obj: xl.Xml, notes, lang, html=None, body=None, doc_path=None):
-
-    file_index, start, end, sutta_name = my_branch[-1]
-
-    if doc_path is None:
-        doc_path = branch_to_doc_path(my_branch)
-        html, body = make_doc(doc_path, lang, sutta_name)
-
-    level = max(len(my_branch), 3)
-
-    title_h = body.ekid("h" + str(level))
-    title_h.attrs["class"] = "sutta_title"
-    title_h.attrs["id"] = sutta_id
-
-    num_span = title_h.ekid("span", {"class": "sutta_num_sc"})
-    num_tuples, names = branch_to_nums_and_names(my_branch)
-    nums = []
-    for _start, _end in num_tuples:
-        if _start == _end:
-            nums.append(str(_start))
-        else:
-            nums.append(str(_start) + "～" + str(_end))
-
-    nums_str = ".".join([str(num) for num in nums])
-
-    if nums_str:
-        sc_a = xl.Element("a", {"href": "https://suttacentral.net/" + short + nums_str}, [short + nums_str])
-        sc_a.attrs["class"] = "sutta_num_sc"
-        num_span.kids.append(sc_a)
-
-    if nums_str:
-        title_h.kids.append("　")
-
-    name_span = title_h.ekid("span", {"class": "sutta_name"})
-    if names:
-        h_names = "/".join([n if n else "" for n in names])
-    else:
-        h_names = sutta_name or "none"
-    name_span.kids.append(lang.c(h_names))
-
-    es = xml_es_to_html(obj.root.kids, obj.root, notes, doc_path, lang)
-    body.kids.extend(es)
-
-
-    if start == end:
-        mark_range = start
-    else:
-        mark_range = "{}～{}".format(str(start), str(end))
-
-    if mark_range is not None:
-        mark_name = "{}.{}".format(mark_range, lang.c(sutta_name))
-    else:
-        mark_name = lang.c(sutta_name)
-
-    mark = epubpacker.Mark(mark_name, href="{}#{}".format(doc_path, sutta_id))
-    return doc_path, html, mark
-
-
 ES = list[xl.Element | str]
 
 def xml_es_to_html(es: ES, root, notes: hyncdzj.note.Notes, doc_path, lang) -> ES:
@@ -616,40 +498,6 @@ def branch_to_nums_and_names(branch: list):
             names.append(name)
 
     return nums, names
-
-
-def read_range(obj):
-    return read_start(obj), read_end(obj)
-
-
-def read_start(obj):
-    start = None
-    for sub_namegroup, sub_obj in obj:
-        _file_index, sub_start, _sub_end, _sub_name = sub_namegroup
-        if sub_start is not None:
-            start = sub_start
-        else:
-            if isinstance(sub_obj, list):
-                start = read_start(sub_obj)
-
-        if start is not None:
-            return start
-
-    return None
-
-
-def read_end(obj: list):
-    for sub_namegroup, sub_obj in obj[::-1]:
-        _file_index, _sub_start, sub_end, _sub_name = sub_namegroup
-        if sub_end is not None:
-            return sub_end
-        else:
-            if isinstance(sub_obj, list):
-                end = read_end(sub_obj)
-                if end is not None:
-                    return end
-
-    return None
 
 
 def is_join_needed(obj):

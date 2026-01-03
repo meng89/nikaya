@@ -8,7 +8,7 @@ from hyncdzj import base
 
 info = base.Info(7, "增支部", ("葉慶春", "關世謙", "郭哲彰"), "AN")
 
-def change_name_fun(name):
+def _change_name_fun(name):
     m = re.match(r"^(([一二三四五六七八九十]+)集)[上|下]?$", name)
     if m:
         return "{}.{}".format(cn2an.cn2an(m.group(2), "normal"), m.group(1))
@@ -29,6 +29,12 @@ def _p(e):
     else:
         return False, None
 
+def _p2(e):
+    if isinstance(e, xl.Element) and e.tag == "p":
+        return True, [e]
+    else:
+        return False, None
+
 
 def get_only_str(e):
     s = ""
@@ -40,9 +46,9 @@ def get_only_str(e):
     return s
 
 
-def filter_xml_body(e: xl.Element | str):
+def _filter_xml_body(e: xl.Element | str):
     import hyncdzj_load_from_p5a
     my_fun_list = hyncdzj_load_from_p5a.default_filter_fun_list.copy()
     my_fun_list.remove(hyncdzj_load_from_p5a.filter_chinese_numerals_p)
-    my_fun_list.append(_p)
+    my_fun_list.append(_p2)
     return hyncdzj_load_from_p5a.filter_xml_body(e, my_fun_list)

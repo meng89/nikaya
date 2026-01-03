@@ -74,7 +74,7 @@ def main(nopdf, noepub):
 
     epub_jobs = []
 
-    temp_td = tempfile.TemporaryDirectory(prefix="AAA_汉译南传大藏经_")
+    temp_td = tempfile.TemporaryDirectory(prefix="A_汉译南传大藏经_")
     config.HYNCDZJ_COVER_DIR = os.path.join(temp_td.name, "cover")
     date = datetime.today().strftime('%Y.%m.%d')
 
