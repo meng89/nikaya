@@ -79,7 +79,21 @@ body.homage {
     justify-content: center; /* 水平居中 */
 }
 
+.poem_wrapper {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
 
+    align-items: center; /* 垂直居中对齐 */
+}
+.author {
+    text-align: right; /* 让作者名字靠右，贴近诗句 */
+    font-weight: bold;
+}
+
+/* 诗句样式 */
+.poem_lines {
+    text-align: center; /* 诗句文字本身居中 */
+}
 """
 
 tc_template = string.Template(_css1)

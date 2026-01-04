@@ -389,7 +389,7 @@ def lg_fun(e):
 
         ji = xl.Element("j")
         if person:
-            ji.attrs["p"] = person
+            ji.attrs["a"] = person
         for s in sentences:
             ji.kids.append(xl.Element("p", kids=s))
 

@@ -400,44 +400,29 @@ def xml_es_to_html(es: ES, root, notes: hyncdzj.note.Notes, doc_path, lang) -> E
                 new_es.append(p)
 
             elif e.tag == "j":
+                poem_wrapper = xl.Element("div", attrs={"class": "poem_wrapper"})
+                poem_author = xl.Element("div", attrs={"class": "poem_author"})
+                poem = xl.Element("div", attrs={"class": "poem"})
+                poem_wrapper.kids.extend([poem_author, poem])
+                if "a" in e.attrs.keys():
+                    poem_author.kids.append(xml_es_to_html([e.attrs["p"]], root, notes, doc_path, lang))
 
-                div = xl.Element("div", attrs={"class": "jizi"})
-                person = ""
-                len_person = 0
-                if "p" in e.attrs.keys():
-                    person = e.attrs["p"] + "　"
-
-                else:
-                    person = "　" * 6
-
-                len_person = len(person)
-
-                for index, p_e in enumerate(e.kids):
-                    _es = []
-                    def _add(_es2):
-                        if len(_es) > 0 and isinstance(_es[-1], str) and len(_es2) > 0 and isinstance(_es2[0], str):
-                            _es_tail = _es[-1]
-                            _es.pop(-1)
-                            _es2_head = _es2[0]
-                            _es2.pop(0)
-                            _es.append(_es_tail + _es2_head)
-                            _es.extend(_es2)
-                        else:
-                            _es.extend(_es2)
-
-                    if index == 0:
-                        _es.append(person)
-                        if isinstance(p_e.kids[0], str) and p_e.kids[0][0] == "「":
-                            len_person += 1
+                add_space = False
+                if e.kids[0].kids[0][0] == "「":
+                    add_space = True
+                for p in e.kids:
+                    p2 = poem.ekid("p")
+                    _new_es = xml_es_to_html(p.kids, root, notes, doc_path, lang)
+                    if p.kids[0][0] == "「":
+                        p2_kids = _new_es
                     else:
-                        _add(["　" * len_person])
-                    _add(p_e.kids)
-                    p = xl.Element("p")
-                    _es3 = xml_es_to_html(_es, root, notes, doc_path, lang)
-                    p.kids.extend(join_html_zwnj(_es3))
-                    _es = []
-                    div.kids.append(p)
-                new_es.append(div)
+                        if add_space:
+                            p2_kids = [" 　"].extend(_new_es)
+                        else:
+                            p2_kids = _new_es
+                    p2.kids.extend(p2_kids)
+
+                new_es.append(poem_wrapper)
 
             elif m_n:
                 pass
