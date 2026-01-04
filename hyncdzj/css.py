@@ -5,6 +5,21 @@ from hyncdzj.ebook_utils import TC, SC
 
 
 _css1 = """
+
+h1, h2, h3, h4, h5, h6, h7 {
+    font-family: "$heading";
+    text-align: center;
+}
+
+p .cjk {
+    font-family: "$paragraph";
+}
+
+p .lat {
+    font-family: "$paragraph";
+}
+
+/*
 .cjk {
     font-family: "Noto Serif CJK TC";
     font-weight: 400;
@@ -20,6 +35,7 @@ _css1 = """
     font-family: "Noto Serif Tibetan";
     font-weight: 400;
 }
+*/
 
 
 h1, h2, h3, h4, h5, h6, h7, .sutta_title {
@@ -98,12 +114,18 @@ body.homage {
 
 tc_template = string.Template(_css1)
 tc_string = tc_template.substitute(
+    heading = "Source Han Sans TW Medium",
+    paragraph = "AR PL UKai TW",
+)
 
+sc_string = tc_template.substitute(
+    heading = "Source Han Sans CN Medium",
+    paragraph = "AR PL UKai CN",
 )
 
 css1 = {
-    TC().en: _css1,
-    SC().en: _css1.replace("CJK TC", "CJK SC")
+    TC().en: tc_string,
+    SC().en: sc_string
 }
 
 css1_path = "_css/css1.css"
