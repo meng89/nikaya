@@ -405,23 +405,23 @@ def xml_es_to_html(es: ES, root, notes: hyncdzj.note.Notes, doc_path, lang) -> E
                 poem = xl.Element("div", attrs={"class": "poem"})
                 poem_wrapper.kids.extend([poem_author, poem])
                 if "a" in e.attrs.keys():
-                    poem_author.kids.append(xml_es_to_html([e.attrs["p"]], root, notes, doc_path, lang))
+                    p = poem_author.ekid("p")
+                    p.kids.extend(xml_es_to_html([e.attrs["a"]], root, notes, doc_path, lang))
 
                 add_space = False
-                if e.kids[0].kids[0][0] == "「":
+                if isinstance(e.kids[0].kids[0], str) and e.kids[0].kids[0][0] == "「":
                     add_space = True
                 for p in e.kids:
                     p2 = poem.ekid("p")
                     _new_es = xml_es_to_html(p.kids, root, notes, doc_path, lang)
-                    if p.kids[0][0] == "「":
+                    if isinstance(p.kids[0], str) and p.kids[0][0] == "「":
                         p2_kids = _new_es
                     else:
                         if add_space:
-                            p2_kids = [" 　"].extend(_new_es)
+                            p2_kids = [" 　"] + _new_es
                         else:
                             p2_kids = _new_es
                     p2.kids.extend(p2_kids)
-
                 new_es.append(poem_wrapper)
 
             elif m_n:
