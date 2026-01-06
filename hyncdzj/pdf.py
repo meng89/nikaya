@@ -5,6 +5,7 @@ import string
 import subprocess
 import shutil
 import math
+from ctypes.wintypes import PLARGE_INTEGER
 
 from datetime import datetime
 import urllib.parse
@@ -28,13 +29,14 @@ PAPER="P"
 
 type_map = {
     ("A4", ELECTRONIC): {
+        "max_hanzi_in_line": 40,
+        "max_line_in_page": 43,
         "topspace": "49pt", # 最边边 + top + topdistance
 
         "top": "45pt",
         "topdistance": "2pt",
         "header": "20pt",
         "headerdistance": "20pt",
-
 
         #"cutspace":"73pt",
 
@@ -45,7 +47,6 @@ type_map = {
 
         #"bottomspace": "1pt",
 
-
         "leftedge": "2pt",
         "leftedgedistance": "2pt",
         "leftmargin": "60pt",
@@ -55,15 +56,10 @@ type_map = {
 
         "backspace":"68pt", # 最边边 + all left *
 
-
-
         "rightmargindistance": "2pt",
         "rightmargin": "60pt",
         "rightedgedistance": "2pt",
         "rightedge": "2pt",
-
-
-
 
         #"horoffset":"30pt",
         #"veroffset":"30pt",
@@ -71,8 +67,6 @@ type_map = {
         "width": "460pt",
         "height": "745pt",
     },
-    ("A4", "P"): None
-
 }
 
 def write_setuplayout(work_dir, size, medium):
@@ -269,16 +263,45 @@ def stopsec(depth):
     return "\\stop{}\n\n".format(_map[depth])
 
 
-def write_tree(module, data, namegroups, lang):
+def write_tree(f, module, namegroups, data, lang, max_hanzi_in_line, max_line_in_page, add_page_break=False):
+
+    if epub.is_leaf(namegroups[-1], data):
+        small_count, large_count = count_doc_size(data, max_hanzi_in_line, max_line_in_page)
+        add_page_break = is_ratio_greater(large_count, small_count, 1)
+
+    for namegroup, obj in data:
+        cur_namegroups = namegroups + [namegroup]
+        depth = len(cur_namegroups)
+
+        _, _, _, mark_name, title_range, title_name = epub.make_mark_and_heading(module, cur_namegroups, obj, 1)
+        
+        if title_range is not None:
+            title = "\\goto{{{}}}[url(https://suttacentral.net/{})]".format(title_range, title_range) + " " + title_name
+        else:
+            title = title_name
+
+        f.write(startsec(depth, lang.c(title), lang.c(mark_name)))
+
+        if isinstance(obj, xl.Xml):
+            write_doc(f, obj, lang, add_page_break)
+
+        else:
+            assert isinstance(obj, list)
+            write_tree(f, module, cur_namegroups, obj, lang, max_hanzi_in_line, max_line_in_page)
+
+        f.write(stopsec(depth))
+
+
+def write_doc(f, doc, lang, add_page_break):
 
 
 def write_data(f, data_name, data, depth, parent_branch, bns, lang):
     new_branch = parent_branch + [data_name]
 
-    add_page = False
+    add_page_break = False
 
     if epub.is_leaf(data):
-        small, lage = count_suttas_size(data, 40, 43)
+        small_count, large_count = count_doc_size(data, 40, 43)
         add_page = is_ratio_greater(lage, small, 1)
 
     for name, obj in data:
@@ -422,9 +445,9 @@ def get_max_depth(data, depth = 0):
 
 
 
-def count_suttas_size(obj, one_line_cjk, one_page_line, other_rate=0.5):
-    small_page = 0
-    large_page = 0
+def count_doc_size(obj, max_hanzi_in_line, max_line_in_page, other_rate=0.5):
+    small_page_count = 0
+    large_page_count = 0
 
     for name, xml in obj:
         xml: xl.Xml
@@ -435,13 +458,13 @@ def count_suttas_size(obj, one_line_cjk, one_page_line, other_rate=0.5):
         for p in body.find_kids("p"):
             txt = utils.line_to_txt(p.kids)
             cjk_count, other_count = tag_str.count(txt.strip())
-            line_count += math.ceil((cjk_count + 2 + other_count * other_rate) / one_line_cjk)
-        if line_count <= one_page_line:
-            small_page += 1
+            line_count += math.ceil((cjk_count + 2 + other_count * other_rate) / max_hanzi_in_line)
+        if line_count <= max_line_in_page:
+            small_page_count += 1
         else:
-            large_page += 1
+            large_page_count += 1
 
-    return small_page, large_page
+    return small_page_count, large_page_count
 
 
 def is_ratio_greater(num1, num2, threshold):

@@ -135,7 +135,7 @@ def write_tree(module, data, marks, docs, parent_namegroups, notes, lang, marks_
 
         # 短经合并到一个页面
         if isinstance(obj, list) and is_leaf(namegroup, obj) and is_join_needed(obj):
-            mark, heading, _ = make_mark_and_heading(module, cur_namegroups, obj, 1)
+            mark, heading, _, _, _, _,= make_mark_and_heading(module, cur_namegroups, obj, 1)
             marks_and_headings.append((mark, heading))
             marks.append(mark)
             body.kids.append(heading)
@@ -152,7 +152,7 @@ def write_tree(module, data, marks, docs, parent_namegroups, notes, lang, marks_
 
         elif isinstance(obj, xl.Xml):
             docs.append((doc_path, html))
-            mark, heading, _ = make_mark_and_heading(module, cur_namegroups, obj, 2)
+            mark, heading, _, _, _, _ = make_mark_and_heading(module, cur_namegroups, obj, 2)
             marks_and_headings.append((mark, heading))
             marks.append(mark)
             body.kids.append(heading)
@@ -169,7 +169,7 @@ def write_tree(module, data, marks, docs, parent_namegroups, notes, lang, marks_
 
         else:
             assert isinstance(obj, list)
-            mark, heading, _ = make_mark_and_heading(module, cur_namegroups, obj, 1)
+            mark, heading, _, _, _, _ = make_mark_and_heading(module, cur_namegroups, obj, 1)
             marks.append(mark)
             marks_and_headings.append((mark, heading))
             write_tree(module, obj, mark.kids, docs, cur_namegroups, notes, lang, marks_and_headings)
@@ -179,7 +179,7 @@ def write_leaf_to_page(module, data, marks, parent_branch, notes, lang, doc_path
     for count, (namegroup, obj) in enumerate(data, start=1):
         cur_namegroups = parent_branch + [namegroup]
         doc_id = "doc_" + str(count)
-        mark, heading, _ = make_mark_and_heading(module, cur_namegroups, obj, 2)
+        mark, heading, _, _, _, _ = make_mark_and_heading(module, cur_namegroups, obj, 2)
         marks.append(mark)
         heading.attrs["id"] = doc_id
         mark.href = doc_path + "#" + doc_id
@@ -195,7 +195,7 @@ def write_doc_to_page(module, obj, marks, cur_namegroups, notes, lang, doc_path,
 
         elif isinstance(e, xl.Element) and e.tag == "sub":
             name_group = sub_to_namegroup(e)
-            mark, heading, is_serial = make_mark_and_heading(module, cur_namegroups + [name_group], obj, 3)
+            mark, heading, is_serial, _, _, _ = make_mark_and_heading(module, cur_namegroups + [name_group], obj, 3)
             heading.attrs["class"] = "sub"
             heading.attrs["id"] = "sub_" + str(sub_count)
             if is_serial:
@@ -207,7 +207,7 @@ def write_doc_to_page(module, obj, marks, cur_namegroups, notes, lang, doc_path,
 
         elif isinstance(e, xl.Element) and e.tag.startswith("sub"):
             name_group = sub_to_namegroup(e)
-            mark, heading, is_serial = make_mark_and_heading(module, cur_namegroups + [name_group], obj, 3)
+            mark, heading, is_serial, _, _, _ = make_mark_and_heading(module, cur_namegroups + [name_group], obj, 3)
             heading.attrs["class"] = "sub"
             heading.attrs["id"] = "sub_" + str(sub_count)
             mark.href = doc_path + "#" + heading.attrs["id"]
@@ -231,7 +231,7 @@ def make_mark_and_heading(module, namegroups, obj, heading_level):
     else:
         mark_range = ""
 
-    heading = xl.Element("h{}".format(heading_level))
+    epub_heading = xl.Element("h{}".format(heading_level))
     serials = []
     serial_names = []
     last_start = None
@@ -251,24 +251,26 @@ def make_mark_and_heading(module, namegroups, obj, heading_level):
             else:
                 ranges.append(str(_start) + "～" + str(_end))
 
-
-        range_str = ".".join(ranges)
+        _range_str = ".".join(ranges)
         name_str = "/".join([or_kong(sn) for sn in serial_names])
 
-        range_and_name = module.info.abbr + range_str
-        a = xl.Element("a", {"href": "https://suttacentral.net/" + range_and_name}, [range_and_name])
-        heading.kids.append(a)
-        heading.kids.append("　")
-        heading.kids.append(name_str)
+        range_str = module.info.abbr + _range_str
+        a = xl.Element("a", {"href": "https://suttacentral.net/" + range_str}, [range_str])
+        epub_heading.kids.append(a)
+        epub_heading.kids.append("　")
+        epub_heading.kids.append(name_str)
         is_serial = True
-
-        mark = epubpacker.Mark(ranges[-1] + "." + or_kong(serial_names[-1]) + mark_range)
+        mark_name = ranges[-1] + "." + or_kong(serial_names[-1]) + mark_range
+        epub_mark = epubpacker.Mark(mark_name)
     else:
-        heading.kids.append(or_kong(names[-1]))
-        mark = epubpacker.Mark(or_kong(names[-1]) + mark_range)
+        range_str = None
+        name_str = or_kong(names[-1])
+        epub_heading.kids.append(name_str)
+        mark_name = or_kong(names[-1]) + mark_range
+        epub_mark = epubpacker.Mark(mark_name)
         is_serial = False
 
-    return mark, heading, is_serial
+    return epub_mark, epub_heading, is_serial, mark_name, range_str, name_str
 
 
 def read_range(obj):
