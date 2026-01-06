@@ -269,6 +269,9 @@ def stopsec(depth):
     return "\\stop{}\n\n".format(_map[depth])
 
 
+def write_tree(module, data, namegroups, lang):
+
+
 def write_data(f, data_name, data, depth, parent_branch, bns, lang):
     new_branch = parent_branch + [data_name]
 

@@ -223,7 +223,7 @@ def write_doc_to_page(module, obj, marks, cur_namegroups, notes, lang, doc_path,
 def make_mark_and_heading(module, namegroups, obj, heading_level):
     file_index, start, end, name = namegroups[-1]
     if start is None:
-        range_start, range_end = read_range2(obj)
+        range_start, range_end = read_range(obj)
         if range_start is None:
             mark_range = ""
         else:
@@ -271,11 +271,11 @@ def make_mark_and_heading(module, namegroups, obj, heading_level):
     return mark, heading, is_serial
 
 
-def read_range2(obj):
-    return read_start2(obj), read_end2(obj)
+def read_range(obj):
+    return read_start(obj), read_end(obj)
 
 
-def read_start2(obj):
+def read_start(obj):
     if isinstance(obj, xl.Xml):
         for e in obj.root.kids:
             if isinstance(e, xl.Element) and e.tag.startswith("sub"):
@@ -289,12 +289,12 @@ def read_start2(obj):
         if start is not None:
             return start
         else:
-            start = read_start2(sub_obj)
+            start = read_start(sub_obj)
             if start is not None:
                 return start
     return None
 
-def read_end2(obj: list):
+def read_end(obj: list):
     if isinstance(obj, xl.Xml):
         for e in obj.root.kids[::-1]:
             if isinstance(e, xl.Element) and e.tag.startswith("sub"):
@@ -308,7 +308,7 @@ def read_end2(obj: list):
         if end is not None:
             return end
         else:
-            end = read_end2(sub_obj)
+            end = read_end(sub_obj)
             if end is not None:
                 return end
 
