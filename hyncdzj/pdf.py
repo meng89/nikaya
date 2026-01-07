@@ -274,7 +274,7 @@ def write_tree(f, module, namegroups, data, lang, max_hanzi_in_line, max_line_in
         depth = len(cur_namegroups)
 
         _, _, _, mark_name, title_range, title_name = epub.make_mark_and_heading(module, cur_namegroups, obj, 1)
-        
+
         if title_range is not None:
             title = "\\goto{{{}}}[url(https://suttacentral.net/{})]".format(title_range, title_range) + " " + title_name
         else:
