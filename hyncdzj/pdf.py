@@ -264,7 +264,6 @@ def stopsec(depth):
 
 
 def write_tree(f, module, namegroups, data, lang, max_hanzi_in_line, max_line_in_page, add_page_break=False):
-
     if epub.is_leaf(namegroups[-1], data):
         small_count, large_count = count_doc_size(data, max_hanzi_in_line, max_line_in_page)
         add_page_break = is_ratio_greater(large_count, small_count, 1)
@@ -293,7 +292,21 @@ def write_tree(f, module, namegroups, data, lang, max_hanzi_in_line, max_line_in
 
 
 def write_doc(f, doc, lang, add_page_break):
+    for e in doc.root.kids:
+        if isinstance(e, xl.Element) and re.match(r"^n\d+$", e.tag):
+            break
 
+        elif isinstance(e, xl.Element) and e.tag == "sub":
+            #todo
+            pass
+
+        elif isinstance(e, xl.Element) and e.tag.startswith("sub"):
+            #todo
+            pass
+
+        else:
+            html_es = xml_es_to_html([e], obj.root, notes, doc_path, lang)
+            body.kids.extend(html_es)
 
 def write_data(f, data_name, data, depth, parent_branch, bns, lang):
     new_branch = parent_branch + [data_name]
