@@ -1,0 +1,23 @@
+\enableregime[utf]
+
+\definefontfamily [myfont] [rm] [Noto Serif CJK SC] % 或者 "Songti SC"
+\setupbodyfont [myfont, 12pt]
+
+\starttext
+
+% 定义一个垂直留白，用于段落间
+\define\PoemGap{\blank[2*line]}
+
+% 开始居中对齐
+\startalignment[middle]
+    \startlines
+        % \llap 让引号向左叠加，不推挤后面的文字
+        \dontleavehmode\llap{XXXXXxxxxxxxxxxxx}aslfj asfl salkfjasl
+        asf laskfj l askjf
+        asf sa f
+        % \rlap 让引号向右叠加
+        laskflasflk aslkf ll aslklkj  asljl\rlap{X}
+    \stoplines
+\stopalignment
+
+\stoptext

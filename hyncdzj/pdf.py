@@ -305,8 +305,10 @@ def write_doc(f, doc, lang, add_page_break):
             pass
 
         else:
+            xml_to_tex(e)
             html_es = xml_es_to_html([e], obj.root, notes, doc_path, lang)
             body.kids.extend(html_es)
+
 
 def write_data(f, data_name, data, depth, parent_branch, bns, lang):
     new_branch = parent_branch + [data_name]
@@ -393,6 +395,28 @@ def write_sutta(file: typing.TextIO, obj, depth, branch, bns, lang, add_page):
     if add_page:
         file.write("\\page\n")
     file.write(stopsec(depth))
+
+
+def xml_to_tes(es, lang, doc):
+    s = ""
+    for e in es:
+        if isinstance(e, str):
+            _s = lang.c(e)
+            _s = _s.replace("{", "\\{").replace("}", "\\}").replace("[", "\\[").replace("]", "\\]").replace("#", "\\#")
+            s += _s
+
+        elif isinstance(e, xl.Element) and e.tag == "p":
+            s += _xml_to_tex(e.kids, lang, doc)
+
+        elif isinstance(e, xl.Element) and e.tag == "jizi":
+            s += "\\startalignment[middle]"
+            s += "\\startlines"
+            for p, index, in enumerate(e.kids):
+                if index == 0:
+                    author = e.attrs["a"]
+                else:
+                    author = ""
+
 
 
 def _xml_to_tex(bns, es, lang, root=None):
