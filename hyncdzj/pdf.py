@@ -397,7 +397,7 @@ def write_sutta(file: typing.TextIO, obj, depth, branch, bns, lang, add_page):
     file.write(stopsec(depth))
 
 
-def xml_to_tes(es, lang, doc):
+def xml_to_tex(es, lang, doc):
     s = ""
     for e in es:
         if isinstance(e, str):
@@ -409,14 +409,49 @@ def xml_to_tes(es, lang, doc):
             s += _xml_to_tex(e.kids, lang, doc)
 
         elif isinstance(e, xl.Element) and e.tag == "jizi":
-            s += "\\startalignment[middle]"
-            s += "\\startlines"
-            for p, index, in enumerate(e.kids):
+            s += "\\startalignment[middle]\n"
+            s += "\\startlines\n"
+            for index, p in enumerate(e.kids):
+                kids, delete_head, delete_tail = xxx(p.kids)
                 if index == 0:
-                    author = e.attrs["a"]
+                    lltp_str = e.attrs["a"]
                 else:
-                    author = ""
+                    lltp_str = ""
 
+                if delete_head:
+                    lltp_str += "「"
+
+                if lltp_str:
+                    s += "\\dontleavehmode\\llap{{{}}}".format(lltp_str)
+                s += xml_to_tex(kids, lang, doc)
+                if delete_tail:
+                    s += "\\rltp{{{}}}".format("」")
+                s += "\n\n"
+            s += "\\stoplines\n"
+            s += "\\stopalignment\n"
+
+        elif isinstance(e, xl.Element) and e.tag == "jizi":
+
+    return s
+
+
+def xxx(p_kids):
+    kids = []
+    delete_head = False
+    for index, e in enumerate(p_kids):
+        if index == 0 and isinstance(e, str) and e[0] == "「":
+            delete_head = True
+            kids.append(e[1:])
+        else:
+            kids.append(e)
+
+    if isinstance(kids[-1], str) and kids[-1][-1] == "」":
+        kids[-1] = kids[-1][:-1]
+        delete_tail = True
+    else:
+        delete_tail = False
+
+    return  kids, delete_head, delete_tail
 
 
 def _xml_to_tex(bns, es, lang, root=None):
