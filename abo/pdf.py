@@ -396,7 +396,7 @@ def _xml_to_tex(bns, es, lang, root=None):
                 "\\par\n"
             elif x.tag == "a":
                 #print(x.to_str())
-                "\\goto{莊春江工作站}[url(https://agama.buddhason.org)]"
+                #"\\goto{莊春江工作站}[url(https://agama.buddhason.org)]"
                 s += "\\goto{" + _xml_to_tex(bns, x.kids, lang, root) + "}[url(" + x.attrs["href"] + ")]"
 
             elif x.tag == "span" and x.attrs.get("class") == "sutra_name":

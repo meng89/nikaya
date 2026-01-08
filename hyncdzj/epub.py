@@ -382,7 +382,7 @@ def xml_es_to_html(es: ES, root, notes: hyncdzj.note.Notes, doc_path, lang) -> E
             if m_t:
                 a = xl.Element("a", attrs={"epub:type": "noteref"})
                 key = m_t.group(1)
-                n_kids = _get_note_by_key(root, key)
+                n_kids = get_note_by_key(root, key)
                 link = notes.add_note(n_kids)
                 href = relpath(link, doc_path)
                 a.attrs["href"] = href
@@ -457,7 +457,7 @@ def join_html_zwnj(es):
     return new_es
 
 
-def _get_note_by_key(root: xl.Element, key: str):
+def get_note_by_key(root: xl.Element, key: str):
     for e in root.kids:
         m_n = re.match(r"^n(\d+)$", e.tag)
         if m_n:

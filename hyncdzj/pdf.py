@@ -405,33 +405,75 @@ def xml_to_tex(es, lang, doc):
             _s = _s.replace("{", "\\{").replace("}", "\\}").replace("[", "\\[").replace("]", "\\]").replace("#", "\\#")
             s += _s
 
-        elif isinstance(e, xl.Element) and e.tag == "p":
-            s += _xml_to_tex(e.kids, lang, doc)
+        elif isinstance(e, xl.Element):
+            m_t = re.match(r"^t(\d+)$", e.tag)
+            m_n = re.match(r"^n\d+$", e.tag)
+            if m_t:
+                text = None
+                if e.kids:
+                    assert (len(e.kids) == 1 and isinstance(e.kids[0], str))
+                    text = e.kids[0]
+                n_kids = epub.get_note_by_key(doc, m_t.group(1))
+                _note = es_to_text(n_kids)
+                s += "\\PDFhighlight[原始注解][{{{}}}]{{{}}}".format(_note, text or "注")
 
-        elif isinstance(e, xl.Element) and e.tag == "jizi":
-            s += "\\startalignment[middle]\n"
-            s += "\\startlines\n"
-            for index, p in enumerate(e.kids):
-                kids, delete_head, delete_tail = xxx(p.kids)
-                if index == 0:
-                    lltp_str = e.attrs["a"]
-                else:
-                    lltp_str = ""
+            elif e.tag == "p":
+                s += _xml_to_tex(e.kids, lang, doc)
 
-                if delete_head:
-                    lltp_str += "「"
+            elif e.tag == "jizi":
+                s += "\\startalignment[middle]\n"
+                s += "\\startlines\n"
+                for index, p in enumerate(e.kids):
+                    kids, delete_head, delete_tail = xxx(p.kids)
+                    if index == 0:
+                        lltp_str = e.attrs["a"]
+                    else:
+                        lltp_str = ""
 
-                if lltp_str:
-                    s += "\\dontleavehmode\\llap{{{}}}".format(lltp_str)
-                s += xml_to_tex(kids, lang, doc)
-                if delete_tail:
-                    s += "\\rltp{{{}}}".format("」")
-                s += "\n\n"
-            s += "\\stoplines\n"
-            s += "\\stopalignment\n"
+                    if delete_head:
+                        lltp_str += "「"
 
-        elif isinstance(e, xl.Element) and e.tag == "jizi":
+                    if lltp_str:
+                        s += "\\dontleavehmode\\llap{{{}}}".format(lltp_str)
+                    s += xml_to_tex(kids, lang, doc)
+                    if delete_tail:
+                        s += "\\rltp{{{}}}".format("」")
+                    s += "\n\n"
+                s += "\\stoplines\n"
+                s += "\\stopalignment\n"
 
+            elif m_n:
+                pass
+
+            elif e.tag == "a":
+                s += "\\goto{" + xml_to_tex(e.kids, lang, doc) + "}[url(" + e.attrs["href"] + ")]"
+
+            elif e.tag == "list":
+                s += "\\startalignment[middle]\n"
+                s += "\\startlines\n"
+                for item in e.kids:
+                    s += xml_to_tex(item, lang, doc)
+                    s += "\n\n"
+                s += "\\stoplines\n"
+                s += "\\stopalignment\n"
+
+            else:
+                raise Exception("Unknown element type: {}".format(repr(e.to_str())))
+
+
+
+    return s
+
+
+def es_to_text(es):
+    s = ""
+    for x in es:
+        if isinstance(x, str):
+            s += x
+        elif isinstance(x, xl.Element):
+            s += es_to_text(x.kids)
+        else:
+            raise Exception(x)
     return s
 
 
