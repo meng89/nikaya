@@ -419,6 +419,7 @@ def xml_to_tex(es, lang, doc):
 
             elif e.tag == "p":
                 s += _xml_to_tex(e.kids, lang, doc)
+                s += "\n\n"
 
             elif e.tag == "jizi":
                 s += "\\startalignment[middle]\n"
@@ -459,8 +460,6 @@ def xml_to_tex(es, lang, doc):
 
             else:
                 raise Exception("Unknown element type: {}".format(repr(e.to_str())))
-
-
 
     return s
 
