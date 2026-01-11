@@ -210,6 +210,7 @@ def make_cover_image(module, lang: Lang, tag=None, width=1600, height=2560):
         driver.get("file://" + cover_xhtml_path)
         driver.save_screenshot(image_path)
         driver.close()
+        driver.quit()
     return image_path
 
 

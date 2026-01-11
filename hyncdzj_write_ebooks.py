@@ -18,7 +18,7 @@ all_modules = [sn, an, mn, dn] + [kn_ap, kn_bv, kn_cp, kn_ps, kn_pv, kn_ud, kn_v
                          kn_thag, kn_thig, kn_nid1, kn_nid2]
 import hyncdzj.base
 import hyncdzj.epub
-#import hyncdzj.pdf
+import hyncdzj.pdf
 
 from hyncdzj import book_modules
 
@@ -35,7 +35,7 @@ jobs =  []
 running = []
 finished = 0
 
-max_processes = os.cpu_count()
+max_processes = os.cpu_count() / 2
 def try_run_job(do_print=True):
     global running, finished
 
@@ -56,7 +56,7 @@ def try_run_job(do_print=True):
     running = new_running
 
     while True:
-        if len(jobs) == 0 or len(running) == max_processes:
+        if len(jobs) == 0 or len(running) >= max_processes:
             break
 
         name, func, args = jobs[0]
@@ -103,27 +103,30 @@ def main(nopdf, noepub):
 
         # hyncdzj.base.print_tree(data)
 
-        for zh_name, lang in [("汉译南传大藏经_简体PDF", hyncdzj.ebook_utils.SC()), ("漢譯南傳大藏經_繁體PDF", hyncdzj.ebook_utils.TC())]:
-            continue #todo
+        for zh_name, lang in [("元亨寺_汉译南传大藏经_简体_PDF", hyncdzj.ebook_utils.SC()), ("元亨寺_漢譯南傳大藏經_繁體_PDF", hyncdzj.ebook_utils.TC())]:
 
-            if nopdf:
-                continue
-            for size in ("A4",):
-                zh_name = zh_name + "_" + size
 
-                filename = "{}_元亨寺_{}_{}_{}{}.pdf".format(lang.c(m.name_han), lang.zh, size, date, lang.c("製"))
+            for layout in hyncdzj.pdf.LAYOUTS:
+                zh_name = zh_name + "_" + layout
+
+                filename = "{}".format(lang.c(m.info.name))
+                if tag:
+                    filename += "_{}".format(tag)
+                filename += "_{}.pdf".format(layout)
+
                 dirname = os.path.join(temp_td.name, zh_name)
 
                 full_path = os.path.join(dirname, filename)
 
                 os.makedirs(os.path.dirname(full_path), exist_ok=True)
-                job = (filename, pyabo2.pdf.build_pdf, (full_path, data, m, lang, tag, size, True))
+                job = (filename, hyncdzj.pdf.build_pdf, (full_path, data, m, lang, layout, tag, True))
                 jobs.append(job)
                 total += 1
                 try_run_job()
 
         for zh_name, lang in [("元亨寺_汉译南传大藏经_简体_EPUB_" + date, hyncdzj.ebook_utils.SC()),
                               ("元亨寺_漢譯南傳大藏經_繁體_EPUB_" + date, hyncdzj.ebook_utils.TC())]:
+            continue
 
             dirs.add(zh_name)
             filename = lang.c(m.info.name)

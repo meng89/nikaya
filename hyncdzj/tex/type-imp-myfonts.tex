@@ -1,0 +1,86 @@
+\enableregime[utf]
+
+\starttypescript [serif] [tcfont]
+
+\definefontsynonym[enserif][file:NotoSerif-Light.ttf]
+\definefontsynonym[enserifbd][file:NotoSerif-SemiBold.ttf]
+\definefontsynonym[enserifit][file:NotoSerif-LightItalic.ttf]
+\definefontsynonym[enserifbi][file:NotoSerif-SemiBoldItalic.ttf]
+
+\definefontfallback[nsecjkl][file:NotoSerifCJKtc-Light.otf][0x00400-0x00eff, 0x01000-0x2FA1F]
+\definefontfallback[nsecjkl][file:NotoSerifTibetan-Light.ttf][0x00f00-0x00fff]
+\definefontfallback[nsecjkb][file:NotoSerifCJKtc-Medium.otf][0x00400-0x2FA1F]
+
+\definefontsynonym[Serif][enserif][fallbacks=nsecjkl]
+\definefontsynonym[SerifBold][enserifbd][fallbacks=nsecjkb]
+\definefontsynonym[SerifItalic][enserifit][fallbacks=nsecjkl]
+\definefontsynonym[SerifBoldItalic][enserifbi][fallbacks=nsecjkb]
+
+\stoptypescript
+
+
+
+\starttypescript [sans] [tcfont]
+
+\definefontsynonym[ensans][file:NotoSans-Light.ttf]
+\definefontsynonym[ensansbd][file:NotoSans-SemiBold.ttf]
+\definefontsynonym[ensansob][file:NotoSans-LightItalic.ttf]
+\definefontsynonym[ensansbo][file:NotoSans-SemiBoldItalic.ttf]
+
+\definefontfallback[nsacjkl][file:NotoSansCJKtc-Light.otf][0x00400-0x00eff, 0x01000-0x2FA1F]
+\definefontfallback[nsacjkl][file:NotoSerifTibetan-Light.ttf][0x00f00-0x00fff]
+\definefontfallback[nsacjkb][file:NotoSansCJKtc-Medium.otf][0x00400-0x2FA1F]
+
+\definefontsynonym[Sans][ensans][fallbacks=nsacjkl]
+\definefontsynonym[SansBold][ensansbd][fallbacks=nsacjkb]
+\definefontsynonym[SansItalic][ensansob][fallbacks=nsacjkl]
+\definefontsynonym[SansBoldItalic][ensansbo][fallbacks=nsacjkb]
+
+\stoptypescript
+
+\starttypescript[tcfonts]
+\definetypeface [tcfonts] [rm] [serif] [tcfont]
+\definetypeface [tcfonts] [ss] [sans] [tcfont]
+\stoptypescript
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\starttypescript [serif] [scfont]
+
+\definefontsynonym[enserif][file:NotoSerif-Light.ttf]
+\definefontsynonym[enserifbd][file:NotoSerif-SemiBold.ttf]
+\definefontsynonym[enserifit][file:NotoSerif-LightItalic.ttf]
+\definefontsynonym[enserifbi][file:NotoSerif-SemiBoldItalic.ttf]
+
+\definefontfallback[nsecjkl][file:NotoSerifCJKsc-Light.otf][0x00400-0x2FA1F]
+\definefontfallback[nsecjkb][file:NotoSerifCJKsc-Medium.otf][0x00400-0x2FA1F]
+
+\definefontsynonym[Serif][enserif][fallbacks=nsecjkl]
+\definefontsynonym[SerifBold][enserifbd][fallbacks=nsecjkb]
+\definefontsynonym[SerifItalic][enserifit][fallbacks=nsecjkl]
+\definefontsynonym[SerifBoldItalic][enserifbi][fallbacks=nsecjkb]
+
+\stoptypescript
+
+
+
+\starttypescript [sans] [scfont]
+
+\definefontsynonym[ensans][file:NotoSans-Light.ttf]
+\definefontsynonym[ensansbd][file:NotoSans-SemiBold.ttf]
+\definefontsynonym[ensansob][file:NotoSans-LightItalic.ttf]
+\definefontsynonym[ensansbo][file:NotoSans-SemiBoldItalic.ttf]
+
+\definefontfallback[nsacjkl][file:NotoSansCJKsc-Light.otf][0x00400-0x2FA1F]
+\definefontfallback[nsacjkb][file:NotoSansCJKsc-Medium.otf][0x00400-0x2FA1F]
+
+\definefontsynonym[Sans][ensans][fallbacks=nsacjkl]
+\definefontsynonym[SansBold][ensansbd][fallbacks=nsacjkb]
+\definefontsynonym[SansItalic][ensansob][fallbacks=nsacjkl]
+\definefontsynonym[SansBoldItalic][ensansbo][fallbacks=nsacjkb]
+
+\stoptypescript
+\starttypescript[scfonts]
+\definetypeface [scfonts] [rm] [serif] [scfont]
+\definetypeface [scfonts] [ss] [sans] [scfont]
+\stoptypescript

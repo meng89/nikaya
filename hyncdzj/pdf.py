@@ -5,30 +5,32 @@ import string
 import subprocess
 import shutil
 import math
-from ctypes.wintypes import PLARGE_INTEGER
 
 from datetime import datetime
-import urllib.parse
 
 import xl
 
 import config
-from . import epub, note, ebook_utils, utils
+from . import epub, ebook_utils, utils
 from public_modules import tag_str
 
 MAIN = "main.tex"
 FONT = "type-imp-myfonts.tex"
 SUTTAS = "suttas.tex"
 
+
+LAYOUTS = [
+    "A4",
+    #"19.5比9",
+    #"21比9",
+
+]
 cover_size_map = {
     "A4": (2480, 3508)
 }
 
-ELECTRONIC="E"
-PAPER="P"
-
 type_map = {
-    ("A4", ELECTRONIC): {
+    "A4": {
         "max_hanzi_in_line": 40,
         "max_line_in_page": 43,
         "topspace": "49pt", # 最边边 + top + topdistance
@@ -69,11 +71,11 @@ type_map = {
     },
 }
 
-def write_setuplayout(work_dir, size, medium):
+def write_setuplayout(work_dir, layout):
 
     f = open(os.path.join(work_dir, "setuplayout.tex"), "w")
 
-    d = type_map[(size, medium)]
+    d = type_map[layout]
     f.write("\n\\setuplayout[\n")
     for k, v in d.items():
         if v is None:
@@ -82,29 +84,26 @@ def write_setuplayout(work_dir, size, medium):
     f.write("]\n")
 
 
-def build_pdf(full_path, data, module, lang, size, exit_after_done=False, medium=ELECTRONIC):
-    bns = [module.short]
+def build_pdf(full_path, data, module, lang, layout, tag, exit_after_done=False):
     work_dir = full_path + "_work"
     out_dir = full_path + "_out"
     os.makedirs(work_dir, exist_ok=True)
     os.makedirs(out_dir, exist_ok=True)
 
-    branch = []
-    w, h = cover_size_map[size]
-    cover_image = ebook_utils.make_cover(module, lang, w, h)
+    w, h = cover_size_map[layout]
+    cover_image = ebook_utils.make_cover_image(module, lang, tag, w, h)
 
-    write_main(work_dir, module, bns, lang, size, cover_image)
+    write_main_tex(work_dir, module, lang, layout, cover_image)
 
     f = open(os.path.join(work_dir, SUTTAS), "w")
-    write_data(f, module.short, data, 1, branch, bns, lang)
+    write_tree(f, module, [(None, None, None, None)], data, lang, 40, 43)
     f.close()
 
-    write_setuplayout(work_dir, size, medium)
+    write_setuplayout(work_dir, layout)
 
     write_fontstex(work_dir)
 
-    _write_fanli(work_dir, bns, lang)
-    _write_homage(work_dir, bns, lang)
+    _write_homage(work_dir, lang)
     _write_zzsm(work_dir)
 
     my_env = os.environ.copy()
@@ -174,69 +173,40 @@ def ntrelpath(path1, path2):
     return path
 
 
-def write_main(work_dir, module, bns, lang, size, cover_image):
-
-    # homage = dopdf.join_to_tex(nikaya.homage_line, bns, c)
-    main_t = open(os.path.join(config.ABO_TEX_DIR, MAIN), "r", encoding='utf-8').read()
+def write_main_tex(work_dir, module, lang, size, cover_image):
+    main_t = open(os.path.join(config.HYNCDZJ_TEX_DIR, MAIN), "r", encoding='utf-8').read()
     date = datetime.today().strftime('%Y-%m-%d')
     main = string.Template(main_t).substitute(
         size=size,
-        title=lang.c(module.name_han),
-        author="莊春江" + lang.c("譯"),
-        keyword=lang.c("上座部佛教、南傳佛教、經藏、尼柯耶、" + module.name_han),
+        title=lang.c(module.info.name),
+        author="、".join(module.info.translators) + lang.c("譯"),
+        keyword=lang.c("上座部佛教、南傳佛教、" + module.info.name),
         date=date,
-
         cover_image=cover_image,
-        homage=lang.c("對那位世尊、阿羅漢、遍正覺者禮敬"),
     )
     f = open(os.path.join(work_dir, MAIN), "w", encoding="utf-8")
     f.write(main)
 
-def _write_cover(work_dir, module, data, lang, size):
-    w, h = cover_size_map[size]
-    cover_image = ebook_utils.make_cover(module, data, lang, w, h)
-    f = open(os.path.join(work_dir, "cover.tex"), "w", encoding="utf-8")
-    f.write("""
-    
-    """)
 
-def _write_fanli(work_dir, bns, lang):
-    f = open(os.path.join(work_dir, "fanli.tex"), "w", encoding="utf-8")
-    s = ""
-    s += startsec(1, "凡例", "凡例")
-    #f.write("\\bookmark[mylist]{fanli}\n")
-    for line in epub.FANLI:
-        s += _xml_to_tex(bns, line, lang)
-        s += "\n\\blank\n\n"
-    s += "\\page\n"
-    s += stopsec(1)
+def _write_homage(work_dir, lang):
+    f = open(os.path.join(config.HYNCDZJ_TEX_DIR, "homage.tex"), "r", encoding="utf-8")
+    homage_t = f.read()
+    homeage = string.Template(homage_t).substitute(
+        line1 = lang.c("歸命彼世尊"),
+        line2 = lang.c("應供等覺者")
+    )
+    f.close()
 
-    f.write(s)
-
-def _write_homage(work_dir, bns, lang):
     f = open(os.path.join(work_dir, "homage.tex"), "w", encoding="utf-8")
-    es = epub.get_homage_xml_es()
-
-    #f.write("\\bookmark[mylist]{{{}}}\n".format(lang.c("禮敬世尊")))
-    #\\bookmark[mylist]{{{}}}
-    f.write("""
-    \\bookmark[mylist]{{{}}}
-    %\\startstandardmakeup
-    \\vfill % 在内容前添加弹性空间
-    \\startalignment[center]
-    {{\\tfd {{{}}}}}
-    \\stopalignment
-    \\vfill % 在内容后添加弹性空间
-    %\\stopstandardmakeup
-    \\page
-    """.format(lang.c("禮敬世尊"), _xml_to_tex(bns, es, lang)))
+    f.write(homeage)
+    f.close()
 
 
 def _write_zzsm(work_dir):
     f = open(os.path.join(work_dir, "readme.tex"), "w", encoding="utf-8")
     f.write(startsec(1, "制作说明", "制作说明"))
     for line in epub.ZZSM:
-        f.write(_xml_to_tex([], line, ebook_utils.Lang()))
+        f.write(xml_to_tex([line], None, ebook_utils.Lang()))
         f.write("\n\\blank\n")
     f.write("\\page\n")
     f.write(stopsec(1))
@@ -249,6 +219,9 @@ _map = {
     4: "subsubsubject",
     5: "subsubsubsubject",
     6: "subsubsubsubsubject",
+    7: "subsubsubsubsubsubject",
+    8: "subsubsubsubsubsubsubject",
+
 }
 def startsec(depth, title, bookmark, reference=None):
     s =  "\\start{}[\n".format(_map[depth])
@@ -305,99 +278,13 @@ def write_doc(f, doc, lang, add_page_break):
             pass
 
         else:
-            xml_to_tex(e)
-            html_es = xml_es_to_html([e], obj.root, notes, doc_path, lang)
-            body.kids.extend(html_es)
+            f.write(xml_to_tex([e], doc.root, lang))
+
+    if add_page_break:
+        f.write("\\page\n\n\n\n")
 
 
-def write_data(f, data_name, data, depth, parent_branch, bns, lang):
-    new_branch = parent_branch + [data_name]
-
-    add_page_break = False
-
-    if epub.is_leaf(data):
-        small_count, large_count = count_doc_size(data, 40, 43)
-        add_page = is_ratio_greater(lage, small, 1)
-
-    for name, obj in data:
-        if isinstance(obj, list):
-            if epub.need_attach_range(name, obj):
-                start, end = epub.read_range(obj)
-                bookmark = "{}({}～{})".format(name, start, end)
-            else:
-                bookmark = name
-
-            f.write(startsec(depth, lang.c(name), lang.c(bookmark)))
-            write_data(f, name, obj, depth + 1, new_branch, bns, lang)
-            f.write(stopsec(depth))
-
-        else:
-            write_sutta(f, obj, depth, new_branch, bns, lang, add_page)
-
-
-    if epub.is_leaf(data):
-        pass
-        #f.write("\\page\n")
-
-
-def write_sutta(file: typing.TextIO, obj, depth, branch, bns, lang, add_page):
-    sutta_num_abo = epub.get_sutta_num_abo(obj.root)
-    sutta_num_sc = epub.get_sutta_num_sc(obj.root)
-    sutta_name = epub.get_sutta_name(obj.root)
-
-    start, end = epub.get_sutta_range(obj.root)
-    if start == end:
-        _range = start
-    else:
-        _range = "{}-{}".format(start, end)
-
-    source_url = urllib.parse.urljoin(config.ABO_WEBSITE, epub.get_source_page(obj.root))
-
-    if sutta_num_sc is not None:
-        #url = "https://suttacentral.net/" + sutta_num_sc.replace(" ","")
-        sutta_num_sc = "\\goto{{{}}}[url(https://suttacentral.net/{})]".format(sutta_num_sc,
-                                                                               sutta_num_sc.replace(" ", ""))
-
-    if sutta_num_sc and sutta_num_abo:
-        num = "{}/{}".format(sutta_num_sc, sutta_num_abo)
-    elif sutta_num_abo:
-        num = sutta_num_abo
-    elif sutta_num_sc:
-        num = sutta_num_sc
-    else:
-        num = ""
-
-    serialized_nodes = []
-    for node in branch:
-        m = re.match(r"^\d+\.(.+)$", node)
-        if m:
-            serialized_nodes.append(m.group(1))
-    assert len(serialized_nodes) <= 1
-
-    if serialized_nodes:
-        name = "{}/{}".format(serialized_nodes[0], sutta_name)
-    else:
-        name = sutta_name
-
-    tex_name = ("\\goto{{{}}}[url({})]".format(name, source_url))
-
-    if num:
-        title = num + " " + tex_name
-    else:
-        title = _range + "." + tex_name
-
-    file.write(startsec(depth, lang.c(title), _range + "." + lang.c(sutta_name)))
-
-    xml_body = obj.root.find_descendants("body")[0]
-    for xml_p in xml_body.find_descendants("p"):
-        file.write(_xml_to_tex(bns, xml_p.kids, lang, obj.root))
-        file.write("\n\n")
-    if add_page:
-        file.write("\\page\n")
-    file.write(stopsec(depth))
-
-
-def xml_to_tex(es, lang, doc):
+def xml_to_tex(es, doc, lang):
     s = ""
     for e in es:
         if isinstance(e, str):
@@ -415,31 +302,34 @@ def xml_to_tex(es, lang, doc):
                     text = e.kids[0]
                 n_kids = epub.get_note_by_key(doc, m_t.group(1))
                 _note = es_to_text(n_kids)
-                s += "\\PDFhighlight[原始注解][{{{}}}]{{{}}}".format(_note, text or "注")
+                #s += "\\high{{\\tfxx \\PDFhighlight[原始注解][{{{}}}]{{{}}}}}".format(_note, text or "㊟")
+                s += "\\high{\\tfxx \\PDFhighlight[原始注解][{" + _note + "}]{" + (text or "㊟") + "}}"
 
             elif e.tag == "p":
-                s += _xml_to_tex(e.kids, lang, doc)
+                s += xml_to_tex(e.kids, doc, lang)
                 s += "\n\n"
 
-            elif e.tag == "jizi":
+            elif e.tag == "j":
                 s += "\\startalignment[middle]\n"
                 s += "\\startlines\n"
                 for index, p in enumerate(e.kids):
                     kids, delete_head, delete_tail = xxx(p.kids)
+                    lltp_str = ""
                     if index == 0:
-                        lltp_str = e.attrs["a"]
-                    else:
-                        lltp_str = ""
+                        if "a" in e.attrs.keys():
+                            lltp_str = e.attrs["a"]
+                        else:
+                            lltp_str = ""
 
                     if delete_head:
                         lltp_str += "「"
 
                     if lltp_str:
                         s += "\\dontleavehmode\\llap{{{}}}".format(lltp_str)
-                    s += xml_to_tex(kids, lang, doc)
+                    s += xml_to_tex(kids, doc, lang)
                     if delete_tail:
-                        s += "\\rltp{{{}}}".format("」")
-                    s += "\n\n"
+                        s += "\\rlap{{{}}}".format("」")
+                    s += "\n"
                 s += "\\stoplines\n"
                 s += "\\stopalignment\n"
 
@@ -447,13 +337,13 @@ def xml_to_tex(es, lang, doc):
                 pass
 
             elif e.tag == "a":
-                s += "\\goto{" + xml_to_tex(e.kids, lang, doc) + "}[url(" + e.attrs["href"] + ")]"
+                s += "\\goto{" + xml_to_tex(e.kids, doc, lang) + "}[url(" + e.attrs["href"] + ")]"
 
             elif e.tag == "list":
                 s += "\\startalignment[middle]\n"
                 s += "\\startlines\n"
                 for item in e.kids:
-                    s += xml_to_tex(item, lang, doc)
+                    s += xml_to_tex(item.kids, doc, lang)
                     s += "\n\n"
                 s += "\\stoplines\n"
                 s += "\\stopalignment\n"
@@ -495,60 +385,6 @@ def xxx(p_kids):
     return  kids, delete_head, delete_tail
 
 
-def _xml_to_tex(bns, es, lang, root=None):
-    s = ""
-    for x in es:
-        if isinstance(x, str):
-            _s = lang.c(x)
-            _s = _s.replace("{", "\\{").replace("}", "\\}").replace("[", "\\[").replace("]", "\\]").replace("#", "\\#")
-            s += _s
-
-        elif isinstance(x, xl.Element):
-            if x.tag == "ln":
-                assert root is not None
-                #s += _xml_to_tex(bns, x.kids, lang, root)
-                _text = _xml_to_tex(bns, x.kids, lang, root)
-                _text = lang.c(_text)
-                _note = None
-                for _note_e in root.find_descendants("notes")[0].kids:
-                    if _note_e.attrs.get("id") == x.attrs["id"]:
-                        #_note = _xml_to_tex(bns, _note_e.kids, lang, root)
-                        _note = utils.line_to_txt(_note_e.kids)
-                        _note = lang.c(_note)
-                        #s += "\\footnote{" + _xml_to_tex(bns, _note.kids, lang, root) + "}"
-                if _note:
-                    s += "\\PDFhighlight[莊春江][{{{}}}]{{{}}}".format(_note, _text)
-                else:
-                    s += _text
-
-            elif x.tag == "gn":
-                _text = _xml_to_tex(bns, x.kids, lang, root)
-                _text = lang.c(_text)
-                gn = note.get_gn()
-                _note = gn.get_es(x.attrs["id"])
-                _note = utils.line_to_txt(_note)
-                #_note = _xml_to_tex(bns, _note, lang, root)
-                _note = lang.c(_note)
-                #lang.c("註解")
-                s += "\\PDFhighlight[莊春江][{{{}}}]{{{}}}".format(_note, _text)
-            elif x.tag == "br":
-                "\\par\n"
-            elif x.tag == "a":
-                #print(x.to_str())
-                "\\goto{莊春江工作站}[url(https://agama.buddhason.org)]"
-                s += "\\goto{" + _xml_to_tex(bns, x.kids, lang, root) + "}[url(" + x.attrs["href"] + ")]"
-
-            elif x.tag == "span" and x.attrs.get("class") == "sutra_name":
-                s += _xml_to_tex(bns, x.kids, lang, root)
-                s += "\n\n"
-            else:
-                print()
-                print(x.to_str())
-                print()
-                raise Exception
-    return s
-
-
 def get_max_depth(data, depth = 0):
     max_depth = 0
     for _, obj in data:
@@ -567,8 +403,7 @@ def count_doc_size(obj, max_hanzi_in_line, max_line_in_page, other_rate=0.5):
         line_count = 0
         line_count += 3 # 标题和空格
         root = xml.root
-        body = root.find_kids("body")[0]
-        for p in body.find_kids("p"):
+        for p in root.find_kids("p"):
             txt = utils.line_to_txt(p.kids)
             cjk_count, other_count = tag_str.count(txt.strip())
             line_count += math.ceil((cjk_count + 2 + other_count * other_rate) / max_hanzi_in_line)
