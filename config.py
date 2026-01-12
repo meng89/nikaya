@@ -27,9 +27,12 @@ SOCKS5_PROXY = "127.0.0.1:1080"
 #SOCKS5_PROXY = None
 # 经文缓存目录
 
-# 字体文件目录
+# 字体文件目录，具体的字体文件可以在这些目录的某个文件夹下
 # FONTS_DIR = os.path.join(PROJECT_ROOT, "fonts")
-FONTS_DIR = "/mnt/data/software/fonts"
+FONTS_DIRS = [
+    "/usr/share/fonts/arphicfonts",
+    "/mnt/data/software/fonts",
+]
 # FONTS_DIR = r"D:\fonts"
 
 # ConTeXt 目录

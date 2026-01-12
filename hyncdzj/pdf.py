@@ -143,7 +143,7 @@ def build_pdf(full_path, data, module, lang, layout, tag, exit_after_done=False)
 
 
 def write_fontstex(work_dir):
-    fonttex = open(os.path.join(config.ABO_TEX_DIR, "type-imp-myfonts.tex"), "r", encoding="utf-8").read()
+    fonttex = open(os.path.join(config.HYNCDZJ_TEX_DIR, "type-imp-myfonts.tex"), "r", encoding="utf-8").read()
     replace_map = {}
     for fontname in re.findall("file:(.*(?:ttf|otf))", fonttex):
         realfontpath = findfile(config.FONTS_DIR, os.path.basename(fontname))
@@ -157,11 +157,12 @@ def write_fontstex(work_dir):
     with open(os.path.join(work_dir, FONT), "w", encoding="utf-8") as new_fonttex_file:
         new_fonttex_file.write(fonttex)
 
-def findfile(start, name):
-    for relpath, dirs, files in os.walk(start):
-        if name in files:
-            full_path = os.path.join(start, relpath, name)
-            return os.path.normpath(os.path.abspath(full_path))
+def findfile(font_dirs, name):
+    for font_dir in font_dirs:
+        for relpath, dirs, files in os.walk(font_dir):
+            if name in files:
+                full_path = os.path.join(font_dir, relpath, name)
+                return os.path.normpath(os.path.abspath(full_path))
     raise FileNotFoundError
 
 def ntrelpath(path1, path2):
