@@ -112,7 +112,7 @@ def build_pdf(full_path, data, module, lang, layout, tag, exit_after_done=False)
     elif os.name == "nt":
         my_env["PATH"] = os.path.expanduser(config.CONTEXT_BIN_PATH) + ";" + my_env["PATH"]
 
-    compile_cmd = "context --path=\"{}\" \"{}\"/\"{}\" --mode={}".format(work_dir, work_dir, MAIN, lang.en)
+    compile_cmd = """context --path="{}" "{}"/"{}" --mode={}""".format(work_dir, work_dir, MAIN, lang.en)
 
     stdout_file = open(os.path.join(out_dir, "cmd_stdout"), "w", encoding="utf-8")
     stderr_file = open(os.path.join(out_dir, "cmd_stderr"), "w", encoding="utf-8")
@@ -146,7 +146,7 @@ def write_fontstex(work_dir):
     fonttex = open(os.path.join(config.HYNCDZJ_TEX_DIR, "type-imp-myfonts.tex"), "r", encoding="utf-8").read()
     replace_map = {}
     for fontname in re.findall("file:(.*(?:ttf|otf))", fonttex):
-        realfontpath = findfile(config.FONTS_DIR, os.path.basename(fontname))
+        realfontpath = findfile(config.FONTS_DIRS, os.path.basename(fontname))
         if os.name == "nt":
             realfontpath = ntrelpath(realfontpath, work_dir)
         replace_map[fontname] = realfontpath
