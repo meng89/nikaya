@@ -103,8 +103,9 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\starttypescript [calligraphy] [sc_kaiti]
+\starttypescript [calligraphy] [sc_kai]
 
   \definefontsynonym[sc_kai][file:gkai00mp.ttf]
 
@@ -116,8 +117,29 @@
 
 
 
-\starttypescript[sc_kaiti]
+\starttypescript[sc_kai]
 
-  \definetypeface [sc_kaiti] [cg] [calligraphy] [sc_kaiti]
+  \definetypeface [sc_kai] [cg] [calligraphy] [sc_kai]
+
+\stoptypescript
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\starttypescript [calligraphy] [tc_kai]
+
+  \definefontsynonym[tc_kai][file:TW-Kai-98_1.ttf]
+
+  \definefontfallback[sc_kai][file:gkai00mp.ttf]
+
+  \definefontsynonym[calligraphy][sc_kai][fallbacks=sc_kai]
+
+\stoptypescript
+
+
+
+\starttypescript[sc_kai]
+
+  \definetypeface [sc_kai] [cg] [calligraphy] [sc_kai]
 
 \stoptypescript

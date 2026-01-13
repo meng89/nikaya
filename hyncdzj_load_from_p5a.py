@@ -851,6 +851,40 @@ def raw_string_to_p(data):
     return new_data
 
 
+def filter_homage(data):
+    new_data = []
+    for namegroup, obj in data:
+        if isinstance(obj, xl.Element):
+            start, end, name = namegroup
+            s = xxx(obj)
+            if start is None and end is None and name in (None, "") and "歸命彼世尊" in s and "應供等覺者" in s:
+
+                if len(s) < 20:
+                    print("    namegroup:{}  ignore:{}".format(namegroup, repr(s)))
+                    pass
+                else:
+                    print("    unignore:", repr(s))
+                    new_data.append((namegroup, obj))
+            else:
+                new_data.append((namegroup, obj))
+        elif isinstance(obj, list):
+            new_obj = filter_homage(obj)
+            new_data.append((namegroup, new_obj))
+        else:
+            raise Exception(type(obj))
+    return new_data
+
+
+def xxx(root):
+    s = ""
+    for x in root.kids:
+        if isinstance(x, str):
+            s += x
+        elif isinstance(x, xl.Element):
+            s += xxx(x)
+    return s
+
+
 def load_book_by_module(m: types.ModuleType):
     xmls = hyncdzj.p5a.get_xmls_by_serial(m.info.serial)
 
@@ -904,5 +938,7 @@ def load_book_by_module(m: types.ModuleType):
     data = remove_single_root(data)
 
     data = raw_string_to_p(data)
+
+    data = filter_homage(data)
 
     return name, data
