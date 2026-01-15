@@ -12,17 +12,21 @@
 %%%%%%%
 % 字体
 \usetypescriptfile[type-imp-myfonts]
+
+% mode 由命令行调用时提供
 \startmode [tc]
   \usetypescript[tcfonts]
-  \setupbodyfont[tcfonts,rm,12pt]
+  \setupbodyfont[tcfonts,cg,12pt]
 \stopmode
 
 \startmode [sc]
   \usetypescript[scfonts]
-  \setupbodyfont[scfonts,rm,12pt]
+  \setupbodyfont[scfonts,cg,12pt]
 \stopmode
 % 字体
 %%%%%%%
+
+\setupindenting[always,first,2em]
 
 \usecolors[crayola]
 %\usecolors[ral]

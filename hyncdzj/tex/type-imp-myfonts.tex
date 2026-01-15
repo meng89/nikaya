@@ -47,10 +47,21 @@
 
 
 
+\starttypescript [calligraphy] [tcfont]
+
+  \definefontsynonym[tckai][file:TW-Kai-98_1.ttf]
+  \definefontfallback[sckaifb][file:gkai00mp.ttf]
+  \definefontsynonym[Calligraphy][tckai][fallbacks=sckaifb]
+
+\stoptypescript
+
+
+
 \starttypescript[tcfonts]
 
   \definetypeface [tcfonts] [rm] [serif] [tcfont]
   \definetypeface [tcfonts] [ss] [sans] [tcfont]
+  \definetypeface [tcfonts] [cg] [calligraphy] [tcfont]
 
 \stoptypescript
 
@@ -94,52 +105,20 @@
 
 
 
+\starttypescript [calligraphy] [scfont]
+
+  \definefontsynonym[sckai][file:gkai00mp.ttf]
+  \definefontfallback[tckaifb][file:TW-Kai-98_1.ttf][0x4E00:0x9fff][force=no]
+  \definefontsynonym[Calligraphy][sckai][fallbacks=tckaifb]
+
+\stoptypescript
+
+
+
 \starttypescript[scfonts]
 
   \definetypeface [scfonts] [rm] [serif] [scfont]
   \definetypeface [scfonts] [ss] [sans] [scfont]
-
-\stoptypescript
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\starttypescript [calligraphy] [sc_kai]
-
-  \definefontsynonym[sc_kai][file:gkai00mp.ttf]
-
-  \definefontfallback[tc_kai][file:bkai00mp.ttf]
-
-  \definefontsynonym[calligraphy][sc_kai][fallbacks=tc_kai]
-
-\stoptypescript
-
-
-
-\starttypescript[sc_kai]
-
-  \definetypeface [sc_kai] [cg] [calligraphy] [sc_kai]
-
-\stoptypescript
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\starttypescript [calligraphy] [tc_kai]
-
-  \definefontsynonym[tc_kai][file:TW-Kai-98_1.ttf]
-
-  \definefontfallback[sc_kai][file:gkai00mp.ttf]
-
-  \definefontsynonym[calligraphy][sc_kai][fallbacks=sc_kai]
-
-\stoptypescript
-
-
-
-\starttypescript[sc_kai]
-
-  \definetypeface [sc_kai] [cg] [calligraphy] [sc_kai]
+  \definetypeface [scfonts] [cg] [calligraphy] [scfont]
 
 \stoptypescript

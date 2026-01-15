@@ -54,4 +54,4 @@ BROWSER = "google-chrome-stable"
 WINDOW_HEIGHT_OFFSET = 86
 
 
-DEBUG = False
+DEBUG = True
