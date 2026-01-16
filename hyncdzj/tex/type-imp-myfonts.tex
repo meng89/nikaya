@@ -50,8 +50,7 @@
 \starttypescript [calligraphy] [tcfont]
 
   \definefontsynonym[tckai][file:TW-Kai-98_1.ttf]
-  \definefontfallback[sckaifb][file:gkai00mp.ttf]
-  \definefontsynonym[Calligraphy][tckai][fallbacks=sckaifb]
+  \definefontsynonym[Calligraphy][tckai]
 
 \stoptypescript
 
@@ -107,8 +106,8 @@
 
 \starttypescript [calligraphy] [scfont]
 
-  \definefontsynonym[sckai][file:gkai00mp.ttf]
-  \definefontfallback[tckaifb][file:TW-Kai-98_1.ttf][0x4E00:0x9fff][force=no]
+  \definefontsynonym[sckai][file:TW-Kai-98_1.ttf]
+  \definefontfallback[tckaifb][file:gkai00mp.ttf][UxFF0C,Ux3002,UxFF1A,UxFF1F,UxFF01][force=yes]
   \definefontsynonym[Calligraphy][sckai][fallbacks=tckaifb]
 
 \stoptypescript
