@@ -106,9 +106,15 @@
 
 \starttypescript [calligraphy] [scfont]
 
-  \definefontsynonym[sckai][file:TW-Kai-98_1.ttf]
-  \definefontfallback[tckaifb][file:gkai00mp.ttf][UxFF0C,Ux3002,UxFF1A,UxFF1F,UxFF01][force=yes]
-  \definefontsynonym[Calligraphy][sckai][fallbacks=tckaifb]
+  \definefontsynonym[sckai][file:FZKTK.ttf]
+  \definefontfallback[sckaifb][file:FZKTJW.ttf][0x04E00-0x09FFF][force=no,check=yes]
+  \definefontfallback[sckaifb][file:FZKTB.ttf][0x00400-0x0FEFE][force=no,check=yes]
+  \definefontfallback[sckaifb][file:TW-Kai-98_1.ttf][0x0329f,0x00400-0x0FEFE][force=no,check=yes]
+  \definefontfallback[sckaifb][file:TW-Kai-Ext-B-98_1.ttf][0x00400-0x2FA1F][force=no,check=yes]
+  \definefontfallback[sckaifb][file:NotoSansCJKsc-Medium.otf][0x00400-0x2FA1F][force=no,check=yes]
+  \definefontfallback[sckaifb][file:NotoSansCJK-Medium.ttc][0x00400-0x2FA1F][force=no,check=yes]
+
+  \definefontsynonym[Calligraphy][sckai][fallbacks=sckaifb]
 
 \stoptypescript
 

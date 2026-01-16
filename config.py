@@ -32,6 +32,8 @@ SOCKS5_PROXY = "127.0.0.1:1080"
 FONTS_DIRS = [
     "/usr/share/fonts/arphicfonts",
     "/mnt/data/software/fonts",
+    "/usr/share/fonts/source-han-sans/",
+    "/usr/share/fonts/noto-cjk/"
 ]
 # FONTS_DIR = r"D:\fonts"
 

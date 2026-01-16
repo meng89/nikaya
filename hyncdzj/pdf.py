@@ -145,7 +145,7 @@ def build_pdf(full_path, data, module, lang, layout, tag, exit_after_done=False)
 def write_fontstex(work_dir):
     fonttex = open(os.path.join(config.HYNCDZJ_TEX_DIR, "type-imp-myfonts.tex"), "r", encoding="utf-8").read()
     replace_map = {}
-    for fontname in re.findall("file:(.*(?:ttf|otf))", fonttex):
+    for fontname in re.findall("file:(.*(?:ttf|otf|ttc))", fonttex):
         realfontpath = findfile(config.FONTS_DIRS, os.path.basename(fontname))
         if os.name == "nt":
             realfontpath = ntrelpath(realfontpath, work_dir)
