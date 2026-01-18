@@ -207,7 +207,7 @@ def _write_zzsm(work_dir):
     f = open(os.path.join(work_dir, "readme.tex"), "w", encoding="utf-8")
     f.write(startsec(1, "制作说明", "制作说明"))
     for line in epub.ZZSM:
-        f.write(xml_to_tex([line], None, ebook_utils.Lang()))
+        f.write(xml_to_tex(line, None, ebook_utils.Lang()))
         f.write("\n\\blank\n")
     f.write("\\page\n")
     f.write(stopsec(1))
@@ -351,6 +351,8 @@ def xml_to_tex(es, doc, lang):
 
             else:
                 raise Exception("Unknown element type: {}".format(repr(e.to_str())))
+        else:
+            raise Exception("Unknown element type: {}".format(repr(e.to_str())))
 
     return s
 

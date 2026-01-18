@@ -35,7 +35,7 @@ jobs =  []
 running = []
 finished = 0
 
-max_processes = os.cpu_count() / 2
+max_processes = os.cpu_count()
 def try_run_job(do_print=True):
     global running, finished
 
@@ -104,7 +104,6 @@ def main(nopdf, noepub):
         # hyncdzj.base.print_tree(data)
 
         for zh_name, lang in [("元亨寺_汉译南传大藏经_简体_PDF", hyncdzj.ebook_utils.SC()), ("元亨寺_漢譯南傳大藏經_繁體_PDF", hyncdzj.ebook_utils.TC())]:
-
 
             for layout in hyncdzj.pdf.LAYOUTS:
                 zh_name = zh_name + "_" + layout

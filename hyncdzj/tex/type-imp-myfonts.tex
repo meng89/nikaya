@@ -50,7 +50,11 @@
 \starttypescript [calligraphy] [tcfont]
 
   \definefontsynonym[tckai][file:TW-Kai-98_1.ttf]
-  \definefontsynonym[Calligraphy][tckai]
+  % 﨟(U+0FA1F)
+  \definefontfallback[fb][file:FZKTK.ttf][0x0FA1F]
+  % 𤷜(U+24DDC) 𧂐(U+27090) 𣳠(U+23CE0) 𨂰(U+280B0) 𠢕(U+20895)
+  \definefontfallback[fb][file:TW-Kai-Ext-B-98_1.ttf][0x24DDC,0x27090,0x23CE0,0x280B0,0x20895][force=no]
+  \definefontsynonym[Calligraphy][tckai][fallbacks=fb]
 
 \stoptypescript
 
@@ -93,7 +97,9 @@
   \definefontsynonym[ensansbo][file:NotoSans-SemiBoldItalic.ttf]
 
   \definefontfallback[nsacjkl][file:NotoSansCJKsc-Light.otf][0x00400-0x2FA1F]
-  \definefontfallback[nsacjkb][file:NotoSansCJKsc-Medium.otf][0x00400-0x2FA1F]
+  \definefontfallback[nsacjkb][file:NotoSansCJKsc-Medium.otf][0x00400-0x26209,0x26211-0x2B7C2,0x2B7C4-0x2FA1F]
+  % 𦈐 (U+26210) 𫟃(U+2B7C3)
+  \definefontfallback[nsacjkb][file:TW-Kai-Ext-B-98_1.ttf][0x26210,0x2B7C3][force=no]
 
   \definefontsynonym[Sans][ensans][fallbacks=nsacjkl]
   \definefontsynonym[SansBold][ensansbd][fallbacks=nsacjkb]
@@ -107,12 +113,18 @@
 \starttypescript [calligraphy] [scfont]
 
   \definefontsynonym[sckai][file:FZKTK.ttf]
-  \definefontfallback[sckaifb][file:FZKTJW.ttf][0x04E00-0x09FFF][force=no,check=yes]
-  \definefontfallback[sckaifb][file:FZKTB.ttf][0x00400-0x0FEFE][force=no,check=yes]
-  \definefontfallback[sckaifb][file:TW-Kai-98_1.ttf][0x0329f,0x00400-0x0FEFE][force=no,check=yes]
-  \definefontfallback[sckaifb][file:TW-Kai-Ext-B-98_1.ttf][0x00400-0x2FA1F][force=no,check=yes]
-  \definefontfallback[sckaifb][file:NotoSansCJKsc-Medium.otf][0x00400-0x2FA1F][force=no,check=yes]
-  \definefontfallback[sckaifb][file:NotoSansCJK-Medium.ttc][0x00400-0x2FA1F][force=no,check=yes]
+  %\definefontfallback[sckaifb][file:FZKTJW.ttf]%[0x04E00-0x09FFF][force=no,check=yes]
+  % 㦸 (U+039B8) 䭾 (U+04B7E)
+  \definefontfallback[sckaifb][file:FZKTB.ttf][0x039B8,0x04B7E][force=no]
+  % ㊟ (U+0329F) 㮈 (U+03B88) 䁆 (U+04046) 㝹 (U+03779) 䑛 (U+0445B) 䉤 (U+04264) 㑩 (U+03469) 㚲 (U+036B2)
+  % ṭ (U+01E6D) ṁ (U+01E41) ñ (U+000F1) ś (U+0015B) ṇ (U+01E47)
+  \definefontfallback[sckaifb][file:TW-Kai-98_1.ttf][0x0329F,0x03B88,0x04046,0x03779,0x0445B,0x04264,0x03469,0x036B2,0x01E6D,0x01E41,0x000F1,0x0015B,0x01E47][force=no]
+  % 𪎊(U+2A38A) 𨱎(U+28C4E) 𫄨(U+2B128) 𤷜(U+24DDC) 𦈐(U+26210) 𧂐(U+27090) 𪡀(U+2A840) 𨅬(U+2816C) 𫘣(U+2B623) 𨂰(U+280B0) 𠢕(U+20895) 𫟃(U+2B7C3) 𫍢(U+2B362) 𪸩(U+2AE29) 𣳠(U+23CE0) 𫓴(U+2B4F4)
+  \definefontfallback[sckaifb][file:TW-Kai-Ext-B-98_1.ttf][0x2A38A,0x28C4E,0x2B128,0x24DDC,0x26210,0x27090,0x2A840,0x2816C,0x2B623,0x280B0,0x20895,0x2B7C3,0x2B362,0x2AE29,0x23CE0,0x2B4F4][force=no]
+  % 𬯎 (U+2CBCE) 𫭟 (U+2BB5F)  𫄧 (U+2B127) 𬬱 (U+2CB31)
+  \definefontfallback[sckaifb][file:NotoSansCJKsc-Medium.otf][0x2CBCE,0x2BB5F,0x2B127,0x2CB31][force=no]
+
+  %𫺭 (U+2BEAD) 𭼈 (U+2DF08)
 
   \definefontsynonym[Calligraphy][sckai][fallbacks=sckaifb]
 

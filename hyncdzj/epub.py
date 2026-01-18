@@ -640,7 +640,7 @@ _yunpan_link = "https://www.jianguoyun.com/p/DbBOkGwQnbmtChjWkpIGIAA"
 _my_mail = "observerchan@gmail.com"
 
 ZZSM = (
-    ["此佛经译著权归属于元亨寺及其译者。", "由", xl.Element("a", {"href": "https://www.cbeta.org/"}, ["CBETA"],),"数字化。"],
+    ["此佛经译著权归属于元亨寺及其译者。", xl.Element("a", {"href": "https://www.cbeta.org/"}, ["CBETA"],),"做了数字化工作。"],
     # ["在本人读经的过程中，会按照上下文填充省略的部分，以及对不懂的词句进行了解并加上注释。若您愿意帮助填充和注释，请联系我。"],
     ["下载请访问", xl.Element("a", {"href": "{}".format(_project_link)}, ["项目主页"]),
      "或", xl.Element("a", {"href": "{}".format(_yunpan_link)}, ["云盘"]),],

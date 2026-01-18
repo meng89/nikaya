@@ -21,6 +21,8 @@ cn2an
 # 简繁转换
 OpenCC
 
+reportlab
+
 # EPUB
 epubpacker@git+https://github.com/meng89/epubpacker@dev#egg=epubpacker
 
