@@ -79,7 +79,7 @@ def main(nopdf, noepub):
     date = datetime.today().strftime('%Y.%m.%d')
 
     #all_modules = [sn, an, mn, dn] # + pyabo2.kn.all_modules
-    #all_modules = [sn]
+    all_modules = [sn]
     dirs = set()
     for count, m in enumerate(all_modules, start=1):
 
@@ -104,21 +104,20 @@ def main(nopdf, noepub):
         # hyncdzj.base.print_tree(data)
 
         for zh_name, lang in [("元亨寺_汉译南传大藏经_简体_PDF", hyncdzj.ebook_utils.SC()), ("元亨寺_漢譯南傳大藏經_繁體_PDF", hyncdzj.ebook_utils.TC())]:
-
-            for layout in hyncdzj.pdf.LAYOUTS:
-                zh_name = zh_name + "_" + layout
+            for layout in hyncdzj.pdf.layouts.keys():
+                layout_filename = zh_name + "_" + layout
 
                 filename = "{}".format(lang.c(m.info.name))
                 if tag:
                     filename += "_{}".format(tag)
                 filename += ".pdf"
 
-                dirname = os.path.join(temp_td.name, zh_name)
+                dirname = os.path.join(temp_td.name, layout_filename)
 
                 full_path = os.path.join(dirname, filename)
 
                 os.makedirs(os.path.dirname(full_path), exist_ok=True)
-                job = (filename, hyncdzj.pdf.build_pdf, (full_path, data, m, lang, layout, tag, True))
+                job = ("{}/{}".format(layout, filename), hyncdzj.pdf.build_pdf, (full_path, data, m, lang, layout, tag, True))
                 jobs.append(job)
                 total += 1
                 try_run_job()

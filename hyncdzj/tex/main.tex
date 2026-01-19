@@ -1,8 +1,6 @@
-\setuppapersize [$size]
 
 
-\input{setuplayout.tex}
-
+\input{$layout}
 
 \enableregime[utf]
 \mainlanguage[cn]
@@ -13,19 +11,19 @@
 % 字体
 \usetypescriptfile[type-imp-myfonts]
 
-
 % mode 由命令行调用时提供
 \startmode [tc]
   \usetypescript[tcfonts]
-  \setupbodyfont[tcfonts,cg,12pt]
+  \setupbodyfont[tcfonts,cg]
 \stopmode
 
 \startmode [sc]
   \usetypescript[scfonts]
-  \setupbodyfont[scfonts,cg,12pt]
+  \setupbodyfont[scfonts,cg]
 \stopmode
 % 字体
 %%%%%%%
+
 
 
 
@@ -132,7 +130,7 @@
 
 
 \useexternalfigure[cover][$cover_image]
-\defineoverlay[cover][{\externalfigure[cover]}]
+\defineoverlay[cover][{\externalfigure[cover][width=\paperwidth]}]
 
 \startsetups Background:cover
 \setupbackgrounds[page][background=cover]

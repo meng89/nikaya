@@ -18,71 +18,19 @@ MAIN = "main.tex"
 FONT = "type-imp-myfonts.tex"
 SUTTAS = "suttas.tex"
 
-
-LAYOUTS = [
-    "A4",
-    #"19.5比9",
-    #"21比9",
-
-]
-cover_size_map = {
-    "A4": (2480, 3508)
-}
-
-type_map = {
+layouts = {
     "A4": {
+        "cover_size": (2480, 3508),
         "max_hanzi_in_line": 40,
         "max_line_in_page": 43,
-        "topspace": "49pt", # 最边边 + top + topdistance
-
-        "top": "45pt",
-        "topdistance": "2pt",
-        "header": "20pt",
-        "headerdistance": "20pt",
-
-        #"cutspace":"73pt",
-
-        "footerdistance": "20pt",
-        "footer": "20pt",
-        "bottomdistance": "2pt",
-        "bottom": "45pt",
-
-        #"bottomspace": "1pt",
-
-        "leftedge": "2pt",
-        "leftedgedistance": "2pt",
-        "leftmargin": "60pt",
-        "leftmargindistance": "2pt",
-
-        #"margin": "40pt",
-
-        "backspace":"68pt", # 最边边 + all left *
-
-        "rightmargindistance": "2pt",
-        "rightmargin": "60pt",
-        "rightedgedistance": "2pt",
-        "rightedge": "2pt",
-
-        #"horoffset":"30pt",
-        #"veroffset":"30pt",
-        #"textwidth": "200pt",
-        "width": "460pt",
-        "height": "745pt",
     },
+
+    "phone21x9": {
+        "cover_size": (1080, 2520),
+        "max_hanzi_in_line": 18,
+        "max_line_in_page": 28,
+    }
 }
-
-def write_setuplayout(work_dir, layout):
-
-    f = open(os.path.join(work_dir, "setuplayout.tex"), "w")
-
-    d = type_map[layout]
-    f.write("\n\\setuplayout[\n")
-    for k, v in d.items():
-        if v is None:
-            continue
-        f.write("  {}={},\n".format(k, v))
-    f.write("]\n")
-
 
 def build_pdf(full_path, data, module, lang, layout, tag, exit_after_done=False):
     work_dir = full_path + "_work"
@@ -90,16 +38,16 @@ def build_pdf(full_path, data, module, lang, layout, tag, exit_after_done=False)
     os.makedirs(work_dir, exist_ok=True)
     os.makedirs(out_dir, exist_ok=True)
 
-    w, h = cover_size_map[layout]
+    w, h = layouts[layout]["cover_size"]
     cover_image = ebook_utils.make_cover_image(module, lang, tag, w, h)
 
     write_main_tex(work_dir, module, lang, layout, cover_image)
 
-    f = open(os.path.join(work_dir, SUTTAS), "w")
-    write_tree(f, module, [(None, None, None, None)], data, lang, 40, 43)
-    f.close()
+    shutil.copy(os.path.join(config.HYNCDZJ_TEX_DIR, "{}.tex".format(layout)), work_dir)
 
-    write_setuplayout(work_dir, layout)
+    f = open(os.path.join(work_dir, SUTTAS), "w")
+    write_tree(f, module, [(None, None, None, None)], data, lang, layouts[layout]["max_hanzi_in_line"], layouts[layout]["max_line_in_page"])
+    f.close()
 
     write_fontstex(work_dir)
 
@@ -112,7 +60,8 @@ def build_pdf(full_path, data, module, lang, layout, tag, exit_after_done=False)
     elif os.name == "nt":
         my_env["PATH"] = os.path.expanduser(config.CONTEXT_BIN_PATH) + ";" + my_env["PATH"]
 
-    compile_cmd = """context --path="{}" "{}"/"{}" --mode={}""".format(work_dir, work_dir, MAIN, lang.en)
+    modes = ",".join([lang.en, layout])
+    compile_cmd = """context --path="{}" "{}"/"{}" --mode={}""".format(work_dir, work_dir, MAIN, modes)
 
     stdout_file = open(os.path.join(out_dir, "cmd_stdout"), "w", encoding="utf-8")
     stderr_file = open(os.path.join(out_dir, "cmd_stderr"), "w", encoding="utf-8")
@@ -174,11 +123,11 @@ def ntrelpath(path1, path2):
     return path
 
 
-def write_main_tex(work_dir, module, lang, size, cover_image):
+def write_main_tex(work_dir, module, lang, layout, cover_image):
     main_t = open(os.path.join(config.HYNCDZJ_TEX_DIR, MAIN), "r", encoding='utf-8').read()
     date = datetime.today().strftime('%Y-%m-%d')
     main = string.Template(main_t).substitute(
-        size=size,
+        layout=layout+".tex",
         title=lang.c(module.info.name),
         author="、".join(module.info.translators) + lang.c("譯"),
         keyword=lang.c("上座部佛教、南傳佛教、" + module.info.name),
