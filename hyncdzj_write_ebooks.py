@@ -111,7 +111,7 @@ def main(nopdf, noepub):
                 filename = "{}".format(lang.c(m.info.name))
                 if tag:
                     filename += "_{}".format(tag)
-                filename += "_{}.pdf".format(layout)
+                filename += ".pdf"
 
                 dirname = os.path.join(temp_td.name, zh_name)
 

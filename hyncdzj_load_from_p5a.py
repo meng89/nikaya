@@ -11,12 +11,15 @@ import config
 
 
 def filter_chinese_numerals_p(e):
-    if isinstance(e, xl.Element) \
-            and e.tag == "p" \
-            and len(e.kids) == 1 \
-            and isinstance(e.kids[0], str) \
-            and re.match(r"^[〇一二三四五六七八九十※～]+$", e.kids[0]):
-        return True, []
+    if isinstance(e, xl.Element) and e.tag == "p":
+        s = ""
+        for kid in e.kids:
+            if isinstance(kid, str):
+                s += kid
+        if re.match(r"^[〇一二三四五六七八九十※～]+$", s):
+            return True, []
+        else:
+            return False, None
     else:
         return False, None
 
@@ -65,41 +68,14 @@ def filter_xml_body(e, fun_list=None):
     return new_e
 
 
-
-
-def filter_es(e: xl.Element | str):
-    if isinstance(e, str):
-        return e
-
-    new_e = xl.Element(tag=e.tag)
-    new_e.attrs.update(e.attrs)
-    for kid in e.kids:
-        # if isinstance(kid, xl.Element):
-        #    print("debug:", kid.to_str())
-
-        if isinstance(kid, xl.Element) and kid.tag in ("lb", "pb", "milestone"):
-            pass
-
-        elif isinstance(kid, xl.Element) \
-                and kid.tag == "p" \
-                and len(kid.kids) == 1 \
-                and isinstance(kid.kids[0], str) \
-                and re.match(r"^[〇一二三四五六七八九十※～]+$", kid.kids[0]):
-            pass
-
-        elif isinstance(kid, str) and kid in ("\n", "\n\r"):
-            pass
-
-        elif isinstance(kid, str):
-            new_e.kids.append(kid.strip())
-
-        elif isinstance(kid, xl.Comment):
-            pass
-
-        else:
-            new_e.kids.append(filter_es(kid))
-
-    return new_e
+def e2s(e):
+    s = ""
+    for x in e.kids:
+        if isinstance(x, str):
+            s += x
+        elif isinstance(x, xl.Element):
+            s += e2s(x)
+    return s
 
 
 def transform_elements(elements) -> list:
@@ -856,7 +832,7 @@ def filter_homage(data):
     for namegroup, obj in data:
         if isinstance(obj, xl.Element):
             start, end, name = namegroup
-            s = xxx(obj)
+            s = e2s(obj)
             if start is None and end is None and name in (None, "") and "歸命彼世尊" in s and "應供等覺者" in s:
 
                 if len(s) < 20:
@@ -873,16 +849,6 @@ def filter_homage(data):
         else:
             raise Exception(type(obj))
     return new_data
-
-
-def xxx(root):
-    s = ""
-    for x in root.kids:
-        if isinstance(x, str):
-            s += x
-        elif isinstance(x, xl.Element):
-            s += xxx(x)
-    return s
 
 
 def load_book_by_module(m: types.ModuleType):
