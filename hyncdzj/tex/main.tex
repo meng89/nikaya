@@ -24,6 +24,9 @@
 % 字体
 %%%%%%%
 
+\startmode [debug]
+  \showframe
+\stopmode
 
 
 
@@ -84,7 +87,7 @@
 
 %%%%%%%%%%%%%%%
 % PDF 属性信息
-\setupinteraction[focus=standard] % 重要功能！添加上后才能连接到位置！
+\setupinteraction[focus=standard] % 重要功能！添加上后才能链接到位置！
 \setupinteraction[state=start,style=normal]
 \setupinteraction[
     title={$title},
@@ -93,6 +96,11 @@
     creator={https://github.com/meng89/nikaya},
 ]
 
+%\setupfootnotenumbering[eachpage] not work
+%\setupfootnotes[way=bypage] not work
+\setupnotation[footnote][way=bypage]
+
+\setupfootnotes[style={\setscript[hanzi]}]
 % PDF 属性信息
 %%%%%%%%%%%%%%%
 

@@ -27,8 +27,8 @@ layouts = {
 
     "phone21x9": {
         "cover_size": (1080, 2520),
-        "max_hanzi_in_line": 18,
-        "max_line_in_page": 28,
+        "max_hanzi_in_line": 19,
+        "max_line_in_page": 35,
     }
 }
 
@@ -59,8 +59,10 @@ def build_pdf(full_path, data, module, lang, layout, tag, exit_after_done=False)
         my_env["PATH"] = os.path.expanduser(config.CONTEXT_BIN_PATH) + ":" + my_env["PATH"]
     elif os.name == "nt":
         my_env["PATH"] = os.path.expanduser(config.CONTEXT_BIN_PATH) + ";" + my_env["PATH"]
-
-    modes = ",".join([lang.en, layout])
+    mode_list = [lang.en, layout]
+    if config.DEBUG:
+        mode_list.append("debug")
+    modes = ",".join(mode_list)
     compile_cmd = """context --path="{}" "{}"/"{}" --mode={}""".format(work_dir, work_dir, MAIN, modes)
 
     stdout_file = open(os.path.join(out_dir, "cmd_stdout"), "w", encoding="utf-8")
@@ -246,6 +248,19 @@ def xml_to_tex(es, doc, lang):
             m_t = re.match(r"^t(\d+)$", e.tag)
             m_n = re.match(r"^n\d+$", e.tag)
             if m_t:
+                text = None
+                if e.kids:
+                    assert (len(e.kids) == 1 and isinstance(e.kids[0], str))
+                    text = e.kids[0]
+                    s += text
+                n_kids = epub.get_note_by_key(doc, m_t.group(1))
+                _note = es_to_text(n_kids)
+
+                s += "\\footnote{" + _note + "}"
+                #s += "\\high{{\\tfxx \\PDFhighlight[原始注解][{{{}}}]{{{}}}}}".format(_note, text or "㊟")
+                #s += "\\high{\\tfxx \\PDFhighlight[原始注解][{" + _note + "}]{" + (text or "㊟") + "}}"
+
+            elif m_t and False:
                 text = None
                 if e.kids:
                     assert (len(e.kids) == 1 and isinstance(e.kids[0], str))
