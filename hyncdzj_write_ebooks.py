@@ -14,8 +14,8 @@ from multiprocessing import Process
 from hyncdzj.book_modules import sn, mn, dn, an
 from hyncdzj.book_modules import (kn_ap, kn_bv, kn_cp, kn_ps, kn_pv, kn_ud, kn_vv, kn_dhp, kn_iti, kn_jat, kn_khp, kn_snp,
                          kn_thag, kn_thig, kn_nid1, kn_nid2)
-all_modules = [sn, an, mn, dn] + [kn_ap, kn_bv, kn_cp, kn_ps, kn_pv, kn_ud, kn_vv, kn_dhp, kn_iti, kn_jat, kn_khp, kn_snp,
-                         kn_thag, kn_thig, kn_nid1, kn_nid2]
+# all_modules = [sn, an, mn, dn] + [kn_ap, kn_bv, kn_cp, kn_ps, kn_pv, kn_ud, kn_vv, kn_dhp, kn_iti, kn_jat, kn_khp, kn_snp,
+#                         kn_thag, kn_thig, kn_nid1, kn_nid2]
 import hyncdzj.base
 import hyncdzj.epub
 import hyncdzj.pdf
@@ -24,10 +24,7 @@ from hyncdzj import book_modules
 
 import hyncdzj.ebook_utils
 
-all_modules = []
-for _, ms in book_modules.categories:
-    for _m in ms:
-        all_modules.append(_m)
+
 
 
 total = 0
@@ -79,7 +76,12 @@ def main(nopdf, noepub):
     date = datetime.today().strftime('%Y.%m.%d')
 
     #all_modules = [sn, an, mn, dn] # + pyabo2.kn.all_modules
-    all_modules = [sn]
+    all_modules = []
+    for _, ms in book_modules.categories:
+        for _m in ms:
+            all_modules.append(_m)
+    if config.DEBUG:
+        all_modules = [sn]
     dirs = set()
     for count, m in enumerate(all_modules, start=1):
 
