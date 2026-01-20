@@ -69,7 +69,7 @@
 \startsetups mainheaderfooter
 \setupheadertexts[]
 %\setupheadertexts[{\tf\bf\ss \somenamedheadnumber{chapter}{current}. \getmarking[chapter]}][]
-\setupfootertexts[{\tfa \it \pagenumber}]
+\setupfootertexts[{\it \pagenumber}]
 \stopsetups
 
 
@@ -87,7 +87,7 @@
 
 %%%%%%%%%%%%%%%
 % PDF 属性信息
-\setupinteraction[focus=standard] % 重要功能！添加上后才能链接到位置！
+\setupinteraction[focus=standard] % 重要功能，添加上后才能链接到位置
 \setupinteraction[state=start,style=normal]
 \setupinteraction[
     title={$title},
@@ -96,11 +96,15 @@
     creator={https://github.com/meng89/nikaya},
 ]
 
-%\setupfootnotenumbering[eachpage] not work
-%\setupfootnotes[way=bypage] not work
-\setupnotation[footnote][way=bypage]
 
-\setupfootnotes[style={\setscript[hanzi]}]
+% rulecolor：正文与脚注之间的隔离线条颜色。textcolor：正文注解引号的颜色
+\setupfootnotes[textcolor=blue]
+% headcolor：脚注引号的颜色。color：脚注文本的颜色
+\setupnotation[footnote][way=bypage,numbercommand={\tfx},distance=0.1em,headcolor=blue] % note text is blue
+
+\def\zhfootnote#1{\footnote{\setscript[hanzi]\rm \tfx #1}}
+
+
 % PDF 属性信息
 %%%%%%%%%%%%%%%
 
