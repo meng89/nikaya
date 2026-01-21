@@ -117,7 +117,7 @@
 
 \definelist[mylist]
 \placebookmarks[title,subject,subsubject,subsubsubject,subsubsubsubject,subsubsubsubsubject,mylist]
-\setuphead[title][incrementnumber=list, style=\tfd\bf\ss, alternative=middle] %\tfd
+%\setuphead[title][incrementnumber=list, style=\tfd\bf\ss, alternative=middle] %\tfd
 \setuphead[subject][incrementnumber=list, style=\tfc\bf\ss, alternative=middle]
 \setuphead[subsubject][incrementnumber=list, style=\tfb\bf\ss, alternative=middle]
 \setuphead[subsubsubject][incrementnumber=list, style=\tfa\bf\ss, alternative=middle]
@@ -128,13 +128,29 @@
 \setuphead[subsubsubsubsubsubsubject][incrementnumber=list, style=\tfa\bf\ss, alternative=middle]
 
 %\setuphead[part]      [number=no,alternative=middle,,placehead=yes,header=empty,footer=empty]
-\setuphead[title][before=0,after=0,space=0]
+\setuphead[
+  title,
+  subject,
+  subsubject,
+  subsubsubject,
+  subsubsubsubject,
+  subsubsubsubsubject,
+  subsubsubsubsubsubject,
+  subsubsubsubsubsubsubject]
+  [textdistance=0em,color=blue,
+    topframe=off,
+    before={},
+    after={},
+    inbetween={},
+    alternative=normal,
+]
+
+\showgrid
 
 \setupinteractionscreen[option=bookmark]
 \enabledirectives[references.bookmarks.preroll]
 
 \enabledirectives[backend.pdf.fixhighlight]
-
 
 
 \definecolor[pdfhighlight:莊春江][r=.93,g=.93,b=.93,]
