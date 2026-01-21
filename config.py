@@ -57,3 +57,4 @@ WINDOW_HEIGHT_OFFSET = 86
 
 
 DEBUG = True
+#DEBUG = False

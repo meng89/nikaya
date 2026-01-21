@@ -27,8 +27,8 @@ layouts = {
 
     "phone21x9": {
         "cover_size": (1080, 2520),
-        "max_hanzi_in_line": 19,
-        "max_line_in_page": 35,
+        "max_hanzi_in_line": 15,
+        "max_line_in_page": 29,
     }
 }
 
@@ -256,7 +256,7 @@ def xml_to_tex(es, doc, lang):
                 n_kids = epub.get_note_by_key(doc, m_t.group(1))
                 _note = es_to_text(n_kids)
 
-                s += "\\footnote{" + _note + "}"
+                s += "\\zhfootnote{" + _note + "}"
                 #s += "\\high{{\\tfxx \\PDFhighlight[原始注解][{{{}}}]{{{}}}}}".format(_note, text or "㊟")
                 #s += "\\high{\\tfxx \\PDFhighlight[原始注解][{" + _note + "}]{" + (text or "㊟") + "}}"
 
