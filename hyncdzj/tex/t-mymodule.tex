@@ -1,0 +1,58 @@
+% 1. 注册命名空间
+\installnamespace{ScHead}
+
+% 2. 安装处理器
+\installcommandhandler \XXXXMyNote {MyNote} \XXXXMyNote
+
+% 3. 设置默认参数
+\setupMyNote
+  [title=笔记,
+   color=blue,
+   width=\textwidth]
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\unprotect
+
+% 定义 \startMyNote
+\def\startMyNote[#1]{
+    \begingroup % 开启局部作用域，确保参数修改不影响环境外
+    % 检查 #1 是不是 key=value 赋值；如果是，则临时应用这些设置
+    \doifassignmentelse{#1}{\setupMyNote[#1]}{\def\currentMyNote{#1}}
+
+    % 这里调用 ConTeXt 的排版组件来承载内容
+    \startframedtext[
+        title=\ScHeadparameter{title},
+        foregroundcolor=\ScHeadparameter{color},
+        framecolor=\ScHeadparameter{color},
+        width=\ScHeadparameter{width}
+    ]
+}
+
+% 定义 \stopMyNote
+\def\stopMyNote{
+    \stopframedtext
+    \endgroup % 结束局部作用域
+}
+
+\protect
+
+
+
+% usage:
+\starttext
+
+% 1. 使用默认值
+\startMyNote
+  这段文字使用默认的蓝色和标题。
+\stopMyNote
+
+\blank
+
+% 2. 使用命名参数自定义（即时生效）
+\startMyNote[title={重要提示}, color=red, width=10cm]
+  这段文字变成了红色，标题也变了，且宽度变窄。
+\stopMyNote
+
+\stoptext

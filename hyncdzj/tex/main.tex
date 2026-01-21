@@ -116,18 +116,31 @@
 %\placebookmarks[appendix,part,chapter,section,subsection,tobias][chapter][number=no]
 
 \definelist[mylist]
-\placebookmarks[title,subject,subsubject,subsubsubject,subsubsubsubject,subsubsubsubsubject,mylist]
-%\setuphead[title][incrementnumber=list, style=\tfd\bf\ss, alternative=middle] %\tfd
-\setuphead[subject][incrementnumber=list, style=\tfc\bf\ss, alternative=middle]
-\setuphead[subsubject][incrementnumber=list, style=\tfb\bf\ss, alternative=middle]
-\setuphead[subsubsubject][incrementnumber=list, style=\tfa\bf\ss, alternative=middle]
-\setuphead[subsubsubsubject][incrementnumber=list, style=\tfa\bf\ss, alternative=middle]
-\setuphead[subsubsubsubsubject][incrementnumber=list, style=\tfa\bf\ss, alternative=middle]
+\placebookmarks[title,subject,subsubject,subsubsubject,subsubsubsubject,subsubsubsubsubject,subsubsubsubsubsubject,subsubsubsubsubsubsubject,mylist]
+\setupcombinedlist[content]
+    [list={title,subject,subsubject,subsubsubject,subsubsubsubject,subsubsubsubsubject,subsubsubsubsubsubject,subsubsubsubsubsubsubject,mylist},
+     alternative=c,
+    ]
+\setuplist[title,mylist][margin=0em]
+\setuplist[subject][margin=2em]
+\setuplist[subsubject,][margin=4em]
+\setuplist[subsubsubject,][margin=6em]
+\setuplist[subsubsubsubject,][margin=8em]
+\setuplist[subsubsubsubsubject,][margin=10em]
+\setuplist[subsubsubsubsubsubject,][margin=12em]
+\setuplist[subsubsubsubsubsubsubject][margin=14em]
 
-\setuphead[subsubsubsubsubsubject][incrementnumber=list, style=\tfa\bf\ss, alternative=middle]
-\setuphead[subsubsubsubsubsubsubject][incrementnumber=list, style=\tfa\bf\ss, alternative=middle]
 
-%\setuphead[part]      [number=no,alternative=middle,,placehead=yes,header=empty,footer=empty]
+
+\setuphead[title][style=\tfd\bf\ss] %\tfd
+\setuphead[subject][style=\tfc\bf\ss]
+\setuphead[subsubject][style=\tfb\bf\ss]
+\setuphead[subsubsubject][style=\tfa\bf\ss]
+\setuphead[subsubsubsubject][ style=\tf\bf\ss]
+\setuphead[subsubsubsubsubject][style=\tfx\bf\ss]
+\setuphead[subsubsubsubsubsubject][style=\tfxx\bf\ss]
+\setuphead[subsubsubsubsubsubsubject][ style=\tfxx\bf\ss]
+
 \setuphead[
   title,
   subject,
@@ -137,15 +150,35 @@
   subsubsubsubsubject,
   subsubsubsubsubsubject,
   subsubsubsubsubsubsubject]
-  [textdistance=0em,color=blue,
+  [
+    incrementnumber=list,
+    textdistance=0em,
+    color=darkblue,
     topframe=off,
-    before={},
-    after={},
+    before={\blank[halfline]},
+    after={\blank[halfline]},
     inbetween={},
-    alternative=normal,
+    align=middle,
+    aftersection={\vspacing[3*halfline]},
+    interaction=list,
+    commandbefore={测试commandbefore},
+    alternative=text,
 ]
 
-\showgrid
+\define [msubsubsubject] [msubsubsubject:start] [msubsubsubject:stop]
+
+% 2. 定义开始部分 (`myhighlight:start`)
+\define [msubsubsubject:start] {
+  \textcolor{red} % 比如，设置字体颜色为红色
+  \bfseries       % 比如，设置为粗体
+}
+
+% 3. 定义停止部分 (`myhighlight:stop`)
+\define [msubsubsubject:stop] {
+  \normalcolor    % 恢复颜色
+  \normalfont     % 恢复字体
+}
+
 
 \setupinteractionscreen[option=bookmark]
 \enabledirectives[references.bookmarks.preroll]
@@ -183,9 +216,15 @@
 \page
 \setups[Background:off]
 
-%\input{fanli.tex}
+% 放置页面目录
+\startcolor[darkgreen]
+\placecontent
+\stopcolor
+\page[yes]
+
 
 \input{homage.tex}
+\page
 
 \setups[mainheaderfooter]
 

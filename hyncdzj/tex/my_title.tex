@@ -1,0 +1,26 @@
+% 1. 定义变量空间
+\setvariables[MyTitle][bookmark=none, title=默认标题, sckey=none]
+
+% 2. 定义环境
+\definestartstop[MyTitle]
+  [
+    before={
+      \definelist[mytitle][title]
+
+      \goto{}\startsubject[
+          title={\getvariable{MyTitle}{title}},
+          bookmark={\getvariable{MyTitle}{bookmark}},
+      ]
+    },
+    after={
+      \stopsubject
+    }
+  ]
+
+% 3. 使用方式：先设置参数，再开启环境
+\starttext
+  \setvariables[MyTitle][color=red, title={警告}]
+  \startMyEnv
+    这段文字将显示在红色边框内，标题为“警告”。
+  \startMyEnv
+\stoptext
