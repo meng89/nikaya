@@ -161,24 +161,10 @@
     align=middle,
     aftersection={\vspacing[3*halfline]},
     interaction=list,
-    commandbefore={测试commandbefore},
-    alternative=text,
 ]
+\setuphead[subsubject][alternative=text,]
 
-\define [msubsubsubject] [msubsubsubject:start] [msubsubsubject:stop]
-
-% 2. 定义开始部分 (`myhighlight:start`)
-\define [msubsubsubject:start] {
-  \textcolor{red} % 比如，设置字体颜色为红色
-  \bfseries       % 比如，设置为粗体
-}
-
-% 3. 定义停止部分 (`myhighlight:stop`)
-\define [msubsubsubject:stop] {
-  \normalcolor    % 恢复颜色
-  \normalfont     % 恢复字体
-}
-
+\input{my_title.tex}
 
 \setupinteractionscreen[option=bookmark]
 \enabledirectives[references.bookmarks.preroll]

@@ -44,6 +44,7 @@ def build_pdf(full_path, data, module, lang, layout, tag, exit_after_done=False)
     write_main_tex(work_dir, module, lang, layout, cover_image)
 
     shutil.copy(os.path.join(config.HYNCDZJ_TEX_DIR, "{}.tex".format(layout)), work_dir)
+    shutil.copy(os.path.join(config.HYNCDZJ_TEX_DIR, "my_title.tex"), work_dir)
 
     f = open(os.path.join(work_dir, SUTTAS), "w")
     write_tree(f, module, [(None, None, None, None)], data, lang, layouts[layout]["max_hanzi_in_line"], layouts[layout]["max_line_in_page"])
@@ -167,7 +168,7 @@ def _write_zzsm(work_dir):
 _map = {
     1: "title",
     2: "subject",
-    3: "subsubject",
+    3: "MySubSubject", #3: "subsubject",
     4: "subsubsubject",
     5: "subsubsubsubject",
     6: "subsubsubsubsubject",
@@ -175,6 +176,7 @@ _map = {
     8: "subsubsubsubsubsubsubject",
 
 }
+
 def startsec(depth, title, bookmark, reference=None):
     s =  "\\start{}[\n".format(_map[depth])
     s += "    title={{{}}},\n".format(title or "")
