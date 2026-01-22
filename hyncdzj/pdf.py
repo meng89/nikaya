@@ -157,7 +157,7 @@ def _write_homage(work_dir, lang):
 
 def _write_zzsm(work_dir):
     f = open(os.path.join(work_dir, "readme.tex"), "w", encoding="utf-8")
-    f.write(startsec(1, "制作说明", "制作说明"))
+    f.write(startsec(1, "制作说明", "制作说明", "制作说明"))
     for line in epub.ZZSM:
         f.write(xml_to_tex(line, None, ebook_utils.Lang()))
         f.write("\n\\blank\n")
@@ -168,7 +168,7 @@ def _write_zzsm(work_dir):
 _map = {
     1: "title",
     2: "subject",
-    3: "MySubSubject", #3: "subsubject",
+    3: "subsubject",
     4: "subsubsubject",
     5: "subsubsubsubject",
     6: "subsubsubsubsubject",
@@ -177,13 +177,16 @@ _map = {
 
 }
 
-def startsec(depth, title, bookmark, reference=None):
-    s =  "\\start{}[\n".format(_map[depth])
+def startsec(depth, title, bookmark, toctext, sc_key=None):
+    s = "\startalignment[middle]"
+    s += "abc\\start{}[\n".format(_map[depth])
     s += "    title={{{}}},\n".format(title or "")
     s += "    bookmark={{{}}},\n".format(bookmark)
-    if reference:
-        s += "    reference={{{}}},\n".format(reference)
-    s += "]\n"
+    s += "    list={haha" + toctext + "},\n"
+
+    s += "]xyz\n"
+    s += "\stopalignment"
+
     return s
 
 def stopsec(depth):
@@ -202,11 +205,13 @@ def write_tree(f, module, namegroups, data, lang, max_hanzi_in_line, max_line_in
         _, _, _, mark_name, title_range, title_name = epub.make_mark_and_heading(module, cur_namegroups, obj, 1)
 
         if title_range is not None:
-            title = "\\goto{{{}}}[url(https://suttacentral.net/{})]".format(title_range, title_range) + " " + title_name
+            sc_key = title_range
+            #title = "\\goto{{{}}}[url(https://suttacentral.net/{})]".format(title_range, title_range) + " " + title_name
         else:
-            title = title_name
+            sc_key = None
+            #title = title_name
 
-        f.write(startsec(depth, lang.c(title), lang.c(mark_name)))
+        f.write(startsec(depth, lang.c(title_name), lang.c(mark_name), lang.c(title_name), sc_key))
 
         if isinstance(obj, xl.Xml):
             write_doc(f, obj, lang, add_page_break)

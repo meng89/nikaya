@@ -155,16 +155,17 @@
     textdistance=0em,
     color=darkblue,
     topframe=off,
-    before={\blank[halfline]},
-    after={\blank[halfline]},
-    inbetween={},
+    before={bef}, %before={\startalignment[middle]before},%before={\blank[halfline]},
+    after={aft}, %\stopalignment},%after={\blank[halfline]},
     align=middle,
     aftersection={\vspacing[3*halfline]},
     interaction=list,
+    alternative=text,
 ]
-\setuphead[subsubject][alternative=text,]
+%
 
-\input{my_title.tex}
+
+%\input{my_title.tex}
 
 \setupinteractionscreen[option=bookmark]
 \enabledirectives[references.bookmarks.preroll]
