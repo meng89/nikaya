@@ -1,9 +1,14 @@
-\bookmark[mylist]{$line1}
+\startpart[
+  title=,
+  bookmark={$line1},
+  list={$line1}
+]
 \vfill % 在内容前添加弹性空间
 \startalignment[center]
-\tfd{$line1}
-
-\tfd{$line2}
+\scale[width=\textwidth]{$line1}
+\blank[2*line]
+\scale[width=\textwidth]{$line2}
 \stopalignment
 \vfill % 在内容后添加弹性空间
-\page
+\stoppart
+\page[yes]

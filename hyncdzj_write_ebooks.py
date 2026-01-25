@@ -81,7 +81,7 @@ def main(nopdf, noepub):
         for _m in ms:
             all_modules.append(_m)
     if config.DEBUG:
-        all_modules = [sn]
+        all_modules = [dn]
     dirs = set()
     for count, m in enumerate(all_modules, start=1):
 
@@ -124,6 +124,12 @@ def main(nopdf, noepub):
                 jobs.append(job)
                 total += 1
                 try_run_job()
+
+                if config.DEBUG:
+                    break
+
+            if config.DEBUG:
+                break
 
         for zh_name, lang in [("元亨寺_汉译南传大藏经_简体_EPUB_" + date, hyncdzj.ebook_utils.SC()),
                               ("元亨寺_漢譯南傳大藏經_繁體_EPUB_" + date, hyncdzj.ebook_utils.TC())]:

@@ -47,13 +47,13 @@ def build_pdf(full_path, data, module, lang, layout, tag, exit_after_done=False)
     shutil.copy(os.path.join(config.HYNCDZJ_TEX_DIR, "my_title.tex"), work_dir)
 
     f = open(os.path.join(work_dir, SUTTAS), "w")
-    write_tree(f, module, [(None, None, None, None)], data, lang, layouts[layout]["max_hanzi_in_line"], layouts[layout]["max_line_in_page"])
+    write_tree(f, module, [], data, lang, layouts[layout]["max_hanzi_in_line"], layouts[layout]["max_line_in_page"])
     f.close()
 
     write_fontstex(work_dir)
 
     _write_homage(work_dir, lang)
-    _write_zzsm(work_dir)
+    _write_zzsm(work_dir, lang)
 
     my_env = os.environ.copy()
     if os.name == "posix":
@@ -92,6 +92,59 @@ def build_pdf(full_path, data, module, lang, layout, tag, exit_after_done=False)
 
     stdout_file.close()
     stderr_file.close()
+
+
+def write_tree(f, module, namegroups, data, lang, max_hanzi_in_line, max_line_in_page, add_page_break=False):
+    for namegroup, obj in data:
+
+        if not add_page_break and epub.is_leaf(namegroup, obj):
+            small_count, large_count = count_doc_size(obj, max_hanzi_in_line, max_line_in_page)
+            add_page_break = is_ratio_greater(large_count, small_count, 1)
+            print(module.info.name, "is leaf", namegroups + [namegroup])
+
+        cur_namegroups = namegroups + [namegroup]
+        depth = len(cur_namegroups)
+
+        _, _, _, mark_name, title_range, title_name = epub.make_mark_and_heading(module, cur_namegroups, obj, 1)
+
+        if title_range is not None:
+            sc_key = title_range
+            #title = "\\goto{{{}}}[url(https://suttacentral.net/{})]".format(title_range, title_range) + " " + title_name
+        else:
+            sc_key = None
+            #title = title_name
+
+        f.write(startsec(lang, depth, lang.c(title_name), lang.c(mark_name), lang.c(title_name), sc_key))
+
+        if isinstance(obj, xl.Xml):
+            print(namegroup, add_page_break)
+            write_doc(f, obj, lang, add_page_break)
+
+        else:
+            assert isinstance(obj, list)
+            write_tree(f, module, cur_namegroups, obj, lang, max_hanzi_in_line, max_line_in_page, add_page_break)
+
+        f.write(stopsec(depth))
+
+
+def write_doc(f, doc, lang, add_page_break):
+    for e in doc.root.kids:
+        if isinstance(e, xl.Element) and re.match(r"^n\d+$", e.tag):
+            break
+
+        elif isinstance(e, xl.Element) and e.tag == "sub":
+            #todo
+            pass
+
+        elif isinstance(e, xl.Element) and e.tag.startswith("sub"):
+            #todo
+            pass
+
+        else:
+            f.write(xml_to_tex([e], doc.root, lang))
+
+    if add_page_break:
+        f.write("\\page\n\n\n\n")
 
 
 def write_fontstex(work_dir):
@@ -155,9 +208,9 @@ def _write_homage(work_dir, lang):
     f.close()
 
 
-def _write_zzsm(work_dir):
+def _write_zzsm(work_dir, lang):
     f = open(os.path.join(work_dir, "readme.tex"), "w", encoding="utf-8")
-    f.write(startsec(1, "制作说明", "制作说明", "制作说明"))
+    f.write(startsec(lang, 1, "制作说明", "制作说明", "制作说明"))
     for line in epub.ZZSM:
         f.write(xml_to_tex(line, None, ebook_utils.Lang()))
         f.write("\n\\blank\n")
@@ -166,81 +219,54 @@ def _write_zzsm(work_dir):
 
 
 _map = {
-    1: "title",
-    2: "subject",
-    3: "subsubject",
-    4: "subsubsubject",
-    5: "subsubsubsubject",
-    6: "subsubsubsubsubject",
-    7: "subsubsubsubsubsubject",
-    8: "subsubsubsubsubsubsubject",
-
+    1: ("part", "\\tfd " ),
+    2: ("title", "\\tfc "),
+    3: ("subject", "\\tfb " ),
+    4: ("subsubject", "\\tfa "),
+    5: ("subsubsubject", "\\tf "),
+    6: ("subsubsubsubject", "\\tfx "),
+    7: ("subsubsubsubsubject", "\\tfxx "),
+    8: ("subsubsubsubsubsubject", "\\tfxx "),
+    9: ("subsubsubsubsubsubsubject", "\\tfxx "),
 }
 
-def startsec(depth, title, bookmark, toctext, sc_key=None):
-    s = "\startalignment[middle]"
-    s += "abc\\start{}[\n".format(_map[depth])
+def startsec(lang, depth, title, bookmark, toctext, sc_key=None, abo_key=None):
+    # Ugly hack to Title
+
+    sec = _map[depth][0]
+    font_size = _map[depth][1]
+    s = ""
+    s += "\\startalignment[center]\n"
+    s += "{\\darkred\n"
+    s += "\\setuphead[" + sec + "][before={\\blank[1*halfline]"
+
+    if sc_key:
+        s += "\\goto{" + font_size + sc_key + "}[url(https://suttacentral.net/"+ sc_key + ")]\\kern 0.5em"
+    else:
+        s += "\\strut" # 若不添加，上面的居中命令就无效了，我也不知道为什么
+
+    s += "}]\n"
+
+    s += "\\start" + sec + "[\n"
     s += "    title={{{}}},\n".format(title or "")
     s += "    bookmark={{{}}},\n".format(bookmark)
-    s += "    list={haha" + toctext + "},\n"
+    s += "    list={" + toctext + "},]\n"
 
-    s += "]xyz\n"
-    s += "\stopalignment"
+    if abo_key:
+        s += "\\goto{(莊春江" + lang.c("譯") + ")}[url(https://suttacentral.net/" + abo_key + ")]\n"
+
+    s += "}\n"
+
+    s += "\\stopalignment\n"
+
+    s += "\\blank[1*halfline]\n\n"
+
 
     return s
 
 def stopsec(depth):
-    return "\\stop{}\n\n".format(_map[depth])
-
-
-def write_tree(f, module, namegroups, data, lang, max_hanzi_in_line, max_line_in_page, add_page_break=False):
-    if epub.is_leaf(namegroups[-1], data):
-        small_count, large_count = count_doc_size(data, max_hanzi_in_line, max_line_in_page)
-        add_page_break = is_ratio_greater(large_count, small_count, 1)
-
-    for namegroup, obj in data:
-        cur_namegroups = namegroups + [namegroup]
-        depth = len(cur_namegroups)
-
-        _, _, _, mark_name, title_range, title_name = epub.make_mark_and_heading(module, cur_namegroups, obj, 1)
-
-        if title_range is not None:
-            sc_key = title_range
-            #title = "\\goto{{{}}}[url(https://suttacentral.net/{})]".format(title_range, title_range) + " " + title_name
-        else:
-            sc_key = None
-            #title = title_name
-
-        f.write(startsec(depth, lang.c(title_name), lang.c(mark_name), lang.c(title_name), sc_key))
-
-        if isinstance(obj, xl.Xml):
-            write_doc(f, obj, lang, add_page_break)
-
-        else:
-            assert isinstance(obj, list)
-            write_tree(f, module, cur_namegroups, obj, lang, max_hanzi_in_line, max_line_in_page)
-
-        f.write(stopsec(depth))
-
-
-def write_doc(f, doc, lang, add_page_break):
-    for e in doc.root.kids:
-        if isinstance(e, xl.Element) and re.match(r"^n\d+$", e.tag):
-            break
-
-        elif isinstance(e, xl.Element) and e.tag == "sub":
-            #todo
-            pass
-
-        elif isinstance(e, xl.Element) and e.tag.startswith("sub"):
-            #todo
-            pass
-
-        else:
-            f.write(xml_to_tex([e], doc.root, lang))
-
-    if add_page_break:
-        f.write("\\page\n\n\n\n")
+    #return ""
+    return "\\stop{}\n\n".format(_map[depth][0])
 
 
 def xml_to_tex(es, doc, lang):
@@ -263,7 +289,7 @@ def xml_to_tex(es, doc, lang):
                 n_kids = epub.get_note_by_key(doc, m_t.group(1))
                 _note = es_to_text(n_kids)
 
-                s += "\\zhfootnote{" + _note + "}"
+                s += "\\zhfootnote{" + lang.c(_note) + "}"
                 #s += "\\high{{\\tfxx \\PDFhighlight[原始注解][{{{}}}]{{{}}}}}".format(_note, text or "㊟")
                 #s += "\\high{\\tfxx \\PDFhighlight[原始注解][{" + _note + "}]{" + (text or "㊟") + "}}"
 
@@ -285,6 +311,7 @@ def xml_to_tex(es, doc, lang):
                 s += "\\startalignment[middle]\n"
                 s += "\\startlines\n"
                 for index, p in enumerate(e.kids):
+                    s += "\\strut "
                     kids, delete_head, delete_tail = xxx(p.kids)
                     lltp_str = ""
                     if index == 0:

@@ -114,34 +114,42 @@
 %\definelist[tobias]
 
 %\placebookmarks[appendix,part,chapter,section,subsection,tobias][chapter][number=no]
+\definehead[notitle][part]
+\definehead[nolist][part]
 
-\definelist[mylist]
-\placebookmarks[title,subject,subsubject,subsubsubject,subsubsubsubject,subsubsubsubsubject,subsubsubsubsubsubject,subsubsubsubsubsubsubject,mylist]
+\definelist[notitle][part]
+
+\placebookmarks[part,title,subject,subsubject,subsubsubject,subsubsubsubject,subsubsubsubsubject,subsubsubsubsubsubject,subsubsubsubsubsubsubject,notitle,nolist]
+
 \setupcombinedlist[content]
-    [list={title,subject,subsubject,subsubsubject,subsubsubsubject,subsubsubsubsubject,subsubsubsubsubsubject,subsubsubsubsubsubsubject,mylist},
+    [list={notitle,part,title,subject,subsubject,subsubsubject,subsubsubsubject,subsubsubsubsubject,subsubsubsubsubsubject,subsubsubsubsubsubsubject},
      alternative=c,
     ]
-\setuplist[title,mylist][margin=0em]
+
+\setuplist[part,notitle][margin=0em]
+\setuplist[title][margin=1em]
 \setuplist[subject][margin=2em]
-\setuplist[subsubject,][margin=4em]
-\setuplist[subsubsubject,][margin=6em]
-\setuplist[subsubsubsubject,][margin=8em]
-\setuplist[subsubsubsubsubject,][margin=10em]
-\setuplist[subsubsubsubsubsubject,][margin=12em]
-\setuplist[subsubsubsubsubsubsubject][margin=14em]
+\setuplist[subsubject,][margin=3em]
+\setuplist[subsubsubject,][margin=4em]
+\setuplist[subsubsubsubject,][margin=5em]
+\setuplist[subsubsubsubsubject,][margin=6em]
+\setuplist[subsubsubsubsubsubject,][margin=7em]
+\setuplist[subsubsubsubsubsubsubject][margin=8em]
 
 
-
-\setuphead[title][style=\tfd\bf\ss] %\tfd
-\setuphead[subject][style=\tfc\bf\ss]
-\setuphead[subsubject][style=\tfb\bf\ss]
-\setuphead[subsubsubject][style=\tfa\bf\ss]
-\setuphead[subsubsubsubject][ style=\tf\bf\ss]
-\setuphead[subsubsubsubsubject][style=\tfx\bf\ss]
+\setuphead[part][style=\tfd\bf\ss]
+\setuphead[title][style=\tfc\bf\ss]
+\setuphead[subject][style=\tfb\bf\ss]
+\setuphead[subsubject][style=\tfa\bf\ss]
+\setuphead[subsubsubject][style=\tf\bf\ss]
+\setuphead[subsubsubsubject][ style=\tfx\bf\ss]
+\setuphead[subsubsubsubsubject][style=\tfxx\bf\ss]
 \setuphead[subsubsubsubsubsubject][style=\tfxx\bf\ss]
 \setuphead[subsubsubsubsubsubsubject][ style=\tfxx\bf\ss]
 
 \setuphead[
+  notitle,
+  part,
   title,
   subject,
   subsubject,
@@ -151,21 +159,35 @@
   subsubsubsubsubsubject,
   subsubsubsubsubsubsubject]
   [
+    number=no,
+    placehead=yes,
+    page=no,
     incrementnumber=list,
     textdistance=0em,
     color=darkblue,
     topframe=off,
-    before={bef}, %before={\startalignment[middle]before},%before={\blank[halfline]},
-    after={aft}, %\stopalignment},%after={\blank[halfline]},
-    align=middle,
-    aftersection={\vspacing[3*halfline]},
+    before=, %before={\startalignment[middle]before},%before={\blank[halfline]},
+    after=, %\stopalignment},%after={\blank[halfline]},
+    %align=middle,
+    aftersection={\blank[3*halfline]},
     interaction=list,
     alternative=text,
 ]
-%
+
+\setuphead[notitle][
+  placehead=no,
+  interaction=list,
+  page=yes,
+]
+\setuphead[nolist][
+  interaction=list,
+  page=yes,
+  align=middle,
+  alternative=normal,
+]
 
 
-%\input{my_title.tex}
+
 
 \setupinteractionscreen[option=bookmark]
 \enabledirectives[references.bookmarks.preroll]
@@ -194,31 +216,31 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \startdocument
+
 \setups[clearheaderfooter]
 %\setuppagenumber[number=1]
-
 \setups[Background:cover]
-\bookmark[mylist]{封面}
+%\bookmark[notitle]{封面}
 \null
 \page
 \setups[Background:off]
 
-% 放置页面目录
-\startcolor[darkgreen]
+
+%
+\startnolist[title={目录},bookmark={页面目录},list=,]
+\startcolor[TropicalRainForest]
 \placecontent
 \stopcolor
 \page[yes]
-
+\stopnolist
 
 \input{homage.tex}
-\page
 
 \setups[mainheaderfooter]
-
 \input{suttas.tex}
+\page[yes]
 
 \setups[clearheaderfooter]
-
 \setupindenting[no]
 \setupheads[indentnext=no]
 \input{readme.tex}
