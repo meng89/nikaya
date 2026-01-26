@@ -394,6 +394,28 @@ def get_max_depth(data, depth = 0):
     return max_depth
 
 
+def maybe_sub_is_doc(obj:list):
+    node_count = 0
+    doc_count = 0
+    for namegroup, sub in obj:
+        if isinstance(sub, xl.Xml):
+            doc_count += 1
+        elif isinstance(sub, list):
+            if is_sub_doc(sub):
+                doc_count += 1
+            else:
+                node_count += 1
+
+
+def is_sub_doc(obj:list):
+    node_count = 0
+    doc_count = 0
+    for namegroup, sub in obj:
+        if isinstance(sub, xl.Xml):
+            doc_count += 1
+        elif isinstance(sub, list):
+            node_count += 1
+
 
 def count_doc_size(obj, max_hanzi_in_line, max_line_in_page, other_rate=0.5):
     small_page_count = 0
