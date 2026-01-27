@@ -24,16 +24,24 @@ layouts = {
         "max_hanzi_in_line": 40,
         "max_line_in_page": 43,
     },
+
     "B6": {
         "cover_size": (1512, 2150),
-        "max_hanzi_in_line": 35,
-        "max_line_in_page": 38,
+        "max_hanzi_in_line": 28,
+        "max_line_in_page": 29,
     },
 
-    "phone21x9": {
+    "xperia10v": {
         "cover_size": (1080, 2520),
-        "max_hanzi_in_line": 15,
-        "max_line_in_page": 29,
+        "max_hanzi_in_line": 29,
+        "max_line_in_page": 15,
+    },
+
+    "kobo_forma": {
+        "cover_size": (1440, 1920),
+        "max_hanzi_in_line": 27,
+        "max_line_in_page": 25,
+
     }
 }
 
@@ -265,7 +273,7 @@ def startsec(lang, depth, title, bookmark, toctext, sc_key=None, abo_key=None):
     s += "\\start" + sec + "[\n"
     s += "    title={{{}}},\n".format(title or "")
     s += "    bookmark={{{}}},\n".format(bookmark)
-    s += "    list={" + toctext + "},]\n"
+    s += "    list={" + (sc_key + " " if sc_key is not None else "") + toctext + "},]\n"
 
     if abo_key:
         s += "\\goto{(莊春江" + lang.c("譯") + ")}[url(https://suttacentral.net/" + abo_key + ")]\n"

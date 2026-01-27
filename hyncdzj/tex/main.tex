@@ -1,6 +1,8 @@
 
 \input{$layout}
 
+\setupinterlinespace[line=3.2ex]
+
 \enableregime[utf]
 \mainlanguage[cn]
 \language[cn]
@@ -68,13 +70,13 @@
 \startsetups mainheaderfooter
 \setupheadertexts[]
 %\setupheadertexts[{\tf\bf\ss \somenamedheadnumber{chapter}{current}. \getmarking[chapter]}][]
-\setupfootertexts[{\it \pagenumber}]
+\setupfootertexts[][{\pagenumber}]
 \stopsetups
 
 
 \startsetups clearheaderfooter
 \setupheadertexts[]
-\setupfootertexts[]
+\setupfootertexts[][]
 \stopsetups
 %
 %
@@ -82,6 +84,7 @@
 
 % 页脚页眉
 %%%%%%%%%%%
+
 
 
 %%%%%%%%%%%%%%%
@@ -98,6 +101,8 @@
 
 % rulecolor：正文与脚注之间的隔离线条颜色。textcolor：正文注解引号的颜色
 \setupfootnotes[textcolor=blue]
+
+\setupnote[footnote][before=,]
 % headcolor：脚注引号的颜色。color：脚注文本的颜色
 \setupnotation[footnote][way=bypage,numbercommand={\tfx},distance=0.1em,headcolor=blue] % note text is blue
 

@@ -202,9 +202,15 @@ def make_cover_image(module, lang: Lang, tag=None, width=1600, height=2560):
         cover_xhtml_path = os.path.join(config.HYNCDZJ_COVER_DIR, xhtml_filename)
         open(cover_xhtml_path, "w").write(doc_str)
 
+
+        profile = selenium.webdriver.FirefoxProfile()
+        profile.set_preference("app.update.auto", False)
+        profile.set_preference("app.update.enabled", False)
+
         options = selenium.webdriver.FirefoxOptions()
         options.add_argument("--headless")
-        #options.add_argument("--window-size=1600x2560")
+        options.profile=profile
+
         driver = selenium.webdriver.Firefox(options=options)
         driver.set_window_size(width, height + config.WINDOW_HEIGHT_OFFSET)
         driver.get("file://" + cover_xhtml_path)

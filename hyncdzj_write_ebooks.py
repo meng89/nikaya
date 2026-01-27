@@ -81,7 +81,7 @@ def main(nopdf, noepub):
         for _m in ms:
             all_modules.append(_m)
     if config.DEBUG:
-        all_modules = [sn]
+        all_modules = [sn, mn]
     dirs = set()
     for count, m in enumerate(all_modules, start=1):
 
