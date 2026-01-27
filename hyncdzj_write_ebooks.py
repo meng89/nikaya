@@ -125,8 +125,8 @@ def main(nopdf, noepub):
                 total += 1
                 try_run_job()
 
-                if config.DEBUG:
-                    break
+                #if config.DEBUG:
+                #    break
 
             if config.DEBUG:
                 break

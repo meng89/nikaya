@@ -24,6 +24,11 @@ layouts = {
         "max_hanzi_in_line": 40,
         "max_line_in_page": 43,
     },
+    "B6": {
+        "cover_size": (1512, 2150),
+        "max_hanzi_in_line": 35,
+        "max_line_in_page": 38,
+    },
 
     "phone21x9": {
         "cover_size": (1080, 2520),
@@ -137,7 +142,6 @@ def write_tree(f, module, namegroups, data: list, lang, max_hanzi_in_line, max_l
 
     check = maybe_sub_is_doc(data)
     if check:
-        print("here0:", namegroups)
         f.write("\\page[yes]\n")
 
 
