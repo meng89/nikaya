@@ -37,12 +37,24 @@ layouts = {
         "max_line_in_page": 15,
     },
 
+    "ipad9th": {
+        "cover_size": (1620, 2160),
+        "max_hanzi_in_line": 29,
+        "max_line_in_page": 15,
+    },
+
     "kobo_forma": {
         "cover_size": (1440, 1920),
         "max_hanzi_in_line": 27,
         "max_line_in_page": 25,
 
+    },
+    "h245mm": {
+        "cover_size": (1440, 1920),
+        "max_hanzi_in_line": 27,
+        "max_line_in_page": 25,
     }
+
 }
 
 def build_pdf(full_path, data, module, lang, layout, tag, exit_after_done=False):
