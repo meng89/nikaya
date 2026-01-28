@@ -49,11 +49,56 @@ layouts = {
         "max_line_in_page": 25,
 
     },
-    "h245mm": {
-        "cover_size": (1440, 1920),
-        "max_hanzi_in_line": 27,
-        "max_line_in_page": 25,
-    }
+
+    "letter_12pt": {
+        "cover_size": (2550, 3300),
+        "max_hanzi_in_line": 47,
+        "max_line_in_page": 43,
+    },
+
+    "letter_13pt": {
+        "cover_size": (2550, 3300),
+        "max_hanzi_in_line": 44,
+        "max_line_in_page": 39,
+    },
+
+    "letter_14pt": {
+        "cover_size": (2550, 3300),
+        "max_hanzi_in_line": 41,
+        "max_line_in_page": 36,
+    },
+    "letter_15pt": {
+        "cover_size": (2550, 3300),
+        "max_hanzi_in_line": 38,
+        "max_line_in_page": 34,
+    },
+    "letter_16pt": {
+        "cover_size": (2550, 3300),
+        "max_hanzi_in_line": 35,
+        "max_line_in_page": 32,
+    },
+    "letter_17pt": {
+        "cover_size": (2550, 3300),
+        "max_hanzi_in_line": 33,
+        "max_line_in_page": 30,
+    },
+    "letter_18pt": {
+        "cover_size": (2550, 3300),
+        "max_hanzi_in_line": 31,
+        "max_line_in_page": 28,
+    },
+
+    #"23in_h245mm": {
+    #    "cover_size": (1440, 1920),
+    #    "max_hanzi_in_line": 27,
+    #    "max_line_in_page": 25,
+    #},
+
+    #"14in_h150mm": {
+    #    "cover_size": (1440, 1920),
+    #    "max_hanzi_in_line": 27,
+    #    "max_line_in_page": 25,
+    #}
 
 }
 

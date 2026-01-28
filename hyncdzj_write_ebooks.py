@@ -11,11 +11,6 @@ import multiprocessing
 multiprocessing.set_start_method("fork") # only POSIX
 from multiprocessing import Process
 
-from hyncdzj.book_modules import sn, mn, dn, an
-from hyncdzj.book_modules import (kn_ap, kn_bv, kn_cp, kn_ps, kn_pv, kn_ud, kn_vv, kn_dhp, kn_iti, kn_jat, kn_khp, kn_snp,
-                         kn_thag, kn_thig, kn_nid1, kn_nid2)
-# all_modules = [sn, an, mn, dn] + [kn_ap, kn_bv, kn_cp, kn_ps, kn_pv, kn_ud, kn_vv, kn_dhp, kn_iti, kn_jat, kn_khp, kn_snp,
-#                         kn_thag, kn_thig, kn_nid1, kn_nid2]
 import hyncdzj.base
 import hyncdzj.epub
 import hyncdzj.pdf
@@ -23,9 +18,6 @@ import hyncdzj.pdf
 from hyncdzj import book_modules
 
 import hyncdzj.ebook_utils
-
-
-
 
 total = 0
 jobs =  []
@@ -63,29 +55,74 @@ def try_run_job(do_print=True):
         jobs.pop(0)
 
 
-def main(nopdf, noepub):
+def main(_help=False, debug=False, types=None, langs=None, books=None, layouts=None):
+    config.DEBUG = debug
+
+    all_types = ["pdf", "epub"]
+    if types:
+        my_types = types.split(",")
+    else:
+        my_types = all_types
+
+    all_langs = [hyncdzj.ebook_utils.SC(), hyncdzj.ebook_utils.TC()]
+    if langs:
+        my_langs = []
+        for lang in langs.split(","):
+            for _lang in all_langs:
+                if lang == _lang.en:
+                    my_langs.append(_lang)
+    else:
+        my_langs = all_langs
+
+    if books is None:
+        my_modules = book_modules.all_modules
+    else:
+        my_modules = []
+        for x in books.split(","):
+            for m in book_modules.all_modules:
+                if x == m.__name__.split(".")[-1]:
+                    my_modules.append(m)
+
+
+    all_layouts = hyncdzj.pdf.layouts.keys()
+    if layouts:
+        my_layouts = []
+        _ls = layouts.split(",")
+        for _l in _ls:
+            for layout in all_layouts:
+                if layout.startswith(_l):
+                    my_layouts.append(layout)
+    else:
+        my_layouts = all_layouts
+
+    if _help:
+        print("debug")
+        print("types:", all_types)
+        print("langs:", [lang.en for lang in all_langs])
+        print("books:", [m.__name__.split(".")[-1] for m in book_modules.all_modules])
+        print("layouts:", list(all_layouts))
+        print()
+        print("命令行举例，只制作《相应部》和《中部》的简体版，不要 EPUB，且包含所有以 letter 开头布局的 PDF：")
+        print("./hyncdzj_write_ebooks.py books=sn,mn langs=sc types=pdf layouts=letter")
+        print()
+        exit()
+
+    print("显示简略使用说明：", sys.argv[0], "help")
+    print()
     start_time = time.time()
+    temp_td = tempfile.TemporaryDirectory(prefix="A_汉译南传大藏经_")
+    print("电子书目录：", temp_td.name)
     print("进程数:", max_processes)
 
     global total
 
-    epub_jobs = []
-
-    temp_td = tempfile.TemporaryDirectory(prefix="A_汉译南传大藏经_")
     config.HYNCDZJ_COVER_DIR = os.path.join(temp_td.name, "cover")
     date = datetime.today().strftime('%Y.%m.%d')
 
-    #all_modules = [sn, an, mn, dn] # + pyabo2.kn.all_modules
-    all_modules = []
-    for _, ms in book_modules.categories:
-        for _m in ms:
-            all_modules.append(_m)
-    if config.DEBUG:
-        all_modules = [sn, mn]
     dirs = set()
-    for count, m in enumerate(all_modules, start=1):
+    for count, m in enumerate(my_modules, start=1):
 
-        print("Loading data: {:2}/{} {}".format(count, len(all_modules), m.info.name), end="", flush=True)
+        print("Loading data: {:2}/{} {}".format(count, len(my_modules), m.info.name), end="", flush=True)
         simple_filled_path = os.path.join(config.SIMPLE_FILLED_DIR, m.info.name)
         simple_filling_path = os.path.join(config.SIMPLE_FILLING_DIR, m.info.name)
 
@@ -105,50 +142,44 @@ def main(nopdf, noepub):
 
         # hyncdzj.base.print_tree(data)
 
-        for zh_name, lang in [("元亨寺_汉译南传大藏经_简体_PDF", hyncdzj.ebook_utils.SC()), ("元亨寺_漢譯南傳大藏經_繁體_PDF", hyncdzj.ebook_utils.TC())]:
-            for layout in hyncdzj.pdf.layouts.keys():
+        for lang in my_langs:
+            zh_name = lang.c("元亨寺_漢譯南傳大藏經")
+            if "pdf" in my_types:
+                for layout in my_layouts:
+                    pdf_dir_name = zh_name + "_" + lang.zh + "_PDF"
+                    layout_dir_name = pdf_dir_name + "_" + layout
 
-                layout_filename = zh_name + "_" + layout
+                    file_name = "{}".format(lang.c(m.info.name))
+                    if tag:
+                        file_name += "_{}".format(tag)
+                    file_name += ".pdf"
 
-                filename = "{}".format(lang.c(m.info.name))
+                    dirs.add(layout_dir_name)
+
+                    full_file_name = os.path.join(temp_td.name, layout_dir_name, file_name)
+
+                    os.makedirs(os.path.dirname(full_file_name), exist_ok=True)
+                    job = ("{}/{}/{}".format(lang.zh, layout, file_name), hyncdzj.pdf.build_pdf, (full_file_name, data, m, lang, layout, tag, True))
+                    jobs.append(job)
+                    total += 1
+                    try_run_job()
+
+            if "epub" in my_types:
+                epub_dir_name = zh_name+ "_" + lang.zh + "_EPUB"
+                file_name = "{}".format(lang.c(m.info.name))
                 if tag:
-                    filename += "_{}".format(tag)
-                filename += ".pdf"
+                    file_name += "_{}".format(tag)
+                file_name += ".epub"
 
-                dirname = os.path.join(temp_td.name, layout_filename)
+                dirs.add(epub_dir_name)
 
-                full_path = os.path.join(dirname, filename)
+                full_file_name = os.path.join(temp_td.name, epub_dir_name, file_name)
 
-                os.makedirs(os.path.dirname(full_path), exist_ok=True)
-                job = ("{}/{}".format(layout, filename), hyncdzj.pdf.build_pdf, (full_path, data, m, lang, layout, tag, True))
-                jobs.append(job)
+                os.makedirs(os.path.dirname(full_file_name), exist_ok=True)
+                jobs.append(("{}/{}".format(lang.zh, file_name), hyncdzj.epub.build_epub, (full_file_name, data, m, lang, tag, True)))
                 total += 1
                 try_run_job()
 
-                #if config.DEBUG:
-                #    break
-
-            if config.DEBUG:
-                break
-
-        for zh_name, lang in [("元亨寺_汉译南传大藏经_简体_EPUB_" + date, hyncdzj.ebook_utils.SC()),
-                              ("元亨寺_漢譯南傳大藏經_繁體_EPUB_" + date, hyncdzj.ebook_utils.TC())]:
-            continue
-
-            dirs.add(zh_name)
-            filename = lang.c(m.info.name)
-            if tag:
-                filename += "_{}".format(tag)
-            filename += ".epub"
-
-            dirname = os.path.join(temp_td.name, zh_name)
-            full_path = os.path.join(dirname, filename)
-            os.makedirs(os.path.dirname(full_path), exist_ok=True)
-            jobs.append((filename, hyncdzj.epub.build_epub, (full_path, data, m, lang, tag, True)))
-            total += 1
-            try_run_job()
-
-    jobs.extend(epub_jobs)
 
     while jobs or running:
         time.sleep(0.01)
@@ -156,10 +187,10 @@ def main(nopdf, noepub):
 
     end_time = time.time()
 
-    print(dirs)
-    for dir_name in dirs:
-        output_dirname = os.path.join(temp_td.name, dir_name)
-        shutil.make_archive(output_dirname, 'zip', output_dirname)
+    if not debug:
+        for dir_name in dirs:
+            output_dirname = os.path.join(temp_td.name, dir_name)
+            shutil.make_archive(output_dirname, 'zip', output_dirname)
 
     print()
     print("用时: {:.2f}s".format(end_time - start_time))
@@ -172,14 +203,18 @@ def main(nopdf, noepub):
     temp_td.cleanup()
 
 
+def read_args():
+    kwargs = {}
+    for x in sys.argv[1:]:
+        if "=" in x:
+            k, v = x.split("=")
+            kwargs[k] = v
+        else:
+            if x == "help":
+                x = "_help"
+            kwargs[x] = True
+    return kwargs
+
 if __name__ == '__main__':
-    sys_args = [arg.lower() for arg in sys.argv[1:]]
-    _nopdf = False
-    _noepub = False
-    if "debug" in sys_args:
-        config.DEBUG = True
-    if "nopdf" in sys_args:
-        _nopdf = True
-    if "noepub" in sys_args:
-        _noepub = True
-    main(_nopdf, _noepub)
+    _kwargs = read_args()
+    main(**_kwargs)

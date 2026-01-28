@@ -15,6 +15,9 @@ lun = ("論藏", (ds, vb, dt, pp, ya, patthana, kv))
 from . import mil, dipavamsa, mahavamsa, culavamsa, visuddhimagga, samantapasadika, abhidhammatthasangaha, dhammalipi
 wai = ("藏外", [mil, dipavamsa, mahavamsa, culavamsa, visuddhimagga, samantapasadika, abhidhammatthasangaha, dhammalipi])
 
-
 categories = (lv, jing, lun, wai)
-#categories = (jing, )
+
+all_modules = []
+for _, ms in categories:
+    for _m in ms:
+        all_modules.append(_m)
