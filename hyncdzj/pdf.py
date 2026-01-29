@@ -15,7 +15,6 @@ from . import epub, ebook_utils, utils
 from public_modules import tag_str
 
 MAIN = "main.tex"
-FONT = "type-imp-myfonts.tex"
 SUTTAS = "suttas.tex"
 
 layouts = {
@@ -120,7 +119,7 @@ def build_pdf(full_path, data, module, lang, layout, tag, exit_after_done=False)
     write_tree(f, module, [], data, lang, layouts[layout]["max_hanzi_in_line"], layouts[layout]["max_line_in_page"])
     f.close()
 
-    write_fontstex(work_dir)
+    write_fontstex(work_dir, lang)
 
     _write_homage(work_dir, lang)
     _write_zzsm(work_dir, lang)
@@ -130,7 +129,7 @@ def build_pdf(full_path, data, module, lang, layout, tag, exit_after_done=False)
         my_env["PATH"] = os.path.expanduser(config.CONTEXT_BIN_PATH) + ":" + my_env["PATH"]
     elif os.name == "nt":
         my_env["PATH"] = os.path.expanduser(config.CONTEXT_BIN_PATH) + ";" + my_env["PATH"]
-    mode_list = [lang.en, layout]
+    mode_list = [layout]
     if config.DEBUG:
         mode_list.append("debug")
     modes = ",".join(mode_list)
@@ -227,8 +226,9 @@ def write_doc(f, doc, lang):
             f.write(xml_to_tex([e], doc.root, lang))
 
 
-def write_fontstex(work_dir):
-    fonttex = open(os.path.join(config.HYNCDZJ_TEX_DIR, "type-imp-myfonts.tex"), "r", encoding="utf-8").read()
+def write_fontstex(work_dir, lang):
+    type_name = "type-imp-myfonts-" + lang.en + ".tex"
+    fonttex = open(os.path.join(config.HYNCDZJ_TEX_DIR, type_name), "r", encoding="utf-8").read()
     replace_map = {}
     for fontname in re.findall("file:(.*(?:ttf|otf|ttc))", fonttex):
         realfontpath = findfile(config.FONTS_DIRS, os.path.basename(fontname))
@@ -239,7 +239,7 @@ def write_fontstex(work_dir):
     for fontname, realfontpath in replace_map.items():
         fonttex = fonttex.replace(fontname, realfontpath.replace("\\", "/"))
 
-    with open(os.path.join(work_dir, FONT), "w", encoding="utf-8") as new_fonttex_file:
+    with open(os.path.join(work_dir, type_name), "w", encoding="utf-8") as new_fonttex_file:
         new_fonttex_file.write(fonttex)
 
 def findfile(font_dirs, name):
@@ -263,6 +263,7 @@ def write_main_tex(work_dir, module, lang, layout, cover_image):
     main_t = open(os.path.join(config.HYNCDZJ_TEX_DIR, MAIN), "r", encoding='utf-8').read()
     date = datetime.today().strftime('%Y-%m-%d')
     main = string.Template(main_t).substitute(
+        font_type="type-imp-myfonts-sc" if isinstance(lang, ebook_utils.SC) else "type-imp-myfonts-tc",
         layout=layout+".tex",
         title=lang.c(module.info.name),
         author="、".join(module.info.translators) + lang.c("譯"),

@@ -1,0 +1,70 @@
+\enableregime[utf]
+
+
+% \starttypescript[...,...][...,...][...,...] ... \stoptypescript
+% [...,...]	serif sans mono math handwriting calligraphy
+% [...,...]	name
+% [...,...]	size name
+
+\starttypescript [serif] [hanfont]
+
+  \definefontsynonym[enserif][file:NotoSerif-Light.ttf]
+  \definefontsynonym[enserifbd][file:NotoSerif-SemiBold.ttf]
+  \definefontsynonym[enserifit][file:NotoSerif-LightItalic.ttf]
+  \definefontsynonym[enserifbi][file:NotoSerif-SemiBoldItalic.ttf]
+
+  \definefontfallback[nsecjkl][file:NotoSerifCJKtc-Light.otf][0x00400-0x00eff, 0x01000-0x2FA1F]
+  \definefontfallback[nsecjkl][file:NotoSerifTibetan-Light.ttf][0x00f00-0x00fff]
+  \definefontfallback[nsecjkb][file:NotoSerifCJKtc-Medium.otf][0x00400-0x2FA1F]
+
+\definefontsynonym[Serif][enserif][fallbacks=nsecjkl]
+\definefontsynonym[SerifBold][enserifbd][fallbacks=nsecjkb]
+\definefontsynonym[SerifItalic][enserifit][fallbacks=nsecjkl]
+\definefontsynonym[SerifBoldItalic][enserifbi][fallbacks=nsecjkb]
+
+\stoptypescript
+
+
+
+\starttypescript [sans] [hanfont]
+
+  \definefontsynonym[ensans][file:NotoSansCJKtc-Regular.otf]
+  \definefontsynonym[ensansbd][file:NotoSansCJKtc-Bold.otf]
+  \definefontsynonym[ensansob][file:NotoSansDisplay-Italic.otf]
+  \definefontsynonym[ensansbo][file:NotoSansDisplay-BoldItalic.otf]
+
+  \definefontfallback[nsacjkl][file:NotoSansCJKtc-Light.otf][0x00400-0x00eff, 0x01000-0x2FA1F]
+  \definefontfallback[nsacjkl][file:NotoSerifTibetan-Light.ttf][0x00f00-0x00fff]
+  \definefontfallback[nsacjkb][file:NotoSansCJKtc-Medium.otf][0x00400-0x2FA1F]
+
+  \definefontsynonym[Sans][ensans][fallbacks=nsacjkl]
+  \definefontsynonym[SansBold][ensansbd][fallbacks=nsacjkb]
+  \definefontsynonym[SansItalic][ensansob][fallbacks=nsacjkl]
+  \definefontsynonym[SansBoldItalic][ensansbo][fallbacks=nsacjkb]
+
+\stoptypescript
+
+
+
+\starttypescript [calligraphy] [hanfont]
+
+  \definefontsynonym[tckai][file:TW-Kai-98_1.ttf]
+  % 﨟(U+0FA1F)
+  \definefontfallback[fb][file:FZKTK.ttf][0x0FA1F]
+  % 𤷜(U+24DDC) 𧂐(U+27090) 𣳠(U+23CE0) 𨂰(U+280B0) 𠢕(U+20895)
+  \definefontfallback[fb][file:TW-Kai-Ext-B-98_1.ttf][0x24DDC,0x27090,0x23CE0,0x280B0,0x20895][force=no]
+  \definefontsynonym[Calligraphy][tckai][fallbacks=fb]
+
+\stoptypescript
+
+
+
+\starttypescript[hanfonts]
+
+  \definetypeface [hanfonts] [rm] [serif] [hanfont]
+  \definetypeface [hanfonts] [ss] [sans] [hanfont]
+  \definetypeface [hanfonts] [cg] [calligraphy] [hanfont]
+
+\stoptypescript
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

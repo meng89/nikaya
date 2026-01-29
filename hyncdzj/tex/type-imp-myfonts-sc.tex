@@ -1,75 +1,6 @@
 \enableregime[utf]
 
-
-% \starttypescript[...,...][...,...][...,...] ... \stoptypescript
-% [...,...]	serif sans mono math handwriting calligraphy
-% [...,...]	name
-% [...,...]	size name
-
-\starttypescript [serif] [tcfont]
-
-  \definefontsynonym[enserif][file:NotoSerif-Light.ttf]
-  \definefontsynonym[enserifbd][file:NotoSerif-SemiBold.ttf]
-  \definefontsynonym[enserifit][file:NotoSerif-LightItalic.ttf]
-  \definefontsynonym[enserifbi][file:NotoSerif-SemiBoldItalic.ttf]
-
-  \definefontfallback[nsecjkl][file:NotoSerifCJKtc-Light.otf][0x00400-0x00eff, 0x01000-0x2FA1F]
-  \definefontfallback[nsecjkl][file:NotoSerifTibetan-Light.ttf][0x00f00-0x00fff]
-  \definefontfallback[nsecjkb][file:NotoSerifCJKtc-Medium.otf][0x00400-0x2FA1F]
-
-\definefontsynonym[Serif][enserif][fallbacks=nsecjkl]
-\definefontsynonym[SerifBold][enserifbd][fallbacks=nsecjkb]
-\definefontsynonym[SerifItalic][enserifit][fallbacks=nsecjkl]
-\definefontsynonym[SerifBoldItalic][enserifbi][fallbacks=nsecjkb]
-
-\stoptypescript
-
-
-
-\starttypescript [sans] [tcfont]
-
-  \definefontsynonym[ensans][file:NotoSans-Light.ttf]
-  \definefontsynonym[ensansbd][file:NotoSans-SemiBold.ttf]
-  \definefontsynonym[ensansob][file:NotoSans-LightItalic.ttf]
-  \definefontsynonym[ensansbo][file:NotoSans-SemiBoldItalic.ttf]
-
-  \definefontfallback[nsacjkl][file:NotoSansCJKtc-Light.otf][0x00400-0x00eff, 0x01000-0x2FA1F]
-  \definefontfallback[nsacjkl][file:NotoSerifTibetan-Light.ttf][0x00f00-0x00fff]
-  \definefontfallback[nsacjkb][file:NotoSansCJKtc-Medium.otf][0x00400-0x2FA1F]
-
-  \definefontsynonym[Sans][ensans][fallbacks=nsacjkl]
-  \definefontsynonym[SansBold][ensansbd][fallbacks=nsacjkb]
-  \definefontsynonym[SansItalic][ensansob][fallbacks=nsacjkl]
-  \definefontsynonym[SansBoldItalic][ensansbo][fallbacks=nsacjkb]
-
-\stoptypescript
-
-
-
-\starttypescript [calligraphy] [tcfont]
-
-  \definefontsynonym[tckai][file:TW-Kai-98_1.ttf]
-  % 﨟(U+0FA1F)
-  \definefontfallback[fb][file:FZKTK.ttf][0x0FA1F]
-  % 𤷜(U+24DDC) 𧂐(U+27090) 𣳠(U+23CE0) 𨂰(U+280B0) 𠢕(U+20895)
-  \definefontfallback[fb][file:TW-Kai-Ext-B-98_1.ttf][0x24DDC,0x27090,0x23CE0,0x280B0,0x20895][force=no]
-  \definefontsynonym[Calligraphy][tckai][fallbacks=fb]
-
-\stoptypescript
-
-
-
-\starttypescript[tcfonts]
-
-  \definetypeface [tcfonts] [rm] [serif] [tcfont]
-  \definetypeface [tcfonts] [ss] [sans] [tcfont]
-  \definetypeface [tcfonts] [cg] [calligraphy] [tcfont]
-
-\stoptypescript
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\starttypescript [serif] [scfont]
+\starttypescript [serif] [hanfont]
 
   \definefontsynonym[enserif][file:NotoSerif-Light.ttf]
   \definefontsynonym[enserifbd][file:NotoSerif-SemiBold.ttf]
@@ -88,7 +19,7 @@
 
 
 
-\starttypescript [sans] [scfont]
+\starttypescript [sans] [hanfont]
 
   \definefontsynonym[ensans][file:NotoSans-Light.ttf]
   \definefontsynonym[ensansbd][file:NotoSans-SemiBold.ttf]
@@ -109,7 +40,7 @@
 
 
 
-\starttypescript [calligraphy] [scfont]
+\starttypescript [calligraphy] [hanfont]
 
   \definefontsynonym[sckai][file:FZKTK.ttf]
   %\definefontfallback[sckaifb][file:FZKTJW.ttf]%[0x04E00-0x09FFF][force=no,check=yes]
@@ -131,10 +62,10 @@
 
 
 
-\starttypescript[scfonts]
+\starttypescript[hanfonts]
 
-  \definetypeface [scfonts] [rm] [serif] [scfont]
-  \definetypeface [scfonts] [ss] [sans] [scfont]
-  \definetypeface [scfonts] [cg] [calligraphy] [scfont]
+  \definetypeface [hanfonts] [rm] [serif] [hanfont]
+  \definetypeface [hanfonts] [ss] [sans] [hanfont]
+  \definetypeface [hanfonts] [cg] [calligraphy] [hanfont]
 
 \stoptypescript
