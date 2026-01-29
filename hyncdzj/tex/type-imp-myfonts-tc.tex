@@ -28,19 +28,21 @@
 
 \starttypescript [sans] [hanfont]
 
-  \definefontsynonym[ensans][file:NotoSansCJKtc-Regular.otf]
-  \definefontsynonym[ensansbd][file:NotoSansCJKtc-Bold.otf]
-  \definefontsynonym[ensansob][file:NotoSansDisplay-Italic.otf]
-  \definefontsynonym[ensansbo][file:NotoSansDisplay-BoldItalic.otf]
+  \definefontsynonym[en_sans][file:SourceSans3-Regular.otf]
+  \definefontsynonym[en_sans_b][file:SourceSans3-Bold.otf]
+  \definefontsynonym[en_sans_i][file:SourceSans3-It.otf]
+  \definefontsynonym[en_sans_bi][file:SourceSans3-BoldIt.otf]
 
-  \definefontfallback[nsacjkl][file:NotoSansCJKtc-Light.otf][0x00400-0x00eff, 0x01000-0x2FA1F]
-  \definefontfallback[nsacjkl][file:NotoSerifTibetan-Light.ttf][0x00f00-0x00fff]
-  \definefontfallback[nsacjkb][file:NotoSansCJKtc-Medium.otf][0x00400-0x2FA1F]
+  % 汉字
+  \definefontfallback[sans_fb][file:SourceHanSansTC-Regular.otf][0x00400-0x00eff, 0x01000-0x2FA1F]
+  % 藏文
+  \definefontfallback[sans_fb][file:NotoSerifTibetan-Light.ttf][0x00f00-0x00fff]
+  \definefontfallback[sans_b_fb][file:SourceHanSansTC-Bold.otf][0x00400-0x2FA1F]
 
-  \definefontsynonym[Sans][ensans][fallbacks=nsacjkl]
-  \definefontsynonym[SansBold][ensansbd][fallbacks=nsacjkb]
-  \definefontsynonym[SansItalic][ensansob][fallbacks=nsacjkl]
-  \definefontsynonym[SansBoldItalic][ensansbo][fallbacks=nsacjkb]
+  \definefontsynonym[Sans][en_sans][fallbacks=sans_fb]
+  \definefontsynonym[SansBold][en_sans_b][fallbacks=sans_b_fb]
+  \definefontsynonym[SansItalic][en_sans_i][fallbacks=sans_fb]
+  \definefontsynonym[SansBoldItalic][en_sans_bi][fallbacks=sans_b_fb]
 
 \stoptypescript
 

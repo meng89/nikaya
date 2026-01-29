@@ -135,7 +135,7 @@ def write_tree(module, data, marks, docs, parent_namegroups, notes, lang, marks_
 
         # 短经合并到一个页面
         if isinstance(obj, list) and is_leaf(namegroup, obj) and is_join_needed(obj):
-            mark, heading, _, _, _, _,= make_mark_and_heading(module, cur_namegroups, obj, 1)
+            mark, heading, _, _, _, _,= make_mark_and_heading(module, cur_namegroups, obj, 1, lang)
             marks_and_headings.append((mark, heading))
             marks.append(mark)
             body.kids.append(heading)
@@ -152,7 +152,7 @@ def write_tree(module, data, marks, docs, parent_namegroups, notes, lang, marks_
 
         elif isinstance(obj, xl.Xml):
             docs.append((doc_path, html))
-            mark, heading, _, _, _, _ = make_mark_and_heading(module, cur_namegroups, obj, 2)
+            mark, heading, _, _, _, _ = make_mark_and_heading(module, cur_namegroups, obj, 2, lang)
             marks_and_headings.append((mark, heading))
             marks.append(mark)
             body.kids.append(heading)
@@ -169,7 +169,7 @@ def write_tree(module, data, marks, docs, parent_namegroups, notes, lang, marks_
 
         else:
             assert isinstance(obj, list)
-            mark, heading, _, _, _, _ = make_mark_and_heading(module, cur_namegroups, obj, 1)
+            mark, heading, _, _, _, _ = make_mark_and_heading(module, cur_namegroups, obj, 1, lang)
             marks.append(mark)
             marks_and_headings.append((mark, heading))
             write_tree(module, obj, mark.kids, docs, cur_namegroups, notes, lang, marks_and_headings)
@@ -179,7 +179,7 @@ def write_leaf_to_page(module, data, marks, parent_branch, notes, lang, doc_path
     for count, (namegroup, obj) in enumerate(data, start=1):
         cur_namegroups = parent_branch + [namegroup]
         doc_id = "doc_" + str(count)
-        mark, heading, _, _, _, _ = make_mark_and_heading(module, cur_namegroups, obj, 2)
+        mark, heading, _, _, _, _ = make_mark_and_heading(module, cur_namegroups, obj, 2, lang)
         marks.append(mark)
         heading.attrs["id"] = doc_id
         mark.href = doc_path + "#" + doc_id
@@ -195,7 +195,7 @@ def write_doc_to_page(module, obj, marks, cur_namegroups, notes, lang, doc_path,
 
         elif isinstance(e, xl.Element) and e.tag == "sub":
             name_group = sub_to_namegroup(e)
-            mark, heading, is_serial, _, _, _ = make_mark_and_heading(module, cur_namegroups + [name_group], obj, 3)
+            mark, heading, is_serial, _, _, _ = make_mark_and_heading(module, cur_namegroups + [name_group], obj, 3, lang)
             heading.attrs["class"] = "sub"
             heading.attrs["id"] = "sub_" + str(sub_count)
             if is_serial:
@@ -207,7 +207,7 @@ def write_doc_to_page(module, obj, marks, cur_namegroups, notes, lang, doc_path,
 
         elif isinstance(e, xl.Element) and e.tag.startswith("sub"):
             name_group = sub_to_namegroup(e)
-            mark, heading, is_serial, _, _, _ = make_mark_and_heading(module, cur_namegroups + [name_group], obj, 3)
+            mark, heading, is_serial, _, _, _ = make_mark_and_heading(module, cur_namegroups + [name_group], obj, 3, lang)
             heading.attrs["class"] = "sub"
             heading.attrs["id"] = "sub_" + str(sub_count)
             mark.href = doc_path + "#" + heading.attrs["id"]
@@ -220,7 +220,7 @@ def write_doc_to_page(module, obj, marks, cur_namegroups, notes, lang, doc_path,
             body.kids.extend(html_es)
 
 
-def make_mark_and_heading(module, namegroups, obj, heading_level):
+def make_mark_and_heading(module, namegroups, obj, heading_level, lang):
     file_index, start, end, name = namegroups[-1]
     if start is None:
         range_start, range_end = read_range(obj)
@@ -258,16 +258,16 @@ def make_mark_and_heading(module, namegroups, obj, heading_level):
         a = xl.Element("a", {"href": "https://suttacentral.net/" + range_str}, [range_str])
         epub_heading.kids.append(a)
         epub_heading.kids.append("　")
-        epub_heading.kids.append(name_str)
+        epub_heading.kids.append(lang.c(name_str))
         is_serial = True
         mark_name = ranges[-1] + "." + or_kong(serial_names[-1]) + mark_range
-        epub_mark = epubpacker.Mark(mark_name)
+        epub_mark = epubpacker.Mark(lang.c(mark_name))
     else:
         range_str = None
         name_str = or_kong(names[-1])
         epub_heading.kids.append(name_str)
         mark_name = or_kong(names[-1]) + mark_range
-        epub_mark = epubpacker.Mark(mark_name)
+        epub_mark = epubpacker.Mark(lang.c(mark_name))
         is_serial = False
 
     return epub_mark, epub_heading, is_serial, mark_name, range_str, name_str

@@ -113,7 +113,6 @@ def build_pdf(full_path, data, module, lang, layout, tag, exit_after_done=False)
     write_main_tex(work_dir, module, lang, layout, cover_image)
 
     shutil.copy(os.path.join(config.HYNCDZJ_TEX_DIR, "{}.tex".format(layout)), work_dir)
-    shutil.copy(os.path.join(config.HYNCDZJ_TEX_DIR, "my_title.tex"), work_dir)
 
     f = open(os.path.join(work_dir, SUTTAS), "w")
     write_tree(f, module, [], data, lang, layouts[layout]["max_hanzi_in_line"], layouts[layout]["max_line_in_page"])

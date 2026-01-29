@@ -850,6 +850,23 @@ def filter_homage(data):
             raise Exception(type(obj))
     return new_data
 
+rares = {
+    "﨟": "臘", ## 中﨟 中臘 中腊
+    "𤷜": "癊", # 嚼楊枝者，有如是五事之功德：眼明，口中不臭，味覺處清淨，不覆痰，痰𤷜不覆食，食有味。
+    "𧂐": "積", # 然後置於有油之金槨，再蓋外重之金槨，再堆上諸香𧂐，火葬轉輪王之遺體，而於大四衢道，建造轉輪王塔。
+    "𣳠": "[氵母]", # 奉安沙婆羅伽𣳠大國之羅普奢伽瑪
+    "𨂰": "[𧾷契]", #
+    "𠢕": "敖", # 婆斯𠢕
+    #"戟": "㦸", # 刺戟
+    "䭾": "馱", # 犍䭾羅國
+    "㮈": "柰", # 初轉法輪之波羅㮈仙人墮處
+    "䁆": "醃", #简体为腌? 肢痛关眼睛有什么事？# 爾時，具壽畢鄰陀婆蹉肢痛。「諸比丘！許用發汗法。」不癒。「諸比丘！許用䁆法。」不癒。
+}
+
+def trans_rare_hanzi(s: str):
+    new_s = ""
+    for x in s:
+
 
 def load_book_by_module(m: types.ModuleType):
     xmls = hyncdzj.p5a.get_xmls_by_serial(m.info.serial)

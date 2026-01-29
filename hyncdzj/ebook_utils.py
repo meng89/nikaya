@@ -15,6 +15,18 @@ _table = [
     ("』", "’"),
 ]
 
+MAP = {
+    "缠𦈐": "缠缚",
+    "𪎊": "麨",
+    "𨱎": "鍮",
+
+}
+def _sc_convert(s):
+    for k, v in MAP.items():
+        s = s.replace(k, v)
+    return s
+
+
 class Lang:
     def c(self, s):
         return s
@@ -63,7 +75,9 @@ class SC(Lang):
 
     def c(self, s):
         if s:
-            return self._converter.convert(s)
+            x = self._converter.convert(s)
+            x = _sc_convert(x)
+            return x
         else:
             return s
 
