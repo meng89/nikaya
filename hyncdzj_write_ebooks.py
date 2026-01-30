@@ -102,7 +102,7 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, layouts=N
         print("books:", [m.__name__.split(".")[-1] for m in book_modules.all_modules])
         print("layouts:", list(all_layouts))
         print()
-        print("命令行举例，只制作《相应部》和《中部》的简体版，不要 EPUB，且包含所有以 letter 开头布局的 PDF：")
+        print("命令行举例，只制作《相应部》和《中部》的简体版，不要 EPUB，且包含所有页面布局为 letter 开头的 PDF：")
         print("./hyncdzj_write_ebooks.py books=sn,mn langs=sc types=pdf layouts=letter")
         print()
         exit()
@@ -140,9 +140,14 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, layouts=N
         print(" ✅")
         time.sleep(0.1)
 
-        # hyncdzj.base.print_tree(data)
-
         for lang in my_langs:
+
+            if debug and isinstance(lang, hyncdzj.ebook_utils.SC):
+                _data = hyncdzj.trans_data(data, lang)
+                _noindex_data = hyncdzj.trans_noindex_data(_data)
+                sc_data_path = os.path.join(temp_td.name, "sc_data", m.info.name)
+                hyncdzj.base.write_to_disk(sc_data_path, _noindex_data)
+
             zh_name = lang.c("元亨寺_漢譯南傳大藏經")
             if "pdf" in my_types:
                 for layout in my_layouts:

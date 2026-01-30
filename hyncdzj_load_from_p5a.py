@@ -866,6 +866,7 @@ rares = {
 def trans_rare_hanzi(s: str):
     new_s = ""
     for x in s:
+        pass
 
 
 def load_book_by_module(m: types.ModuleType):

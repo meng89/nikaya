@@ -276,7 +276,7 @@ def write_to_disk(path, data: list):
         sub_path = os.path.join(path, file_name)
         if isinstance(obj, list):
             write_to_disk(sub_path, obj)
-        elif isinstance(obj, xl.Element):
+        elif isinstance(obj, (xl.Xml, xl.Element)):
             add_space_before_note(obj)
             s = obj.to_str(do_pretty=True, try_self_closing=True, dont_do_tags=dont_do_tags)
             with open(sub_path + ".xml", "w") as f:
@@ -288,6 +288,7 @@ def write_to_disk(path, data: list):
 def load_from_disk(path) -> list:
     data = []
     entries = os.listdir(path)
+    entries.sort()
     for entry in entries:
         entry_path = os.path.join(path, entry)
 
@@ -301,7 +302,6 @@ def load_from_disk(path) -> list:
             raise Exception("Unknow File: {}".format(entry_path))
         data.append((fullnamegroup, v))
 
-    data.sort()
     return data
 
 

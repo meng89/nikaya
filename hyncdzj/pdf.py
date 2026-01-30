@@ -176,7 +176,7 @@ def write_tree(f, module, namegroups, data: list, lang, max_hanzi_in_line, max_l
         cur_namegroups = namegroups + [namegroup]
         depth = len(cur_namegroups)
 
-        _, _, _, mark_name, title_range, title_name = epub.make_mark_and_heading(module, cur_namegroups, obj, 1)
+        _, _, _, mark_name, title_range, title_name = epub.make_mark_and_heading(module, cur_namegroups, obj, 1, lang)
 
         if title_range is not None:
             sc_key = title_range

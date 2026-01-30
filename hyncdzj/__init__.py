@@ -3,13 +3,24 @@ import xl
 
 def trans_data(data, lang):
     new_data = []
-    for (f_index, start, end, name), obj in data:
-        new_namegroup = (lang.c(f_index), lang.c(start), lang.c(end), lang.c(name))
+    for (file_index, start, end, name), obj in data:
+        new_namegroup = (file_index, start, end, lang.c(name))
         if isinstance(obj, xl.Xml):
             new_obj = trans_xml(obj, lang)
         else:
-            new_obj = trans_data(obj, lang)
+            new_obj= trans_data(obj, lang)
         new_data.append((new_namegroup, new_obj))
+    return new_data
+
+
+def trans_noindex_data(data):
+    new_data = []
+    for (file_index, start, end, name), obj in data:
+        namegroup = (start, end, name)
+        if isinstance(obj, xl.Xml):
+            new_data.append((namegroup, obj))
+        else:
+            new_data.append((namegroup, trans_noindex_data(obj)))
     return new_data
 
 
