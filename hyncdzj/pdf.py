@@ -18,7 +18,18 @@ MAIN = "main.tex"
 SUTTAS = "suttas.tex"
 
 layouts = {
-    "A4": {
+    "A4_song": {
+        "cover_size": (2480, 3508),
+        "max_hanzi_in_line": 40,
+        "max_line_in_page": 43,
+    },
+    "A4_kai": {
+        "cover_size": (2480, 3508),
+        "max_hanzi_in_line": 40,
+        "max_line_in_page": 43,
+    },
+
+    "A4_hei": {
         "cover_size": (2480, 3508),
         "max_hanzi_in_line": 40,
         "max_line_in_page": 43,
