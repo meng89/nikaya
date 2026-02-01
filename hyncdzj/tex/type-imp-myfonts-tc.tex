@@ -1,23 +1,15 @@
 \enableregime[utf]
 
-
-\definefontfeature[vf-regular][default][axis={weight=400}]
-\definefontfeature[vf-bold]   [default][axis={weight=700}]
-\definefontfeature[vf-heavy]  [default][axis={weight=900}]
-
-
-
 \starttypescript [serif] [hanfont]
-\definefontfeature[my-thin-style][default][axis={weight:900}]
 
   \definefontsynonym[en_serif][file:NotoSerif-Regular.ttf]
   \definefontsynonym[en_serif_b][file:NotoSerif-Bold.ttf]
   \definefontsynonym[en_serif_i][file:NotoSerif-Italic.ttf]
   \definefontsynonym[en_serif_bi][file:NotoSerif-BoldItalic.ttf]
 
-  \definefontfallback[serif_fb][file:SourceHanSerifTC-VF.otf][0x00400-0x00eff, 0x01000-0x2FA1F][weight=bold]
+  \definefontfallback[serif_fb][file:SourceHanSerifTC-Regular.otf][0x00400-0x00eff, 0x01000-0x2FA1F]
   \definefontfallback[serif_fb][file:NotoSerifTibetan-Light.ttf][0x00f00-0x00fff]
-  \definefontfallback[serif_b_fb][file:SourceHanSerifTC-VF.otf][0x00400-0x2FA1F]
+  \definefontfallback[serif_b_fb][file:SourceHanSerifTC-Bold.otf][0x00400-0x2FA1F]
 
   \definefontsynonym[Serif][en_serif][fallbacks=serif_fb]
   \definefontsynonym[SerifBold][en_serif_b][fallbacks=serif_b_fb]
@@ -30,10 +22,10 @@
 
 \starttypescript [sans] [hanfont]
 
-  \definefontsynonym[en_sans][file:SourceSans3-Regular.otf]
-  \definefontsynonym[en_sans_b][file:SourceSans3-Bold.otf]
-  \definefontsynonym[en_sans_i][file:SourceSans3-It.otf]
-  \definefontsynonym[en_sans_bi][file:SourceSans3-BoldIt.otf]
+  \definefontsynonym[en_sans][file:NotoSans-Regular.ttf]
+  \definefontsynonym[en_sans_b][file:NotoSans-Bold.ttf]
+  \definefontsynonym[en_sans_i][file:NotoSans-Italic.ttf]
+  \definefontsynonym[en_sans_bi][file:NotoSans-BoldItalic.ttf]
 
   % 汉字
   \definefontfallback[sans_fb][file:SourceHanSansTC-Regular.otf][0x00400-0x00eff, 0x01000-0x2FA1F]
@@ -52,12 +44,12 @@
 
 \starttypescript [calligraphy] [hanfont]
 
-  \definefontsynonym[tckai][file:TW-Kai-98_1.ttf]
-  % 﨟(U+0FA1F)
-  \definefontfallback[fb][file:FZKTK.ttf][0x0FA1F]
-  % 𤷜(U+24DDC) 𧂐(U+27090) 𣳠(U+23CE0) 𨂰(U+280B0) 𠢕(U+20895)
-  \definefontfallback[fb][file:TW-Kai-Ext-B-98_1.ttf][0x24DDC,0x27090,0x23CE0,0x280B0,0x20895][force=no]
-  \definefontsynonym[Calligraphy][tckai][fallbacks=fb]
+  \definefontsynonym[en_serif][file:NotoSerif-Regular.ttf]
+
+  \definefontfallback[calligraphy_fb][file:TW-Kai-98_1.ttf][0x00400-0x00eff, 0x01000-0x2FA1F]
+  \definefontfallback[calligraphy_fb][file:NotoSerifTibetan-Light.ttf][0x00f00-0x00fff]
+
+  \definefontsynonym[Calligraphy][en_serif][fallbacks=calligraphy_fb]
 
 \stoptypescript
 

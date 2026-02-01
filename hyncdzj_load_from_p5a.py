@@ -396,8 +396,8 @@ g_map = {
     "#CB32759": "暹",
     "#CB32762": "[波/牛]", # note 里
     "#CB32765": "[木*閂]",
-    "#CB17697": "𫺭", # 忄怠
-    "#CB32766": "𭼈", # 疒白
+    "#CB17697": "怠", # 忄怠
+    "#CB32766": "[疒+白]",# "𭼈", # 疒白
     "#CB07799": "凞",
     "#CB02722": "屣", #𭕫：尸徒， 同【屣】
     "#CB00584": "颰", #CBETA: [颱-台+犮]
@@ -850,23 +850,51 @@ def filter_homage(data):
             raise Exception(type(obj))
     return new_data
 
+
 rares = {
     "﨟": "臘", ## 中﨟 中臘 中腊
     "𤷜": "癊", # 嚼楊枝者，有如是五事之功德：眼明，口中不臭，味覺處清淨，不覆痰，痰𤷜不覆食，食有味。
     "𧂐": "積", # 然後置於有油之金槨，再蓋外重之金槨，再堆上諸香𧂐，火葬轉輪王之遺體，而於大四衢道，建造轉輪王塔。
     "𣳠": "[氵母]", # 奉安沙婆羅伽𣳠大國之羅普奢伽瑪
-    "𨂰": "[𧾷契]", #
+    "𨂰": "[足契]", #
     "𠢕": "敖", # 婆斯𠢕
     #"戟": "㦸", # 刺戟
     "䭾": "馱", # 犍䭾羅國
     "㮈": "柰", # 初轉法輪之波羅㮈仙人墮處
-    "䁆": "醃", #简体为腌? 肢痛关眼睛有什么事？# 爾時，具壽畢鄰陀婆蹉肢痛。「諸比丘！許用發汗法。」不癒。「諸比丘！許用䁆法。」不癒。
+#    "䁆": "醃", # 简体为腌? 肢痛关眼睛有什么事？# 爾時，具壽畢鄰陀婆蹉肢痛。「諸比丘！許用發汗法。」不癒。「諸比丘！許用䁆法。」不癒。
+    "𫺭": "怠", # 彼依彼法於慧而為簡擇、極簡擇、遍尋思，且為發勤精進、無𫺭，是言精進覺支。
+    "𠻬": "嗏", # 中阿含二〇一、𠻬帝經（大正一、七六七a）。
 }
 
-def trans_rare_hanzi(s: str):
-    new_s = ""
-    for x in s:
-        pass
+def convert(s):
+    for k, v in rares.items():
+        if isinstance(s, str):
+            s = s.replace(k, v)
+    return s
+
+def trans_rares(data):
+    new_data = []
+    for (start, end, name), obj in data:
+        new_namegroup = (start, end, convert(name))
+        if isinstance(obj, xl.Element):
+            new_obj = trans_e(obj)
+        else:
+            new_obj= trans_rares(obj)
+        new_data.append((new_namegroup, new_obj))
+    return new_data
+
+def trans_e(e: xl.Element):
+    new_e = xl.Element(e.tag)
+    for k, v in e.attrs.items():
+        new_e.attrs[k] = convert(v)
+
+    for sub in e.kids:
+        if isinstance(sub, str):
+            new_e.kids.append(convert(sub))
+        if isinstance(sub, xl.Element):
+            new_e.kids.append(trans_e(sub))
+    return new_e
+
 
 
 def load_book_by_module(m: types.ModuleType):
@@ -924,5 +952,7 @@ def load_book_by_module(m: types.ModuleType):
     data = raw_string_to_p(data)
 
     data = filter_homage(data)
+
+    data = trans_rares(data)
 
     return name, data

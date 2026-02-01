@@ -2,18 +2,19 @@
 
 \starttypescript [serif] [hanfont]
 
-  \definefontsynonym[enserif][file:NotoSerif-Light.ttf]
-  \definefontsynonym[enserifbd][file:NotoSerif-SemiBold.ttf]
-  \definefontsynonym[enserifit][file:NotoSerif-LightItalic.ttf]
-  \definefontsynonym[enserifbi][file:NotoSerif-SemiBoldItalic.ttf]
+  \definefontsynonym[en_serif][file:NotoSerif-Regular.ttf]
+  \definefontsynonym[en_serif_b][file:NotoSerif-Bold.ttf]
+  \definefontsynonym[en_serif_i][file:NotoSerif-Italic.ttf]
+  \definefontsynonym[en_serif_bi][file:NotoSerif-BoldItalic.ttf]
 
-  \definefontfallback[nsecjkl][file:NotoSerifCJKsc-Light.otf][0x00400-0x2FA1F]
-  \definefontfallback[nsecjkb][file:NotoSerifCJKsc-Medium.otf][0x00400-0x2FA1F]
+  \definefontfallback[serif_fb][file:SourceHanSerifSC-Regular.otf][0x00400-0x00eff, 0x01000-0x2FA1F]
+  \definefontfallback[serif_fb][file:NotoSerifTibetan-Light.ttf][0x00f00-0x00fff]
+  \definefontfallback[serif_b_fb][file:SourceHanSerifSC-Bold.otf][0x00400-0x2FA1F]
 
-  \definefontsynonym[Serif][enserif][fallbacks=nsecjkl]
-  \definefontsynonym[SerifBold][enserifbd][fallbacks=nsecjkb]
-  \definefontsynonym[SerifItalic][enserifit][fallbacks=nsecjkl]
-  \definefontsynonym[SerifBoldItalic][enserifbi][fallbacks=nsecjkb]
+  \definefontsynonym[Serif][en_serif][fallbacks=serif_fb]
+  \definefontsynonym[SerifBold][en_serif_b][fallbacks=serif_b_fb]
+  \definefontsynonym[SerifItalic][en_serif_i][fallbacks=serif_fb]
+  \definefontsynonym[SerifBoldItalic][en_serif_bi][fallbacks=serif_b_fb]
 
 \stoptypescript
 
@@ -21,10 +22,10 @@
 
 \starttypescript [sans] [hanfont]
 
-  \definefontsynonym[en_sans][file:SourceSans3-Regular.otf]
-  \definefontsynonym[en_sans_b][file:SourceSans3-Bold.otf]
-  \definefontsynonym[en_sans_i][file:SourceSans3-It.otf]
-  \definefontsynonym[en_sans_bi][file:SourceSans3-BoldIt.otf]
+  \definefontsynonym[en_sans][file:NotoSans-Regular.ttf]
+  \definefontsynonym[en_sans_b][file:NotoSans-Bold.ttf]
+  \definefontsynonym[en_sans_i][file:NotoSans-Italic.ttf]
+  \definefontsynonym[en_sans_bi][file:NotoSans-BoldItalic.ttf]
 
   % 汉字
   \definefontfallback[sans_fb][file:SourceHanSansSC-Regular.otf][0x00400-0x00eff, 0x01000-0x2FA1F]
@@ -43,21 +44,23 @@
 
 \starttypescript [calligraphy] [hanfont]
 
-  \definefontsynonym[sckai][file:FZKTK.ttf]
+  \definefontsynonym[en_serif][file:NotoSerif-Regular.ttf]
+
+  \definefontfallback[calligraphy_fb][file:FZKTK.ttf][0x00400-0x00eff, 0x01000-0x2FA1F]
+  \definefontfallback[calligraphy_fb][file:NotoSerifTibetan-Light.ttf][0x00f00-0x00fff]
+
   %\definefontfallback[sckaifb][file:FZKTJW.ttf]%[0x04E00-0x09FFF][force=no,check=yes]
   % 㦸 (U+039B8) 䭾 (U+04B7E)
-  \definefontfallback[sckaifb][file:FZKTB.ttf][0x039B8,0x04B7E][force=no]
+  \definefontfallback[calligraphy_fb][file:FZKTB.ttf][0x039B8,0x04B7E][force=no]
   % ㊟ (U+0329F) 㮈 (U+03B88) 䁆 (U+04046) 㝹 (U+03779) 䑛 (U+0445B) 䉤 (U+04264) 㑩 (U+03469) 㚲 (U+036B2)
   % ṭ (U+01E6D) ṁ (U+01E41) ñ (U+000F1) ś (U+0015B) ṇ (U+01E47)
-  \definefontfallback[sckaifb][file:TW-Kai-98_1.ttf][0x0329F,0x03B88,0x04046,0x03779,0x0445B,0x04264,0x03469,0x036B2,0x01E6D,0x01E41,0x000F1,0x0015B,0x01E47][force=no]
+  \definefontfallback[calligraphy_fb][file:TW-Kai-98_1.ttf][0x0329F,0x03B88,0x04046,0x03779,0x0445B,0x04264,0x03469,0x036B2][force=no]
   % 𪎊(U+2A38A) 𨱎(U+28C4E) 𫄨(U+2B128) 𤷜(U+24DDC) 𦈐(U+26210) 𧂐(U+27090) 𪡀(U+2A840) 𨅬(U+2816C) 𫘣(U+2B623) 𨂰(U+280B0) 𠢕(U+20895) 𫟃(U+2B7C3) 𫍢(U+2B362) 𪸩(U+2AE29) 𣳠(U+23CE0) 𫓴(U+2B4F4)
-  \definefontfallback[sckaifb][file:TW-Kai-Ext-B-98_1.ttf][0x2A38A,0x28C4E,0x2B128,0x24DDC,0x26210,0x27090,0x2A840,0x2816C,0x2B623,0x280B0,0x20895,0x2B7C3,0x2B362,0x2AE29,0x23CE0,0x2B4F4][force=no]
+  \definefontfallback[calligraphy_fb][file:TW-Kai-Ext-B-98_1.ttf][0x2A38A,0x28C4E,0x2B128,0x24DDC,0x26210,0x27090,0x2A840,0x2816C,0x2B623,0x280B0,0x20895,0x2B7C3,0x2B362,0x2AE29,0x23CE0,0x2B4F4][force=no]
   % 𬯎 (U+2CBCE) 𫭟 (U+2BB5F)  𫄧 (U+2B127) 𬬱 (U+2CB31)
-  \definefontfallback[sckaifb][file:NotoSansCJKsc-Medium.otf][0x2CBCE,0x2BB5F,0x2B127,0x2CB31][force=no]
+  \definefontfallback[calligraphy_fb][file:SourceHanSerifSC-Regular.otf][0x2CBCE,0x2BB5F,0x2B127,0x2CB31][force=no]
 
-  %𫺭 (U+2BEAD) 𭼈 (U+2DF08)
-
-  \definefontsynonym[Calligraphy][sckai][fallbacks=sckaifb]
+  \definefontsynonym[Calligraphy][en_serif][fallbacks=calligraphy_fb]
 
 \stoptypescript
 

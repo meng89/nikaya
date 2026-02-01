@@ -258,7 +258,7 @@ def findfile(font_dirs, name):
             if name in files:
                 full_path = os.path.join(font_dir, relpath, name)
                 return os.path.normpath(os.path.abspath(full_path))
-    raise FileNotFoundError
+    raise FileNotFoundError(name)
 
 def ntrelpath(path1, path2):
     import ntpath
@@ -305,6 +305,29 @@ def _write_zzsm(work_dir, lang):
     for line in epub.ZZSM:
         f.write(xml_to_tex(line, None, ebook_utils.Lang()))
         f.write("\n\\blank\n")
+    if config.DEBUG:
+        f.write("\\page[yes]\n")
+        lines = [
+            "Pali: Sammā-diṭṭhi, Sammā-saṅkappa, Sammā-vācā, Sammā-kammanta, Sammā-ājīva, Sammā-vāyāma, Sammā-sati, Sammā-samādhi",
+            "EN: right view, right resolve, right speech, right conduct, right livelihood, right effort, right mindfulness, and right samadhi",
+            "SC: 正见、正思维、正语、正业、正命、正精进、正念、正定",
+            "TC: 正見、正思維、正語、正業、正命、正精進、正念、正定",
+        ]
+        for font in "rm", "ss", "cg":
+            for style in "", "it", "bf":
+                f.write("{")
+
+                f.write("\\" + font + " ")
+                if style:
+                    f.write("\\" + style + " ")
+                f.write(font + " " + style + " :\\par\n")
+
+                for line in lines:
+                    f.write(line)
+                    f.write("\\par\n")
+                f.write("}")
+                f.write("\n\\blank\n")
+
     f.write("\\page\n")
     f.write(stopsec(1))
 

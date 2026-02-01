@@ -143,7 +143,7 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, layouts=N
         for lang in my_langs:
 
             if debug and isinstance(lang, hyncdzj.ebook_utils.SC):
-                _data = hyncdzj.trans_data(data, lang)
+                _data = hyncdzj.trans_data(data, lang.c)
                 _noindex_data = hyncdzj.trans_noindex_data(_data)
                 sc_data_path = os.path.join(temp_td.name, "sc_data", m.info.name)
                 hyncdzj.base.write_to_disk(sc_data_path, _noindex_data)

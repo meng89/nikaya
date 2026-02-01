@@ -1,16 +1,36 @@
 import xl
 
 
-def trans_data(data, lang):
+def trans_data(data, f):
     new_data = []
     for (file_index, start, end, name), obj in data:
-        new_namegroup = (file_index, start, end, lang.c(name))
+        new_namegroup = (file_index, start, end, f(name))
         if isinstance(obj, xl.Xml):
-            new_obj = trans_xml(obj, lang)
+            new_obj = trans_xml(obj, f)
         else:
-            new_obj= trans_data(obj, lang)
+            new_obj= trans_data(obj, f)
         new_data.append((new_namegroup, new_obj))
     return new_data
+
+
+def trans_xml(xml, f):
+    root = xml.root
+    new_root = trans_e(root, f)
+    new_xml = xl.Xml(new_root)
+    return new_xml
+
+
+def trans_e(e: xl.Element, f):
+    new_e = xl.Element(e.tag)
+    for k, v in e.attrs.items():
+        new_e.attrs[k] = f(v)
+
+    for sub in e.kids:
+        if isinstance(sub, str):
+            new_e.kids.append(f(sub))
+        if isinstance(sub, xl.Element):
+            new_e.kids.append(trans_e(sub, f))
+    return new_e
 
 
 def trans_noindex_data(data):
@@ -22,23 +42,3 @@ def trans_noindex_data(data):
         else:
             new_data.append((namegroup, trans_noindex_data(obj)))
     return new_data
-
-
-def trans_xml(xml, lang):
-    root = xml.root
-    new_root = trans_e(root, lang)
-    new_xml = xl.Xml(new_root)
-    return new_xml
-
-
-def trans_e(e: xl.Element, lang):
-    new_e = xl.Element(e.tag)
-    for k, v in e.attrs.items():
-        new_e.attrs[k] = lang.c(v)
-
-    for sub in e.kids:
-        if isinstance(sub, str):
-            new_e.kids.append(lang.c(sub))
-        if isinstance(sub, xl.Element):
-            new_e.kids.append(trans_e(sub, lang))
-    return new_e
