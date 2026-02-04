@@ -55,7 +55,7 @@ def try_run_job(do_print=True):
         jobs.pop(0)
 
 
-def main(_help=False, debug=False, types=None, langs=None, books=None, layouts=None):
+def main(_help=False, debug=False, types=None, langs=None, books=None, layouts=None, fonts=None):
     config.DEBUG = debug
 
     all_types = ["pdf", "epub"]
@@ -95,12 +95,21 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, layouts=N
     else:
         my_layouts = all_layouts
 
+    all_fonts = hyncdzj.pdf.fonts.keys()
+    if fonts:
+        my_fonts = []
+        for _l in fonts.split(","):
+            if _l in all_fonts:
+                my_fonts.append(_l)
+    else:
+        my_fonts = all_fonts
+
     if _help:
-        print("debug")
         print("types:", all_types)
         print("langs:", [lang.en for lang in all_langs])
         print("books:", [m.__name__.split(".")[-1] for m in book_modules.all_modules])
         print("layouts:", list(all_layouts))
+        print("fonts:", list(all_fonts))
         print()
         print("命令行举例，只制作《相应部》和《中部》的简体版，不要 EPUB，且包含所有页面布局为 letter 开头的 PDF：")
         print("./hyncdzj_write_ebooks.py books=sn,mn langs=sc types=pdf layouts=letter")
@@ -151,23 +160,25 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, layouts=N
             zh_name = lang.c("元亨寺_漢譯南傳大藏經")
             if "pdf" in my_types:
                 for layout in my_layouts:
-                    pdf_dir_name = zh_name + "_" + lang.zh + "_PDF"
-                    layout_dir_name = pdf_dir_name + "_" + layout
+                    for font in my_fonts:
+                        pdf_dir_name = zh_name + "_" + lang.zh + "_PDF"
+                        layout_dir_name = pdf_dir_name + "_" + layout
+                        font_dir_name = layout_dir_name + "_" + font
 
-                    file_name = "{}".format(lang.c(m.info.name))
-                    if tag:
-                        file_name += "_{}".format(tag)
-                    file_name += ".pdf"
+                        file_name = "{}".format(lang.c(m.info.name))
+                        if tag:
+                            file_name += "_{}".format(tag)
+                        file_name += ".pdf"
 
-                    dirs.add(layout_dir_name)
+                        dirs.add(font_dir_name)
 
-                    full_file_name = os.path.join(temp_td.name, layout_dir_name, file_name)
+                        full_file_name = os.path.join(temp_td.name, font_dir_name, file_name)
 
-                    os.makedirs(os.path.dirname(full_file_name), exist_ok=True)
-                    job = ("{}/{}/{}".format(lang.zh, layout, file_name), hyncdzj.pdf.build_pdf, (full_file_name, data, m, lang, layout, tag, True))
-                    jobs.append(job)
-                    total += 1
-                    try_run_job()
+                        os.makedirs(os.path.dirname(full_file_name), exist_ok=True)
+                        job = ("{}/{}_{}/{}".format(lang.zh, layout, font, file_name), hyncdzj.pdf.build_pdf, (full_file_name, data, m, lang, layout, font, tag, True))
+                        jobs.append(job)
+                        total += 1
+                        try_run_job()
 
             if "epub" in my_types:
                 epub_dir_name = zh_name+ "_" + lang.zh + "_EPUB"
@@ -198,7 +209,7 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, layouts=N
             shutil.make_archive(output_dirname, 'zip', output_dirname)
 
     print()
-    print("用时: {:.2f}s".format(end_time - start_time))
+    print("用时:", format_seconds(end_time - start_time))
 
     print()
     print("电子书临时目录在：", temp_td.name)
@@ -219,6 +230,21 @@ def read_args():
                 x = "_help"
             kwargs[x] = True
     return kwargs
+
+
+def format_seconds(seconds):
+    m, s = divmod(int(seconds), 60)
+    h, m = divmod(m, 60)
+    d, h = divmod(h, 24)
+
+    parts = []
+    if d > 0: parts.append(f"{d}d")
+    if h > 0: parts.append(f"{h}h")
+    if m > 0: parts.append(f"{m}m")
+    if s > 0 or not parts: parts.append(f"{s}s")
+
+    return " ".join(parts)
+
 
 if __name__ == '__main__':
     _kwargs = read_args()

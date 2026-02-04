@@ -18,18 +18,7 @@ MAIN = "main.tex"
 SUTTAS = "suttas.tex"
 
 layouts = {
-    "A4_song": {
-        "cover_size": (2480, 3508),
-        "max_hanzi_in_line": 40,
-        "max_line_in_page": 43,
-    },
-    "A4_kai": {
-        "cover_size": (2480, 3508),
-        "max_hanzi_in_line": 40,
-        "max_line_in_page": 43,
-    },
-
-    "A4_hei": {
+    "A4": {
         "cover_size": (2480, 3508),
         "max_hanzi_in_line": 40,
         "max_line_in_page": 43,
@@ -112,18 +101,25 @@ layouts = {
 
 }
 
-def build_pdf(full_path, data, module, lang, layout, tag, exit_after_done=False):
+fonts = {
+    "song": "rm",
+    "kai": "cg",
+    "hei": "ss"
+}
+
+def build_pdf(full_path, data, module, lang, layout, font, tag, exit_after_done=False):
     work_dir = full_path + "_work"
     out_dir = full_path + "_out"
-    os.makedirs(work_dir, exist_ok=True)
+    shutil.copytree(config.HYNCDZJ_TEX_DIR, work_dir)
+
     os.makedirs(out_dir, exist_ok=True)
 
     w, h = layouts[layout]["cover_size"]
     cover_image = ebook_utils.make_cover_image(module, lang, tag, w, h)
 
-    write_main_tex(work_dir, module, lang, layout, cover_image)
+    write_main_tex(work_dir, module, lang, layout, font, cover_image)
 
-    shutil.copy(os.path.join(config.HYNCDZJ_TEX_DIR, "{}.tex".format(layout)), work_dir)
+    #shutil.copy(os.path.join(config.HYNCDZJ_TEX_DIR, "{}.tex".format(layout)), work_dir)
 
     f = open(os.path.join(work_dir, SUTTAS), "w")
     write_tree(f, module, [], data, lang, layouts[layout]["max_hanzi_in_line"], layouts[layout]["max_line_in_page"])
@@ -238,7 +234,10 @@ def write_doc(f, doc, lang):
 
 def write_fontstex(work_dir, lang):
     type_name = "type-imp-myfonts-" + lang.en + ".tex"
-    fonttex = open(os.path.join(config.HYNCDZJ_TEX_DIR, type_name), "r", encoding="utf-8").read()
+
+    f = open(os.path.join(work_dir, type_name), "r+", encoding="utf-8")
+    fonttex = f.read()
+
     replace_map = {}
     for fontname in re.findall("file:(.*(?:ttf|otf|ttc))", fonttex):
         realfontpath = findfile(config.FONTS_DIRS, os.path.basename(fontname))
@@ -249,8 +248,10 @@ def write_fontstex(work_dir, lang):
     for fontname, realfontpath in replace_map.items():
         fonttex = fonttex.replace(fontname, realfontpath.replace("\\", "/"))
 
-    with open(os.path.join(work_dir, type_name), "w", encoding="utf-8") as new_fonttex_file:
-        new_fonttex_file.write(fonttex)
+    f.seek(0)
+    f.truncate()
+    f.write(fonttex)
+    f.close()
 
 def findfile(font_dirs, name):
     for font_dir in font_dirs:
@@ -269,32 +270,38 @@ def ntrelpath(path1, path2):
     return path
 
 
-def write_main_tex(work_dir, module, lang, layout, cover_image):
-    main_t = open(os.path.join(config.HYNCDZJ_TEX_DIR, MAIN), "r", encoding='utf-8').read()
+def write_main_tex(work_dir, module, lang, layout, font, cover_image):
+    f = open(os.path.join(work_dir, MAIN), "r+", encoding='utf-8')
+    main_t = f.read()
+
     date = datetime.today().strftime('%Y-%m-%d')
     main = string.Template(main_t).substitute(
         font_type="type-imp-myfonts-sc" if isinstance(lang, ebook_utils.SC) else "type-imp-myfonts-tc",
         layout=layout+".tex",
+        font=fonts[font],
         title=lang.c(module.info.name),
         author="、".join(module.info.translators) + lang.c("譯"),
         keyword=lang.c("上座部佛教、南傳佛教、" + module.info.name),
         date=date,
         cover_image=cover_image,
     )
-    f = open(os.path.join(work_dir, MAIN), "w", encoding="utf-8")
+    f.seek(0)
+    f.truncate()
     f.write(main)
+    f.close()
 
 
 def _write_homage(work_dir, lang):
-    f = open(os.path.join(config.HYNCDZJ_TEX_DIR, "homage.tex"), "r", encoding="utf-8")
+    f = open(os.path.join(work_dir, "homage.tex"), "r+", encoding="utf-8")
     homage_t = f.read()
+
     homeage = string.Template(homage_t).substitute(
         line1 = lang.c("歸命彼世尊"),
         line2 = lang.c("應供等覺者")
     )
-    f.close()
 
-    f = open(os.path.join(work_dir, "homage.tex"), "w", encoding="utf-8")
+    f.seek(0)
+    f.truncate()
     f.write(homeage)
     f.close()
 
@@ -355,7 +362,7 @@ def startsec(lang, depth, title, bookmark, toctext, sc_key=None, abo_key=None):
     s += "\\setuphead[" + sec + "][before={\\testpage[4]\\blank[1*halfline]"
 
     if sc_key:
-        s += "\\goto{" + font_size + sc_key + "}[url(https://suttacentral.net/"+ sc_key + ")]\\kern 0.5em"
+        s += "\\goto{" + font_size + "\\ss \\bf " + sc_key + "}[url(https://suttacentral.net/"+ sc_key + ")]\\kern 0.5em"
     else:
         s += "\\strut" # 若不添加，上面的居中命令就无效了，我也不知道为什么
 
@@ -374,7 +381,6 @@ def startsec(lang, depth, title, bookmark, toctext, sc_key=None, abo_key=None):
     s += "\\stopalignment\n"
 
     s += "\\blank[1*halfline]\n\n"
-
 
     return s
 

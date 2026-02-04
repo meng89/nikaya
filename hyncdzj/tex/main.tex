@@ -2,9 +2,13 @@
 \usetypescript[hanfonts]
 
 
-\input{$layout}
+\input{layouts/$layout}
 
+\setupbodyfont[hanfonts,$font]
+
+% 行距
 \setupinterlinespace[line=3.2ex]
+
 
 \enableregime[utf]
 \mainlanguage[cn]
@@ -94,14 +98,16 @@
 ]
 
 
+% 脚注行距
+\defineinterlinespace[footnote][line=1.5ex]
 % rulecolor：正文与脚注之间的隔离线条颜色。textcolor：正文注解引号的颜色
-\setupfootnotes[textcolor=blue]
+\setupfootnotes[interlinespace=footnote]
 
 \setupnote[footnote][before=,]
 % headcolor：脚注引号的颜色。color：脚注文本的颜色
-\setupnotation[footnote][way=bypage,numbercommand={\tfx},distance=0.1em,headcolor=blue] % note text is blue
+\setupnotation[footnote][way=bypage,numbercommand={\tfx},headcolor=blue]
 
-\def\zhfootnote#1{\footnote{\setscript[hanzi]\rm \tfx #1}}
+\def\zhfootnote#1{\footnote{\setscript[hanzi]\ss \tfx #1}}
 
 
 % PDF 属性信息
@@ -141,10 +147,10 @@
 \setuphead[subject][style=\tfb\bf\ss]
 \setuphead[subsubject][style=\tfa\bf\ss]
 \setuphead[subsubsubject][style=\tf\bf\ss]
-\setuphead[subsubsubsubject][ style=\tfx\bf\ss]
+\setuphead[subsubsubsubject][style=\tfx\bf\ss]
 \setuphead[subsubsubsubsubject][style=\tfxx\bf\ss]
 \setuphead[subsubsubsubsubsubject][style=\tfxx\bf\ss]
-\setuphead[subsubsubsubsubsubsubject][ style=\tfxx\bf\ss]
+\setuphead[subsubsubsubsubsubsubject][style=\tfxx\bf\ss]
 
 \setuphead[
   notitle,
