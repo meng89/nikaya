@@ -3,6 +3,7 @@ import re
 import uuid
 import math
 import posixpath
+import string
 from urllib.parse import urlsplit
 
 import cn2an
@@ -10,12 +11,12 @@ import cn2an
 import epubpacker
 import xl
 
+import config
 from . import base
 from . import ebook_utils
 import hyncdzj.utils
 import hyncdzj.note
-from . import css
-from public_modules import tag_str
+#from public_modules import tag_str
 
 
 
@@ -36,7 +37,7 @@ def build_epub(full_path, data, module, lang, tag, exit_after_done=False):
                                        [lang.c("漢譯南傳大藏經")]))
     epub.meta.others.append(xl.Element("meta", {"refines": "#c01", "property": "collection-type"}, ["series"]))
 
-    epub.userfiles[css.css1_path] = css.css1[lang.en]
+    write_css(epub, lang)
 
     notes = hyncdzj.note.Notes()
     docs = []
@@ -69,6 +70,23 @@ def build_epub(full_path, data, module, lang, tag, exit_after_done=False):
 
     if exit_after_done:
         exit()
+
+def write_css(epub, lang):
+    css_t = open(os.path.join(config.HYNCDZJ_DIR, "style.css"), "r").read()
+
+    if isinstance(lang, ebook_utils.SC):
+        heading_font_name = "思源黑体 CN"
+
+    else:
+        heading_font_name = "思源黑體 TW"
+
+
+    css_str = string.Template(css_t).substitute(
+        body_font_name="Source Han Serif " + lang.en.upper(),
+        heading_font_name=heading_font_name
+    )
+    epub.userfiles["style.css"] = css_str
+
 
 def make_marks_href(marks):
     for mark in marks:
@@ -439,8 +457,8 @@ def xml_es_to_html(es: ES, root, notes: hyncdzj.note.Notes, doc_path, lang) -> E
                 raise Exception("Unknown element type: {}".format(repr(e.to_str())))
 
         elif isinstance(e, str):
-            new_es.extend(tag_str.str_to_es(e))
-
+            new_es.append(e)
+            #new_es.extend(tag_str.str_to_es(e))
     return new_es
 
 
@@ -556,7 +574,7 @@ def make_doc(doc_path, lang, title=None):
     if title:
         _title = head.ekid("title", kids=[title])
 
-    _make_css_link(head, relpath(css.css1_path, doc_path), "css1")
+    _make_css_link(head, relpath("style.css", doc_path), "css1")
     #_make_css_link(head, relpath("_css/user_css1.css", doc_path), "user_css1")
     #_make_css_link(head, relpath("_css/user_css2.css", doc_path), "user_css2")
     #_make_js_link(head, relpath(js.js1_path, doc_path), "js1")

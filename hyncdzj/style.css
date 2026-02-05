@@ -1,46 +1,12 @@
-import string
 
-
-from hyncdzj.ebook_utils import TC, SC
-
-
-_css1 = """
+body {
+    font-family: "$body_font_name";
+    
+}
 
 h1, h2, h3, h4, h5, h6, h7 {
-    font-family: "$heading";
-    text-align: center;
-}
-
-p .cjk {
-    font-family: "$paragraph";
-}
-
-p .lat {
-    font-family: "$paragraph";
-}
-
-/*
-.cjk {
-    font-family: "Noto Serif CJK TC";
-    font-weight: 400;
-    font-feature-settings: "kern" 0, "palt" 0, "chws" 0;
-}
-
-.lat {
-    font-family: "Noto Serif";
-    font-weight: 300;
-}
-
-.tib {
-    font-family: "Noto Serif Tibetan";
-    font-weight: 400;
-}
-*/
-
-
-h1, h2, h3, h4, h5, h6, h7, .sutta_title {
-    font-family: "Noto Sans CJK TC";
-    font-weight: 600;
+    font-family: "$heading_font_name";
+    font-weight: bold;
     color: inherit;
     text-align: center;
 }
@@ -110,22 +76,3 @@ body.homage {
 .poem_lines {
     text-align: center; /* 诗句文字本身居中 */
 }
-"""
-
-tc_template = string.Template(_css1)
-tc_string = tc_template.substitute(
-    heading = "Source Han Sans TW Medium",
-    paragraph = "AR PL UKai TW",
-)
-
-sc_string = tc_template.substitute(
-    heading = "Source Han Sans CN Medium",
-    paragraph = "AR PL UKai CN",
-)
-
-css1 = {
-    TC().en: tc_string,
-    SC().en: sc_string
-}
-
-css1_path = "_css/css1.css"
