@@ -21,7 +21,7 @@ from public_modules import tag_str
 
 def build_epub(full_path, data, module, lang, tag, exit_after_done=False):
     epub = epubpacker.Epub()
-    title = module.info.name
+    title = lang.c(module.info.name)
     epub.meta.titles = [title]
 
     # epub.meta.creators = ["莊春江({})".format(lang.c("譯"))] #todo
@@ -138,7 +138,7 @@ def write_tree(module, data, marks, docs, parent_namegroups, notes, lang, marks_
             mark, heading, _, _, _, _,= make_mark_and_heading(module, cur_namegroups, obj, 1, lang)
             marks_and_headings.append((mark, heading))
             marks.append(mark)
-            body.kids.append(heading)
+            #body.kids.append(heading)
             docs.append((doc_path, html))
 
             for m, h in marks_and_headings:
@@ -258,16 +258,16 @@ def make_mark_and_heading(module, namegroups, obj, heading_level, lang):
         a = xl.Element("a", {"href": "https://suttacentral.net/" + range_str}, [range_str])
         epub_heading.kids.append(a)
         epub_heading.kids.append("　")
-        epub_heading.kids.append(lang.c(name_str))
+        epub_heading.kids.append(name_str)
         is_serial = True
         mark_name = ranges[-1] + "." + or_kong(serial_names[-1]) + mark_range
-        epub_mark = epubpacker.Mark(lang.c(mark_name))
+        epub_mark = epubpacker.Mark(mark_name)
     else:
         range_str = None
         name_str = or_kong(names[-1])
         epub_heading.kids.append(name_str)
         mark_name = or_kong(names[-1]) + mark_range
-        epub_mark = epubpacker.Mark(lang.c(mark_name))
+        epub_mark = epubpacker.Mark(mark_name)
         is_serial = False
 
     return epub_mark, epub_heading, is_serial, mark_name, range_str, name_str
@@ -439,7 +439,7 @@ def xml_es_to_html(es: ES, root, notes: hyncdzj.note.Notes, doc_path, lang) -> E
                 raise Exception("Unknown element type: {}".format(repr(e.to_str())))
 
         elif isinstance(e, str):
-            new_es.extend(tag_str.str_to_es(lang.c(e)))
+            new_es.extend(tag_str.str_to_es(e))
 
     return new_es
 
@@ -640,7 +640,7 @@ _yunpan_link = "https://www.jianguoyun.com/p/DbBOkGwQnbmtChjWkpIGIAA"
 _my_mail = "observerchan@gmail.com"
 
 ZZSM = (
-    ["此佛经译著权归属于元亨寺及其译者。", xl.Element("a", {"href": "https://www.cbeta.org/"}, ["CBETA"],),"做了数字化工作。"],
+    ["此佛经译著权归属于元亨寺及其译者。", xl.Element("a", {"href": "https://www.cbeta.org/"}, ["CBETA"],)," 做了数字化工作。"],
     # ["在本人读经的过程中，会按照上下文填充省略的部分，以及对不懂的词句进行了解并加上注释。若您愿意帮助填充和注释，请联系我。"],
     ["下载请访问", xl.Element("a", {"href": "{}".format(_project_link)}, ["项目主页"]),
      "或", xl.Element("a", {"href": "{}".format(_yunpan_link)}, ["云盘"]),],

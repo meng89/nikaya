@@ -192,7 +192,7 @@ def write_tree(f, module, namegroups, data: list, lang, max_hanzi_in_line, max_l
             sc_key = None
             #title = title_name
 
-        f.write(startsec(lang, depth, lang.c(title_name), lang.c(mark_name), lang.c(title_name), sc_key))
+        f.write(startsec(lang, depth, title_name, mark_name, title_name, sc_key))
 
         if isinstance(obj, xl.Xml):
             write_doc(f, obj, lang)
@@ -279,9 +279,9 @@ def write_main_tex(work_dir, module, lang, layout, font, cover_image):
         font_type="type-imp-myfonts-sc" if isinstance(lang, ebook_utils.SC) else "type-imp-myfonts-tc",
         layout=layout+".tex",
         font=fonts[font],
-        title=lang.c(module.info.name),
+        title=module.info.name,
         author="、".join(module.info.translators) + lang.c("譯"),
-        keyword=lang.c("上座部佛教、南傳佛教、" + module.info.name),
+        keyword=lang.c("上座部佛教、南傳佛教、") + module.info.name,
         date=date,
         cover_image=cover_image,
     )
@@ -393,7 +393,7 @@ def xml_to_tex(es, doc, lang):
     s = ""
     for e in es:
         if isinstance(e, str):
-            _s = lang.c(e)
+            _s = e
             _s = _s.replace("{", "\\{").replace("}", "\\}").replace("[", "\\[").replace("]", "\\]").replace("#", "\\#")
             s += _s
 
@@ -408,7 +408,7 @@ def xml_to_tex(es, doc, lang):
                 n_kids = epub.get_note_by_key(doc, m_t.group(1))
                 _note = es_to_text(n_kids)
 
-                s += "\\zhfootnote{" + lang.c(_note) + "}"
+                s += "\\zhfootnote{" + _note + "}"
                 #s += "\\high{{\\tfxx \\PDFhighlight[原始注解][{{{}}}]{{{}}}}}".format(_note, text or "㊟")
                 #s += "\\high{\\tfxx \\PDFhighlight[原始注解][{" + _note + "}]{" + (text or "㊟") + "}}"
 

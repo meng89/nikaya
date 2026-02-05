@@ -151,11 +151,14 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, layouts=N
 
         for lang in my_langs:
 
-            if debug and isinstance(lang, hyncdzj.ebook_utils.SC):
-                _data = hyncdzj.trans_data(data, lang.c)
-                _noindex_data = hyncdzj.trans_noindex_data(_data)
-                sc_data_path = os.path.join(temp_td.name, "sc_data", m.info.name)
-                hyncdzj.base.write_to_disk(sc_data_path, _noindex_data)
+            if isinstance(lang, hyncdzj.ebook_utils.SC):
+                translated_data = hyncdzj.trans_data(data, lang.c)
+                if debug:
+                    _noindex_data = hyncdzj.trans_noindex_data(data)
+                    sc_data_path = os.path.join(temp_td.name, "sc_data", m.info.name)
+                    hyncdzj.base.write_to_disk(sc_data_path, _noindex_data)
+            else:
+                translated_data = data
 
             zh_name = lang.c("元亨寺_漢譯南傳大藏經")
             if "pdf" in my_types:
@@ -175,7 +178,7 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, layouts=N
                         full_file_name = os.path.join(temp_td.name, font_dir_name, file_name)
 
                         os.makedirs(os.path.dirname(full_file_name), exist_ok=True)
-                        job = ("{}/{}_{}/{}".format(lang.zh, layout, font, file_name), hyncdzj.pdf.build_pdf, (full_file_name, data, m, lang, layout, font, tag, True))
+                        job = ("{}/{}_{}/{}".format(lang.zh, layout, font, file_name), hyncdzj.pdf.build_pdf, (full_file_name, translated_data, m, lang, layout, font, tag, True))
                         jobs.append(job)
                         total += 1
                         try_run_job()
@@ -192,7 +195,7 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, layouts=N
                 full_file_name = os.path.join(temp_td.name, epub_dir_name, file_name)
 
                 os.makedirs(os.path.dirname(full_file_name), exist_ok=True)
-                jobs.append(("{}/{}".format(lang.zh, file_name), hyncdzj.epub.build_epub, (full_file_name, data, m, lang, tag, True)))
+                jobs.append(("{}/{}".format(lang.zh, file_name), hyncdzj.epub.build_epub, (full_file_name, translated_data, m, lang, tag, True)))
                 total += 1
                 try_run_job()
 
