@@ -139,30 +139,30 @@ def make_series(module):
 
 def xxx(m):
     name = m.info.name
-    if name.endswith("經"):
-        name = name[:-1]
+    #if name.endswith("經"):
+    #    name = name[:-1]
 
     if m in book_modules.jing[1] or m in book_modules.dh_modules or m in book_modules.wai[1]:
         background_color = "#4ea455"
         font_color = "#5F005A"
-        book_name_font_size = "30vw"
+        book_name_font_size = "20vh"
 
     elif m in book_modules.lv[1]:
         background_color = "orange"
         font_color = "#073c9f"
-        book_name_font_size = "30vw"
+        book_name_font_size = "20vh"
 
     elif m in book_modules.lun[1]:
         background_color = "#228fbd"
         font_color = "#5c1c01"
-        book_name_font_size = "30vw"
+        book_name_font_size = "20vh"
     else:
         raise Exception(m.info.name)
 
     if m in book_modules.dh_modules or m in book_modules.wai[1]:
         background_color = "#abc476"
         font_color = "#71356c"
-        book_name_font_size = "20vw"
+        book_name_font_size = "12.5vh"
 
 
     book_name_space_margin = "0em"

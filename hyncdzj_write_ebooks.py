@@ -161,6 +161,9 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, layouts=N
                 translated_data = data
 
             zh_name = lang.c("元亨寺_漢譯南傳大藏經")
+
+            classi = [lang.c(x) for x in book_modules.get_classification(m)]
+
             if "pdf" in my_types:
                 for layout in my_layouts:
                     for font in my_fonts:
@@ -168,14 +171,18 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, layouts=N
                         layout_dir_name = pdf_dir_name + "_" + layout
                         font_dir_name = layout_dir_name + "_" + font
 
+                        date_dir_name = font_dir_name + "_" + date
+                        package_dir = "{}_{}_PDF_{}_{}_{}".format(zh_name, lang.zh, layout, font, date)
+
                         file_name = "{}".format(lang.c(m.info.name))
                         if tag:
                             file_name += "_{}".format(tag)
                         file_name += ".pdf"
 
-                        dirs.add(font_dir_name)
+                        dirs.add(package_dir)
 
-                        full_file_name = os.path.join(temp_td.name, font_dir_name, file_name)
+
+                        full_file_name = os.path.join(temp_td.name, package_dir, *classi, file_name)
 
                         os.makedirs(os.path.dirname(full_file_name), exist_ok=True)
                         job = ("{}/{}_{}/{}".format(lang.zh, layout, font, file_name), hyncdzj.pdf.build_pdf, (full_file_name, translated_data, m, lang, layout, font, tag, True))
@@ -190,9 +197,11 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, layouts=N
                     file_name += "_{}".format(tag)
                 file_name += ".epub"
 
-                dirs.add(epub_dir_name)
+                package_dir = "{}_{}_EPUB_{}".format(zh_name, lang.zh, date)
 
-                full_file_name = os.path.join(temp_td.name, epub_dir_name, file_name)
+                dirs.add(package_dir)
+
+                full_file_name = os.path.join(temp_td.name, package_dir, *classi, file_name)
 
                 os.makedirs(os.path.dirname(full_file_name), exist_ok=True)
                 jobs.append(("{}/{}".format(lang.zh, file_name), hyncdzj.epub.build_epub, (full_file_name, translated_data, m, lang, tag, True)))

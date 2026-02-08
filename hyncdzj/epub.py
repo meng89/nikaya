@@ -75,15 +75,17 @@ def write_css(epub, lang):
     css_t = open(os.path.join(config.HYNCDZJ_DIR, "style.css"), "r").read()
 
     if isinstance(lang, ebook_utils.SC):
-        heading_font_name = "思源黑体 CN"
+        heading_font_name = """ "Microsoft YaHei", "PingFang SC", "思源黑体 CN" """
+        body_font_name = """ "Source Han Serif SC", "SimSun", "Songti SC" """
 
     else:
-        heading_font_name = "思源黑體 TW"
-
+        heading_font_name = """ "Microsoft JhengHei", "PingFang TC", "思源黑體 TW" """
+        body_font_name = """ "Source Han Serif TC", "PMingLiU", "Songti TC" """
 
     css_str = string.Template(css_t).substitute(
-        body_font_name="Source Han Serif " + lang.en.upper(),
-        heading_font_name=heading_font_name
+        heading_font_name = heading_font_name,
+        body_font_name = body_font_name,
+
     )
     epub.userfiles["style.css"] = css_str
 
@@ -153,7 +155,7 @@ def write_tree(module, data, marks, docs, parent_namegroups, notes, lang, marks_
 
         # 短经合并到一个页面
         if isinstance(obj, list) and is_leaf(namegroup, obj) and is_join_needed(obj):
-            mark, heading, _, _, _, _,= make_mark_and_heading(module, cur_namegroups, obj, 1, lang)
+            mark, heading, _, _, _, _,= make_mark_and_heading(module, cur_namegroups, obj, 1)
             marks_and_headings.append((mark, heading))
             marks.append(mark)
             #body.kids.append(heading)
@@ -170,10 +172,10 @@ def write_tree(module, data, marks, docs, parent_namegroups, notes, lang, marks_
 
         elif isinstance(obj, xl.Xml):
             docs.append((doc_path, html))
-            mark, heading, _, _, _, _ = make_mark_and_heading(module, cur_namegroups, obj, 2, lang)
+            mark, heading, _, _, _, _ = make_mark_and_heading(module, cur_namegroups, obj, 2)
             marks_and_headings.append((mark, heading))
             marks.append(mark)
-            body.kids.append(heading)
+            #body.kids.append(heading)
 
             docs.append((doc_path, html))
             for m, h in marks_and_headings:
@@ -187,7 +189,7 @@ def write_tree(module, data, marks, docs, parent_namegroups, notes, lang, marks_
 
         else:
             assert isinstance(obj, list)
-            mark, heading, _, _, _, _ = make_mark_and_heading(module, cur_namegroups, obj, 1, lang)
+            mark, heading, _, _, _, _ = make_mark_and_heading(module, cur_namegroups, obj, 1)
             marks.append(mark)
             marks_and_headings.append((mark, heading))
             write_tree(module, obj, mark.kids, docs, cur_namegroups, notes, lang, marks_and_headings)
@@ -197,7 +199,7 @@ def write_leaf_to_page(module, data, marks, parent_branch, notes, lang, doc_path
     for count, (namegroup, obj) in enumerate(data, start=1):
         cur_namegroups = parent_branch + [namegroup]
         doc_id = "doc_" + str(count)
-        mark, heading, _, _, _, _ = make_mark_and_heading(module, cur_namegroups, obj, 2, lang)
+        mark, heading, _, _, _, _ = make_mark_and_heading(module, cur_namegroups, obj, 2)
         marks.append(mark)
         heading.attrs["id"] = doc_id
         mark.href = doc_path + "#" + doc_id
@@ -213,7 +215,7 @@ def write_doc_to_page(module, obj, marks, cur_namegroups, notes, lang, doc_path,
 
         elif isinstance(e, xl.Element) and e.tag == "sub":
             name_group = sub_to_namegroup(e)
-            mark, heading, is_serial, _, _, _ = make_mark_and_heading(module, cur_namegroups + [name_group], obj, 3, lang)
+            mark, heading, is_serial, _, _, _ = make_mark_and_heading(module, cur_namegroups + [name_group], obj, 3)
             heading.attrs["class"] = "sub"
             heading.attrs["id"] = "sub_" + str(sub_count)
             if is_serial:
@@ -225,7 +227,7 @@ def write_doc_to_page(module, obj, marks, cur_namegroups, notes, lang, doc_path,
 
         elif isinstance(e, xl.Element) and e.tag.startswith("sub"):
             name_group = sub_to_namegroup(e)
-            mark, heading, is_serial, _, _, _ = make_mark_and_heading(module, cur_namegroups + [name_group], obj, 3, lang)
+            mark, heading, is_serial, _, _, _ = make_mark_and_heading(module, cur_namegroups + [name_group], obj, 3)
             heading.attrs["class"] = "sub"
             heading.attrs["id"] = "sub_" + str(sub_count)
             mark.href = doc_path + "#" + heading.attrs["id"]
@@ -238,7 +240,7 @@ def write_doc_to_page(module, obj, marks, cur_namegroups, notes, lang, doc_path,
             body.kids.extend(html_es)
 
 
-def make_mark_and_heading(module, namegroups, obj, heading_level, lang):
+def make_mark_and_heading(module, namegroups, obj, heading_level):
     file_index, start, end, name = namegroups[-1]
     if start is None:
         range_start, range_end = read_range(obj)

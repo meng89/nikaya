@@ -21,3 +21,16 @@ all_modules = []
 for _, ms in categories:
     for _m in ms:
         all_modules.append(_m)
+
+
+def get_classification(m):
+    for c, ms2 in categories:
+        for m2 in ms2:
+            if m == m2:
+                if m in dh_modules:
+                    return [c, "小部"]
+                else:
+                    return [c]
+
+    raise Exception
+

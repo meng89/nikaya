@@ -1,14 +1,50 @@
 
 body {
-    font-family: "$body_font_name";
-    
+    font-family: "Source Serif 4", "Source Serif 5", /* Linux */
+                 "Liberation Serif", /* Linux 兜底 */
+                 "Palatino Linotype", /* Windows */
+                 Palatino, /* MacOS */
+                 "Times New Roman", /* Windows MacOS 兜底 */
+                 $body_font_name, /* 汉字 */
+                 serif; /* html 兜底 */
+}
+
+body > p {
+    text-indent: 2em;
+}
+
+body > * {
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
+}
+
+.poem > p {
+    margin-top: 0em;
+    margin-bottom: 0em;
 }
 
 h1, h2, h3, h4, h5, h6, h7 {
-    font-family: "$heading_font_name";
+    font-family: "Source Sans 3", "Source Sans 4", /* Linux */
+                 "DejaVu Sans" /* Linux 兜底 */
+                 "Segoe UI", /* Windows */
+                 "Helvetica Neue", /* MacOS */
+                 Arial, /* Windows MacOS 兜底 */
+                 $heading_font_name, /* 汉字 */
+                 sans-serif; /* html 兜底 */
     font-weight: bold;
     color: inherit;
     text-align: center;
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+}
+
+
+.no_text_noteref {
+    vertical-align: super; /* 设置为上标 */
+    font-size: 0.75em;     /* 缩小字体大小，例如为原来的 75% */
+    line-height: 0;
+    text-indent: 0em;
+
 }
 .sutta_nums {
 /*

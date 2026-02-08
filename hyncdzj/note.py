@@ -36,7 +36,7 @@ class Notes:
             if _path != last_page_path:
                 last_page_path = _path
                 title = self.note_name+"第{}页".format(self._get_page_index(index))
-                html, body = epub.make_doc(last_page_path, lang, lang.c(title))
+                html, body = epub.make_doc(last_page_path, lang, title)
                 body.attrs["class"] = "note"
                 #last_html = html
                 h1 = body.ekid("h1")
@@ -51,11 +51,11 @@ class Notes:
 
             li = last_ol.ekid("li")
             li.attrs["id"] = str(index)
-            p = li.ekid("p")
-            p.kids.extend(epub.xml_es_to_html(note, last_html, self, last_page_path, lang))
+            #p = li.ekid("p")
+            li.kids.extend(epub.xml_es_to_html(note, last_html, self, last_page_path, lang))
 
         pages = []
         for title, path, xhtml in xhtmls:
-            pages.append((title, path, xhtml.to_str()))
+            pages.append((title, path, xhtml.to_str(do_pretty=True)))
 
         return pages
