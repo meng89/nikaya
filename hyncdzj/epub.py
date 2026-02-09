@@ -72,7 +72,7 @@ def build_epub(full_path, data, module, lang, tag, exit_after_done=False):
         exit()
 
 def write_css(epub, lang):
-    css_t = open(os.path.join(config.HYNCDZJ_DIR, "style.css"), "r").read()
+    css_t = open(os.path.join(config.RESOURCE_DIR, "../resource/style.css"), "r").read()
 
     if isinstance(lang, ebook_utils.SC):
         heading_font_name = """ "Microsoft YaHei", "PingFang SC", "思源黑体 CN" """
@@ -624,7 +624,7 @@ def relpath(path1, path2):
 def _write_cover(epub, cover_image_path, lang):
     base_name = os.path.basename(cover_image_path)
     epub.userfiles[base_name] = open(cover_image_path, "rb").read()
-    cover_doc_path = "cover.xhtml"
+    cover_doc_path = "../resource/cover.xhtml"
     html, body = make_doc(cover_doc_path, lang, "封面")
     #body.attrs["style"] = "text-align: center;"
     body.attrs["class"] = "cover"

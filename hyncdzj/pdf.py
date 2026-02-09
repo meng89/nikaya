@@ -60,7 +60,7 @@ fonts = {
 def build_pdf(full_path, data, module, lang, layout, font, tag, exit_after_done=False):
     work_dir = full_path + "_work"
     out_dir = full_path + "_out"
-    shutil.copytree(config.HYNCDZJ_TEX_DIR, work_dir)
+    shutil.copytree(config.TEX_DIR, work_dir)
 
     os.makedirs(out_dir, exist_ok=True)
 

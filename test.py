@@ -4,4 +4,4 @@ import os
 
 
 
-shutil.copytree(config.HYNCDZJ_TEX_DIR, "/tmp/xxx.work")
+shutil.copytree(config.TEX_DIR, "/tmp/xxx.work")

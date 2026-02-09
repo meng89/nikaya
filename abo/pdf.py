@@ -170,7 +170,7 @@ def findfile(font_dirs, name):
             if name in files:
                 full_path = os.path.join(font_dir, relpath, name)
                 return os.path.normpath(os.path.abspath(full_path))
-    raise FileNotFoundError
+    raise FileNotFoundError(name)
 
 def ntrelpath(path1, path2):
     import ntpath

@@ -8,20 +8,20 @@ ABO_WEBSITE = "https://agama.buddhason.org"
 
 RESOURCE_DIR = os.path.join(PROJECT_ROOT, "resource")
 
-ABO_RESOURCE_DIR = os.path.join(RESOURCE_DIR, "abo")
+TEX_DIR = os.path.join(PROJECT_ROOT, "tex")
+
+ABO_RESOURCE_DIR = os.path.join(PROJECT_ROOT, "abo_resource")
 ABO_COVER_DIR = os.path.join(ABO_RESOURCE_DIR, "cover")
 ABO_DOWNLOAD_DIR = os.path.join(ABO_RESOURCE_DIR, "htm")
 ABO_XML_DIR = os.path.join(ABO_RESOURCE_DIR, "xml")
 
 ABO_TEX_DIR = os.path.join(PROJECT_ROOT, "abo", "tex")
-HYNCDZJ_DIR = os.path.join(PROJECT_ROOT, "hyncdzj")
-HYNCDZJ_TEX_DIR = os.path.join(HYNCDZJ_DIR, "tex")
-HYNCDZJ_RESOURCE_DIR = os.path.join(RESOURCE_DIR, "hyndzj")
-HYNCDZJ_COVER_DIR = os.path.join(HYNCDZJ_RESOURCE_DIR, "cover")
-SIMPLE_DOC_DIR = os.path.join(HYNCDZJ_RESOURCE_DIR, "simple_doc")
-SIMPLE_FILLING_DIR = os.path.join(HYNCDZJ_RESOURCE_DIR, "simple_充填中")
+
+HYNCDZJ_XML_DIR = os.path.join(PROJECT_ROOT, "hyndzj_xml")
+HYNCDZJ_SIMPLE_XML_DIR = os.path.join(HYNCDZJ_XML_DIR, "simple_xml")
+SIMPLE_FILLING_DIR = os.path.join(HYNCDZJ_XML_DIR, "simple_充填中")
 os.makedirs(SIMPLE_FILLING_DIR, exist_ok=True)
-SIMPLE_FILLED_DIR = os.path.join(HYNCDZJ_RESOURCE_DIR, "simple_充填完成")
+SIMPLE_FILLED_DIR = os.path.join(HYNCDZJ_XML_DIR, "simple_充填完成")
 os.makedirs(SIMPLE_FILLED_DIR, exist_ok=True)
 
 SOCKS5_PROXY = "127.0.0.1:1080"

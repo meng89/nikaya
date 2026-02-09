@@ -1,0 +1,632 @@
+﻿var in_word_div = 0;	// 判斷滑鼠是不是在文字的範圍中
+var in_note_div = 0;	// 判斷滑鼠是不是在註解視窗的範圍中, 當不在這二個範圍中時, 註解視窗就消失
+
+function get_str_title()
+{
+	var str_title = '<div id="toolbar"></div>';
+	return str_title;
+}
+function write_str_title()
+{
+	var str_title = get_str_title();
+	document.write(str_title);
+}
+function draw_layout () 
+{
+	var str_title = get_str_title();
+    Ext.onReady(function()
+{
+       Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
+       var viewport = new Ext.Viewport
+(
+{
+            layout:'border',
+               items:
+[{
+            region:'north',
+               contentEl: 'north',
+               autoScroll: true,
+               collapsible: true,
+                title: str_title,
+                    split: true,
+                    height: 80,
+                    border: false,
+                    minSize: 1,
+                    maxSize: 500,
+                    margins:'0 0 0 0'
+ },
+/* {
+                   region:'south',
+                    contentEl: 'south',
+                    title:'<font color="#3366FF"><span style="font-size:16pt">註解</font>',
+                    split: true,
+                    autoScroll: true,
+                    collapsible: true,
+                    height: 180,
+                    border: false,
+                    minSize: 1,
+                    maxSize: 1000,
+                    margins:'0 0 0 0'
+ }, */
+ /*{
+               region:'west',
+                    contentEl: 'west',
+                    title:'功能表',
+                    split:true,
+                    width: 50,
+                    minSize: 50,
+                    maxSize: 300,
+                    collapsible: true,
+                    margins:'0 0 0 0',
+                    layout:'accordion',
+                    layoutConfig:
+{
+                   animate:true
+  }
+ },
+ 
+*/
+{
+                   region:'east',
+                    contentEl: 'east',
+                    title: '<font color="#3366FF"><span style="font-size:14pt">巴利語經文-tipitaka.org<font color="#CC3300">(點右端»隱藏本欄)</font></font>',
+                    split: true,
+                    collapsible: true,
+                    autoScroll: true,
+                    width: '50%',
+                    border: false,
+                    minSize: 1,
+                    maxSize: 900,
+                    layout:'fit',
+                    margins:'0 0 0 0'
+ },
+{
+                   region: 'center',
+                    contentEl: 'center',
+                    title: '<font color="#3366FF"><span style="font-size:14pt">譯　文(莊春江譯)</font>',
+                    autoScroll: true,
+                    collapsible: true,
+                    width: '50%',
+                    border: false,
+                    layout:'fit',
+                    margins:'0 0 0 0'
+                }
+             ]
+         });
+		
+// 主選單 : 1. 下拉的選單-只要改 text 和 go2 的連結網址--------------
+	var menu1 = new Ext.menu.Menu
+	({id: 'mainMenu1',
+	 style: {overflow: 'visible'}, // For the Combo popup
+	 items: [
+	 {text: '1.某位',
+	   handler: function(){go2("Ti1.htm")}},
+	 {text: '2.解脫者',
+	   handler: function(){go2("Ti2.htm")}},
+	 {text: '3.富樓那',
+	   handler: function(){go2("Ti3.htm")}},
+	 {text: '4.低舍',
+	   handler: function(){go2("Ti4.htm")}},
+	 {text: '5.另位低舍',
+	   handler: function(){go2("Ti5.htm")}},
+	 {text: '6.明智者',
+	   handler: function(){go2("Ti6.htm")}},
+	 {text: '7.英雄',
+	   handler: function(){go2("Ti7.htm")}},
+	 {text: '8.朋友',
+	   handler: function(){go2("Ti8.htm")}},
+	 {text: '9.賢善',
+	   handler: function(){go2("Ti9.htm")}},
+	 {text: '10.寂靜',
+	   handler: function(){go2("Ti10.htm")}}
+	             ]
+	});
+
+	var menu2 = new Ext.menu.Menu
+	({id: 'mainMenu2',
+	 style: {overflow: 'visible'},
+	 items: [
+	 {text: '11.解脫者',
+	   handler: function(){go2("Ti11.htm")}},
+	 {text: '12.法施',
+	   handler: function(){go2("Ti12.htm")}},
+	 {text: '13.毘舍佉',
+	   handler: function(){go2("Ti13.htm")}},
+	 {text: '14.善意者',
+	   handler: function(){go2("Ti14.htm")}},
+	 {text: '15.鬱多羅',
+	   handler: function(){go2("Ti15.htm")}},
+	 {text: '16.老出家善意者',
+	   handler: function(){go2("Ti16.htm")}},
+	 {text: '17.法',
+	   handler: function(){go2("Ti17.htm")}},
+	 {text: '18.群眾',
+	   handler: function(){go2("Ti18.htm")}}
+	             ]
+	});
+
+	var menu3 = new Ext.menu.Menu
+	({id: 'mainMenu3',
+	 style: {overflow: 'visible'},
+	 items: [
+	 {text: '1.殊妙難陀',
+	   handler: function(){go2("Ti19.htm")}},
+	 {text: '2.戰勝者',
+	   handler: function(){go2("Ti20.htm")}},
+	 {text: '3.善吉祥之母',
+	   handler: function(){go2("Ti21.htm")}},
+	 {text: '4.迦尸富裕者',
+	   handler: function(){go2("Ti22.htm")}},
+	 {text: '5.質多',
+	   handler: function(){go2("Ti23.htm")}},
+	 {text: '6.友好',
+	   handler: function(){go2("Ti24.htm")}},
+	 {text: '7.朋友',
+	   handler: function(){go2("Ti25.htm")}},
+	 {text: '8.無畏之母',
+	   handler: function(){go2("Ti26.htm")}},
+	 {text: '9.無畏',
+	   handler: function(){go2("Ti27.htm")}},
+	 {text: '10.黑',
+	   handler: function(){go2("Ti28.htm")}}
+	             ]
+	});
+
+	var menu4 = new Ext.menu.Menu
+	({id: 'mainMenu4',
+	 style: {overflow: 'visible'},
+	 items: [
+	 {text: '3集 1.另位黑',
+	   handler: function(){go2("Ti29.htm")}},
+	 {text: '　　2.最上者',
+	   handler: function(){go2("Ti30.htm")}},
+	 {text: '　　3.另位最上者',
+	   handler: function(){go2("Ti31.htm")}},
+	 {text: '　　4.旦低葛',
+	   handler: function(){go2("Ti32.htm")}},
+	 {text: '　　5.優逼哩',
+	   handler: function(){go2("Ti33.htm")}},
+	 {text: '　　6.白',
+	   handler: function(){go2("Ti34.htm")}},
+	 {text: '　　7.謝勒',
+	   handler: function(){go2("Ti35.htm")}},
+	 {text: '　　8.受摩',
+	   handler: function(){go2("Ti36.htm")}},
+	 {text: '4集 1.葛逼勒國的賢善',
+	   handler: function(){go2("Ti37.htm")}}
+	             ]
+	});
+
+	var menu5 = new Ext.menu.Menu
+	({id: 'mainMenu5',
+	 style: {overflow: 'visible'},
+	 items: [
+	 {text: '1.某位',
+	   handler: function(){go2("Ti38.htm")}},
+	 {text: '2.離垢者',
+	   handler: function(){go2("Ti39.htm")}},
+	 {text: '3.母獅',
+	   handler: function(){go2("Ti40.htm")}},
+	 {text: '4.美女難陀',
+	   handler: function(){go2("Ti41.htm")}},
+	 {text: '5.更上歡喜者',
+	   handler: function(){go2("Ti42.htm")}},
+	 {text: '6.咪大葛里',
+	   handler: function(){go2("Ti43.htm")}},
+	 {text: '7.色古拉',
+	   handler: function(){go2("Ti44.htm")}},
+	 {text: '8.受那',
+	   handler: function(){go2("Ti45.htm")}},
+	 {text: '9.捲髮的賢善',
+	   handler: function(){go2("Ti46.htm")}},
+	 {text: '10.帕大者臘',
+	   handler: function(){go2("Ti47.htm")}},
+	 {text: '11.約三十位',
+	   handler: function(){go2("Ti48.htm")}},
+	 {text: '12.月',
+	   handler: function(){go2("Ti49.htm")}}
+	             ]
+	});
+
+	var menu6 = new Ext.menu.Menu
+	({id: 'mainMenu6',
+	 style: {overflow: 'visible'},
+	 items: [
+	 {text: '1.約五百位',
+	   handler: function(){go2("Ti50.htm")}},
+	 {text: '2.襪謝德',
+	   handler: function(){go2("Ti51.htm")}},
+	 {text: '3.讖摩',
+	   handler: function(){go2("Ti52.htm")}},
+	 {text: '4.善生',
+	   handler: function(){go2("Ti53.htm")}},
+	 {text: '5.無相似者',
+	   handler: function(){go2("Ti54.htm")}},
+	 {text: '6.摩訶波闍波提喬達彌',
+	   handler: function(){go2("Ti55.htm")}},
+	 {text: '7.守護者',
+	   handler: function(){go2("Ti56.htm")}},
+	 {text: '8.勝利',
+	   handler: function(){go2("Ti57.htm")}}
+	             ]
+	});
+
+	var menu7 = new Ext.menu.Menu
+	({id: 'mainMenu7',
+	 style: {overflow: 'visible'},
+	 items: [
+	 {text: '7集 1.鬱多羅',
+	   handler: function(){go2("Ti58.htm")}},
+	 {text: '　　2.遮羅',
+	   handler: function(){go2("Ti59.htm")}},
+	 {text: '　　3.優波遮羅',
+	   handler: function(){go2("Ti60.htm")}},
+	 {text: '8集 1.尸蘇波遮羅',
+	   handler: function(){go2("Ti61.htm")}},
+	 {text: '9集 1.增長之母',
+	   handler: function(){go2("Ti62.htm")}},
+	 {text: '11集1.瘦喬達彌',
+	   handler: function(){go2("Ti63.htm")}},
+	 {text: '12集1.蓮華色',
+	   handler: function(){go2("Ti64.htm")}},
+	 {text: '16集1.富樓那',
+	   handler: function(){go2("Ti65.htm")}}
+	             ]
+	});
+
+	var menu8 = new Ext.menu.Menu
+	({id: 'mainMenu8',
+	 style: {overflow: 'visible'},
+	 items: [
+	 {text: '20集1.蓭婆巴利',
+	   handler: function(){go2("Ti66.htm")}},
+	 {text: '　　 2.柔希尼',
+	   handler: function(){go2("Ti67.htm")}},
+	 {text: '　　 3.遮玻',
+	   handler: function(){go2("Ti68.htm")}},
+	 {text: '　　 4.孫陀利',
+	   handler: function(){go2("Ti69.htm")}},
+	 {text: '　　 5.鐵匠女兒蘇玻',
+	   handler: function(){go2("Ti70.htm")}},
+	 {text: '30集1.芒果林生活者蘇玻',
+	   handler: function(){go2("Ti71.htm")}},
+	 {text: '40集1.仙僕',
+	   handler: function(){go2("Ti72.htm")}},
+	 {text: '大 集1.蘇昧達',
+	   handler: function(){go2("Ti73.htm")}}
+	             ]
+	});
+
+// 主選單 : 2.橫式主選單 ------------------------------
+	var tb = new Ext.Toolbar();
+	tb.render('toolbar');
+	tb.add(
+	{text:'首　頁',
+	handler: function(){go2("../index.htm")}},
+	{text:'　1集₁',  menu: menu1}, // 下拉的選單
+	{text:' 1集₂',  menu: menu2}, // 下拉的選單
+	{text:' 2集',  menu: menu3}, // 下拉的選單
+	{text:' 3集~',  menu: menu4}, // 下拉的選單
+	{text:' 5集',  menu: menu5}, // 下拉的選單
+	{text:' 6集',  menu: menu6}, // 下拉的選單
+	{text:' 7集~',  menu: menu7}, // 下拉的選單
+	{text:' 20集~',  menu: menu8}, // 下拉的選單
+	{text:'　上則 /',
+	handler: function(){pre_sutra()}},
+	{text:'下則',
+	handler: function(){next_sutra()}}
+	);
+	tb.doLayout();
+	$("td.x-toolbar-left").attr("align","center");// 將主選單置中
+	$("em.x-btn-arrow button").hover(function() {$(this).click()});// 滑鼠移到按鈕時, 自動按下去
+	$("#center,#east,#north").hover(function() {hide_menu()});// 移到三個主視窗就隱藏選單
+	$(document).mouseleave(function() {hide_menu()}); // 離開畫面就隱藏選單
+// 隱藏選單
+	function hide_menu()
+	{$("div[id^='mainMenu']").hide();    // 全部下拉選單消失
+	 $("div[id^='mainMenu']").prev().hide(); // 下拉選單的陰影也消失
+	 $("table.x-btn.x-btn-menu-active").removeClass("x-btn-menu-active");} // 按鈕呈現"未按下"
+	function go2(url) {window.location.href = url}
+	function pre_sutra() {
+		var myurl=window.location.toString();
+		if (myurl.match(/Ti(\d+)\.htm/) != null){var sutranum = myurl.replace(/^.*?(\d+)\.htm/i,"$1");}// 取出經號
+		var pre_sutra = parseInt(sutranum,10) - 1; 
+		// 前一經
+		if(pre_sutra < 1){pre_sutra = 73;}
+		pre_sutra = "Ti" + pre_sutra.toString() + ".htm";
+		go2(pre_sutra);
+	}
+	function next_sutra() {
+		var myurl=window.location.toString();
+		if (myurl.match(/Ti(\d+)\.htm/) != null){var sutranum = myurl.replace(/^.*?(\d+)\.htm/i,"$1");}// 取出經號
+		var next_sutra = parseInt(sutranum,10) + 1; 
+		// 下一經
+		if(next_sutra > 73) {next_sutra = 1;}
+		next_sutra = "Ti" + next_sutra.toString() + ".htm";
+		go2(next_sutra);
+	}
+// 選單結束 ----------------------
+    });
+}
+function do_some_thing () 
+{
+	$(document).ready(function()
+{
+	$('head').append('<meta http-equiv="expires" content="-1">');
+//    	$("#east").html($("#center").html());
+    	$("#notediv").mouseover(function(){ in_note_div = 1; });	// 記錄滑鼠移入註解視窗
+    	$("#notediv").mouseout(function(){ in_note_div = 0; });		// 記錄滑鼠移開註解視窗
+    	$("#east").mouseover(function(){ check_note_div(); });		// 處理滑鼠移到主視窗的文字時, 要檢查此時是不是要取消註解視窗
+    	$("#center").mouseover(function(){ check_note_div(); });	// 處理滑鼠移到主視窗的文字時, 要檢查此時是不是要取消註解視窗
+    	add_agama_link("#south");
+    	add_agama_link("#center");
+	});}
+
+    	// 經號連結
+function add_agama_link(obj_div)
+{
+	var mycomp = $(obj_div).html();
+	mycomp=mycomp.replace(/SA\.(\d+)/g, function(word,str1)
+	 {
+		mynum = '<a href="../SA/dm.php?keyword=' +str1+'" target="xxx">SA.' + str1 + '</a>';
+  		return mynum;
+  	}
+	);
+
+	mycomp=mycomp.replace(/SN\.(\d+\.\d+)/g, function(word,str1)
+	 {
+		mynum = '<a href="../SN/sn.php?keyword=' +str1+'" target="xxx">SN.' + str1 + '</a>';
+  		return mynum;
+  	}
+	);
+
+	mycomp=mycomp.replace(/MA\.(\d+)/g, function(word,str1)
+	 {
+		mynum = '<a href="../MA/dm.php?keyword=' +str1+'" target="xxx">MA.' + str1 + '</a>';
+  		return mynum;
+  	}
+	);
+
+	mycomp=mycomp.replace(/MN\.(\d+)/g, function(word,str1)
+	 {
+		mynum = '<a href="../MN/dm.php?keyword=' +str1+'" target="xxx">MN.' + str1 + '</a>';
+  		return mynum;
+  	}
+	);
+
+	mycomp=mycomp.replace(/DA\.(\d+)/g, function(word,str1)
+	 {
+		mynum = '<a href="../DA/dm.php?keyword=' +str1+'" target="xxx">DA.' + str1 + '</a>';
+  		return mynum;
+  	}
+	);
+
+	mycomp=mycomp.replace(/DN\.(\d+)/g, function(word,str1)
+	 {
+		mynum = '<a href="../DN/dm.php?keyword=' +str1+'" target="xxx">DN.' + str1 + '</a>';
+  		return mynum;
+  	}
+  	);
+
+	mycomp=mycomp.replace(/Ud\.(\d+)/g, function(word,str1)
+	 {
+		mynum = '<a href="../Ud/dm.php?keyword=' +str1+'" target="xxx">Ud.' + str1 + '</a>';
+  		return mynum;
+  	}
+  	);
+
+	mycomp=mycomp.replace(/It\.(\d+)/g, function(word,str1)
+	 {
+		mynum = '<a href="../It/dm.php?keyword=' +str1+'" target="xxx">It.' + str1 + '</a>';
+  		return mynum;
+  	}
+  	);
+
+	mycomp=mycomp.replace(/Ni.(\d+)/g, function(word,str1)
+	{
+		var mynum = "" + str1.toString();
+		mynum = mynum.replace(/^.*(\d\d\d)/,"$1");
+		mynum = '<a href="../Ni/Ni' + mynum + '.htm" target="xxx">Ni.' + str1.toString()+ '</a>';
+  		return mynum;
+  	}
+	);
+
+	mycomp=mycomp.replace(/Khp.(\d+)/g, function(word,str1)
+	{
+		var mynum = "" + str1.toString();
+		mynum = '<a href="../Kh/Kh' + mynum + '.htm" target="xxx">Khp.' + str1.toString()+ '</a>';
+  		return mynum;
+  	}
+	);
+
+	mycomp=mycomp.replace(/Dhp.(\d+)/g, function(word,str1)
+	{
+		var mynum = "" + str1.toString();
+		mynum = mynum.replace(/^.*(\d\d\d)/,"$1");
+		mynum = '<a href="../Dh/Dh' + mynum + '.htm" target="xxx">Dhp.' + str1.toString()+ '</a>';
+  		return mynum;
+  	}
+	);
+
+	mycomp=mycomp.replace(/Sn.(\d+)/g, function(word,str1)
+	{
+		var mynum = "" + str1.toString();
+		mynum = mynum.replace(/^.*(\d\d\d)/,"$1");
+		mynum = '<a href="../Su/Su' + mynum + '.htm" target="xxx">Sn.' + str1.toString()+ '</a>';
+  		return mynum;
+  	}
+	);
+
+	mycomp=mycomp.replace(/Vv.(\d+)/g, function(word,str1)
+	{
+		var mynum = "" + str1.toString();
+		mynum = mynum.replace(/^.*(\d\d\d)/,"$1");
+		mynum = '<a href="../Vi/Vi' + mynum + '.htm" target="xxx">Vv.' + str1.toString()+ '</a>';
+  		return mynum;
+  	}
+	);
+
+	mycomp=mycomp.replace(/Pv.(\d+)/g, function(word,str1)
+	{
+		var mynum = "" + str1.toString();
+		mynum = mynum.replace(/^.*(\d\d\d)/,"$1");
+		mynum = '<a href="../Pv/Pv' + mynum + '.htm" target="xxx">Pv.' + str1.toString()+ '</a>';
+  		return mynum;
+  	}
+	);
+
+	mycomp=mycomp.replace(/Thag.(\d+)/g, function(word,str1)
+	{
+		var mynum = "" + str1.toString();
+		mynum = mynum.replace(/^.*(\d\d\d)/,"$1");
+		mynum = '<a href="../Th/Th' + mynum + '.htm" target="xxx">Thag.' + str1.toString()+ '</a>';
+  		return mynum;
+  	}
+	);
+
+	mycomp=mycomp.replace(/Thig.(\d+)/g, function(word,str1)
+	{
+		var mynum = "" + str1.toString();
+		mynum = mynum.replace(/^.*(\d\d\d)/,"$1");
+		mynum = '<a href="../Ti/Ti' + mynum + '.htm" target="xxx">Thig.' + str1.toString()+ '</a>';
+  		return mynum;
+  	}
+	);
+
+	mycomp=mycomp.replace(/Apn.(\d+)/g, function(word,str1)
+	{
+		var mynum = "" + str1.toString();
+		mynum = mynum.replace(/^.*(\d\d\d)/,"$1");
+		mynum = '<a href="../Ap/Ap' + mynum + '.htm" target="xxx">Apn.' + str1.toString()+ '</a>';
+  		return mynum;
+  	}
+	);
+
+	mycomp=mycomp.replace(/Mi.(\d+)/g, function(word,str1)
+	{
+		var mynum = "" + str1.toString();
+		mynum = mynum.replace(/^.*(\d\d\d)/,"$1");
+		mynum = '<a href="../Mi/Mi' + mynum + '.htm" target="xxx">Mi.' + str1.toString()+ '</a>';
+  		return mynum;
+  	}
+	);
+
+	mycomp=mycomp.replace(/Ps.(\d+)/g, function(word,str1)
+	{
+		var mynum = "" + str1.toString();
+		mynum = mynum.replace(/^.*(\d\d\d)/,"$1");
+		mynum = '<a href="../Ps/Ps' + mynum + '.htm" target="xxx">Ps.' + str1.toString()+ '</a>';
+  		return mynum;
+  	}
+	);
+
+	mycomp=mycomp.replace(/AA\.(\d+\.\d+)/g, function(word,str1)
+	 {
+		mynum = '<a href="../AA/dm.php?keyword=' +str1+'" target="xxx">AA.' + str1 + '</a>';
+  		return mynum;
+  	}
+	);
+
+	mycomp=mycomp.replace(/AN\.(\d+\.\d+)/g, function(word,str1)
+	 {
+		mynum = '<a href="../AN/an.php?keyword=' +str1+'" target="xxx">AN.' + str1 + '</a>';
+  		return mynum;
+  	}
+	);
+	$(obj_div).html(mycomp);
+}
+
+note_array = new Array();
+
+// 滑鼠移到註解時要秀出註解視窗
+
+function note(obj,num)
+{
+	show_note(obj,num,0);	// 表示是全面的註解
+}
+
+function local(obj,num)
+{
+	show_note(obj,num,1);	// 表示是單一檔案的註解
+}
+
+function show_note(obj,num,local)
+{
+	in_word_div = 1;				// 表示滑鼠進入 名相文字
+	loading = "載入中...";		// 第一次載入時的呈現文字
+	
+	// 先指定滑鼠 onMouseOut 的行為, 讓視窗消失
+	$(obj).mouseout(function(){
+		in_word_div = 0;
+	});
+	
+	// 用 Ajax 讀取資料
+	$("#notediv").html(loading);
+	
+	// 如果是讀過的檔案, 由陣列讀取資料
+	if(local == 0)
+	{
+		filenum = Math.floor(num/100);
+		// 這是讀取全面的註解
+		if(note_array[filenum])
+		{
+			$("#notediv").html(note_array[filenum]);
+			str = "#notediv #div" + num;
+			$("#notediv").html($(str).html());
+		add_agama_link("#notediv");
+		}
+		else
+		{
+			str = "../note/note" + filenum + ".htm #div" + num;		
+			$("#notediv").load(str,function(data){
+				note_array[filenum] = data;		// 全部資料放在 note_array 陣列中
+		add_agama_link("#notediv");
+			});
+		}
+		//add_agama_link("#notediv");
+	}
+	else
+	{
+		// 這是讀取單一檔案的註解
+		str = "#note" + num;
+		$("#notediv").html($(str).html());
+	}
+	
+	// 呈現並調整框的位置
+	$("#notediv").show();
+	
+	// 找出文字的上一層是在左邊或右邊
+	var $myparent = $("#ext-comp-1004");	// 預設是左邊
+	if($(obj).parent().parent().attr('id') == "east")
+	{
+		$myparent = $("#ext-comp-1003");
+	}
+	
+	$("#notediv").css("top", $(obj).position().top + $myparent.position().top + 53);
+	$("#notediv").css("left", $(obj).position().left + $myparent.position().left);
+	if($(obj).position().left + $myparent.position().left + $("#notediv").width() > $(window).width())
+	{
+		$("#notediv").css("left", $(window).width() - $("#notediv").width() - 40);
+	}
+	if($("#notediv").position().top + $("#notediv").height() + $myparent.position().top - $(window).scrollTop() - 80  > $(window).height())
+	{
+		$("#notediv").css("top", $(obj).position().top  + $myparent.position().top - $("#notediv").height() + 6);
+	}
+	if($("#notediv").position().top < $(window).scrollTop())
+	{
+		$("#notediv").css("top", $(obj).position().top + $myparent.position().top + 53);
+	}
+}
+
+
+function check_note_div()
+{
+	if (in_word_div == 0 && in_note_div == 0)
+	{
+		$("#notediv").hide();
+	}
+	else
+	{
+		$("#notediv").show();
+	}
+}

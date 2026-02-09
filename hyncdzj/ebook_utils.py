@@ -193,7 +193,7 @@ def make_cover_image(module, lang: Lang, tag=None, width=1600, height=2560):
     image_path = os.path.join(config.HYNCDZJ_COVER_DIR, image_filename)
 
     if not os.path.exists(image_path):
-        _template_str = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "cover.xhtml")).read()
+        _template_str = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../resource/cover.xhtml")).read()
         if isinstance(lang, SC):
             template_str = _template_str.replace("CJK TC", "CJK SC")
         else:
@@ -221,7 +221,8 @@ def make_cover_image(module, lang: Lang, tag=None, width=1600, height=2560):
 
         new_name, background_color, font_color, book_name_font_size, book_name_space_margin = xxx(module)
 
-        dharma_wheel_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Original_Dharma_Wheel.svg")
+        dharma_wheel_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                         "../resource/Original_Dharma_Wheel.svg")
 
         doc_str = t.substitute(
             dharma_wheel_path = dharma_wheel_path,

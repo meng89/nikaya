@@ -10,7 +10,7 @@ from  hyncdzj import book_modules
 def main():
     for category, ms in book_modules.categories:
         for m in ms:
-            data_dir = os.path.join(config.SIMPLE_DOC_DIR, m.info.name)
+            data_dir = os.path.join(config.HYNCDZJ_SIMPLE_XML_DIR, m.info.name)
             print(data_dir)
             name, data = hyncdzj_load_from_p5a.load_book_by_module(m)
             os.makedirs(data_dir, exist_ok=True)

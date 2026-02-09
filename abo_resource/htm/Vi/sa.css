@@ -1,0 +1,70 @@
+﻿
+div#north , div#east , div#center , div#south  {
+        font-family:Tahoma , 新細明體 , Arial Unicode MS, SimSun ;
+		font-size: 19pt;
+        line-height: 34pt;
+        margin: 0px 10px 0px 10px;
+}
+
+#main_menu {
+	position: absolute; 
+	top: 6px; 
+	left:40%;
+}
+
+a { text-decoration:underline; }
+a:link    { color: #3366FF;text-decoration:none; }
+a:visited { color: #3366FF;text-decoration:none; }
+a:active  { color: #3366FF;text-decoration:none; }
+a:hover   { color: #993333;text-decoration:underline; }
+
+.agama		{color: #525000; }
+.nikaya		{color: #005B00; }
+.pali		{color: #666699; }
+.comp		{color: #00605B; }
+.subject		{color: #993333; }
+.subject1		{color: #666666; }
+.sutra_name {text-decoration:underline;}
+.update_time {display:none; color: #999966; }
+
+.x-panel-body {background: #EDFFE1; }
+
+/* 彈出式註解視窗的屬性 */
+#notediv{
+	position:absolute; 
+	overflow:visible; 
+	z-index: 10; 
+	border:#005B00 2px solid; 
+	width:700px; 
+	background-color: #EDFFE1; 
+	display:none; 
+	padding:10px; 
+	text-align:left;
+	font-size:25px;
+	color: #333333;
+	line-height: 28pt;
+	font-family:Tahoma,新細明體,Arial Unicode MS, SimSun;
+
+}
+
+
+#toolbar {
+    height: 30px;
+}
+
+.x-menu-list-item {
+    font-size: 22px;
+    height: 27px;
+    color: #3366ff;
+}
+#toolbar .x-btn button , #toolbar .x-toolbar div {
+    font-size: 21px;
+    color: #3366ff;
+    font-weight: bold;
+}
+div.x-toolbar {
+    height: 30px;
+}
+img.x-menu-item-icon {
+    visibility: hidden;
+}

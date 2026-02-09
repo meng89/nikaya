@@ -142,7 +142,7 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, layouts=N
             data = hyncdzj.base.load_from_disk(simple_filling_path)
             tag = "充填中"
         else:
-            simple_path = os.path.join(config.SIMPLE_DOC_DIR, m.info.name)
+            simple_path = os.path.join(config.HYNCDZJ_SIMPLE_XML_DIR, m.info.name)
             data = hyncdzj.base.load_from_disk(simple_path)
             tag = None
 
