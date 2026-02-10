@@ -2,9 +2,16 @@ import re
 
 import cn2an
 
-from hyncdzj import base
+from nikaya_share import base
 
-info = base.Info(4, "長部", ("通妙",), "DN")
+
+info = base.Info(
+    serial = 4,
+    name = "長部",
+    pali = "Dīgha Nikāya",
+    translators = ("通妙",),
+    abbr = "DN",
+)
 
 def change_name_fun(name):
     m = re.match(r"^([一二三四五六七八九十〇]+)　(\S+經)$", name)

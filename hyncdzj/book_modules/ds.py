@@ -1,6 +1,10 @@
-# 论藏/法集论
-# Dhammasaṅgaṇī
+from nikaya_share import base
 
-from hyncdzj import base
 
-info = base.Info(24, "法集論", ("郭哲彰",), "DS")
+info = base.Info(
+    serial = 24,
+    name = "法集論",
+    pali = "Dhammasaṅgaṇī",
+    translators = ("郭哲彰",),
+    abbr = "DS",
+)

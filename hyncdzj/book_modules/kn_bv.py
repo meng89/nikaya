@@ -1,6 +1,10 @@
-from hyncdzj import base
+from nikaya_share import base
 
-# Buddhavaṃsa
-# 佛种姓
 
-info = base.Info(20, "佛種姓經", ("悟醒",), "BV")
+info = base.Info(
+    serial = 20,
+    name = "佛種姓經",
+    pali = "Buddhavaṃsa",
+    translators = ("悟醒",),
+    abbr = "BV",
+)

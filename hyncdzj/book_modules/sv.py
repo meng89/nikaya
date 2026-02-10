@@ -1,9 +1,15 @@
-# 律藏/经分别
 import re
 
-from hyncdzj import base
+from nikaya_share import base
 
-info = base.Info(1, "經分別", ("通妙",), "SV")
+
+info = base.Info(
+    serial = 1,
+    name = "經分別",
+    pali = "Suttavibhaṅga",
+    translators = ("通妙",),
+    abbr = "SV",
+)
 
 
 def change_name_fun(name):
@@ -16,5 +22,3 @@ def change_name_fun(name):
         return m.group(1)
 
     return name
-
-

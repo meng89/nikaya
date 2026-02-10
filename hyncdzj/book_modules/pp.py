@@ -1,6 +1,10 @@
-# 论藏/人施設論
-# Puggalapaññatti
+from nikaya_share import base
 
-from hyncdzj import base
 
-info = base.Info(27, "人施設論", ("郭哲彰",), "PP")
+info = base.Info(
+    serial = 27,
+    name = "人施設論",
+    pali = "Puggalapaññatti",
+    translators = ("郭哲彰",),
+    abbr = "PP",
+)

@@ -1,7 +1,10 @@
-from hyncdzj import base
+from nikaya_share import base
 
-# 论藏/发趣论
 
-# Paṭṭhāna
-
-info = base.Info(29, "發趣論", ("郭哲彰",), "Patthana")
+info = base.Info(
+    serial = 29,
+    name = "發趣論",
+    pali = "Paṭṭhāna",
+    translators = ("郭哲彰",),
+    abbr = "Patthana",
+)

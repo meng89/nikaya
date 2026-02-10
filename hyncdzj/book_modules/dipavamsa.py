@@ -1,6 +1,8 @@
-from hyncdzj import base
+from nikaya_share import base
 
-# Dīpavamsa
-# 島王統史
-
-info = base.Info(32, "島王統史", ("悟醒",), "dipavamsa")
+info = base.Info(
+    serial = 32,
+    name = "島王統史",
+    pali = "Dīpavamsa",
+    translators = ("悟醒",),
+)

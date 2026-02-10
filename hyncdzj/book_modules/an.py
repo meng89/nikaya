@@ -4,9 +4,15 @@ import cn2an
 
 import xl
 
-from hyncdzj import base
+from nikaya_share import base
 
-info = base.Info(7, "增支部", ("葉慶春", "關世謙", "郭哲彰"), "AN")
+info = base.Info(
+    serial = 7,
+    name = "增支部",
+    pali = "Aṅguttara Nikāya",
+    translators = ("葉慶春", "關世謙", "郭哲彰"),
+    abbr = "AN",
+)
 
 def _change_name_fun(name):
     m = re.match(r"^(([一二三四五六七八九十]+)集)[上|下]?$", name)

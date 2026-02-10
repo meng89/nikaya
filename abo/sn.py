@@ -4,6 +4,7 @@ import abo.page_parsing
 import abo.utils
 
 
+
 name_han = "相應部"
 name_pali = "Saṃyutta Nikāya"
 short = "SN"
@@ -58,7 +59,7 @@ def load_from_htm():
             pian_m = pian_matched[0][0]
             pian_name = pian_m.group(1)
             pian = []
-            data.append((pian_name, pian))
+            data.append(((None, None, pian_name), pian))
             xy = None
             pin = None
 
@@ -71,7 +72,7 @@ def load_from_htm():
             assert xy_seril_1 == xy_seril_2
             xy_name = xy_m.group(2)
             xy = []
-            pian.append(("{}.{}".format(xy_seril_2, xy_name), xy))
+            pian.append(((xy_seril_2, xy_seril_2, xy_name), xy))
             pin = None
 
         pin_p = re.compile(r"^\d+\.(.+品)")
@@ -81,7 +82,7 @@ def load_from_htm():
             pin_m = pin_matched[0][0]
             pin_name = pin_m.group(1)
             pin = []
-            xy.append((pin_name, pin))
+            xy.append(((None, None, pin_name), pin))
 
 
         if pin is not None:
@@ -121,6 +122,6 @@ def load_from_htm():
                                     body=body,
                                     notes=notes)
 
-        folder.append((sutta_num_sc, xml))
+        folder.append(((start, end, name), xml))
 
     return data

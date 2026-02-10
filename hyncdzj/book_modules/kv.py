@@ -1,6 +1,10 @@
-# 论藏/论事
-# Kathāvatthu
+from nikaya_share import base
 
-from hyncdzj import base
 
-info = base.Info(30, "論事", ("郭哲彰",), "KV")
+info = base.Info(
+    serial = 30,
+    name = "論事",
+    pali = "Kathāvatthu",
+    translators = ("郭哲彰",),
+    abbr = "KV",
+)

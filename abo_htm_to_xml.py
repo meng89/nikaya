@@ -5,7 +5,7 @@ import os
 import config
 from abo import sn, mn, dn, an
 import abo.kn
-import base
+from abo import base
 
 import abo.kn.su
 

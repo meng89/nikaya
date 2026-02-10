@@ -1,6 +1,10 @@
-# 论藏/分别论
-# Vibhaṅga
+from nikaya_share import base
 
-from hyncdzj import base
 
-info = base.Info(25, "分別論", ("郭哲彰",), "VB")
+info = base.Info(
+    serial = 25,
+    name = "分別論",
+    pali = "Vibhaṅga",
+    translators = ("郭哲彰",),
+    abbr = "VB",
+)

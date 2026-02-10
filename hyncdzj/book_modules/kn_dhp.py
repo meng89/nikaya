@@ -1,5 +1,10 @@
-# 法句經
+from nikaya_share import base
 
-from hyncdzj import base
 
-info = base.Info(9, "法句經", ("悟醒",), "DHP")
+info = base.Info(
+    serial = 9,
+    name = "法句經",
+    pali = "Dhammapada",
+    translators = ("悟醒",),
+    abbr = "DHP",
+)

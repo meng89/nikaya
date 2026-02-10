@@ -1,5 +1,10 @@
-# Theragāthā
+from nikaya_share import base
 
-from hyncdzj import base
 
-info = base.Info(15, "長老偈經", ("雲庵",), "THAG")
+info = base.Info(
+    serial = 15,
+    name = "長老偈經",
+    pali = "Theragāthā",
+    translators = ("雲庵",),
+    abbr = "THAG",
+)

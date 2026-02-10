@@ -1,6 +1,9 @@
-# 论藏/界論
-# Dhātukathā
+from nikaya_share import base
 
-from hyncdzj import base
-
-info = base.Info(26, "界論", ("郭哲彰",), "DT")
+info = base.Info(
+    serial = 26,
+    name = "界論",
+    pali = "Dhātukathā",
+    translators = ("郭哲彰",),
+    abbr = "DT",
+)

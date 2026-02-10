@@ -1,6 +1,10 @@
-# Cariyāpiṭaka
-# 所行藏
+from nikaya_share import base
 
-from hyncdzj import base
 
-info = base.Info(21, "所行藏經", ("悟醒",), "CP")
+info = base.Info(
+    serial = 21,
+    name = "所行藏經",
+    pali = "Cariyāpiṭaka",
+    translators = ("悟醒",),
+    abbr = "CP",
+)

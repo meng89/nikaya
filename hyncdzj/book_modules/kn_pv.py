@@ -1,3 +1,10 @@
-from hyncdzj import base
+from nikaya_share import base
 
-info = base.Info(14, "餓鬼事經", ("雲庵",), "VV")
+
+info = base.Info(
+    serial = 14,
+    name = "餓鬼事經",
+    pali = "Petavatthu",
+    translators = ("雲庵",),
+    abbr = "VV",
+)

@@ -1,4 +1,3 @@
-import dataclasses
 import shutil
 import re
 import os
@@ -138,17 +137,6 @@ def _hit_note(notes, num):
 
 
 ########################################################################################################################
-
-@dataclasses.dataclass
-class Info:
-    serial: int | None
-    name: str
-    translators: tuple[str, ...]
-    abbr: str
-    authors: tuple[tuple, ...] = None
-
-#class Info2:
-#    def __init__(self, serial: int or None, name: str, translators: tuple[str, ...], abbr: str, authors: tuple[tuple, ...]):
 
 
 def is_pts_ref(x):

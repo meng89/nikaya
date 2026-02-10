@@ -1,7 +1,11 @@
-from hyncdzj import base
+from nikaya_share import base
 
-# Apadāna
+
 # 譬喻/本行
-
-
-info = base.Info(17, "譬喻經", ("悟醒",), "AP")
+info = base.Info(
+    serial = 17,
+    name = "譬喻經",
+    pali = "Apadāna",
+    translators = ("悟醒",),
+    abbr = "AP",
+)

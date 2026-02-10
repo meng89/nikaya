@@ -2,9 +2,16 @@ import re
 
 import cn2an
 
-from hyncdzj import base
+from nikaya_share import base
 
-info = base.Info(6, "相應部", ("通妙", "雲庵"), "SN")
+
+info = base.Info(
+    serial = 6,
+    name = "相應部",
+    pali = "Saṃyutta Nikāya",
+    translators = ("通妙", "雲庵"),
+    abbr = "SN",
+)
 
 
 # 原始 p5a 转换成的 simple, 调用此函数处理一下

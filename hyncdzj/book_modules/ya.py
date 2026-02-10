@@ -1,6 +1,10 @@
-# 论藏/雙論
-# Yamaka
+from nikaya_share import base
 
-from hyncdzj import base
 
-info = base.Info(28, "雙論", ("郭哲彰",), "YA")
+info = base.Info(
+    serial = 28,
+    name = "雙論",
+    pali = "Yamaka",
+    translators = ("郭哲彰",),
+    abbr = "YA",
+)

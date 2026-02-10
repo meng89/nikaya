@@ -1,6 +1,11 @@
-from hyncdzj import base
+from nikaya_share import base
 
-# Visuddhimagga
-# 清淨道論
 
-info = base.Info(35, "清淨道論", ("悟醒",), "visuddhimagga", ("佛音撰",))
+info = base.Info(
+    serial = 35,
+    name = "清淨道論",
+    pali = "Visuddhimagga",
+    translators = ("悟醒",),
+    abbr = "visuddhimagga",
+    authors = (("佛音撰",),),
+)

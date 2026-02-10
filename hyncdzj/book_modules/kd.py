@@ -1,6 +1,9 @@
-# Khandhaka
-# 律藏/犍度
+from nikaya_share import base
 
-from hyncdzj import base
-
-info = base.Info(2, "犍度", ("通妙",), "KD")
+info = base.Info(
+    serial = 2,
+    name = "犍度",
+    pali = "Khandhaka",
+    translators = ("通妙",),
+    abbr = "KD",
+)

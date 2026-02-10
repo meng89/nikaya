@@ -1,6 +1,10 @@
-from hyncdzj import base
+from nikaya_share import base
 
-# Abhidhammattha-sangaha
-# 攝阿毘達磨義論
 
-info = base.Info(37, "攝阿毘達磨義論", ("悟醒",), "Abhidhammattha-sangaha", (("阿那律陀", "著"),))
+info = base.Info(
+    serial = 37,
+    name = "攝阿毘達磨義論",
+    pali = "Abhidhammattha-sangaha",
+    translators = ("悟醒",),
+    authors=(("阿那律陀", "著"),),
+)

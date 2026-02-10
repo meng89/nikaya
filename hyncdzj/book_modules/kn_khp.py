@@ -1,5 +1,10 @@
-# 小诵经
+from nikaya_share import base
 
-from hyncdzj import base
 
-info = base.Info(8, "小誦經", ("悟醒",), "KHP")
+info = base.Info(
+    serial = 8,
+    name = "小誦經",
+    pali = "Khuddakapāṭha",
+    translators = ("悟醒",),
+    abbr = "KHP",
+)

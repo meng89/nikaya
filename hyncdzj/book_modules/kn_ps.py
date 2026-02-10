@@ -1,3 +1,10 @@
-from hyncdzj import base
+from nikaya_share import base
 
-info = base.Info(19, "無礙解道", ("悟醒",), "PS")
+
+info = base.Info(
+    serial = 19,
+    name = "無礙解道",
+    pali = "Paṭisambhidāmagga",
+    translators = ("悟醒",),
+    abbr = "PS",
+)

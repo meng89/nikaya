@@ -1,9 +1,10 @@
-#!/usr/bin/env python3
+from nikaya_share import base
 
-# Parivāra
-# 附隨
 
-from hyncdzj import base
-
-info = base.Info(3, "附隨", ("通妙",), "PV")
-
+info = base.Info(
+    serial = 3,
+    name = "附隨",
+    pali = "Parivāra",
+    translators = ("通妙",),
+    abbr = "PV",
+)

@@ -1,7 +1,10 @@
-from hyncdzj import base
-
-# Milindapañha
-# 彌蘭王問經
+from nikaya_share import base
 
 
-info = base.Info(31, "彌蘭王問經", ("郭哲彰",), "MIL")
+info = base.Info(
+    serial = 31,
+    name = "彌蘭王問經",
+    pali = "Milindapañha",
+    translators = ("郭哲彰",),
+    abbr = "MIL",
+)

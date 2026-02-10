@@ -1,12 +1,17 @@
-
 import re
 
 import cn2an
 
-from hyncdzj import base
+from nikaya_share import base
 
-info = base.Info(5, "中部", ("通妙",), "MN")
 
+info = base.Info(
+    serial = 5,
+    name = "中部",
+    pali = "Majjhima Nikāya",
+    translators = ("通妙",),
+    abbr = "MN",
+)
 
 def change_name_fun(name):
     m = re.match(r"^\S+　(\S+)篇[上下]$", name)

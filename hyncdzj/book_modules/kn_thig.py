@@ -1,4 +1,10 @@
-from hyncdzj import base
+from nikaya_share import base
 
-info = base.Info(16, "長老尼偈經", ("雲庵",), "thig")
 
+info = base.Info(
+    serial = 16,
+    name = "長老尼偈經",
+    pali = "Therīgāthā",
+    translators = ("雲庵",),
+    abbr = "thig",
+)

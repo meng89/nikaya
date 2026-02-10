@@ -1,6 +1,10 @@
-from hyncdzj import base
+from nikaya_share import base
 
-# Samantapāsādikā
-# 一切善見律註序
 
-info = base.Info(36, "一切善見律註序", ("悟醒",), "Samantapasadika", (("佛音", "譯述"),))
+info = base.Info(
+    serial = 36,
+    name = "一切善見律註序",
+    pali = "Samantapāsādikā",
+    translators = ("悟醒",),
+    authors = (("佛音", "譯述"),)
+)

@@ -1,5 +1,10 @@
-# Suttanipāta
+from nikaya_share import base
 
-from hyncdzj import base
 
-info = base.Info(12, "經集", ("雲庵",), "SNP")
+info = base.Info(
+    serial = 12,
+    name = "經集",
+    pali = "Suttanipāta",
+    translators = ("雲庵",),
+    abbr = "SNP",
+)

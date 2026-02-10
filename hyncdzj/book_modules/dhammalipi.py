@@ -1,6 +1,9 @@
-from hyncdzj import base
+from nikaya_share import base
 
-# Dhaṃma Lipi
-# 阿育王刻文
 
-info = base.Info(38, "阿育王刻文", ("悟醒",), "dhammalipi")
+info = base.Info(
+    serial = 38,
+    name = "阿育王刻文",
+    pali =  "Dhaṃma Lipi",
+    translators = ("悟醒",),
+)

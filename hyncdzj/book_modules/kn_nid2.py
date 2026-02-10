@@ -1,3 +1,10 @@
-from hyncdzj import base
+from nikaya_share import base
 
-info = base.Info(23, "小義釋", ("悟醒",), "NID2")
+
+info = base.Info(
+    serial = 23,
+    name = "小義釋",
+    pali = "Cula Niddesa",
+    translators = ("悟醒",),
+    abbr = "NID2",
+)

@@ -1,3 +1,10 @@
-from hyncdzj import base
+from nikaya_share import base
 
-info = base.Info(10, "自說經", ("悟醒",), "UD")
+
+info = base.Info(
+    serial = 10,
+    name = "自說經",
+    pali = "Udāna",
+    translators = ("悟醒",),
+    abbr = "UD",
+)

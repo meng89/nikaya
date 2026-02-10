@@ -1,6 +1,10 @@
-# Jātaka
-# 本生
+from nikaya_share import base
 
-from hyncdzj import base
 
-info = base.Info(18, "本生經", ("悟醒",), "JAT")
+info = base.Info(
+    serial = 18,
+    name = "本生經",
+    pali = "Jātaka",
+    translators = ("悟醒",),
+    abbr = "JAT",
+)
