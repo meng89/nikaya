@@ -5,6 +5,7 @@ import config
 from hyncdzj import base
 import hyncdzj_load_from_p5a
 from  hyncdzj import book_modules
+from nikaya_share import base
 
 
 def main():

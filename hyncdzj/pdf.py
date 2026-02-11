@@ -144,7 +144,7 @@ def write_tree(f, module, namegroups, data: list, lang, max_hanzi_in_line, max_l
 
         f.write(startsec(lang, depth, title_name, mark_name, title_name, sc_key))
 
-        if isinstance(obj, xl.Xml):
+        if isinstance(obj, xl.Element):
             write_doc(f, obj, lang)
 
         else:
@@ -166,7 +166,7 @@ def write_tree(f, module, namegroups, data: list, lang, max_hanzi_in_line, max_l
 
 
 def write_doc(f, doc, lang):
-    for e in doc.root.kids:
+    for e in doc.kids:
         if isinstance(e, xl.Element) and re.match(r"^n\d+$", e.tag):
             break
 
@@ -179,7 +179,7 @@ def write_doc(f, doc, lang):
             pass
 
         else:
-            f.write(xml_to_tex([e], doc.root, lang))
+            f.write(xml_to_tex([e], doc, lang))
 
 
 def write_fontstex(work_dir, lang):
@@ -467,10 +467,10 @@ def maybe_sub_is_doc(obj:list):
     node_count = 0
     doc_count = 0
     for namegroup, sub in obj:
-        if isinstance(sub, xl.Xml):
-            doc_count += 1
-        elif isinstance(sub, list):
+        if isinstance(sub, list):
             node_count += 1
+        elif isinstance(sub, xl.Element):
+            doc_count += 1
         else:
             raise Exception
 

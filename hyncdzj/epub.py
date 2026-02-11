@@ -170,7 +170,7 @@ def write_tree(module, data, marks, docs, parent_namegroups, notes, lang, marks_
 
             write_leaf_to_page(module, obj, mark.kids, cur_namegroups, notes, lang, doc_path, html, body)
 
-        elif isinstance(obj, xl.Xml):
+        elif isinstance(obj, xl.Element):
             docs.append((doc_path, html))
             mark, heading, _, _, _, _ = make_mark_and_heading(module, cur_namegroups, obj, 2)
             marks_and_headings.append((mark, heading))
@@ -209,7 +209,7 @@ def write_leaf_to_page(module, data, marks, parent_branch, notes, lang, doc_path
 
 def write_doc_to_page(module, obj, marks, cur_namegroups, notes, lang, doc_path, html, body, doc_id):
     sub_count = 0
-    for e in obj.root.kids:
+    for e in obj.kids:
         if isinstance(e, xl.Element) and re.match(r"^n\d+$", e.tag):
             break
 
@@ -236,7 +236,7 @@ def write_doc_to_page(module, obj, marks, cur_namegroups, notes, lang, doc_path,
             sub_count += 1
 
         else:
-            html_es = xml_es_to_html([e], obj.root, notes, doc_path, lang)
+            html_es = xml_es_to_html([e], obj, notes, doc_path, lang)
             body.kids.extend(html_es)
 
 

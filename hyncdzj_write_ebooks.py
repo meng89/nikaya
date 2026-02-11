@@ -8,6 +8,9 @@ import config
 import shutil
 
 import multiprocessing
+
+from nikaya_share import base
+
 multiprocessing.set_start_method("fork") # only POSIX
 from multiprocessing import Process
 
@@ -136,14 +139,14 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, layouts=N
         simple_filling_path = os.path.join(config.SIMPLE_FILLING_DIR, m.info.name)
 
         if os.path.exists(simple_filled_path):
-            data = hyncdzj.base.load_from_disk(simple_filled_path)
+            data = base.load_from_disk(simple_filled_path)
             tag = "已充填"
         elif os.path.exists(simple_filling_path):
-            data = hyncdzj.base.load_from_disk(simple_filling_path)
+            data = base.load_from_disk(simple_filling_path)
             tag = "充填中"
         else:
             simple_path = os.path.join(config.HYNCDZJ_SIMPLE_XML_DIR, m.info.name)
-            data = hyncdzj.base.load_from_disk(simple_path)
+            data = base.load_from_disk(simple_path)
             tag = None
 
         print(" ✅")
@@ -156,7 +159,7 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, layouts=N
                 if debug:
                     _noindex_data = hyncdzj.trans_noindex_data(data)
                     sc_data_path = os.path.join(temp_td.name, "sc_data", m.info.name)
-                    hyncdzj.base.write_to_disk(sc_data_path, _noindex_data)
+                    base.write_to_disk(sc_data_path, _noindex_data)
             else:
                 translated_data = data
 

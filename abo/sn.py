@@ -2,13 +2,16 @@ import re
 
 import abo.page_parsing
 import abo.utils
+from nikaya_share import base
 
 
-
-name_han = "相應部"
-name_pali = "Saṃyutta Nikāya"
-short = "SN"
-htmls = ["SN/SN{:0>4d}.htm".format(x) for x in range(1, 1807)]
+info = base.Info(
+    name = "相應部",
+    pali = "Saṃyutta Nikāya",
+    translators = ("莊春江",),
+    abbr = "SN",
+    htmls = ["SN/SN{:0>4d}.htm".format(x) for x in range(1, 1807)],
+)
 
 
 def load_from_htm():
@@ -17,7 +20,7 @@ def load_from_htm():
     xy = []
     pin = []
 
-    for htm in htmls:
+    for htm in info.htmls:
         root, mtime, body_lines, notes, div_nikaya = abo.page_parsing.read_page(htm, 2)
 
         # 相應部1相應1經/暴流之渡過經(諸天相應/有偈篇/祇夜)(莊春江譯)[SA.1267]
@@ -40,12 +43,12 @@ def load_from_htm():
 
         assert len(matched) == 1
         m = matched[0][0]
-        xy_seril_1 = m.group(1)
-        start = m.group(2)
+        xy_seril_1 = int(m.group(1))
+        start = int(m.group(2))
         if m.group(3) is None:
             end = start
         else:
-            end = m.group(3)
+            end = int(m.group(3))
 
         name = m.group(4)
         tail = m.group(5)
@@ -68,7 +71,7 @@ def load_from_htm():
         if xy_matched:
             assert len(xy_matched) == 1
             xy_m = xy_matched[0][0]
-            xy_seril_2 = xy_m.group(1)
+            xy_seril_2 = int(xy_m.group(1))
             assert xy_seril_1 == xy_seril_2
             xy_name = xy_m.group(2)
             xy = []
