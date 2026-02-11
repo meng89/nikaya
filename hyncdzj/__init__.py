@@ -5,19 +5,13 @@ def trans_data(data, f):
     new_data = []
     for (file_index, start, end, name), obj in data:
         new_namegroup = (file_index, start, end, f(name))
-        if isinstance(obj, xl.Xml):
-            new_obj = trans_xml(obj, f)
+        if isinstance(obj, list):
+            new_obj = trans_data(obj, f)
         else:
-            new_obj= trans_data(obj, f)
+            new_obj = trans_e(obj, f)
+
         new_data.append((new_namegroup, new_obj))
     return new_data
-
-
-def trans_xml(xml, f):
-    root = xml.root
-    new_root = trans_e(root, f)
-    new_xml = xl.Xml(new_root)
-    return new_xml
 
 
 def trans_e(e: xl.Element, f):

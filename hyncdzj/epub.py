@@ -531,9 +531,9 @@ def count_page(obj):
             large_page += large_page2
             continue
 
-        xml = obj
+
         line_count = 0
-        for p in xml.root.find_kids("p"):
+        for p in obj.find_kids("p"):
             txt = hyncdzj.utils.line_to_txt(p.kids)
             line_count += math.ceil(len(txt)/40)
 

@@ -285,7 +285,8 @@ def load_from_disk(path) -> list:
         if os.path.isdir(entry_path):
             v = load_from_disk(entry_path)
         elif os.path.isfile(entry_path):
-            v = xl.parse(open(entry_path, "r").read(),ignore_blank=True, unignore_blank_parent_tags=[""])
+            xml = xl.parse(open(entry_path, "r").read(),ignore_blank=True, unignore_blank_parent_tags=[""])
+            v = xml.root
         else:
             raise Exception("Unknow File: {}".format(entry_path))
         data.append((fullnamegroup, v))
