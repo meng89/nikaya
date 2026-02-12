@@ -1,43 +1,20 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0656.htm
-        </source_page>
+        <source_page>SN/SN0656.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.22.138
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 22.138
-            </sutta_num>
+            <sutta_num>SN.22.138</sutta_num>
+            <sutta_num type="SC">SN 22.138</sutta_num>
         </sutta_nums>
-        <start>
-            138
-        </start>
-        <end>
-            138
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部22相應138經/無常經第二
-            </span>
-            (蘊相應/蘊篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>138</start>
+        <end>138</end>
+        <source_title><span class="sutra_name">相應部22相應138經/無常經第二</span>(蘊相應/蘊篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            無常經第二
-        </title>
-        <mtime>
-            2025-08-16 01:46:06 +0800
-        </mtime>
+        <title>無常經第二</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　起源於舍衛城。</p>
-        <p>　　「<gn id="31">比丘</gn>們！凡是無常的，在那裡，貪應該被你們捨斷。比丘們！而什麼是無常的呢？比丘們！色是無常的，在那裡，貪應該被你們捨斷；受是無常的……想……諸行……識是無常的，在那裡，貪應該被你們捨斷。比丘們！凡是無常的，在那裡，貪應該被你們捨斷。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>起源於舍衛城。</p>
+    <p>「<g31>比丘</g31>們！凡是無常的，在那裡，貪應該被你們捨斷。比丘們！而什麼是無常的呢？比丘們！色是無常的，在那裡，貪應該被你們捨斷；受是無常的……想……諸行……識是無常的，在那裡，貪應該被你們捨斷。比丘們！凡是無常的，在那裡，貪應該被你們捨斷。」</p>
+    <n1/>
 </doc>

@@ -1,49 +1,22 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0064.htm
-        </source_page>
+        <source_page>SN/SN0064.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.1.64
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 1.64
-            </sutta_num>
+            <sutta_num>SN.1.64</sutta_num>
+            <sutta_num type="SC">SN 1.64</sutta_num>
         </sutta_nums>
-        <start>
-            64
-        </start>
-        <end>
-            64
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部1相應64經/結經
-            </span>
-            (諸天相應/有偈篇/祇夜)(莊春江譯)[SA.1010]
-        </source_title>
-        <relevant>
-            [SA.1010]
-        </relevant>
-        <title>
-            結經
-        </title>
-        <mtime>
-            2025-08-16 01:46:38 +0800
-        </mtime>
+        <start>64</start>
+        <end>64</end>
+        <source_title><span class="sutra_name">相應部1相應64經/結經</span>(諸天相應/有偈篇/祇夜)(莊春江譯)[SA.1010]</source_title>
+        <relevant>[SA.1010]</relevant>
+        <title>結經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「什麼是世間的結呢？什麼是它的遊走呢？</p>
-        <p>　　　以什麼的放捨，被稱為「涅槃」呢？」</p>
-        <p>　　「歡喜是世間的結，<ln id="1">尋是它的遊走</ln>，</p>
-        <p>　　　以渴愛的放捨，被稱為「涅槃」。」</p>
-    </body>
-    <notes>
-        <note id="1">
-            「尋是它的遊走」(vitakkassa vicāraṇaṃ)，菩提比丘長老英譯為「思考是它四處移動的方法」(Thought is its means of travelling about)，並解說，「遊走」(vicāraṇa)，與其同源的「伺」(vicāra)，通常與「尋」(vitakka)合起來描述心思的過程(the thought process)，如初禪[的「有尋有伺」]，這裡似乎是表示：「尋」不需要身體的運動就能四處游走。按：《顯揚真義》以「尋是它的雙腳」(vitakko tassa pādā)解說。
-        </note>
-    </notes>
+    <p>「什麼是世間的結呢？什麼是它的遊走呢？</p>
+    <p>以什麼的放捨，被稱為「涅槃」呢？」</p>
+    <p>「歡喜是世間的結，<t1>尋是它的遊走</t1>，</p>
+    <p>以渴愛的放捨，被稱為「涅槃」。」</p>
+    <n1>「尋是它的遊走」(vitakkassa vicāraṇaṃ)，菩提比丘長老英譯為「思考是它四處移動的方法」(Thought is its means of travelling about)，並解說，「遊走」(vicāraṇa)，與其同源的「伺」(vicāra)，通常與「尋」(vitakka)合起來描述心思的過程(the thought process)，如初禪[的「有尋有伺」]，這裡似乎是表示：「尋」不需要身體的運動就能四處游走。按：《顯揚真義》以「尋是它的雙腳」(vitakko tassa pādā)解說。</n1>
 </doc>

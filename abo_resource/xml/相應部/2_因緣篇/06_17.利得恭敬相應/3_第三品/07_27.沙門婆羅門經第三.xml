@@ -1,43 +1,20 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0448.htm
-        </source_page>
+        <source_page>SN/SN0448.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.17.27
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 17.27
-            </sutta_num>
+            <sutta_num>SN.17.27</sutta_num>
+            <sutta_num type="SC">SN 17.27</sutta_num>
         </sutta_nums>
-        <start>
-            27
-        </start>
-        <end>
-            27
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部17相應27經/沙門婆羅門經第三
-            </span>
-            (利得恭敬相應/因緣篇/如來記說)(莊春江譯)
-        </source_title>
+        <start>27</start>
+        <end>27</end>
+        <source_title><span class="sutra_name">相應部17相應27經/沙門婆羅門經第三</span>(利得恭敬相應/因緣篇/如來記說)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            沙門婆羅門經第三
-        </title>
-        <mtime>
-            2025-08-16 01:48:30 +0800
-        </mtime>
+        <title>沙門婆羅門經第三</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　住在舍衛城……（中略）。 </p>
-        <p>　　「<gn id="31">比丘</gn>們！凡任何<gn id="29">沙門</gn>或<gn id="17">婆羅門</gn>不如實知道利得、恭敬、名聲，不如實知道利得、恭敬、名聲的<gn id="67">集</gn>，不如實知道利得、恭敬、名聲的<gn id="68">滅</gn>，不如實知道導向利得、恭敬、名聲的<gn id="69">滅道跡</gn>者……（中略）了知……（中略）以證智自作證後，[<gn id="42">在當生中</gn>]<gn id="66">進入後住於</gn><gn id="327">沙門義</gn>或婆羅門義。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>住在舍衛城……（中略）。 </p>
+    <p>「<g31>比丘</g31>們！凡任何<g29>沙門</g29>或<g17>婆羅門</g17>不如實知道利得、恭敬、名聲，不如實知道利得、恭敬、名聲的<g67>集</g67>，不如實知道利得、恭敬、名聲的<g68>滅</g68>，不如實知道導向利得、恭敬、名聲的<g69>滅道跡</g69>者……（中略）了知……（中略）以證智自作證後，[<g42>在當生中</g42>]<g66>進入後住於</g66><g327>沙門義</g327>或婆羅門義。」</p>
+    <n1/>
 </doc>

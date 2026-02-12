@@ -1,47 +1,22 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0716.htm
-        </source_page>
+        <source_page>SN/SN0716.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.24.13
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 24.13
-            </sutta_num>
+            <sutta_num>SN.24.13</sutta_num>
+            <sutta_num type="SC">SN 24.13</sutta_num>
         </sutta_nums>
-        <start>
-            13
-        </start>
-        <end>
-            13
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部24相應13經/命即是身體經
-            </span>
-            (見相應/蘊篇/弟子記說)(莊春江譯)[SA.168]
-        </source_title>
-        <relevant>
-            [SA.168]
-        </relevant>
-        <title>
-            命即是身體經
-        </title>
-        <mtime>
-            2025-08-16 01:45:36 +0800
-        </mtime>
+        <start>13</start>
+        <end>13</end>
+        <source_title><span class="sutra_name">相應部24相應13經/命即是身體經</span>(見相應/蘊篇/弟子記說)(莊春江譯)[SA.168]</source_title>
+        <relevant>[SA.168]</relevant>
+        <title>命即是身體經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　起源於舍衛城。</p>
-        <p>　　「<gn id="31">比丘</gn>們！在有什麼時，執取什麼後，執著什麼後，這樣的見生起：『命即是身體。』呢？」</p>
-        <p>　　「<gn id="45">大德</gn>！我們的法是<gn id="12">世尊</gn>為根本的……（中略）。」……</p>
-        <p>　　「……<gn id="159">決定</gn>、<gn id="160">以正覺為彼岸</gn>的<gn id="165">入流者</gn>聖弟子。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>起源於舍衛城。</p>
+    <p>「<g31>比丘</g31>們！在有什麼時，執取什麼後，執著什麼後，這樣的見生起：『命即是身體。』呢？」</p>
+    <p>「<g45>大德</g45>！我們的法是<g12>世尊</g12>為根本的……（中略）。」……</p>
+    <p>「……<g159>決定</g159>、<g160>以正覺為彼岸</g160>的<g165>入流者</g165>聖弟子。」</p>
+    <n1/>
 </doc>

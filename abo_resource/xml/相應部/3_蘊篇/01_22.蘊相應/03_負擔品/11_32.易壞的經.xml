@@ -1,54 +1,27 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0550.htm
-        </source_page>
+        <source_page>SN/SN0550.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.22.32
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 22.32
-            </sutta_num>
+            <sutta_num>SN.22.32</sutta_num>
+            <sutta_num type="SC">SN 22.32</sutta_num>
         </sutta_nums>
-        <start>
-            32
-        </start>
-        <end>
-            32
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部22相應32經/易壞的經
-            </span>
-            (蘊相應/蘊篇/修多羅)(莊春江譯)[SA.51]
-        </source_title>
-        <relevant>
-            [SA.51]
-        </relevant>
-        <title>
-            易壞的經
-        </title>
-        <mtime>
-            2025-08-16 01:47:24 +0800
-        </mtime>
+        <start>32</start>
+        <end>32</end>
+        <source_title><span class="sutra_name">相應部22相應32經/易壞的經</span>(蘊相應/蘊篇/修多羅)(莊春江譯)[SA.51]</source_title>
+        <relevant>[SA.51]</relevant>
+        <title>易壞的經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　起源於舍衛城。</p>
-        <p>　　「<gn id="31">比丘</gn>們！我將教導<ln id="1">易壞的</ln>與非易壞的，<gn id="43">你們要聽</gn>它！</p>
-        <p>　　比丘們！而什麼是易壞的？什麼是非易壞的？</p>
-        <p>　　比丘們！色是易壞的，凡它的<gn id="68">滅</gn>、平息、滅沒，這是非易壞的。</p>
-        <p>　　受是易壞的，凡它的滅、平息、滅沒，這是非易壞的。想是易壞的……諸行是易壞的，凡它的滅、平息、滅沒，這是非易壞的。識是易壞的，凡它的滅、平息、滅沒，這是非易壞的。」</p>
-        <p>　　負擔品第三，其<gn id="35">攝頌</gn>：</p>
-        <p>　　「負擔、遍知、證知，意欲貪為第四的，</p>
-        <p>　　　樂味三說，歡喜為第八的，</p>
-        <p>　　　生起與痛苦之根，易壞的為第十一的。」</p>
-    </body>
-    <notes>
-        <note id="1">
-            「壞法(SA.51)」，南傳作「易壞的」(pabhaṅgu，另譯為「壞法」)，菩提比丘長老英譯為「易碎的」(the fragile)。按：《顯揚真義》以「被破壞自性」(pabhijjanasabhāvaṃ)解說。
-        </note>
-    </notes>
+    <p>起源於舍衛城。</p>
+    <p>「<g31>比丘</g31>們！我將教導<t1>易壞的</t1>與非易壞的，<g43>你們要聽</g43>它！</p>
+    <p>比丘們！而什麼是易壞的？什麼是非易壞的？</p>
+    <p>比丘們！色是易壞的，凡它的<g68>滅</g68>、平息、滅沒，這是非易壞的。</p>
+    <p>受是易壞的，凡它的滅、平息、滅沒，這是非易壞的。想是易壞的……諸行是易壞的，凡它的滅、平息、滅沒，這是非易壞的。識是易壞的，凡它的滅、平息、滅沒，這是非易壞的。」</p>
+    <p>負擔品第三，其<g35>攝頌</g35>：</p>
+    <p>「負擔、遍知、證知，意欲貪為第四的，</p>
+    <p>樂味三說，歡喜為第八的，</p>
+    <p>生起與痛苦之根，易壞的為第十一的。」</p>
+    <n1>「壞法(SA.51)」，南傳作「易壞的」(pabhaṅgu，另譯為「壞法」)，菩提比丘長老英譯為「易碎的」(the fragile)。按：《顯揚真義》以「被破壞自性」(pabhijjanasabhāvaṃ)解說。</n1>
 </doc>

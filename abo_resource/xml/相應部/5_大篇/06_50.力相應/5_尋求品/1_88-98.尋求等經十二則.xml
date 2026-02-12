@@ -1,47 +1,24 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1540.htm
-        </source_page>
+        <source_page>SN/SN1540.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.50.88-98
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 50.88-98
-            </sutta_num>
+            <sutta_num>SN.50.88-98</sutta_num>
+            <sutta_num type="SC">SN 50.88-98</sutta_num>
         </sutta_nums>
-        <start>
-            88
-        </start>
-        <end>
-            98
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部50相應 88-98經/尋求等經十二則
-            </span>
-            (力相應/大篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>88</start>
+        <end>98</end>
+        <source_title><span class="sutra_name">相應部50相應 88-98經/尋求等經十二則</span>(力相應/大篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            尋求等經十二則
-        </title>
-        <mtime>
-            2025-08-16 01:49:12 +0800
-        </mtime>
+        <title>尋求等經十二則</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head>
+            <p>9.尋求品</p>
+        </head>
     </meta>
-    <head>
-        <p>9.尋求品</p>
-    </head>
-    <body>
-        <p>　　尋求經應該這樣使之被細說[按：如SN.45.161-171]：有：貪之調伏的完結、瞋之調伏的完結、癡之調伏的完結。</p>
-        <p>　　 尋求品第九，其<gn id="35">攝頌</gn>：</p>
-        <p>　　「尋求、慢、漏，有與三苦性，</p>
-        <p>　　　荒蕪、垢、惱亂，受、渴愛、渴望。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>尋求經應該這樣使之被細說[按：如SN.45.161-171]：有：貪之調伏的完結、瞋之調伏的完結、癡之調伏的完結。</p>
+    <p>尋求品第九，其<g35>攝頌</g35>：</p>
+    <p>「尋求、慢、漏，有與三苦性，</p>
+    <p>荒蕪、垢、惱亂，受、渴愛、渴望。」</p>
+    <n1/>
 </doc>

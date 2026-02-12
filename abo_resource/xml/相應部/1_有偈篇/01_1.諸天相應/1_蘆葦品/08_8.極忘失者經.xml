@@ -1,47 +1,23 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0008.htm
-        </source_page>
+        <source_page>SN/SN0008.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.1.8
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 1.8
-            </sutta_num>
+            <sutta_num>SN.1.8</sutta_num>
+            <sutta_num type="SC">SN 1.8</sutta_num>
         </sutta_nums>
-        <start>
-            8
-        </start>
-        <end>
-            8
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部1相應8經/極忘失者經
-            </span>
-            (諸天相應/有偈篇/祇夜)(莊春江譯)[SA.580]
-        </source_title>
-        <relevant>
-            [SA.580]
-        </relevant>
-        <title>
-            極忘失者經
-        </title>
-        <mtime>
-            2025-08-16 01:53:02 +0800
-        </mtime>
+        <start>8</start>
+        <end>8</end>
+        <source_title><span class="sutra_name">相應部1相應8經/極忘失者經</span>(諸天相應/有偈篇/祇夜)(莊春江譯)[SA.580]</source_title>
+        <relevant>[SA.580]</relevant>
+        <title>極忘失者經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　起源於舍衛城。</p>
-        <p>　　在一旁站立的那位天神在<gn id="12">世尊</gn>面前說這<gn id="281">偈頌</gn>：</p>
-        <p>　　「其諸法完全忘失者們，會被引導到異教，</p>
-        <p>　　　熟睡的他們未覺醒，是他們覺醒的時候。」</p>
-        <p>　　「其諸法不忘失者們，不會被引導到異教，</p>
-        <p>　　　那些<gn id="185">正覺者</gn><gn id="191">以究竟智</gn>，<gn id="882">在不平順中平順地行</gn>。」</p>
-    </body>
-    <notes/>
+    <p>起源於舍衛城。</p>
+    <p>在一旁站立的那位天神在<g12>世尊</g12>面前說這<g281>偈頌</g281>：</p>
+    <p>「其諸法完全忘失者們，會被引導到異教，</p>
+    <p>熟睡的他們未覺醒，是他們覺醒的時候。」</p>
+    <p>「其諸法不忘失者們，不會被引導到異教，</p>
+    <p>那些<g185>正覺者</g185><g191>以究竟智</g191>，<g882>在不平順中平順地行</g882>。」</p>
 </doc>

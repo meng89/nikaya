@@ -1,46 +1,21 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1465.htm
-        </source_page>
+        <source_page>SN/SN1465.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.48.13
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 48.13
-            </sutta_num>
+            <sutta_num>SN.48.13</sutta_num>
+            <sutta_num type="SC">SN 48.13</sutta_num>
         </sutta_nums>
-        <start>
-            13
-        </start>
-        <end>
-            13
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部48相應13經/簡要經第二
-            </span>
-            (根相應/大篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>13</start>
+        <end>13</end>
+        <source_title><span class="sutra_name">相應部48相應13經/簡要經第二</span>(根相應/大篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            簡要經第二
-        </title>
-        <mtime>
-            2025-08-16 01:47:04 +0800
-        </mtime>
+        <title>簡要經第二</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「<gn id="31">比丘</gn>們！有這五根，哪五個？信根……（中略）慧根。比丘們！這是五根。</p>
-        <p>　　比丘們！這五根的達成者、完成者是<gn id="5">阿羅漢</gn>；較之弱者是<gn id="209">不還者</gn>；較之弱者是<gn id="208">一來者</gn>；較之弱者是<gn id="165">入流者</gn>；較之弱者是<gn id="167">隨法行</gn>者；較之弱者是隨<gn id="166">信行</gn>者。</p>
-        <p>　　比丘們！像這樣，<ln id="1">根的不同有果的不同</ln>，果的不同有人的不同。」</p>
-    </body>
-    <notes>
-        <note id="1">
-            「根的不同有果的不同」，參看SN.48.16。
-        </note>
-    </notes>
+    <p>「<g31>比丘</g31>們！有這五根，哪五個？信根……（中略）慧根。比丘們！這是五根。</p>
+    <p>比丘們！這五根的達成者、完成者是<g5>阿羅漢</g5>；較之弱者是<g209>不還者</g209>；較之弱者是<g208>一來者</g208>；較之弱者是<g165>入流者</g165>；較之弱者是<g167>隨法行</g167>者；較之弱者是隨<g166>信行</g166>者。</p>
+    <p>比丘們！像這樣，<t1>根的不同有果的不同</t1>，果的不同有人的不同。」</p>
+    <n1>「根的不同有果的不同」，參看SN.48.16。</n1>
 </doc>

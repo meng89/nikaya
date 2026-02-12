@@ -1,51 +1,26 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0224.htm
-        </source_page>
+        <source_page>SN/SN0224.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.9.4
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 9.4
-            </sutta_num>
+            <sutta_num>SN.9.4</sutta_num>
+            <sutta_num type="SC">SN 9.4</sutta_num>
         </sutta_nums>
-        <start>
-            4
-        </start>
-        <end>
-            4
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部9相應4經/眾多經
-            </span>
-            (林相應/有偈篇/祇夜)(莊春江譯)[SA.1331]
-        </source_title>
-        <relevant>
-            [SA.1331]
-        </relevant>
-        <title>
-            眾多經
-        </title>
-        <mtime>
-            2025-08-16 01:46:08 +0800
-        </mtime>
+        <start>4</start>
+        <end>4</end>
+        <source_title><span class="sutra_name">相應部9相應4經/眾多經</span>(林相應/有偈篇/祇夜)(莊春江譯)[SA.1331]</source_title>
+        <relevant>[SA.1331]</relevant>
+        <title>眾多經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　<gn id="2">有一次</gn>，眾多<gn id="31">比丘</gn>住在憍薩羅國某處叢林中。</p>
-        <p>　　那時，雨季已下過，經過三個月，那些比丘出發遊行。</p>
-        <p>　　那時，那位住在那處叢林中、不見那些比丘、悲泣的天神在那時說這<gn id="281">偈頌</gn>：</p>
-        <p>　　「今天對我看起來像不喜樂的樣子：在許多遠離的(空的)座位上看見後，</p>
-        <p>　　　那些巧說者、多聞者，這些<gn id="80">喬達摩</gn>的弟子到哪裡了？」</p>
-        <p>　　在這麼說時，另一位天神以偈頌回應那位天神：</p>
-        <p>　　「到摩揭陀到憍薩羅，而某些是在跋耆地區，</p>
-        <p>　　　如野鹿般無執著的行者：比丘們無家屋地住。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p><g2>有一次</g2>，眾多<g31>比丘</g31>住在憍薩羅國某處叢林中。</p>
+    <p>那時，雨季已下過，經過三個月，那些比丘出發遊行。</p>
+    <p>那時，那位住在那處叢林中、不見那些比丘、悲泣的天神在那時說這<g281>偈頌</g281>：</p>
+    <p>「今天對我看起來像不喜樂的樣子：在許多遠離的(空的)座位上看見後，</p>
+    <p>那些巧說者、多聞者，這些<g80>喬達摩</g80>的弟子到哪裡了？」</p>
+    <p>在這麼說時，另一位天神以偈頌回應那位天神：</p>
+    <p>「到摩揭陀到憍薩羅，而某些是在跋耆地區，</p>
+    <p>如野鹿般無執著的行者：比丘們無家屋地住。」</p>
+    <n1/>
 </doc>

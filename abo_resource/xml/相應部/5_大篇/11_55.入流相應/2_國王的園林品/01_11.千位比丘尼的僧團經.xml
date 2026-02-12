@@ -1,50 +1,23 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1634.htm
-        </source_page>
+        <source_page>SN/SN1634.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.55.11
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 55.11
-            </sutta_num>
+            <sutta_num>SN.55.11</sutta_num>
+            <sutta_num type="SC">SN 55.11</sutta_num>
         </sutta_nums>
-        <start>
-            11
-        </start>
-        <end>
-            11
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部55相應11經/千位
-                <a onmouseover="note(this,31);">
-                    比丘尼
-                </a>
-                的僧團經
-            </span>
-            (入流相應/大篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>11</start>
+        <end>11</end>
+        <source_title><span class="sutra_name">相應部55相應11經/千位<a onmouseover="note(this,31);">比丘尼</a>的僧團經</span>(入流相應/大篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            千位比丘尼的僧團經
-        </title>
-        <mtime>
-            2025-08-16 01:49:30 +0800
-        </mtime>
+        <title>千位比丘尼的僧團經</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head>
+            <p>2.國王的園林品</p>
+        </head>
     </meta>
-    <head>
-        <p>2.國王的園林品</p>
-    </head>
-    <body>
-        <p>　　<gn id="2">有一次</gn>，<gn id="12">世尊</gn>住在舍衛城國王的園林。</p>
-        <p>　　那時，千位比丘尼的僧團去見世尊。抵達後，向世尊<gn id="46">問訊</gn>後，在一旁站立。世尊對在一旁站立的那些比丘尼說這個：</p>
-        <p>　　「比丘尼們！具備四法的<gn id="24">聖弟子</gn>是<gn id="165">入流者</gn>、不墮<gn id="110">惡趣</gn>法者、<gn id="159">決定者</gn>、<gn id="160">正覺為彼岸者</gn>，哪四個？比丘尼們！這裡，聖弟子在佛上具備<gn id="233">不壞淨</gn>：『像這樣，那位世尊是……（中略）<gn id="11">天-人們的大師</gn>、<gn id="3">佛陀</gn>、<gn id="12">世尊</gn>。』在法上……（中略）在<gn id="375">僧團</gn>上……（中略）具備聖者喜愛的諸戒：無毀壞的……（中略）轉起定的。比丘尼們！具備這四法的聖弟子是入流者、不墮惡趣法者、決定者、正覺為彼岸者。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p><g2>有一次</g2>，<g12>世尊</g12>住在舍衛城國王的園林。</p>
+    <p>那時，千位比丘尼的僧團去見世尊。抵達後，向世尊<g46>問訊</g46>後，在一旁站立。世尊對在一旁站立的那些比丘尼說這個：</p>
+    <p>「比丘尼們！具備四法的<g24>聖弟子</g24>是<g165>入流者</g165>、不墮<g110>惡趣</g110>法者、<g159>決定者</g159>、<g160>正覺為彼岸者</g160>，哪四個？比丘尼們！這裡，聖弟子在佛上具備<g233>不壞淨</g233>：『像這樣，那位世尊是……（中略）<g11>天-人們的大師</g11>、<g3>佛陀</g3>、<g12>世尊</g12>。』在法上……（中略）在<g375>僧團</g375>上……（中略）具備聖者喜愛的諸戒：無毀壞的……（中略）轉起定的。比丘尼們！具備這四法的聖弟子是入流者、不墮惡趣法者、決定者、正覺為彼岸者。」</p>
+    <n1/>
 </doc>

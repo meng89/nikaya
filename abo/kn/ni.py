@@ -35,21 +35,21 @@ def load_(htmls_):
         m = abo.utils.get_name(root, re.compile(r"^(\d+)\.(.+(?:的說明|…)|序偈)$"))
 
         body = abo.page_parsing.htm_lines_to_xml_lines(body_lines)
-        body = abo.page_parsing.lines_to_body(body)
+        body = abo.page_parsing.lines_to_es(body)
 
         xml = abo.utils.make_xml(source_page = htm,
-                                    sutta_nums = [],
-                                    start = m.group(1),
-                                    end = m.group(1),
-                                    mtime = mtime,
-                                    ctime = None,
-                                    source_title = None,
-                                    relevant = None,
-                                    title_line = [m.group(2)],
-                                    head = None,
-                                    body = body,
-                                    notes = notes
-                                    )
+                                 sutta_nums = [],
+                                 start = m.group(1),
+                                 end = m.group(1),
+                                 mtime = mtime,
+                                 ctime = None,
+                                 source_title = None,
+                                 relevant = None,
+                                 title_line = [m.group(2)],
+                                 head = None,
+                                 body_es= body,
+                                 notes = notes
+                                 )
         m = re.match(r"Ni/(.*).htm", htm)
         data.append((m.group(1), xml))
 

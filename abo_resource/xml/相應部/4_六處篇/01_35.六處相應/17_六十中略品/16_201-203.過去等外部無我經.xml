@@ -1,42 +1,19 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1017.htm
-        </source_page>
+        <source_page>SN/SN1017.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.35.201-203
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 35.201-203
-            </sutta_num>
+            <sutta_num>SN.35.201-203</sutta_num>
+            <sutta_num type="SC">SN 35.201-203</sutta_num>
         </sutta_nums>
-        <start>
-            201
-        </start>
-        <end>
-            203
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部35相應 201-203經/過去等外部無我經
-            </span>
-            (處相應/處篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>201</start>
+        <end>203</end>
+        <source_title><span class="sutra_name">相應部35相應 201-203經/過去等外部無我經</span>(處相應/處篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            過去等外部無我經
-        </title>
-        <mtime>
-            2025-08-16 01:52:52 +0800
-        </mtime>
+        <title>過去等外部無我經</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「<gn id="31">比丘</gn>們！過去、未來、現在諸色是無我，諸聲音……諸氣味……諸味道……諸<gn id="220">所觸</gn>……過去、未來、現在諸法是無我……這樣看的……（中略）他知道：『……<gn id="21">不再有此處[輪迴]的狀態</gn>。』」 </p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「<g31>比丘</g31>們！過去、未來、現在諸色是無我，諸聲音……諸氣味……諸味道……諸<g220>所觸</g220>……過去、未來、現在諸法是無我……這樣看的……（中略）他知道：『……<g21>不再有此處[輪迴]的狀態</g21>。』」 </p>
+    <n1/>
 </doc>

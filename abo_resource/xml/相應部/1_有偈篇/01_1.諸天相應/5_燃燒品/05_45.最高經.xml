@@ -1,41 +1,19 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0045.htm
-        </source_page>
+        <source_page>SN/SN0045.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.1.45
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 1.45
-            </sutta_num>
+            <sutta_num>SN.1.45</sutta_num>
+            <sutta_num type="SC">SN 1.45</sutta_num>
         </sutta_nums>
-        <start>
-            45
-        </start>
-        <end>
-            45
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部1相應45經/最高經
-            </span>
-            (諸天相應/有偈篇/祇夜)(莊春江譯)
-        </source_title>
+        <start>45</start>
+        <end>45</end>
+        <source_title><span class="sutra_name">相應部1相應45經/最高經</span>(諸天相應/有偈篇/祇夜)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            最高經
-        </title>
-        <mtime>
-            2025-08-16 01:49:38 +0800
-        </mtime>
+        <title>最高經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「完美名字者、微妙義的看見者，慧的給與者、在欲<gn id="391">阿賴耶</gn>上不執著者，</p>
-        <p>　　　請你們看那位一切知者、善智慧者：進入聖之路的大仙。」[Sn.9, 179偈]</p>
-    </body>
-    <notes/>
+    <p>「完美名字者、微妙義的看見者，慧的給與者、在欲<g391>阿賴耶</g391>上不執著者，</p>
+    <p>請你們看那位一切知者、善智慧者：進入聖之路的大仙。」[Sn.9, 179偈]</p>
 </doc>

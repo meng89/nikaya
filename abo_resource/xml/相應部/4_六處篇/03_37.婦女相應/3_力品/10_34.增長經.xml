@@ -1,48 +1,25 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1117.htm
-        </source_page>
+        <source_page>SN/SN1117.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.37.34
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 37.34
-            </sutta_num>
+            <sutta_num>SN.37.34</sutta_num>
+            <sutta_num type="SC">SN 37.34</sutta_num>
         </sutta_nums>
-        <start>
-            34
-        </start>
-        <end>
-            34
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部37相應34經/增長經
-            </span>
-            (婦女相應/處篇/如來記說)(莊春江譯)
-        </source_title>
+        <start>34</start>
+        <end>34</end>
+        <source_title><span class="sutra_name">相應部37相應34經/增長經</span>(婦女相應/處篇/如來記說)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            增長經
-        </title>
-        <mtime>
-            2025-08-16 01:50:06 +0800
-        </mtime>
+        <title>增長經</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「<gn id="31">比丘</gn>們！當以五個增長增長時，女聖弟子以聖增長增長，並且她是核心的取得者、殊勝身體的取得者，以哪五個？以信增長、以戒增長、以聽聞增長、以施捨增長、以慧增長，比丘們！當以這五個增長增長時，女聖弟子以聖增長增長，並且她是核心的取得者、殊勝身體的取得者。」</p>
-        <p>　　「凡在這裡以信、戒增長，與以慧、以施捨、以聽聞兩者，</p>
-        <p>　　　那位像那樣有戒的<gn id="99">優婆夷</gn>，就在這裡得到自己的核心。」</p>
-        <p>　　力品第三，其<gn id="35">攝頌</gn>：</p>
-        <p>　　「有自信、壓迫後、征服後，一、以部分為第五，</p>
-        <p>　　　驅逐、因與處，有自信、以增長為第十。」</p>
-        <p>　　婦女相應完成。</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「<g31>比丘</g31>們！當以五個增長增長時，女聖弟子以聖增長增長，並且她是核心的取得者、殊勝身體的取得者，以哪五個？以信增長、以戒增長、以聽聞增長、以施捨增長、以慧增長，比丘們！當以這五個增長增長時，女聖弟子以聖增長增長，並且她是核心的取得者、殊勝身體的取得者。」</p>
+    <p>「凡在這裡以信、戒增長，與以慧、以施捨、以聽聞兩者，</p>
+    <p>那位像那樣有戒的<g99>優婆夷</g99>，就在這裡得到自己的核心。」</p>
+    <p>力品第三，其<g35>攝頌</g35>：</p>
+    <p>「有自信、壓迫後、征服後，一、以部分為第五，</p>
+    <p>驅逐、因與處，有自信、以增長為第十。」</p>
+    <p>婦女相應完成。</p>
+    <n1/>
 </doc>

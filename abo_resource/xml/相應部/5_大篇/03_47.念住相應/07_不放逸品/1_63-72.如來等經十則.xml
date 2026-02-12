@@ -1,47 +1,24 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1449.htm
-        </source_page>
+        <source_page>SN/SN1449.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.47.63-72
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 47.63-72
-            </sutta_num>
+            <sutta_num>SN.47.63-72</sutta_num>
+            <sutta_num type="SC">SN 47.63-72</sutta_num>
         </sutta_nums>
-        <start>
-            63
-        </start>
-        <end>
-            72
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部47相應 63-72經/如來等經十則
-            </span>
-            (念住相應/大篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>63</start>
+        <end>72</end>
+        <source_title><span class="sutra_name">相應部47相應 63-72經/如來等經十則</span>(念住相應/大篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            如來等經十則
-        </title>
-        <mtime>
-            2025-08-16 01:47:24 +0800
-        </mtime>
+        <title>如來等經十則</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head>
+            <p>7.不放逸品</p>
+        </head>
     </meta>
-    <head>
-        <p>7.不放逸品</p>
-    </head>
-    <body>
-        <p>　　「<gn id="31">比丘</gn>們！眾生之所及：無足的、二足的、四足的、多足的……。[SN.45.139-148]」應該使之被細說。</p>
-        <p>　　不放逸品第七，其<gn id="35">攝頌</gn>：</p>
-        <p>　　「如來、足跡、屋頂，根、樹心、茉莉花，</p>
-        <p>　　　王、月、日，以衣服為第十句。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「<g31>比丘</g31>們！眾生之所及：無足的、二足的、四足的、多足的……。[SN.45.139-148]」應該使之被細說。</p>
+    <p>不放逸品第七，其<g35>攝頌</g35>：</p>
+    <p>「如來、足跡、屋頂，根、樹心、茉莉花，</p>
+    <p>王、月、日，以衣服為第十句。」</p>
+    <n1/>
 </doc>

@@ -1,55 +1,28 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0150.htm
-        </source_page>
+        <source_page>SN/SN0150.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.4.14
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 4.14
-            </sutta_num>
+            <sutta_num>SN.4.14</sutta_num>
+            <sutta_num type="SC">SN 4.14</sutta_num>
         </sutta_nums>
-        <start>
-            14
-        </start>
-        <end>
-            14
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部4相應14經/適當經
-            </span>
-            (魔相應/有偈篇/祇夜)(莊春江譯)[SA.1097]
-        </source_title>
-        <relevant>
-            [SA.1097]
-        </relevant>
-        <title>
-            適當經
-        </title>
-        <mtime>
-            2025-08-16 01:52:46 +0800
-        </mtime>
+        <start>14</start>
+        <end>14</end>
+        <source_title><span class="sutra_name">相應部4相應14經/適當經</span>(魔相應/有偈篇/祇夜)(莊春江譯)[SA.1097]</source_title>
+        <relevant>[SA.1097]</relevant>
+        <title>適當經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　<gn id="2">有一次</gn>，<gn id="12">世尊</gn>住在憍薩羅國一沙羅樹[地方]的<gn id="17">婆羅門</gn>村落。</p>
-        <p>　　當時，世尊被在家大眾圍繞，教導法。</p>
-        <p>　　那時，魔<gn id="49">波旬</gn>想這個：</p>
-        <p>　　「這位<gn id="29">沙門</gn><gn id="80">喬達摩</gn>被在家大眾圍繞，教導法，讓我為了使之盲目去見沙門喬達摩。」</p>
-        <p>　　那時，魔波旬去見世尊。抵達後，以<gn id="281">偈頌</gn>對世尊說：</p>
-        <p>　　「這不適合你：凡你教誡其他人，</p>
-        <p>　　　<ln id="1">在諸順從與排斥上</ln>，行那個的你不要被黏著。」</p>
-        <p>　　「為利益憐愍者、<gn id="185">正覺者</gn>，凡他教誡其他人，</p>
-        <p>　　　在諸順從與排斥上，<gn id="4">如來</gn>已脫離。」</p>
-        <p>　　那時，魔波旬：「世尊知道我，<gn id="8">善逝</gn>知道我。」痛苦地、不快樂地就在那裡消失。</p>
-    </body>
-    <notes>
-        <note id="1">
-            「相違不相違(SA.1097)」，南傳作「在諸順從與排斥上」(Anurodhavirodhesu)，菩提比丘長老英譯為「在吸引和排斥」(In attraction and repulsion)。按：《顯揚真義》說，這是貪與瞋恚(rāgapaṭighesu)，當講述法的談論時，因有一類人讚歎(sādhukāraṃ dadanti，給與作善哉」)他在那裡生起貪，有一類人不恭敬聽聞，他在那裡生起嫌惡(paṭigho，反感)，名為說法者在順從與排斥上被黏著(sajjati)。
-        </note>
-    </notes>
+    <p><g2>有一次</g2>，<g12>世尊</g12>住在憍薩羅國一沙羅樹[地方]的<g17>婆羅門</g17>村落。</p>
+    <p>當時，世尊被在家大眾圍繞，教導法。</p>
+    <p>那時，魔<g49>波旬</g49>想這個：</p>
+    <p>「這位<g29>沙門</g29><g80>喬達摩</g80>被在家大眾圍繞，教導法，讓我為了使之盲目去見沙門喬達摩。」</p>
+    <p>那時，魔波旬去見世尊。抵達後，以<g281>偈頌</g281>對世尊說：</p>
+    <p>「這不適合你：凡你教誡其他人，</p>
+    <p><t1>在諸順從與排斥上</t1>，行那個的你不要被黏著。」</p>
+    <p>「為利益憐愍者、<g185>正覺者</g185>，凡他教誡其他人，</p>
+    <p>在諸順從與排斥上，<g4>如來</g4>已脫離。」</p>
+    <p>那時，魔波旬：「世尊知道我，<g8>善逝</g8>知道我。」痛苦地、不快樂地就在那裡消失。</p>
+    <n1>「相違不相違(SA.1097)」，南傳作「在諸順從與排斥上」(Anurodhavirodhesu)，菩提比丘長老英譯為「在吸引和排斥」(In attraction and repulsion)。按：《顯揚真義》說，這是貪與瞋恚(rāgapaṭighesu)，當講述法的談論時，因有一類人讚歎(sādhukāraṃ dadanti，給與作善哉」)他在那裡生起貪，有一類人不恭敬聽聞，他在那裡生起嫌惡(paṭigho，反感)，名為說法者在順從與排斥上被黏著(sajjati)。</n1>
 </doc>

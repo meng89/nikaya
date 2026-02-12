@@ -1,43 +1,20 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0626.htm
-        </source_page>
+        <source_page>SN/SN0626.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.22.108
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 22.108
-            </sutta_num>
+            <sutta_num>SN.22.108</sutta_num>
+            <sutta_num type="SC">SN 22.108</sutta_num>
         </sutta_nums>
-        <start>
-            108
-        </start>
-        <end>
-            108
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部22相應108經/沙門經第二
-            </span>
-            (蘊相應/蘊篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>108</start>
+        <end>108</end>
+        <source_title><span class="sutra_name">相應部22相應108經/沙門經第二</span>(蘊相應/蘊篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            沙門經第二
-        </title>
-        <mtime>
-            2025-08-16 01:53:06 +0800
-        </mtime>
+        <title>沙門經第二</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　起源於舍衛城。</p>
-        <p>　　「<gn id="31">比丘</gn>們！有這些<gn id="36">五取蘊</gn>，哪五個？即：色取蘊、受取蘊、想取蘊、行取蘊、識取蘊，比丘們！凡任何沙門或婆羅門不如實知道這些五取蘊的<gn id="67">集起</gn>、滅沒、<gn id="295">樂味</gn>、<gn id="293">過患</gn>、<gn id="294">出離</gn>……（中略）知道……以證智自作證後……<gn id="66">進入後住於</gn>……。」 </p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>起源於舍衛城。</p>
+    <p>「<g31>比丘</g31>們！有這些<g36>五取蘊</g36>，哪五個？即：色取蘊、受取蘊、想取蘊、行取蘊、識取蘊，比丘們！凡任何沙門或婆羅門不如實知道這些五取蘊的<g67>集起</g67>、滅沒、<g295>樂味</g295>、<g293>過患</g293>、<g294>出離</g294>……（中略）知道……以證智自作證後……<g66>進入後住於</g66>……。」 </p>
+    <n1/>
 </doc>

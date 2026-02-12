@@ -1,42 +1,19 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1116.htm
-        </source_page>
+        <source_page>SN/SN1116.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.37.33
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 37.33
-            </sutta_num>
+            <sutta_num>SN.37.33</sutta_num>
+            <sutta_num type="SC">SN 37.33</sutta_num>
         </sutta_nums>
-        <start>
-            33
-        </start>
-        <end>
-            33
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部37相應33經/五戒有自信經
-            </span>
-            (婦女相應/處篇/如來記說)(莊春江譯)
-        </source_title>
+        <start>33</start>
+        <end>33</end>
+        <source_title><span class="sutra_name">相應部37相應33經/五戒有自信經</span>(婦女相應/處篇/如來記說)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            五戒有自信經
-        </title>
-        <mtime>
-            2025-08-16 01:50:12 +0800
-        </mtime>
+        <title>五戒有自信經</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「<gn id="31">比丘</gn>們！具備五法的婦女有自信地住家中，哪五個？她是離殺生者、離<gn id="104">未被給與的拿取</gn>者、離<gn id="105">邪淫</gn>者、離<gn id="106">妄語</gn>者、離<gn id="106">榖酒果酒酒放逸處</gn>者，比丘們！具備這五法的婦女有自信地住家中。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「<g31>比丘</g31>們！具備五法的婦女有自信地住家中，哪五個？她是離殺生者、離<g104>未被給與的拿取</g104>者、離<g105>邪淫</g105>者、離<g106>妄語</g106>者、離<g106>榖酒果酒酒放逸處</g106>者，比丘們！具備這五法的婦女有自信地住家中。」</p>
+    <n1/>
 </doc>

@@ -1,44 +1,19 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0278.htm
-        </source_page>
+        <source_page>SN/SN0278.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.12.7
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 12.7
-            </sutta_num>
+            <sutta_num>SN.12.7</sutta_num>
+            <sutta_num type="SC">SN 12.7</sutta_num>
         </sutta_nums>
-        <start>
-            7
-        </start>
-        <end>
-            7
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部12相應7經/拘留孫經
-            </span>
-            (因緣相應/因緣篇/修多羅)(莊春江譯)[SA.366]
-        </source_title>
-        <relevant>
-            [SA.366]
-        </relevant>
-        <title>
-            拘留孫經
-        </title>
-        <mtime>
-            2025-08-16 01:48:20 +0800
-        </mtime>
+        <start>7</start>
+        <end>7</end>
+        <source_title><span class="sutra_name">相應部12相應7經/拘留孫經</span>(因緣相應/因緣篇/修多羅)(莊春江譯)[SA.366]</source_title>
+        <relevant>[SA.366]</relevant>
+        <title>拘留孫經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「<gn id="31">比丘</gn>們！當拘留孫<gn id="12">世尊</gn>、<gn id="5">阿羅漢</gn>、遍正覺者……（中略）。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「<g31>比丘</g31>們！當拘留孫<g12>世尊</g12>、<g5>阿羅漢</g5>、遍正覺者……（中略）。」</p>
+    <n1/>
 </doc>

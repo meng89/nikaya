@@ -47,6 +47,7 @@ def _read_page2(root):
 
     notes = take_comp(div_comp)
     body_lines =  kids_to_lines(div_nikaya.kids)
+    body_lines = lstrip_lines(body_lines)
     return [body_lines, notes, div_nikaya]
 
 
@@ -72,23 +73,22 @@ def _read_page1(root):
     homage_line, _head_lines = _split_homage_and_head(homage_and_head_lines)
     head_lines = _head_lines
 
-    body = lines_to_body(body_lines)
+    body = lines_to_es(body_lines)
     return [homage_line, head_lines, sutta_name_part, translator_part, agama_part, body, notes, div_pali]
 
 
 def take_comp(div_comp: xl.Element):
-    notes = xl.Element("notes")
+    notes = []
     for span in div_comp.find_descendants("span"):
         id_ = span.attrs.get("id")
         if id_ is not None:
             m = re.match(r"^note(\d+)$", id_)
             if m:
-                note = xl.Element("note")
-                note.attrs["id"] = m.group(1)
+                nx = xl.Element("n" + m.group(1))
 
                 for line in kids_to_lines(span.kids):
-                    note.kids.extend(htm_line_to_xml_line(line))
-                notes.kids.append(note)
+                    nx.kids.extend(htm_line_to_xml_line(line))
+                notes.append(nx)
 
     return notes
 
@@ -113,9 +113,26 @@ def kids_to_lines(kids: list) -> list:
             raise Exception((type(e), repr(e)))
             # line.append(e)
     if line:
+        line = lstrip_line(line)
         lines.append(line)
 
     return lines
+
+def lstrip_lines(lines):
+    new_lines = []
+    for line in lines:
+        new_lines.append(lstrip_line(line))
+    return new_lines
+
+def lstrip_line(line):
+    if not line:
+        return line
+    x = line[0]
+    if isinstance(x, str):
+        if x.lstrip() != x:
+            line.pop(0)
+            line.insert(0, x.lstrip())
+    return line
 
 
 def take_nikaya(div_nikaya):
@@ -233,6 +250,10 @@ def do_global_note(e):
     if isinstance(e, xl.Element) and e.tag == "a" and "onmouseover" in e.attrs.keys():
         m = re.match(r"^note\(this,(\d+)\);?$", e.attrs["onmouseover"])
         if m:
+            gx = xl.Element("g" + m.group(1))
+            gx.kids.extend(e.kids)
+            return True, [gx]
+
             twgn = xl.Element("gn") # text with global note
             twgn.attrs["id"] = m.group(1)
             twgn.kids.extend(e.kids)
@@ -245,6 +266,10 @@ def do_local_note(e):
     if isinstance(e, xl.Element) and e.tag == "a" and "onmouseover" in e.attrs.keys():
         m = re.match(r"^local\(this,(\d+)\);?$", e.attrs["onmouseover"])
         if m:
+            tx = xl.Element("t" + m.group(1))
+            tx.kids.extend(e.kids)
+            return True, [tx]
+
             twln = xl.Element("ln") # text with local note
             twln.attrs["id"] = m.group(1)
             twln.kids.extend(e.kids)
@@ -294,13 +319,14 @@ class NoteNotFound(Exception):
     pass
 
 
-def lines_to_body(lines):
-    body = xl.Element("body")
+def lines_to_es(lines):
+    es = []
     for line in lines:
-        p = body.ekid("p")
+        p = xl.Element("p")
         assert isinstance(line, list)
         p.kids.extend(line)
-    return body
+        es.append(p)
+    return es
 
 
 def lines_to_head(lines):

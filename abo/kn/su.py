@@ -52,7 +52,7 @@ def load_from_htm():
         head = abo.page_parsing.lines_to_head(head_lines)
 
         body = abo.page_parsing.htm_lines_to_xml_lines(body_lines)
-        body = abo.page_parsing.lines_to_body(body)
+        body = abo.page_parsing.lines_to_es(body)
 
         sutta_serial += 1
         sutta_num = "Su.{}.{}".format(pin_serial, sutta_serial)
@@ -61,18 +61,18 @@ def load_from_htm():
         ]
 
         xml = abo.utils.make_xml(source_page = htm,
-                                    sutta_nums = sutta_nums,
-                                    start = str(sutta_serial),
-                                    end = str(sutta_serial),
-                                    mtime = mtime,
-                                    ctime = None,
-                                    source_title = source_title_line,
-                                    relevant = m.group(3),
-                                    title_line = [m.group(2)],
-                                    head = head,
-                                    body = body,
-                                    notes = notes
-                                    )
+                                 sutta_nums = sutta_nums,
+                                 start = str(sutta_serial),
+                                 end = str(sutta_serial),
+                                 mtime = mtime,
+                                 ctime = None,
+                                 source_title = source_title_line,
+                                 relevant = m.group(3),
+                                 title_line = [m.group(2)],
+                                 head = head,
+                                 body_es= body,
+                                 notes = notes
+                                 )
         pin.append((sutta_num, xml))
 
     return data

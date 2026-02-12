@@ -35,25 +35,25 @@ def load_from_htm():
         head = abo.page_parsing.lines_to_head(head_lines)
 
         body = abo.page_parsing.htm_lines_to_xml_lines(body_lines)
-        body = abo.page_parsing.lines_to_body(body)
+        body = abo.page_parsing.lines_to_es(body)
 
         sutta_num = "Dh." + sutta_serial
         sutta_nums = [
             (None, sutta_num),
         ]
         xml = abo.utils.make_xml(source_page=htm,
-                                    sutta_nums=sutta_nums,
-                                    start=m.group(1),
-                                    end=m.group(1),
-                                    mtime=mtime,
-                                    ctime=None,
-                                    source_title=abo.utils.strip_crlf(source_title_line),
-                                    relevant=None,
-                                    title_line=title_line,
-                                    head=head,
-                                    body=body,
-                                    notes=notes
-                                    )
+                                 sutta_nums=sutta_nums,
+                                 start=m.group(1),
+                                 end=m.group(1),
+                                 mtime=mtime,
+                                 ctime=None,
+                                 source_title=abo.utils.strip_crlf(source_title_line),
+                                 relevant=None,
+                                 title_line=title_line,
+                                 head=head,
+                                 body_es=body,
+                                 notes=notes
+                                 )
 
         data.append((sutta_num, xml))
 

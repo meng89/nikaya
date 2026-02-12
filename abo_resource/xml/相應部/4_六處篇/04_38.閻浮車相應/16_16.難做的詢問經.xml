@@ -1,56 +1,31 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1133.htm
-        </source_page>
+        <source_page>SN/SN1133.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.38.16
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 38.16
-            </sutta_num>
+            <sutta_num>SN.38.16</sutta_num>
+            <sutta_num type="SC">SN 38.16</sutta_num>
         </sutta_nums>
-        <start>
-            16
-        </start>
-        <end>
-            16
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部38相應16經/難做的詢問經
-            </span>
-            (閻浮車相應/處篇/弟子記說)(莊春江譯)[SA.490]
-        </source_title>
-        <relevant>
-            [SA.490]
-        </relevant>
-        <title>
-            難做的詢問經
-        </title>
-        <mtime>
-            2025-08-16 01:45:06 +0800
-        </mtime>
+        <start>16</start>
+        <end>16</end>
+        <source_title><span class="sutra_name">相應部38相應16經/難做的詢問經</span>(閻浮車相應/處篇/弟子記說)(莊春江譯)[SA.490]</source_title>
+        <relevant>[SA.490]</relevant>
+        <title>難做的詢問經</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「舍利弗<gn id="201">道友</gn>！什麼是在這法、律中難做的呢？」</p>
-        <p>　　「道友！出家是在這法、律中難做的。」</p>
-        <p>　　「道友！那麼，什麼是被出家者難做的呢？」</p>
-        <p>　　「道友！歡喜是被出家者難做的。」</p>
-        <p>　　「道友！那麼，什麼是被歡喜者難做的呢？」</p>
-        <p>　　「道友！<gn id="58">法、隨法行</gn>是被歡喜者難做的。」</p>
-        <p>　　「道友！那麼，法、隨法行的<gn id="31">比丘</gn>多久會成為<gn id="5">阿羅漢</gn>？」</p>
-        <p>　　「道友！不久。」</p>
-        <p>　　閻浮車相應完成，其<gn id="35">攝頌</gn>：</p>
-        <p>　　「涅槃與阿羅漢狀態，如法之說者、為了什麼目的，</p>
-        <p>　　　穌息、最高穌息，受、漏、無明，</p>
-        <p>　　　渴愛、暴流、取，有、苦與有身，</p>
-        <p>　　　在這法、律中難做的。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「舍利弗<g201>道友</g201>！什麼是在這法、律中難做的呢？」</p>
+    <p>「道友！出家是在這法、律中難做的。」</p>
+    <p>「道友！那麼，什麼是被出家者難做的呢？」</p>
+    <p>「道友！歡喜是被出家者難做的。」</p>
+    <p>「道友！那麼，什麼是被歡喜者難做的呢？」</p>
+    <p>「道友！<g58>法、隨法行</g58>是被歡喜者難做的。」</p>
+    <p>「道友！那麼，法、隨法行的<g31>比丘</g31>多久會成為<g5>阿羅漢</g5>？」</p>
+    <p>「道友！不久。」</p>
+    <p>閻浮車相應完成，其<g35>攝頌</g35>：</p>
+    <p>「涅槃與阿羅漢狀態，如法之說者、為了什麼目的，</p>
+    <p>穌息、最高穌息，受、漏、無明，</p>
+    <p>渴愛、暴流、取，有、苦與有身，</p>
+    <p>在這法、律中難做的。」</p>
+    <n1/>
 </doc>

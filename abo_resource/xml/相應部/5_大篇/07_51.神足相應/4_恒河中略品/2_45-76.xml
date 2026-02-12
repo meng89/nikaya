@@ -1,40 +1,19 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1575.htm
-        </source_page>
+        <source_page>SN/SN1575.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.51.45-76
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 51.45-76
-            </sutta_num>
+            <sutta_num>SN.51.45-76</sutta_num>
+            <sutta_num type="SC">SN 51.45-76</sutta_num>
         </sutta_nums>
-        <start>
-            45
-        </start>
-        <end>
-            76
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部51相應 45-76經
-            </span>
-            (神足相應/大篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>45</start>
+        <end>76</end>
+        <source_title><span class="sutra_name">相應部51相應 45-76經</span>(神足相應/大篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
         <title/>
-        <mtime>
-            2025-08-16 01:50:40 +0800
-        </mtime>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　（略去）  </p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>（略去）  </p>
+    <n1/>
 </doc>

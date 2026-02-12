@@ -1,47 +1,22 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0943.htm
-        </source_page>
+        <source_page>SN/SN0943.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.35.109
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 35.109
-            </sutta_num>
+            <sutta_num>SN.35.109</sutta_num>
+            <sutta_num type="SC">SN 35.109</sutta_num>
         </sutta_nums>
-        <start>
-            109
-        </start>
-        <end>
-            109
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部35相應109經/會被結縛經
-            </span>
-            (處相應/處篇/修多羅)(莊春江譯)[SA.239]
-        </source_title>
-        <relevant>
-            [SA.239]
-        </relevant>
-        <title>
-            會被結縛經
-        </title>
-        <mtime>
-            2025-08-16 01:45:14 +0800
-        </mtime>
+        <start>109</start>
+        <end>109</end>
+        <source_title><span class="sutra_name">相應部35相應109經/會被結縛經</span>(處相應/處篇/修多羅)(莊春江譯)[SA.239]</source_title>
+        <relevant>[SA.239]</relevant>
+        <title>會被結縛經</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「<gn id="31">比丘</gn>們！我將教導<gn id="666">會被結縛的諸法</gn>與結，<gn id="43">你們要聽</gn>它！</p>
-        <p>　　比丘們！而什麼是會被結縛的諸法？而什麼是結呢？</p>
-        <p>　　比丘們！眼是會被結縛的法；凡在那裡有意欲貪者，在那裡有結。……（中略）舌是會被結縛的法……（中略）意是會被結縛的法；凡在那裡有意欲貪者，在那裡有結。</p>
-        <p>　　比丘們！這些被稱為會被結縛的法，這個是結。」[≃SN.22.120, SN.35.122]</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「<g31>比丘</g31>們！我將教導<g666>會被結縛的諸法</g666>與結，<g43>你們要聽</g43>它！</p>
+    <p>比丘們！而什麼是會被結縛的諸法？而什麼是結呢？</p>
+    <p>比丘們！眼是會被結縛的法；凡在那裡有意欲貪者，在那裡有結。……（中略）舌是會被結縛的法……（中略）意是會被結縛的法；凡在那裡有意欲貪者，在那裡有結。</p>
+    <p>比丘們！這些被稱為會被結縛的法，這個是結。」[≃SN.22.120, SN.35.122]</p>
+    <n1/>
 </doc>

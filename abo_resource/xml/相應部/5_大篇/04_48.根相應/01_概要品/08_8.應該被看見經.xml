@@ -1,50 +1,25 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1460.htm
-        </source_page>
+        <source_page>SN/SN1460.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.48.8
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 48.8
-            </sutta_num>
+            <sutta_num>SN.48.8</sutta_num>
+            <sutta_num type="SC">SN 48.8</sutta_num>
         </sutta_nums>
-        <start>
-            8
-        </start>
-        <end>
-            8
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部48相應8經/應該被看見經
-            </span>
-            (根相應/大篇/修多羅)(莊春江譯)[SA.655, SA.658]
-        </source_title>
-        <relevant>
-            [SA.655, SA.658]
-        </relevant>
-        <title>
-            應該被看見經
-        </title>
-        <mtime>
-            2025-08-16 01:54:08 +0800
-        </mtime>
+        <start>8</start>
+        <end>8</end>
+        <source_title><span class="sutra_name">相應部48相應8經/應該被看見經</span>(根相應/大篇/修多羅)(莊春江譯)[SA.655, SA.658]</source_title>
+        <relevant>[SA.655, SA.658]</relevant>
+        <title>應該被看見經</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「<gn id="31">比丘</gn>們！有這五根，哪五個？信根……（中略）慧根。</p>
-        <p>　　比丘們！而信根應該在哪裡被看見？在四<gn id="370">入流支</gn>上：在這裡信根應該被看見。</p>
-        <p>　　比丘們！而<gn id="291">活力根</gn>應該在哪裡被看見？在<gn id="292">四正勤</gn>上：在這裡活力根應該被看見。</p>
-        <p>　　比丘們！而念根應該在哪裡被看見？在<gn id="286">四念住</gn>上：在這裡念根應該被看見。</p>
-        <p>　　比丘們！而定根應該在哪裡被看見？在四禪上：在這裡定根應該被看見。</p>
-        <p>　　比丘們！而慧根應該在哪裡被看見？在四聖諦上：在這裡慧根應該被看見。</p>
-        <p>　　比丘們！這是五根。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「<g31>比丘</g31>們！有這五根，哪五個？信根……（中略）慧根。</p>
+    <p>比丘們！而信根應該在哪裡被看見？在四<g370>入流支</g370>上：在這裡信根應該被看見。</p>
+    <p>比丘們！而<g291>活力根</g291>應該在哪裡被看見？在<g292>四正勤</g292>上：在這裡活力根應該被看見。</p>
+    <p>比丘們！而念根應該在哪裡被看見？在<g286>四念住</g286>上：在這裡念根應該被看見。</p>
+    <p>比丘們！而定根應該在哪裡被看見？在四禪上：在這裡定根應該被看見。</p>
+    <p>比丘們！而慧根應該在哪裡被看見？在四聖諦上：在這裡慧根應該被看見。</p>
+    <p>比丘們！這是五根。」</p>
+    <n1/>
 </doc>

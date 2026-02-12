@@ -1,42 +1,19 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1299.htm
-        </source_page>
+        <source_page>SN/SN1299.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.45.170
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 45.170
-            </sutta_num>
+            <sutta_num>SN.45.170</sutta_num>
+            <sutta_num type="SC">SN 45.170</sutta_num>
         </sutta_nums>
-        <start>
-            170
-        </start>
-        <end>
-            170
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部45相應170經/渴愛經
-            </span>
-            (道相應/大篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>170</start>
+        <end>170</end>
+        <source_title><span class="sutra_name">相應部45相應170經/渴愛經</span>(道相應/大篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            渴愛經
-        </title>
-        <mtime>
-            2025-08-16 01:45:08 +0800
-        </mtime>
+        <title>渴愛經</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「<gn id="31">比丘</gn>們！有這三種渴愛，哪三個？欲的渴愛、有的渴愛、<gn id="244">無有的渴愛</gn>，比丘們！這是三種渴愛。比丘們！為了這三種渴愛的證智、<gn id="154">遍知</gn>、遍盡、捨斷……（中略）這<gn id="525">八支聖道</gn>應該被<gn id="94">修習</gn>。比丘們！而什麼是八支聖道？比丘們！這裡，比丘<gn id="322">依止遠離</gn>、依止離貪、依止滅、<gn id="221">捨棄的成熟</gn>修習正見……（中略）比丘依止遠離、依止離貪、依止滅、捨棄的成熟修習正定。比丘們！為了這三種渴愛的證智、遍知、遍盡、捨斷……（中略）這八支聖道應該被修習。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「<g31>比丘</g31>們！有這三種渴愛，哪三個？欲的渴愛、有的渴愛、<g244>無有的渴愛</g244>，比丘們！這是三種渴愛。比丘們！為了這三種渴愛的證智、<g154>遍知</g154>、遍盡、捨斷……（中略）這<g525>八支聖道</g525>應該被<g94>修習</g94>。比丘們！而什麼是八支聖道？比丘們！這裡，比丘<g322>依止遠離</g322>、依止離貪、依止滅、<g221>捨棄的成熟</g221>修習正見……（中略）比丘依止遠離、依止離貪、依止滅、捨棄的成熟修習正定。比丘們！為了這三種渴愛的證智、遍知、遍盡、捨斷……（中略）這八支聖道應該被修習。」</p>
+    <n1/>
 </doc>

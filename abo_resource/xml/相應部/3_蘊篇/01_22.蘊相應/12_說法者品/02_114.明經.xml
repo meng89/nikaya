@@ -1,45 +1,22 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0632.htm
-        </source_page>
+        <source_page>SN/SN0632.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.22.114
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 22.114
-            </sutta_num>
+            <sutta_num>SN.22.114</sutta_num>
+            <sutta_num type="SC">SN 22.114</sutta_num>
         </sutta_nums>
-        <start>
-            114
-        </start>
-        <end>
-            114
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部22相應114經/明經
-            </span>
-            (蘊相應/蘊篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>114</start>
+        <end>114</end>
+        <source_title><span class="sutra_name">相應部22相應114經/明經</span>(蘊相應/蘊篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            明經
-        </title>
-        <mtime>
-            2025-08-16 01:51:10 +0800
-        </mtime>
+        <title>明經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　起源於舍衛城。</p>
-        <p>　　在一旁坐下的那位<gn id="31">比丘</gn>對<gn id="12">世尊</gn>說這個：</p>
-        <p>　　「<gn id="45">大德</gn>！被稱為『明、明』，大德！什麼是明？而什麼情形是進入了<gn id="207">明</gn>？」</p>
-        <p>　　「比丘！這裡，<gn id="24">有聽聞的聖弟子</gn>知道色，知道色集，知道色滅，知道導向色<gn id="69">滅道跡</gn>。受……想……知道諸行……（中略）知道導向識滅道跡，比丘！這被稱為明，而這個情形是進入明者。」[SN.22.135]</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>起源於舍衛城。</p>
+    <p>在一旁坐下的那位<g31>比丘</g31>對<g12>世尊</g12>說這個：</p>
+    <p>「<g45>大德</g45>！被稱為『明、明』，大德！什麼是明？而什麼情形是進入了<g207>明</g207>？」</p>
+    <p>「比丘！這裡，<g24>有聽聞的聖弟子</g24>知道色，知道色集，知道色滅，知道導向色<g69>滅道跡</g69>。受……想……知道諸行……（中略）知道導向識滅道跡，比丘！這被稱為明，而這個情形是進入明者。」[SN.22.135]</p>
+    <n1/>
 </doc>

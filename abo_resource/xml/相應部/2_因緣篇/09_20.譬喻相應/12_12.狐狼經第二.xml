@@ -1,49 +1,25 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0506.htm
-        </source_page>
+        <source_page>SN/SN0506.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.20.12
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 20.12
-            </sutta_num>
+            <sutta_num>SN.20.12</sutta_num>
+            <sutta_num type="SC">SN 20.12</sutta_num>
         </sutta_nums>
-        <start>
-            12
-        </start>
-        <end>
-            12
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部20相應12經/狐狼經第二
-            </span>
-            (譬喻相應/因緣篇/如來記說)(莊春江譯)[SA.1264]
-        </source_title>
-        <relevant>
-            [SA.1264]
-        </relevant>
-        <title>
-            狐狼經第二
-        </title>
-        <mtime>
-            2025-08-16 01:54:14 +0800
-        </mtime>
+        <start>12</start>
+        <end>12</end>
+        <source_title><span class="sutra_name">相應部20相應12經/狐狼經第二</span>(譬喻相應/因緣篇/如來記說)(莊春江譯)[SA.1264]</source_title>
+        <relevant>[SA.1264]</relevant>
+        <title>狐狼經第二</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　住在舍衛城。……（中略）</p>
-        <p>　　「<gn id="31">比丘</gn>們！你們在破曉時聽到老狐狼鳴叫著嗎？」</p>
-        <p>　　「是的，<gn id="45">大德</gn>！」</p>
-        <p>　　「比丘們！在那隻老狐狼上，會有某些(任何)知恩、感恩，然而，這裡，在某類<gn id="262">釋迦之徒的</gn>自稱者上，不會有任何知恩、感恩。</p>
-        <p>　　比丘們！因此，在這裡，應該被這麼學：『我們將要是知恩者、感恩者，而且，即使於我們少量所作的[恩惠]也將不毀滅。』比丘們！應該被你們這麼學。」</p>
-        <p>　　譬喻相應完成，其<gn id="35">攝頌</gn>：</p>
-        <p>　　「屋頂、指甲尖、家，大口鍋、矛、弓箭手，</p>
-        <p>　　　楔子、圓木頭、象，貓、二則狐狼。」</p>
-    </body>
-    <notes/>
+    <p>住在舍衛城。……（中略）</p>
+    <p>「<g31>比丘</g31>們！你們在破曉時聽到老狐狼鳴叫著嗎？」</p>
+    <p>「是的，<g45>大德</g45>！」</p>
+    <p>「比丘們！在那隻老狐狼上，會有某些(任何)知恩、感恩，然而，這裡，在某類<g262>釋迦之徒的</g262>自稱者上，不會有任何知恩、感恩。</p>
+    <p>比丘們！因此，在這裡，應該被這麼學：『我們將要是知恩者、感恩者，而且，即使於我們少量所作的[恩惠]也將不毀滅。』比丘們！應該被你們這麼學。」</p>
+    <p>譬喻相應完成，其<g35>攝頌</g35>：</p>
+    <p>「屋頂、指甲尖、家，大口鍋、矛、弓箭手，</p>
+    <p>楔子、圓木頭、象，貓、二則狐狼。」</p>
 </doc>

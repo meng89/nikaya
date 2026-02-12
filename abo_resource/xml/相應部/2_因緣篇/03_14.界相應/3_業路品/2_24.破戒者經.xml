@@ -1,48 +1,23 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0380.htm
-        </source_page>
+        <source_page>SN/SN0380.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.14.24
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 14.24
-            </sutta_num>
+            <sutta_num>SN.14.24</sutta_num>
+            <sutta_num type="SC">SN 14.24</sutta_num>
         </sutta_nums>
-        <start>
-            24
-        </start>
-        <end>
-            24
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部14相應24經/破戒者經
-            </span>
-            (界相應/因緣篇/修多羅)(莊春江譯)[SA.450]
-        </source_title>
-        <relevant>
-            [SA.450]
-        </relevant>
-        <title>
-            破戒者經
-        </title>
-        <mtime>
-            2025-08-16 01:52:44 +0800
-        </mtime>
+        <start>24</start>
+        <end>24</end>
+        <source_title><span class="sutra_name">相應部14相應24經/破戒者經</span>(界相應/因緣篇/修多羅)(莊春江譯)[SA.450]</source_title>
+        <relevant>[SA.450]</relevant>
+        <title>破戒者經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　住在舍衛城……（中略）。</p>
-        <p>　　「<gn id="31">比丘</gn>們！眾生就從界會合、集合：無信者與無信者一起會合、集合，無慚者與無慚者一起會合、集合，無愧者與無愧者一起會合、集合，破戒者與破戒者一起會合、集合，劣慧者與劣慧者一起會合、集合。</p>
-        <p>　　有信者與有信者一起會合、集合，有慚者與有慚者一起會合、集合，有愧者與有愧者一起會合、集合，持戒者與持戒者一起會合、集合，有慧者與有慧者一起會合、集合。」</p>
-        <p/>
-        <p/>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>住在舍衛城……（中略）。</p>
+    <p>「<g31>比丘</g31>們！眾生就從界會合、集合：無信者與無信者一起會合、集合，無慚者與無慚者一起會合、集合，無愧者與無愧者一起會合、集合，破戒者與破戒者一起會合、集合，劣慧者與劣慧者一起會合、集合。</p>
+    <p>有信者與有信者一起會合、集合，有慚者與有慚者一起會合、集合，有愧者與有愧者一起會合、集合，持戒者與持戒者一起會合、集合，有慧者與有慧者一起會合、集合。」</p>
+    <p/>
+    <p/>
+    <n1/>
 </doc>

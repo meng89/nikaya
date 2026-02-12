@@ -1,44 +1,22 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0845.htm
-        </source_page>
+        <source_page>SN/SN0845.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.34.28-34
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 34.28-34
-            </sutta_num>
+            <sutta_num>SN.34.28-34</sutta_num>
+            <sutta_num type="SC">SN 34.28-34</sutta_num>
         </sutta_nums>
-        <start>
-            28
-        </start>
-        <end>
-            34
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部34相應28-34經/根本出定-順意經等七則
-            </span>
-            (禪相應/蘊篇/如來記說)(莊春江譯)
-        </source_title>
+        <start>28</start>
+        <end>34</end>
+        <source_title><span class="sutra_name">相應部34相應28-34經/根本出定-順意經等七則</span>(禪相應/蘊篇/如來記說)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            根本出定-順意經等七則
-        </title>
-        <mtime>
-            2025-08-16 01:48:38 +0800
-        </mtime>
+        <title>根本出定-順意經等七則</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　起源於舍衛城。</p>
-        <p>　　「<gn id="31">比丘</gn>們！有這四種禪修者，哪四種？</p>
-        <p>　　比丘們！這裡，某一類禪修者是在定上<gn id="726">出定善巧者</gn>，但不是在定上<gn id="727">順意善巧者</gn>。……是在定上順意善巧者，但不是在定上出定善巧者。……既不是在定上順意善巧者，也不是在定上出定善巧者。……是在定上順意善巧者與在定上出定善巧者。</p>
-        <p>　　比丘們！在那裡，凡這位……禪修者……（中略）最高的、最頂的。」</p>
-        <p>　　(應該如前面根本[持續]到第三十四經根本出定的適當作者使七經完成)(根本出定)</p>
-    </body>
-    <notes/>
+    <p>起源於舍衛城。</p>
+    <p>「<g31>比丘</g31>們！有這四種禪修者，哪四種？</p>
+    <p>比丘們！這裡，某一類禪修者是在定上<g726>出定善巧者</g726>，但不是在定上<g727>順意善巧者</g727>。……是在定上順意善巧者，但不是在定上出定善巧者。……既不是在定上順意善巧者，也不是在定上出定善巧者。……是在定上順意善巧者與在定上出定善巧者。</p>
+    <p>比丘們！在那裡，凡這位……禪修者……（中略）最高的、最頂的。」</p>
+    <p>(應該如前面根本[持續]到第三十四經根本出定的適當作者使七經完成)(根本出定)</p>
 </doc>

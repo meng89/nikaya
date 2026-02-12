@@ -1,47 +1,23 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0003.htm
-        </source_page>
+        <source_page>SN/SN0003.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.1.3
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 1.3
-            </sutta_num>
+            <sutta_num>SN.1.3</sutta_num>
+            <sutta_num type="SC">SN 1.3</sutta_num>
         </sutta_nums>
-        <start>
-            3
-        </start>
-        <end>
-            3
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部1相應3經/被帶走經
-            </span>
-            (諸天相應/有偈篇/祇夜)(莊春江譯)[SA.1001]
-        </source_title>
-        <relevant>
-            [SA.1001]
-        </relevant>
-        <title>
-            被帶走經
-        </title>
-        <mtime>
-            2025-08-16 01:45:54 +0800
-        </mtime>
+        <start>3</start>
+        <end>3</end>
+        <source_title><span class="sutra_name">相應部1相應3經/被帶走經</span>(諸天相應/有偈篇/祇夜)(莊春江譯)[SA.1001]</source_title>
+        <relevant>[SA.1001]</relevant>
+        <title>被帶走經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　起源於舍衛城。</p>
-        <p>　　在一旁站立的那位天神在<gn id="12">世尊</gn>面前說這<gn id="281">偈頌</gn>：</p>
-        <p>　　「生命被帶走、壽命是少的，被帶到老年者的救護所不存在，</p>
-        <p>　　　觀看這在死亡上的恐怖者，<gn id="893">應該作帶來樂的福德</gn>。」</p>
-        <p>　　「生命被帶走、壽命是少的，被帶到老年者的救護所不存在，</p>
-        <p>　　　觀看這在死亡上的恐怖者，<gn id="893">期待寂靜者</gn>應該捨棄<gn id="593">世間物質(餌)</gn>。」[SN.2.19]</p>
-    </body>
-    <notes/>
+    <p>起源於舍衛城。</p>
+    <p>在一旁站立的那位天神在<g12>世尊</g12>面前說這<g281>偈頌</g281>：</p>
+    <p>「生命被帶走、壽命是少的，被帶到老年者的救護所不存在，</p>
+    <p>觀看這在死亡上的恐怖者，<g893>應該作帶來樂的福德</g893>。」</p>
+    <p>「生命被帶走、壽命是少的，被帶到老年者的救護所不存在，</p>
+    <p>觀看這在死亡上的恐怖者，<g893>期待寂靜者</g893>應該捨棄<g593>世間物質(餌)</g593>。」[SN.2.19]</p>
 </doc>

@@ -1,44 +1,20 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0762.htm
-        </source_page>
+        <source_page>SN/SN0762.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.27.7
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 27.7
-            </sutta_num>
+            <sutta_num>SN.27.7</sutta_num>
+            <sutta_num type="SC">SN 27.7</sutta_num>
         </sutta_nums>
-        <start>
-            7
-        </start>
-        <end>
-            7
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部27相應7經/思經
-            </span>
-            (污染相應/蘊篇/如來記說)(莊春江譯)[SA.900]
-        </source_title>
-        <relevant>
-            [SA.900]
-        </relevant>
-        <title>
-            思經
-        </title>
-        <mtime>
-            2025-08-16 01:46:32 +0800
-        </mtime>
+        <start>7</start>
+        <end>7</end>
+        <source_title><span class="sutra_name">相應部27相應7經/思經</span>(污染相應/蘊篇/如來記說)(莊春江譯)[SA.900]</source_title>
+        <relevant>[SA.900]</relevant>
+        <title>思經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　起源於舍衛城。</p>
-        <p>　　「<gn id="31">比丘</gn>們！凡在<gn id="872">色之思</gn>上的意欲貪是心的<gn id="288">隨雜染</gn>；凡在聲音之思上……（中略）凡在氣味之思上……（中略）凡在味道之思上……（中略）凡在<gn id="220">所觸</gn>之思上……（中略）凡在法思上的意欲貪，這是心的隨雜染。</p>
-        <p>　　比丘們！當比丘……（中略）在應該被證智作證的諸法上，是<gn id="412">適合作業的</gn>。」</p>
-    </body>
-    <notes/>
+    <p>起源於舍衛城。</p>
+    <p>「<g31>比丘</g31>們！凡在<g872>色之思</g872>上的意欲貪是心的<g288>隨雜染</g288>；凡在聲音之思上……（中略）凡在氣味之思上……（中略）凡在味道之思上……（中略）凡在<g220>所觸</g220>之思上……（中略）凡在法思上的意欲貪，這是心的隨雜染。</p>
+    <p>比丘們！當比丘……（中略）在應該被證智作證的諸法上，是<g412>適合作業的</g412>。」</p>
 </doc>

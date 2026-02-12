@@ -1,46 +1,23 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1600.htm
-        </source_page>
+        <source_page>SN/SN1600.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.52.24
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 52.24
-            </sutta_num>
+            <sutta_num>SN.52.24</sutta_num>
+            <sutta_num type="SC">SN 52.24</sutta_num>
         </sutta_nums>
-        <start>
-            24
-        </start>
-        <end>
-            24
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部52相應24經/漏的滅盡經
-            </span>
-            (阿那律相應/大篇/弟子記說)(莊春江譯)
-        </source_title>
+        <start>24</start>
+        <end>24</end>
+        <source_title><span class="sutra_name">相應部52相應24經/漏的滅盡經</span>(阿那律相應/大篇/弟子記說)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            漏的滅盡經
-        </title>
-        <mtime>
-            2025-08-16 01:52:52 +0800
-        </mtime>
+        <title>漏的滅盡經</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「<gn id="201">學友</gn>們！而且，我以這<gn id="286">四念住</gn>的<gn id="658">已自我修習</gn>、已自我<gn id="95">多作</gn>，以諸<gn id="188">漏</gn>的滅盡，<gn id="42">當生</gn>以證智自作證後，<gn id="66">進入後住於</gn>無漏<gn id="16">心解脫</gn>、<gn id="539">慧解脫</gn>。」</p>
-        <p>　　第二品，其<gn id="35">攝頌</gn>：</p>
-        <p>　　「大通智、神通、天耳，他心、可能、業，</p>
-        <p>　　　一切處、界、志向，根、禪、三則明。」</p>
-        <p>　　阿那律相應第八。</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「<g201>學友</g201>們！而且，我以這<g286>四念住</g286>的<g658>已自我修習</g658>、已自我<g95>多作</g95>，以諸<g188>漏</g188>的滅盡，<g42>當生</g42>以證智自作證後，<g66>進入後住於</g66>無漏<g16>心解脫</g16>、<g539>慧解脫</g539>。」</p>
+    <p>第二品，其<g35>攝頌</g35>：</p>
+    <p>「大通智、神通、天耳，他心、可能、業，</p>
+    <p>一切處、界、志向，根、禪、三則明。」</p>
+    <p>阿那律相應第八。</p>
+    <n1/>
 </doc>

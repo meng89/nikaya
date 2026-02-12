@@ -1,51 +1,26 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0816.htm
-        </source_page>
+        <source_page>SN/SN0816.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.33.16-20
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 33.16-20
-            </sutta_num>
+            <sutta_num>SN.33.16-20</sutta_num>
+            <sutta_num type="SC">SN 33.16-20</sutta_num>
         </sutta_nums>
-        <start>
-            16
-        </start>
-        <end>
-            20
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部33相應16-20經/色-不隨覺等經五則
-            </span>
-            (婆蹉氏相應/蘊篇/如來記說)(莊春江譯)[SA.963]
-        </source_title>
-        <relevant>
-            [SA.963]
-        </relevant>
-        <title>
-            色-不隨覺等經五則
-        </title>
-        <mtime>
-            2025-08-16 01:50:54 +0800
-        </mtime>
+        <start>16</start>
+        <end>20</end>
+        <source_title><span class="sutra_name">相應部33相應16-20經/色-不隨覺等經五則</span>(婆蹉氏相應/蘊篇/如來記說)(莊春江譯)[SA.963]</source_title>
+        <relevant>[SA.963]</relevant>
+        <title>色-不隨覺等經五則</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　起源於舍衛城。</p>
-        <p>　　在一旁坐下的<gn id="79">遊行者</gn>婆蹉氏對<gn id="12">世尊</gn>說這個：</p>
-        <p>　　「<gn id="80">喬達摩</gn>尊師！什麼因、什麼<gn id="180">緣</gn>……（中略）。」</p>
-        <p>　　「婆蹉！以在色上的不<gn id="355">隨覺</gn>……（中略）以在導向色<gn id="69">滅道跡</gn>上的不隨覺……（中略）。」</p>
-        <p>　　起源於舍衛城。「婆蹉！以在受上的不隨覺……（中略）。」</p>
-        <p>　　起源於舍衛城。「婆蹉！以在想上的不隨覺……（中略）。」</p>
-        <p>　　起源於舍衛城。「婆蹉！以在行上的不隨覺……（中略）。」</p>
-        <p>　　起源於舍衛城。「婆蹉！以在識上的不隨覺……（中略）以在導向識滅道跡上的不隨覺……（中略）。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>起源於舍衛城。</p>
+    <p>在一旁坐下的<g79>遊行者</g79>婆蹉氏對<g12>世尊</g12>說這個：</p>
+    <p>「<g80>喬達摩</g80>尊師！什麼因、什麼<g180>緣</g180>……（中略）。」</p>
+    <p>「婆蹉！以在色上的不<g355>隨覺</g355>……（中略）以在導向色<g69>滅道跡</g69>上的不隨覺……（中略）。」</p>
+    <p>起源於舍衛城。「婆蹉！以在受上的不隨覺……（中略）。」</p>
+    <p>起源於舍衛城。「婆蹉！以在想上的不隨覺……（中略）。」</p>
+    <p>起源於舍衛城。「婆蹉！以在行上的不隨覺……（中略）。」</p>
+    <p>起源於舍衛城。「婆蹉！以在識上的不隨覺……（中略）以在導向識滅道跡上的不隨覺……（中略）。」</p>
+    <n1/>
 </doc>

@@ -1,54 +1,27 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0206.htm
-        </source_page>
+        <source_page>SN/SN0206.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.7.20
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 7.20
-            </sutta_num>
+            <sutta_num>SN.7.20</sutta_num>
+            <sutta_num type="SC">SN 7.20</sutta_num>
         </sutta_nums>
-        <start>
-            20
-        </start>
-        <end>
-            20
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部7相應20經/乞食者經
-            </span>
-            (婆羅門相應/有偈篇/祇夜)(莊春江譯)[SA.97]
-        </source_title>
-        <relevant>
-            [SA.97]
-        </relevant>
-        <title>
-            乞食者經
-        </title>
-        <mtime>
-            2025-08-16 01:50:32 +0800
-        </mtime>
+        <start>20</start>
+        <end>20</end>
+        <source_title><span class="sutra_name">相應部7相應20經/乞食者經</span>(婆羅門相應/有偈篇/祇夜)(莊春江譯)[SA.97]</source_title>
+        <relevant>[SA.97]</relevant>
+        <title>乞食者經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　起源於舍衛城。</p>
-        <p>　　那時，乞食者婆羅門去見<gn id="12">世尊</gn>。抵達後，與世尊一起互相問候。交換應該被互相問候的友好交談後，在一旁坐下。在一旁坐下的乞食者婆羅門對世尊說這個：</p>
-        <p>　　「<gn id="80">喬達摩</gn>尊師！我是乞食者，<gn id="203">尊師</gn>也是乞食者，這裡，有什麼差別？」</p>
-        <p>　　「不因為那樣是乞食者：只對他人乞食的程度，</p>
-        <p>　　　受持<ln id="1">在家法</ln>後，只那些他就不是<gn id="31">乞食者(比丘)</gn>。</p>
-        <p>　　　凡這裡福德與惡，拒斥後有梵行，</p>
-        <p>　　　考量後在世間中行，他確實被稱為『乞食者(比丘)』。」 </p>
-        <p>　　在這麼說時，乞食者婆羅門對世尊說這個：</p>
-        <p>　　「太偉大了，喬達摩尊師！……（中略）請喬達摩<gn id="203">尊師</gn>記得我為<gn id="98">優婆塞</gn>，從今天起<gn id="64">已終生歸依</gn>。」</p>
-    </body>
-    <notes>
-        <note id="1">
-            「在家法(SA.97/GA.263)」，南傳作「在家法」(Vissaṃ dhammaṃ)，菩提比丘長老英譯為「熱心於家庭的實行」(a domestic practice)，並考證這裡的vissa即vesma(家；住處)，正與北傳不謀而合，今準此譯。按：《顯揚真義》以「惡臭不善法」(duggandhaṃ akusaladhammaṃ)解說。而PTS巴英詞典以「像生肉的氣味」(a smell like raw flesh)解說Vissa。另，SA與GA雖都說「在家法」，但結論卻不同，GA也許從初果到第三果的在家聖者的角度稱「比丘法」。
-        </note>
-    </notes>
+    <p>起源於舍衛城。</p>
+    <p>那時，乞食者婆羅門去見<g12>世尊</g12>。抵達後，與世尊一起互相問候。交換應該被互相問候的友好交談後，在一旁坐下。在一旁坐下的乞食者婆羅門對世尊說這個：</p>
+    <p>「<g80>喬達摩</g80>尊師！我是乞食者，<g203>尊師</g203>也是乞食者，這裡，有什麼差別？」</p>
+    <p>「不因為那樣是乞食者：只對他人乞食的程度，</p>
+    <p>受持<t1>在家法</t1>後，只那些他就不是<g31>乞食者(比丘)</g31>。</p>
+    <p>凡這裡福德與惡，拒斥後有梵行，</p>
+    <p>考量後在世間中行，他確實被稱為『乞食者(比丘)』。」 </p>
+    <p>在這麼說時，乞食者婆羅門對世尊說這個：</p>
+    <p>「太偉大了，喬達摩尊師！……（中略）請喬達摩<g203>尊師</g203>記得我為<g98>優婆塞</g98>，從今天起<g64>已終生歸依</g64>。」</p>
+    <n1>「在家法(SA.97/GA.263)」，南傳作「在家法」(Vissaṃ dhammaṃ)，菩提比丘長老英譯為「熱心於家庭的實行」(a domestic practice)，並考證這裡的vissa即vesma(家；住處)，正與北傳不謀而合，今準此譯。按：《顯揚真義》以「惡臭不善法」(duggandhaṃ akusaladhammaṃ)解說。而PTS巴英詞典以「像生肉的氣味」(a smell like raw flesh)解說Vissa。另，SA與GA雖都說「在家法」，但結論卻不同，GA也許從初果到第三果的在家聖者的角度稱「比丘法」。</n1>
 </doc>

@@ -1,45 +1,20 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1212.htm
-        </source_page>
+        <source_page>SN/SN1212.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.45.17
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 45.17
-            </sutta_num>
+            <sutta_num>SN.45.17</sutta_num>
+            <sutta_num type="SC">SN 45.17</sutta_num>
         </sutta_nums>
-        <start>
-            17
-        </start>
-        <end>
-            17
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部45相應17經/遍純淨經第二
-            </span>
-            (道相應/大篇/修多羅)(莊春江譯)[SA.766]
-        </source_title>
-        <relevant>
-            [SA.766]
-        </relevant>
-        <title>
-            遍純淨經第二
-        </title>
-        <mtime>
-            2025-08-16 01:51:58 +0800
-        </mtime>
+        <start>17</start>
+        <end>17</end>
+        <source_title><span class="sutra_name">相應部45相應17經/遍純淨經第二</span>(道相應/大篇/修多羅)(莊春江譯)[SA.766]</source_title>
+        <relevant>[SA.766]</relevant>
+        <title>遍純淨經第二</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　起源於舍衛城。</p>
-        <p>　　「<gn id="31">比丘</gn>們！有這遍純淨的、皎潔的、無穢的、離<gn id="288">隨雜染</gn>的八法，未生起者不在<gn id="8">善逝</gn>之律外其它地生起，哪八個？即：正見……（中略）正定。比丘們！這些是遍純淨的、皎潔的、無穢的、離隨雜染的八法，未生起者不在善逝之律外其它地生起。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>起源於舍衛城。</p>
+    <p>「<g31>比丘</g31>們！有這遍純淨的、皎潔的、無穢的、離<g288>隨雜染</g288>的八法，未生起者不在<g8>善逝</g8>之律外其它地生起，哪八個？即：正見……（中略）正定。比丘們！這些是遍純淨的、皎潔的、無穢的、離隨雜染的八法，未生起者不在善逝之律外其它地生起。」</p>
+    <n1/>
 </doc>

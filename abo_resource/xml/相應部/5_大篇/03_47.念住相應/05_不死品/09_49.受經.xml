@@ -1,43 +1,20 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1446.htm
-        </source_page>
+        <source_page>SN/SN1446.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.47.49
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 47.49
-            </sutta_num>
+            <sutta_num>SN.47.49</sutta_num>
+            <sutta_num type="SC">SN 47.49</sutta_num>
         </sutta_nums>
-        <start>
-            49
-        </start>
-        <end>
-            49
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部47相應49經/受經
-            </span>
-            (念住相應/大篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>49</start>
+        <end>49</end>
+        <source_title><span class="sutra_name">相應部47相應49經/受經</span>(念住相應/大篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            受經
-        </title>
-        <mtime>
-            2025-08-16 01:50:12 +0800
-        </mtime>
+        <title>受經</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「<gn id="31">比丘</gn>們！有這三受，哪三個？樂受、苦受、不苦不樂受，比丘們！這是三受。</p>
-        <p>　　比丘們！為了這些三受的<gn id="154">遍知</gn>，<gn id="286">四念住</gn>應該被<gn id="94">修習</gn>，哪四個？比丘們！這裡，比丘<gn id="176">在身上隨看身地</gn>住：熱心的、正知的、有念的，調伏世間中的<gn id="435">貪婪</gn>、憂後；在諸受上……（中略）在心上……（中略）在諸法上隨看法地住：熱心的、正知的、有念的，調伏世間中的貪婪、憂後。比丘們！為了這三受的遍知，這四念住應該被修習。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「<g31>比丘</g31>們！有這三受，哪三個？樂受、苦受、不苦不樂受，比丘們！這是三受。</p>
+    <p>比丘們！為了這些三受的<g154>遍知</g154>，<g286>四念住</g286>應該被<g94>修習</g94>，哪四個？比丘們！這裡，比丘<g176>在身上隨看身地</g176>住：熱心的、正知的、有念的，調伏世間中的<g435>貪婪</g435>、憂後；在諸受上……（中略）在心上……（中略）在諸法上隨看法地住：熱心的、正知的、有念的，調伏世間中的貪婪、憂後。比丘們！為了這三受的遍知，這四念住應該被修習。」</p>
+    <n1/>
 </doc>

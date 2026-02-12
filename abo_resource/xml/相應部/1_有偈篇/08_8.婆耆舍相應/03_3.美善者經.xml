@@ -1,61 +1,32 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0211.htm
-        </source_page>
+        <source_page>SN/SN0211.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.8.3
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 8.3
-            </sutta_num>
+            <sutta_num>SN.8.3</sutta_num>
+            <sutta_num type="SC">SN 8.3</sutta_num>
         </sutta_nums>
-        <start>
-            3
-        </start>
-        <end>
-            3
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部8相應3經/美善者經
-            </span>
-            (婆耆舍相應/有偈篇/祇夜)(莊春江譯)[SA.1216]
-        </source_title>
-        <relevant>
-            [SA.1216]
-        </relevant>
-        <title>
-            美善者經
-        </title>
-        <mtime>
-            2025-08-16 01:51:06 +0800
-        </mtime>
+        <start>3</start>
+        <end>3</end>
+        <source_title><span class="sutra_name">相應部8相應3經/美善者經</span>(婆耆舍相應/有偈篇/祇夜)(莊春江譯)[SA.1216]</source_title>
+        <relevant>[SA.1216]</relevant>
+        <title>美善者經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　<gn id="2">有一次</gn>，<gn id="200">尊者</gn>婆耆舍與尊者尼拘律葛波<gn id="108">和尚</gn>，共住在阿羅婆的阿格羅婆<gn id="366">塔廟</gn>。</p>
-        <p>　　當時，尊者婆耆舍以自己的辯才輕蔑其他美善<gn id="31">比丘</gn>們。</p>
-        <p>　　那時，尊者婆耆舍想這個：</p>
-        <p>　　「確實是我的無利得，確實不是我的利得；確實是我的惡得的，確實不是我的善得的：我以自己的辯才輕蔑其他美善比丘們。」</p>
-        <p>　　那時，尊者婆耆舍就以自己對自己的懊悔生起後，那時候說這些<gn id="281">偈頌</gn>：</p>
-        <p>　　「<gn id="80">喬達摩</gn>！請你捨斷慢，以及請你無殘餘地捨斷<ln id="1">慢的道路</ln>，</p>
-        <p>　　　在慢的道路上，癡迷的你長久是後悔者。</p>
-        <p>　　　被詆毀塗污的人們，被慢殺害者們跌落地獄，</p>
-        <p>　　　人們長久地憂愁：往生地獄的被慢殺害者們。</p>
-        <p>　　　比丘任何時候確實都不憂愁：<ln id="2">道的勝利者</ln>、正行者，</p>
-        <p>　　　經驗名聲與安樂，他們說那位自我努力者是『法的看見者』。</p>
-        <p>　　　因此這裡不頑固者、勤奮者，捨斷諸蓋後成為清淨者，</p>
-        <p>　　　而無餘地捨斷慢後，成為以明作終結的寂靜者。」</p>
-    </body>
-    <notes>
-        <note id="1">
-            「慢的道路」(mānapathañca)，菩提比丘長老英譯為「自大之路」(the pathway of conceit)。按：《顯揚真義》以「慢之所緣及與慢一起生起的法」(mānārammaṇañceva mānasahabhuno ca dhamme)解說，但長老說，它可能只是對被慢控制的一個隱喻表示(a metaphorical expression)。
-        </note>
-        <note id="2">
-            「道的勝利者」(maggajino)，菩提比丘長老依Norman的意見英譯為「路的知道者」(A path-knower)。按：《顯揚真義》以「以道征服污染者」(maggena jitakileso)解說。
-        </note>
-    </notes>
+    <p><g2>有一次</g2>，<g200>尊者</g200>婆耆舍與尊者尼拘律葛波<g108>和尚</g108>，共住在阿羅婆的阿格羅婆<g366>塔廟</g366>。</p>
+    <p>當時，尊者婆耆舍以自己的辯才輕蔑其他美善<g31>比丘</g31>們。</p>
+    <p>那時，尊者婆耆舍想這個：</p>
+    <p>「確實是我的無利得，確實不是我的利得；確實是我的惡得的，確實不是我的善得的：我以自己的辯才輕蔑其他美善比丘們。」</p>
+    <p>那時，尊者婆耆舍就以自己對自己的懊悔生起後，那時候說這些<g281>偈頌</g281>：</p>
+    <p>「<g80>喬達摩</g80>！請你捨斷慢，以及請你無殘餘地捨斷<t1>慢的道路</t1>，</p>
+    <p>在慢的道路上，癡迷的你長久是後悔者。</p>
+    <p>被詆毀塗污的人們，被慢殺害者們跌落地獄，</p>
+    <p>人們長久地憂愁：往生地獄的被慢殺害者們。</p>
+    <p>比丘任何時候確實都不憂愁：<t2>道的勝利者</t2>、正行者，</p>
+    <p>經驗名聲與安樂，他們說那位自我努力者是『法的看見者』。</p>
+    <p>因此這裡不頑固者、勤奮者，捨斷諸蓋後成為清淨者，</p>
+    <p>而無餘地捨斷慢後，成為以明作終結的寂靜者。」</p>
+    <n1>「慢的道路」(mānapathañca)，菩提比丘長老英譯為「自大之路」(the pathway of conceit)。按：《顯揚真義》以「慢之所緣及與慢一起生起的法」(mānārammaṇañceva mānasahabhuno ca dhamme)解說，但長老說，它可能只是對被慢控制的一個隱喻表示(a metaphorical expression)。</n1>
+    <n2>「道的勝利者」(maggajino)，菩提比丘長老依Norman的意見英譯為「路的知道者」(A path-knower)。按：《顯揚真義》以「以道征服污染者」(maggena jitakileso)解說。</n2>
 </doc>

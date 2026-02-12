@@ -1,44 +1,21 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0976.htm
-        </source_page>
+        <source_page>SN/SN0976.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.35.142
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 35.142
-            </sutta_num>
+            <sutta_num>SN.35.142</sutta_num>
+            <sutta_num type="SC">SN 35.142</sutta_num>
         </sutta_nums>
-        <start>
-            142
-        </start>
-        <end>
-            142
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部35相應142經/自身內無我之因經
-            </span>
-            (處相應/處篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>142</start>
+        <end>142</end>
+        <source_title><span class="sutra_name">相應部35相應142經/自身內無我之因經</span>(處相應/處篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            自身內無我之因經
-        </title>
-        <mtime>
-            2025-08-16 01:54:16 +0800
-        </mtime>
+        <title>自身內無我之因經</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「<gn id="31">比丘</gn>們！眼是無我，為了眼生起的該因及該<gn id="180">緣</gn>，那個也是無我，比丘們！無我所生成的眼，將從哪裡有我？</p>
-        <p>　　……（中略）舌是無我，為了舌生起的該因及該緣，那個也是無我，比丘們！無我所生成的舌，將從哪裡有我？……（中略）意是無我，為了意生起的該因及該緣，那個也是無我，比丘們！無我所生成的意，將從哪裡有我？</p>
-        <p>　　這樣看的……（中略）他知道：『<gn id="18">出生已盡</gn>，<gn id="19">梵行已完成</gn>，<gn id="20">應該被作的已作</gn>，<gn id="21">不再有此處[輪迴]的狀態</gn>。』」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「<g31>比丘</g31>們！眼是無我，為了眼生起的該因及該<g180>緣</g180>，那個也是無我，比丘們！無我所生成的眼，將從哪裡有我？</p>
+    <p>……（中略）舌是無我，為了舌生起的該因及該緣，那個也是無我，比丘們！無我所生成的舌，將從哪裡有我？……（中略）意是無我，為了意生起的該因及該緣，那個也是無我，比丘們！無我所生成的意，將從哪裡有我？</p>
+    <p>這樣看的……（中略）他知道：『<g18>出生已盡</g18>，<g19>梵行已完成</g19>，<g20>應該被作的已作</g20>，<g21>不再有此處[輪迴]的狀態</g21>。』」</p>
+    <n1/>
 </doc>

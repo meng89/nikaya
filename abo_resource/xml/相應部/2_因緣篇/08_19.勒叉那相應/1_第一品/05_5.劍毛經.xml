@@ -1,46 +1,19 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0478.htm
-        </source_page>
+        <source_page>SN/SN0478.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.19.5
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 19.5
-            </sutta_num>
+            <sutta_num>SN.19.5</sutta_num>
+            <sutta_num type="SC">SN 19.5</sutta_num>
         </sutta_nums>
-        <start>
-            5
-        </start>
-        <end>
-            5
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部19相應5經/劍毛經
-            </span>
-            (勒叉那相應/因緣篇/弟子記說)(莊春江譯)[SA.516]
-        </source_title>
-        <relevant>
-            [SA.516]
-        </relevant>
-        <title>
-            劍毛經
-        </title>
-        <mtime>
-            2025-08-16 01:49:28 +0800
-        </mtime>
+        <start>5</start>
+        <end>5</end>
+        <source_title><span class="sutra_name">相應部19相應5經/劍毛經</span>(勒叉那相應/因緣篇/弟子記說)(莊春江譯)[SA.516]</source_title>
+        <relevant>[SA.516]</relevant>
+        <title>劍毛經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「<gn id="201">學友</gn>！這裡，當我從<gn id="258">耆闍崛山</gn>下來時，看見空中行走的<ln id="1">劍毛</ln>男子，他的那些劍一一飛起後就落在他的身上，他發出(作)痛苦的聲音。……（中略）<gn id="31">比丘</gn>們！這位眾生就在這王舍城曾是殺豬人……（中略）。」</p>
-    </body>
-    <notes>
-        <note id="1">
-            「劍毛」(asilomaṃ)，菩提比丘長老英譯為「像劍般的身毛」(body-hairs of swords)。
-        </note>
-    </notes>
+    <p>「<g201>學友</g201>！這裡，當我從<g258>耆闍崛山</g258>下來時，看見空中行走的<t1>劍毛</t1>男子，他的那些劍一一飛起後就落在他的身上，他發出(作)痛苦的聲音。……（中略）<g31>比丘</g31>們！這位眾生就在這王舍城曾是殺豬人……（中略）。」</p>
+    <n1>「劍毛」(asilomaṃ)，菩提比丘長老英譯為「像劍般的身毛」(body-hairs of swords)。</n1>
 </doc>

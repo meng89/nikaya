@@ -1,47 +1,24 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0466.htm
-        </source_page>
+        <source_page>SN/SN0466.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.18.7
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 18.7
-            </sutta_num>
+            <sutta_num>SN.18.7</sutta_num>
+            <sutta_num type="SC">SN 18.7</sutta_num>
         </sutta_nums>
-        <start>
-            7
-        </start>
-        <end>
-            7
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部18相應7經/思經
-            </span>
-            (羅侯羅相應/因緣篇/如來記說)(莊春江譯)
-        </source_title>
+        <start>7</start>
+        <end>7</end>
+        <source_title><span class="sutra_name">相應部18相應7經/思經</span>(羅侯羅相應/因緣篇/如來記說)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            思經
-        </title>
-        <mtime>
-            2025-08-16 01:49:06 +0800
-        </mtime>
+        <title>思經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　住在舍衛城……（中略）。</p>
-        <p>　　「羅侯羅！你怎麼想它：色思是常的，或是無常的？」</p>
-        <p>　　「無常的，<gn id="45">大德</gn>！」……（中略）。</p>
-        <p>　　「聲音思……（中略）氣味思……味道思……<gn id="220">所觸</gn>思……法思是常的，或是無常的？」</p>
-        <p>　　「無常的，大德！」……（中略）。</p>
-        <p>　　「羅侯羅！這樣看的<gn id="24">有聽聞的聖弟子</gn>在色思上<gn id="15">厭</gn>……（中略）在聲音思上厭……在氣味思上厭……在味道思上厭……在所觸思上厭……在法思上厭……（中略）他知道：……（中略）。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>住在舍衛城……（中略）。</p>
+    <p>「羅侯羅！你怎麼想它：色思是常的，或是無常的？」</p>
+    <p>「無常的，<g45>大德</g45>！」……（中略）。</p>
+    <p>「聲音思……（中略）氣味思……味道思……<g220>所觸</g220>思……法思是常的，或是無常的？」</p>
+    <p>「無常的，大德！」……（中略）。</p>
+    <p>「羅侯羅！這樣看的<g24>有聽聞的聖弟子</g24>在色思上<g15>厭</g15>……（中略）在聲音思上厭……在氣味思上厭……在味道思上厭……在所觸思上厭……在法思上厭……（中略）他知道：……（中略）。」</p>
+    <n1/>
 </doc>

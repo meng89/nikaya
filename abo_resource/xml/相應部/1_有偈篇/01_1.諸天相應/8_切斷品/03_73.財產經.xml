@@ -1,47 +1,22 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0073.htm
-        </source_page>
+        <source_page>SN/SN0073.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.1.73
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 1.73
-            </sutta_num>
+            <sutta_num>SN.1.73</sutta_num>
+            <sutta_num type="SC">SN 1.73</sutta_num>
         </sutta_nums>
-        <start>
-            73
-        </start>
-        <end>
-            73
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部1相應73經/財產經
-            </span>
-            (諸天相應/有偈篇/祇夜)(莊春江譯)[SA.1013]
-        </source_title>
-        <relevant>
-            [SA.1013]
-        </relevant>
-        <title>
-            財產經
-        </title>
-        <mtime>
-            2025-08-16 01:50:58 +0800
-        </mtime>
+        <start>73</start>
+        <end>73</end>
+        <source_title><span class="sutra_name">相應部1相應73經/財產經</span>(諸天相應/有偈篇/祇夜)(莊春江譯)[SA.1013]</source_title>
+        <relevant>[SA.1013]</relevant>
+        <title>財產經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「這裡什麼是男子的最上財產呢？什麼被實行帶來樂呢？</p>
-        <p>　　　什麼確實是諸味道中最(更)美味的呢？如何生活他們說是最上的活命者？」</p>
-        <p>　　「這裡信是男子的最上財產，法被善實行帶來樂，</p>
-        <p>　　　真理確實是味道中最美味的，以慧生活他們說是最上的活命者。」[SN.10.12]</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「這裡什麼是男子的最上財產呢？什麼被實行帶來樂呢？</p>
+    <p>什麼確實是諸味道中最(更)美味的呢？如何生活他們說是最上的活命者？」</p>
+    <p>「這裡信是男子的最上財產，法被善實行帶來樂，</p>
+    <p>真理確實是味道中最美味的，以慧生活他們說是最上的活命者。」[SN.10.12]</p>
+    <n1/>
 </doc>

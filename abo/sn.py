@@ -94,7 +94,7 @@ def load_from_htm():
             folder = xy
 
         body = abo.page_parsing.htm_lines_to_xml_lines(sutta_body_lines)
-        body = abo.page_parsing.lines_to_body(body)
+        body_es = abo.page_parsing.lines_to_es(body)
 
         head = abo.page_parsing.htm_lines_to_xml_lines(head_lines)
         head = abo.page_parsing.lines_to_head(head)
@@ -113,17 +113,17 @@ def load_from_htm():
         ]
 
         xml = abo.utils.make_xml(source_page=htm,
-                                    sutta_nums=sutta_nums,
-                                    start=str(start),
-                                    end=str(end),
-                                    mtime=mtime,
-                                    ctime=None,
-                                    source_title=abo.utils.strip_crlf(matched[0][2]),
-                                    relevant=tail,
-                                    title_line=[name],
-                                    head=head,
-                                    body=body,
-                                    notes=notes)
+                                 sutta_nums=sutta_nums,
+                                 start=str(start),
+                                 end=str(end),
+                                 mtime=mtime,
+                                 ctime=None,
+                                 source_title=abo.utils.strip_crlf(matched[0][2]),
+                                 relevant=tail,
+                                 title_line=[name],
+                                 head=head,
+                                 body_es=body_es,
+                                 notes=notes)
 
         folder.append(((start, end, name), xml))
 

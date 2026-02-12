@@ -1,42 +1,19 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1061.htm
-        </source_page>
+        <source_page>SN/SN1061.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.36.9
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 36.9
-            </sutta_num>
+            <sutta_num>SN.36.9</sutta_num>
+            <sutta_num type="SC">SN 36.9</sutta_num>
         </sutta_nums>
-        <start>
-            9
-        </start>
-        <end>
-            9
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部36相應9經/無常經
-            </span>
-            (受相應/處篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>9</start>
+        <end>9</end>
+        <source_title><span class="sutra_name">相應部36相應9經/無常經</span>(受相應/處篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            無常經
-        </title>
-        <mtime>
-            2025-08-16 01:50:50 +0800
-        </mtime>
+        <title>無常經</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「 <gn id="31">比丘</gn>們！這三受是無常的、<gn id="90">有為的</gn>、<gn id="557">緣所生的</gn>，是<gn id="273">滅盡法</gn>、<gn id="155">消散法</gn>、<gn id="77">褪去</gn>法、<gn id="68">滅法</gn>，哪三個？樂受、苦受、不苦不樂受， 比丘們！這三受是無常的、有為的、緣所生的，是滅盡法、消散法、褪去法、滅法。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「 <g31>比丘</g31>們！這三受是無常的、<g90>有為的</g90>、<g557>緣所生的</g557>，是<g273>滅盡法</g273>、<g155>消散法</g155>、<g77>褪去</g77>法、<g68>滅法</g68>，哪三個？樂受、苦受、不苦不樂受， 比丘們！這三受是無常的、有為的、緣所生的，是滅盡法、消散法、褪去法、滅法。」</p>
+    <n1/>
 </doc>

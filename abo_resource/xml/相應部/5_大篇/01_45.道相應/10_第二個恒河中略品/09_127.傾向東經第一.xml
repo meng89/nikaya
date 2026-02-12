@@ -1,44 +1,21 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1270.htm
-        </source_page>
+        <source_page>SN/SN1270.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.45.127
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 45.127
-            </sutta_num>
+            <sutta_num>SN.45.127</sutta_num>
+            <sutta_num type="SC">SN 45.127</sutta_num>
         </sutta_nums>
-        <start>
-            127
-        </start>
-        <end>
-            127
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部45相應127經/傾向東經第一
-            </span>
-            (道相應/大篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>127</start>
+        <end>127</end>
+        <source_title><span class="sutra_name">相應部45相應127經/傾向東經第一</span>(道相應/大篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            傾向東經第一
-        </title>
-        <mtime>
-            2025-08-16 01:48:44 +0800
-        </mtime>
+        <title>傾向東經第一</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「<gn id="31">比丘</gn>們！猶如恒河是傾向東的、斜向東的、坡斜向東的。同樣的，比丘們！<gn id="94">修習</gn><gn id="525">八支聖道</gn>、<gn id="95">多作</gn>八支聖道的比丘是傾向涅槃的、斜向涅槃的、坡斜向涅槃的。</p>
-        <p>　　比丘們！而怎樣修習八支聖道、多作八支聖道的比丘是傾向涅槃的、斜向涅槃的、坡斜向涅槃的？比丘們！這裡，比丘傾向涅槃地、斜向涅槃地、坡斜向涅槃地修習正見……（中略）傾向涅槃地、斜向涅槃地、坡斜向涅槃地修習正定。 </p>
-        <p>　　比丘們！這樣修習八支聖道、多作八支聖道的比丘是傾向涅槃的、斜向涅槃的、坡斜向涅槃的。」 </p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「<g31>比丘</g31>們！猶如恒河是傾向東的、斜向東的、坡斜向東的。同樣的，比丘們！<g94>修習</g94><g525>八支聖道</g525>、<g95>多作</g95>八支聖道的比丘是傾向涅槃的、斜向涅槃的、坡斜向涅槃的。</p>
+    <p>比丘們！而怎樣修習八支聖道、多作八支聖道的比丘是傾向涅槃的、斜向涅槃的、坡斜向涅槃的？比丘們！這裡，比丘傾向涅槃地、斜向涅槃地、坡斜向涅槃地修習正見……（中略）傾向涅槃地、斜向涅槃地、坡斜向涅槃地修習正定。 </p>
+    <p>比丘們！這樣修習八支聖道、多作八支聖道的比丘是傾向涅槃的、斜向涅槃的、坡斜向涅槃的。」 </p>
+    <n1/>
 </doc>

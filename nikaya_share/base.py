@@ -32,8 +32,6 @@ FullNameGroup = Tuple[int, int|None, int|None, str|None]
 
 def fullnamegroup_to_filename(namegroup: FullNameGroup, index_width=0) -> str:
     file_index, start, end, name = namegroup
-    print()
-    print(namegroup)
     if isinstance(start, int):
         assert isinstance(end, int)
         if start == end:
@@ -114,6 +112,8 @@ def add_space_before_note(doc: xl.Element):
             return
 
 
+ABO_WRITE_DONT_DO_TAGS = ["source_page", "sutta_num", "start", "end", "name", "mtime", "ctime", "relevant", "p", "note", "title", "source_title"]
+
 def write_to_disk(path, data: list):
     dont_do_tags = ["p", "sub"]
     for x in range(1, 1000):
@@ -131,7 +131,7 @@ def write_to_disk(path, data: list):
             write_to_disk(sub_path, obj)
         elif isinstance(obj, (xl.Xml, xl.Element)):
             add_space_before_note(obj)
-            s = obj.to_str(do_pretty=True, try_self_closing=True, dont_do_tags=dont_do_tags)
+            s = obj.to_str(do_pretty=True, try_self_closing=True, dont_do_tags=dont_do_tags + ABO_WRITE_DONT_DO_TAGS)
             with open(sub_path + ".xml", "w") as f:
                 f.write(s)
         else:

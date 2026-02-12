@@ -1,46 +1,22 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0027.htm
-        </source_page>
+        <source_page>SN/SN0027.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.1.27
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 1.27
-            </sutta_num>
+            <sutta_num>SN.1.27</sutta_num>
+            <sutta_num type="SC">SN 1.27</sutta_num>
         </sutta_nums>
-        <start>
-            27
-        </start>
-        <end>
-            27
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部1相應27經/溪流經
-            </span>
-            (諸天相應/有偈篇/祇夜)(莊春江譯)[SA.601]
-        </source_title>
-        <relevant>
-            [SA.601]
-        </relevant>
-        <title>
-            溪流經
-        </title>
-        <mtime>
-            2025-08-16 01:52:26 +0800
-        </mtime>
+        <start>27</start>
+        <end>27</end>
+        <source_title><span class="sutra_name">相應部1相應27經/溪流經</span>(諸天相應/有偈篇/祇夜)(莊春江譯)[SA.601]</source_title>
+        <relevant>[SA.601]</relevant>
+        <title>溪流經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「<gn id="664">溪流</gn>從哪裡折回？輪轉在何處不轉？</p>
-        <p>　　　名與色在何處，被破壞無餘？」</p>
-        <p>　　「於該處水與地，火、風不堅立，[≃Apn.538, 218偈]</p>
-        <p>　　　從那裡溪流折回，在這裡輪轉不轉，</p>
-        <p>　　　在這裡名與色，被破壞無餘。」</p>
-    </body>
-    <notes/>
+    <p>「<g664>溪流</g664>從哪裡折回？輪轉在何處不轉？</p>
+    <p>名與色在何處，被破壞無餘？」</p>
+    <p>「於該處水與地，火、風不堅立，[≃Apn.538, 218偈]</p>
+    <p>從那裡溪流折回，在這裡輪轉不轉，</p>
+    <p>在這裡名與色，被破壞無餘。」</p>
 </doc>

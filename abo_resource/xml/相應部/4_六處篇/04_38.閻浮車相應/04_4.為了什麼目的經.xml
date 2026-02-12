@@ -1,50 +1,25 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1121.htm
-        </source_page>
+        <source_page>SN/SN1121.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.38.4
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 38.4
-            </sutta_num>
+            <sutta_num>SN.38.4</sutta_num>
+            <sutta_num type="SC">SN 38.4</sutta_num>
         </sutta_nums>
-        <start>
-            4
-        </start>
-        <end>
-            4
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部38相應4經/為了什麼目的經
-            </span>
-            (閻浮車相應/處篇/弟子記說)(莊春江譯)[SA.490]
-        </source_title>
-        <relevant>
-            [SA.490]
-        </relevant>
-        <title>
-            為了什麼目的經
-        </title>
-        <mtime>
-            2025-08-16 01:54:02 +0800
-        </mtime>
+        <start>4</start>
+        <end>4</end>
+        <source_title><span class="sutra_name">相應部38相應4經/為了什麼目的經</span>(閻浮車相應/處篇/弟子記說)(莊春江譯)[SA.490]</source_title>
+        <relevant>[SA.490]</relevant>
+        <title>為了什麼目的經</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「舍利弗<gn id="201">道友</gn>！為了什麼目的在<gn id="29">沙門</gn><gn id="80">喬達摩</gn>處梵行被住？」</p>
-        <p>　　「道友！為了苦的<gn id="154">遍知</gn>目的在<gn id="12">世尊</gn>處梵行被住。」</p>
-        <p>　　「道友！那麼，為了這苦的遍知，<gn id="359">有道、有道跡</gn>嗎？」</p>
-        <p>　　「道友！為了這苦的遍知，有道、有道跡。」</p>
-        <p>　　「道友！那麼，為了這苦的遍知，什麼是道？什麼是道跡？」</p>
-        <p>　　「道友！為了這苦的遍知，就是這<gn id="525">八支聖道</gn>，即：正見、正志、正語、正業、正命、正方便、正念、正定。道友！為了這苦的遍知，這是道，這是道跡。」[≃SN.45.5]</p>
-        <p>　　「道友！為了這苦的遍知，道是善的，道跡是善的，舍利弗道友！還有，對不放逸是足夠的。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「舍利弗<g201>道友</g201>！為了什麼目的在<g29>沙門</g29><g80>喬達摩</g80>處梵行被住？」</p>
+    <p>「道友！為了苦的<g154>遍知</g154>目的在<g12>世尊</g12>處梵行被住。」</p>
+    <p>「道友！那麼，為了這苦的遍知，<g359>有道、有道跡</g359>嗎？」</p>
+    <p>「道友！為了這苦的遍知，有道、有道跡。」</p>
+    <p>「道友！那麼，為了這苦的遍知，什麼是道？什麼是道跡？」</p>
+    <p>「道友！為了這苦的遍知，就是這<g525>八支聖道</g525>，即：正見、正志、正語、正業、正命、正方便、正念、正定。道友！為了這苦的遍知，這是道，這是道跡。」[≃SN.45.5]</p>
+    <p>「道友！為了這苦的遍知，道是善的，道跡是善的，舍利弗道友！還有，對不放逸是足夠的。」</p>
+    <n1/>
 </doc>

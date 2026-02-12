@@ -1,50 +1,26 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0267.htm
-        </source_page>
+        <source_page>SN/SN0267.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.11.21
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 11.21
-            </sutta_num>
+            <sutta_num>SN.11.21</sutta_num>
+            <sutta_num type="SC">SN 11.21</sutta_num>
         </sutta_nums>
-        <start>
-            21
-        </start>
-        <end>
-            21
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部11相應21經/切斷後經
-            </span>
-            (帝釋相應/有偈篇/祇夜)(莊春江譯)[SA.1116]
-        </source_title>
-        <relevant>
-            [SA.1116]
-        </relevant>
-        <title>
-            切斷後經
-        </title>
-        <mtime>
-            2025-08-16 01:52:46 +0800
-        </mtime>
+        <start>21</start>
+        <end>21</end>
+        <source_title><span class="sutra_name">相應部11相應21經/切斷後經</span>(帝釋相應/有偈篇/祇夜)(莊春江譯)[SA.1116]</source_title>
+        <relevant>[SA.1116]</relevant>
+        <title>切斷後經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head>
+            <p>3.第三品</p>
+        </head>
     </meta>
-    <head>
-        <p>3.第三品</p>
-    </head>
-    <body>
-        <p>　　在舍衛城祇樹林。</p>
-        <p>　　那時，<gn id="263">天帝釋</gn>去見<gn id="12">世尊</gn>。抵達後，向世尊<gn id="46">問訊</gn>後，在一旁站立。在一旁站立的天帝釋以<gn id="281">偈頌</gn>對世尊說：</p>
-        <p>　　「切斷什麼後<gn id="532">睡得安樂</gn>呢？切斷什麼後不憂愁呢？</p>
-        <p>　　　對哪一法的殺害，<gn id="80">喬達摩</gn>同意呢？」</p>
-        <p>　　「切斷憤怒後睡得安樂，切斷憤怒後不憂愁，</p>
-        <p>　　　<gn id="263">襪瑟哇</gn>！對端為蜜，<gn id="929">對根為毒的憤怒</gn>，</p>
-        <p>　　　聖者們稱讚殺害，因為切斷它後不憂愁。」[SN.1.71/SN.2.3]</p>
-    </body>
-    <notes/>
+    <p>在舍衛城祇樹林。</p>
+    <p>那時，<g263>天帝釋</g263>去見<g12>世尊</g12>。抵達後，向世尊<g46>問訊</g46>後，在一旁站立。在一旁站立的天帝釋以<g281>偈頌</g281>對世尊說：</p>
+    <p>「切斷什麼後<g532>睡得安樂</g532>呢？切斷什麼後不憂愁呢？</p>
+    <p>對哪一法的殺害，<g80>喬達摩</g80>同意呢？」</p>
+    <p>「切斷憤怒後睡得安樂，切斷憤怒後不憂愁，</p>
+    <p><g263>襪瑟哇</g263>！對端為蜜，<g929>對根為毒的憤怒</g929>，</p>
+    <p>聖者們稱讚殺害，因為切斷它後不憂愁。」[SN.1.71/SN.2.3]</p>
 </doc>

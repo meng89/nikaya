@@ -1,45 +1,20 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0862.htm
-        </source_page>
+        <source_page>SN/SN0862.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.35.11
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 35.11
-            </sutta_num>
+            <sutta_num>SN.35.11</sutta_num>
+            <sutta_num type="SC">SN 35.11</sutta_num>
         </sutta_nums>
-        <start>
-            11
-        </start>
-        <end>
-            11
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部35相應11經/外部的過去未來苦經
-            </span>
-            (處相應/處篇/修多羅)(莊春江譯)[SA.208, SA.333]
-        </source_title>
-        <relevant>
-            [SA.208, SA.333]
-        </relevant>
-        <title>
-            外部的過去未來苦經
-        </title>
-        <mtime>
-            2025-08-16 01:53:48 +0800
-        </mtime>
+        <start>11</start>
+        <end>11</end>
+        <source_title><span class="sutra_name">相應部35相應11經/外部的過去未來苦經</span>(處相應/處篇/修多羅)(莊春江譯)[SA.208, SA.333]</source_title>
+        <relevant>[SA.208, SA.333]</relevant>
+        <title>外部的過去未來苦經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「<gn id="31">比丘</gn>們！過去、未來諸色是苦的，更不用說現在！</p>
-        <p>　　比丘們！這樣看的<gn id="24">有聽聞的聖弟子</gn>在過去諸色上是無期待者，在未來諸色上不歡喜，對現在諸色是為了<gn id="15">厭</gn>、<gn id="77">離貪</gn>、<gn id="519">滅的行者</gn>。……（中略）。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「<g31>比丘</g31>們！過去、未來諸色是苦的，更不用說現在！</p>
+    <p>比丘們！這樣看的<g24>有聽聞的聖弟子</g24>在過去諸色上是無期待者，在未來諸色上不歡喜，對現在諸色是為了<g15>厭</g15>、<g77>離貪</g77>、<g519>滅的行者</g519>。……（中略）。」</p>
+    <n1/>
 </doc>

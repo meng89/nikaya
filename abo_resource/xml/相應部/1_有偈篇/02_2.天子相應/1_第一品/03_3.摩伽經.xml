@@ -1,50 +1,25 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0084.htm
-        </source_page>
+        <source_page>SN/SN0084.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.2.3
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 2.3
-            </sutta_num>
+            <sutta_num>SN.2.3</sutta_num>
+            <sutta_num type="SC">SN 2.3</sutta_num>
         </sutta_nums>
-        <start>
-            3
-        </start>
-        <end>
-            3
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部2相應3經/摩伽經
-            </span>
-            (天子相應/有偈篇/祇夜)(莊春江譯)
-        </source_title>
+        <start>3</start>
+        <end>3</end>
+        <source_title><span class="sutra_name">相應部2相應3經/摩伽經</span>(天子相應/有偈篇/祇夜)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            摩伽經
-        </title>
-        <mtime>
-            2025-08-16 01:51:36 +0800
-        </mtime>
+        <title>摩伽經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　起源於舍衛城。</p>
-        <p>　　那時，在夜已深時，容色絕佳的摩伽<gn id="282">天子</gn>使整個祇樹林發光後，去見世尊。抵達後，向世尊<gn id="46">問訊</gn>後，在一旁站立。在一旁站立的摩伽天子以<gn id="281">偈頌</gn>對世尊說：</p>
-        <p>　　「切斷什麼後<gn id="532">睡得安樂</gn>呢？切斷什麼後不憂愁呢？</p>
-        <p>　　　對哪一法的殺害，<gn id="80">喬達摩</gn>同意呢？」</p>
-        <p>　　「切斷憤怒後睡得安樂，切斷憤怒後不憂愁，</p>
-        <p>　　　<ln id="1">阿修羅的征服者</ln>！對端為蜜，<gn id="929">對根為毒的憤怒</gn>，</p>
-        <p>　　　聖者們稱讚殺害，因為切斷它後不憂愁。」[SN.1.71/SN.11.21]</p>
-    </body>
-    <notes>
-        <note id="1">
-            「阿修羅的征服者」(vatrabhū)，另譯為「帝釋天；天帝釋」。按：「摩伽」(Māgha)，為天帝釋的別名，參看SA.1105、SA.1106。
-        </note>
-    </notes>
+    <p>起源於舍衛城。</p>
+    <p>那時，在夜已深時，容色絕佳的摩伽<g282>天子</g282>使整個祇樹林發光後，去見世尊。抵達後，向世尊<g46>問訊</g46>後，在一旁站立。在一旁站立的摩伽天子以<g281>偈頌</g281>對世尊說：</p>
+    <p>「切斷什麼後<g532>睡得安樂</g532>呢？切斷什麼後不憂愁呢？</p>
+    <p>對哪一法的殺害，<g80>喬達摩</g80>同意呢？」</p>
+    <p>「切斷憤怒後睡得安樂，切斷憤怒後不憂愁，</p>
+    <p><t1>阿修羅的征服者</t1>！對端為蜜，<g929>對根為毒的憤怒</g929>，</p>
+    <p>聖者們稱讚殺害，因為切斷它後不憂愁。」[SN.1.71/SN.11.21]</p>
+    <n1>「阿修羅的征服者」(vatrabhū)，另譯為「帝釋天；天帝釋」。按：「摩伽」(Māgha)，為天帝釋的別名，參看SA.1105、SA.1106。</n1>
 </doc>

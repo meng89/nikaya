@@ -1,55 +1,30 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0010.htm
-        </source_page>
+        <source_page>SN/SN0010.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.1.10
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 1.10
-            </sutta_num>
+            <sutta_num>SN.1.10</sutta_num>
+            <sutta_num type="SC">SN 1.10</sutta_num>
         </sutta_nums>
-        <start>
-            10
-        </start>
-        <end>
-            10
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部1相應10經/林野經
-            </span>
-            (諸天相應/有偈篇/祇夜)(莊春江譯)[SA.995]
-        </source_title>
-        <relevant>
-            [SA.995]
-        </relevant>
-        <title>
-            林野經
-        </title>
-        <mtime>
-            2025-08-16 01:52:18 +0800
-        </mtime>
+        <start>10</start>
+        <end>10</end>
+        <source_title><span class="sutra_name">相應部1相應10經/林野經</span>(諸天相應/有偈篇/祇夜)(莊春江譯)[SA.995]</source_title>
+        <relevant>[SA.995]</relevant>
+        <title>林野經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　起源於舍衛城。</p>
-        <p>　　在一旁站立的那位天神以<gn id="281">偈頌</gn>對<gn id="12">世尊</gn>說：</p>
-        <p>　　「在<gn id="142">林野</gn>中居住者們的，寂靜的梵行者們的，</p>
-        <p>　　　食一餐者們的，容色為何明淨？」</p>
-        <p>　　「他們不悲傷過去，不希求未來，</p>
-        <p>　　　他們以當面的維生，因此容色明淨。</p>
-        <p>　　　以希求未來的，以悲傷過去的，</p>
-        <p>　　　以這個愚者乾枯，如被割斷的綠蘆葦。」</p>
-        <p>　　蘆葦品第一，其<gn id="35">攝頌</gn>：</p>
-        <p>　　「暴流、解脫、被帶走，流逝、切斷多少，</p>
-        <p>　　　清醒、未確知者，極忘失者、慢之愛欲者，</p>
-        <p>　　　林野被說為第十，以那個被稱為品。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>起源於舍衛城。</p>
+    <p>在一旁站立的那位天神以<g281>偈頌</g281>對<g12>世尊</g12>說：</p>
+    <p>「在<g142>林野</g142>中居住者們的，寂靜的梵行者們的，</p>
+    <p>食一餐者們的，容色為何明淨？」</p>
+    <p>「他們不悲傷過去，不希求未來，</p>
+    <p>他們以當面的維生，因此容色明淨。</p>
+    <p>以希求未來的，以悲傷過去的，</p>
+    <p>以這個愚者乾枯，如被割斷的綠蘆葦。」</p>
+    <p>蘆葦品第一，其<g35>攝頌</g35>：</p>
+    <p>「暴流、解脫、被帶走，流逝、切斷多少，</p>
+    <p>清醒、未確知者，極忘失者、慢之愛欲者，</p>
+    <p>林野被說為第十，以那個被稱為品。」</p>
+    <n1/>
 </doc>

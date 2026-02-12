@@ -1,53 +1,28 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0253.htm
-        </source_page>
+        <source_page>SN/SN0253.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.11.7
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 11.7
-            </sutta_num>
+            <sutta_num>SN.11.7</sutta_num>
+            <sutta_num type="SC">SN 11.7</sutta_num>
         </sutta_nums>
-        <start>
-            7
-        </start>
-        <end>
-            7
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部11相應7經/不傷害經
-            </span>
-            (帝釋相應/有偈篇/祇夜)(莊春江譯)[SA.1120]
-        </source_title>
-        <relevant>
-            [SA.1120]
-        </relevant>
-        <title>
-            不傷害經
-        </title>
-        <mtime>
-            2025-08-16 01:46:10 +0800
-        </mtime>
+        <start>7</start>
+        <end>7</end>
+        <source_title><span class="sutra_name">相應部11相應7經/不傷害經</span>(帝釋相應/有偈篇/祇夜)(莊春江譯)[SA.1120]</source_title>
+        <relevant>[SA.1120]</relevant>
+        <title>不傷害經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　在舍衛城。</p>
-        <p>　　「<gn id="31">比丘</gn>們！從前，獨處、<gn id="92">獨坐</gn>的天帝釋這樣心的深思生起：『凡即使他會是我的極敵對者，我也不應該傷害他。』</p>
-        <p>　　比丘們！那時，毘摩質多阿修羅王以心了知天帝釋心中的深思後，去見天帝釋。</p>
-        <p>　　比丘們！那時，天帝釋看見正從遠處到來的毘摩質多阿修羅王。看見後，對毘摩質多阿修羅王說這個：</p>
-        <p>　　「站住！毘摩質多！你被捉住。」</p>
-        <p>　　「<gn id="204">親愛的先生</gn>！你不要捨棄，那個你先前的心。」</p>
-        <p>　　「毘摩質多！但請你發誓，以無害意對我。」</p>
-        <p>　　「凡虛妄說者的惡，凡斥責聖者的惡，</p>
-        <p>　　　以及凡背叛朋友的惡，凡不知恩者的惡，</p>
-        <p>　　　<gn id="263">須闍之夫</gn>！就令那種惡觸達，凡如果傷害你。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>在舍衛城。</p>
+    <p>「<g31>比丘</g31>們！從前，獨處、<g92>獨坐</g92>的天帝釋這樣心的深思生起：『凡即使他會是我的極敵對者，我也不應該傷害他。』</p>
+    <p>比丘們！那時，毘摩質多阿修羅王以心了知天帝釋心中的深思後，去見天帝釋。</p>
+    <p>比丘們！那時，天帝釋看見正從遠處到來的毘摩質多阿修羅王。看見後，對毘摩質多阿修羅王說這個：</p>
+    <p>「站住！毘摩質多！你被捉住。」</p>
+    <p>「<g204>親愛的先生</g204>！你不要捨棄，那個你先前的心。」</p>
+    <p>「毘摩質多！但請你發誓，以無害意對我。」</p>
+    <p>「凡虛妄說者的惡，凡斥責聖者的惡，</p>
+    <p>以及凡背叛朋友的惡，凡不知恩者的惡，</p>
+    <p><g263>須闍之夫</g263>！就令那種惡觸達，凡如果傷害你。」</p>
+    <n1/>
 </doc>

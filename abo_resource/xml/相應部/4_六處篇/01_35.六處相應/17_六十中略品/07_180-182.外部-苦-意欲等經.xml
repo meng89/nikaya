@@ -1,42 +1,19 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1008.htm
-        </source_page>
+        <source_page>SN/SN1008.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.35.180-182
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 35.180-182
-            </sutta_num>
+            <sutta_num>SN.35.180-182</sutta_num>
+            <sutta_num type="SC">SN 35.180-182</sutta_num>
         </sutta_nums>
-        <start>
-            180
-        </start>
-        <end>
-            182
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部35相應 180-182經/外部-苦-意欲等經
-            </span>
-            (處相應/處篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>180</start>
+        <end>182</end>
+        <source_title><span class="sutra_name">相應部35相應 180-182經/外部-苦-意欲等經</span>(處相應/處篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            外部-苦-意欲等經
-        </title>
-        <mtime>
-            2025-08-16 01:53:40 +0800
-        </mtime>
+        <title>外部-苦-意欲等經</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「<gn id="31">比丘</gn>們！凡是苦的，在那裡意欲應該被你們捨斷、貪應該被捨斷、意欲貪應該被捨斷。比丘們！而什麼是苦的？比丘們！諸色是苦的，在那裡意欲應該被你們捨斷、貪應該被捨斷、意欲貪應該被捨斷；諸聲音……諸氣味……諸味道……諸<gn id="220">所觸</gn>……諸法是苦的，在那裡意欲應該被你們捨斷、貪應該被捨斷、意欲貪應該被捨斷。比丘們！凡是苦的，在那裡意欲應該被你們捨斷、貪應該被捨斷、意欲貪應該被捨斷。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「<g31>比丘</g31>們！凡是苦的，在那裡意欲應該被你們捨斷、貪應該被捨斷、意欲貪應該被捨斷。比丘們！而什麼是苦的？比丘們！諸色是苦的，在那裡意欲應該被你們捨斷、貪應該被捨斷、意欲貪應該被捨斷；諸聲音……諸氣味……諸味道……諸<g220>所觸</g220>……諸法是苦的，在那裡意欲應該被你們捨斷、貪應該被捨斷、意欲貪應該被捨斷。比丘們！凡是苦的，在那裡意欲應該被你們捨斷、貪應該被捨斷、意欲貪應該被捨斷。」</p>
+    <n1/>
 </doc>

@@ -1,43 +1,20 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0558.htm
-        </source_page>
+        <source_page>SN/SN0558.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.22.40
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 22.40
-            </sutta_num>
+            <sutta_num>SN.22.40</sutta_num>
+            <sutta_num type="SC">SN 22.40</sutta_num>
         </sutta_nums>
-        <start>
-            40
-        </start>
-        <end>
-            40
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部22相應40經/隨法經第二(蘊相應/蘊篇/修多羅)
-            </span>
-            (莊春江譯)
-        </source_title>
+        <start>40</start>
+        <end>40</end>
+        <source_title><span class="sutra_name">相應部22相應40經/隨法經第二(蘊相應/蘊篇/修多羅)</span>(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            隨法經第二
-        </title>
-        <mtime>
-            2025-08-16 01:47:58 +0800
-        </mtime>
+        <title>隨法經第二</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　起源於舍衛城。</p>
-        <p>　　「<gn id="31">比丘</gn>們！這是<gn id="58">法、隨法行</gn>比丘的隨法：在色上應該<gn id="59">隨看無常地</gn>住……（中略）我說：『從苦被釋放。』」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>起源於舍衛城。</p>
+    <p>「<g31>比丘</g31>們！這是<g58>法、隨法行</g58>比丘的隨法：在色上應該<g59>隨看無常地</g59>住……（中略）我說：『從苦被釋放。』」</p>
+    <n1/>
 </doc>

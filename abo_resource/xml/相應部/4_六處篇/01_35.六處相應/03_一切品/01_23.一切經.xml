@@ -1,52 +1,25 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0874.htm
-        </source_page>
+        <source_page>SN/SN0874.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.35.23
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 35.23
-            </sutta_num>
+            <sutta_num>SN.35.23</sutta_num>
+            <sutta_num type="SC">SN 35.23</sutta_num>
         </sutta_nums>
-        <start>
-            23
-        </start>
-        <end>
-            23
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部35相應23經/一切經
-            </span>
-            (處相應/處篇/修多羅)(莊春江譯)[SA.319]
-        </source_title>
-        <relevant>
-            [SA.319]
-        </relevant>
-        <title>
-            一切經
-        </title>
-        <mtime>
-            2025-08-16 01:53:50 +0800
-        </mtime>
+        <start>23</start>
+        <end>23</end>
+        <source_title><span class="sutra_name">相應部35相應23經/一切經</span>(處相應/處篇/修多羅)(莊春江譯)[SA.319]</source_title>
+        <relevant>[SA.319]</relevant>
+        <title>一切經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head>
+            <p>3.一切品</p>
+        </head>
     </meta>
-    <head>
-        <p>3.一切品</p>
-    </head>
-    <body>
-        <p>　　起源於舍衛城。</p>
-        <p>　　「<gn id="31">比丘</gn>們！我將為你們教導<ln id="1">一切</ln>，<gn id="43">你們要聽</gn>它！</p>
-        <p>　　比丘們！而什麼是一切？</p>
-        <p>　　即是眼與諸色、耳與諸聲、鼻與諸氣味、舌與諸味道、身與諸<gn id="220">所觸</gn>、意與諸法，比丘們！這被稱為一切。</p>
-        <p>　　比丘們！凡如果這麼說：『拒絕這個一切後，我將<gn id="143">安立</gn>另一個一切。』他的言語會成為無根據的，而當被詢問時不會解答，且更會來到惱害，那是什麼原因？比丘們！那個正如<gn id="783">不在[感官的]境域中</gn>那樣。」[≃SN.35.92]</p>
-    </body>
-    <notes>
-        <note id="1">
-            「一切」(sabbaṃ)，菩提比丘長老英譯為「所有；全部」(all)。按：《顯揚真義》說，一切有四類：i.一切的一切(sabbasabba)：佛證知而指導(neyyaṃ)的一切。ii.一切處(āyatanasabba)：如本經所說。iii.一切有身(sakkāyasabba)：如MN.1所說。iv.指定(部分)的一切(padesasabba)：對一切法初注意(根對境)生起心、意、心所…對應的意界等。
-        </note>
-    </notes>
+    <p>起源於舍衛城。</p>
+    <p>「<g31>比丘</g31>們！我將為你們教導<t1>一切</t1>，<g43>你們要聽</g43>它！</p>
+    <p>比丘們！而什麼是一切？</p>
+    <p>即是眼與諸色、耳與諸聲、鼻與諸氣味、舌與諸味道、身與諸<g220>所觸</g220>、意與諸法，比丘們！這被稱為一切。</p>
+    <p>比丘們！凡如果這麼說：『拒絕這個一切後，我將<g143>安立</g143>另一個一切。』他的言語會成為無根據的，而當被詢問時不會解答，且更會來到惱害，那是什麼原因？比丘們！那個正如<g783>不在[感官的]境域中</g783>那樣。」[≃SN.35.92]</p>
+    <n1>「一切」(sabbaṃ)，菩提比丘長老英譯為「所有；全部」(all)。按：《顯揚真義》說，一切有四類：i.一切的一切(sabbasabba)：佛證知而指導(neyyaṃ)的一切。ii.一切處(āyatanasabba)：如本經所說。iii.一切有身(sakkāyasabba)：如MN.1所說。iv.指定(部分)的一切(padesasabba)：對一切法初注意(根對境)生起心、意、心所…對應的意界等。</n1>
 </doc>

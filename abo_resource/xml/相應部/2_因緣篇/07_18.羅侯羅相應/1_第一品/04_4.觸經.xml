@@ -1,47 +1,24 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0463.htm
-        </source_page>
+        <source_page>SN/SN0463.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.18.4
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 18.4
-            </sutta_num>
+            <sutta_num>SN.18.4</sutta_num>
+            <sutta_num type="SC">SN 18.4</sutta_num>
         </sutta_nums>
-        <start>
-            4
-        </start>
-        <end>
-            4
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部18相應4經/觸經
-            </span>
-            (羅侯羅相應/因緣篇/如來記說)(莊春江譯)
-        </source_title>
+        <start>4</start>
+        <end>4</end>
+        <source_title><span class="sutra_name">相應部18相應4經/觸經</span>(羅侯羅相應/因緣篇/如來記說)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            觸經
-        </title>
-        <mtime>
-            2025-08-16 01:46:22 +0800
-        </mtime>
+        <title>觸經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　住在舍衛城……（中略）。</p>
-        <p>　　「羅侯羅！你怎麼想它：眼觸是常的，或是無常的？」</p>
-        <p>　　「無常的，<gn id="45">大德</gn>！」……（中略）。</p>
-        <p>　　「耳觸……（中略）鼻觸……舌觸……身觸……意觸是常的，或是無常的？」</p>
-        <p>　　「無常的，大德！」……（中略）。</p>
-        <p>　　「羅侯羅！這樣看的<gn id="24">有聽聞的聖弟子</gn>在眼觸上<gn id="15">厭</gn>……（中略）在耳觸上厭……在鼻觸上厭……在舌觸上厭……在身觸上厭……在意觸上厭。厭者<gn id="558">離染</gn>……（中略）他知道：……。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>住在舍衛城……（中略）。</p>
+    <p>「羅侯羅！你怎麼想它：眼觸是常的，或是無常的？」</p>
+    <p>「無常的，<g45>大德</g45>！」……（中略）。</p>
+    <p>「耳觸……（中略）鼻觸……舌觸……身觸……意觸是常的，或是無常的？」</p>
+    <p>「無常的，大德！」……（中略）。</p>
+    <p>「羅侯羅！這樣看的<g24>有聽聞的聖弟子</g24>在眼觸上<g15>厭</g15>……（中略）在耳觸上厭……在鼻觸上厭……在舌觸上厭……在身觸上厭……在意觸上厭。厭者<g558>離染</g558>……（中略）他知道：……。」</p>
+    <n1/>
 </doc>

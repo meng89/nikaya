@@ -1,45 +1,22 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1512.htm
-        </source_page>
+        <source_page>SN/SN1512.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.48.60
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 48.60
-            </sutta_num>
+            <sutta_num>SN.48.60</sutta_num>
+            <sutta_num type="SC">SN 48.60</sutta_num>
         </sutta_nums>
-        <start>
-            60
-        </start>
-        <end>
-            60
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部48相應60經/生起經第二
-            </span>
-            (根相應/大篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>60</start>
+        <end>60</end>
+        <source_title><span class="sutra_name">相應部48相應60經/生起經第二</span>(根相應/大篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            生起經第二
-        </title>
-        <mtime>
-            2025-08-16 01:53:18 +0800
-        </mtime>
+        <title>生起經第二</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「<gn id="31">比丘</gn>們！有這五根，已<gn id="94">修習</gn>、已<gn id="95">多作</gn>，未生起者不在<gn id="8">善逝</gn>之律外其它地生起，哪五個？信根、<gn id="291">活力根</gn>、念根、定根、慧根。比丘們！這是五根，已修習、已多作，未生起者不在善逝之律外其它地生起。」</p>
-        <p>　　野豬洞品第一，其<gn id="35">攝頌</gn>：</p>
-        <p>　　「薩羅、末羅與有學，足跡、樹心、已住立，</p>
-        <p>　　　梵天、野豬洞，生起二則在後。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「<g31>比丘</g31>們！有這五根，已<g94>修習</g94>、已<g95>多作</g95>，未生起者不在<g8>善逝</g8>之律外其它地生起，哪五個？信根、<g291>活力根</g291>、念根、定根、慧根。比丘們！這是五根，已修習、已多作，未生起者不在善逝之律外其它地生起。」</p>
+    <p>野豬洞品第一，其<g35>攝頌</g35>：</p>
+    <p>「薩羅、末羅與有學，足跡、樹心、已住立，</p>
+    <p>梵天、野豬洞，生起二則在後。」</p>
+    <n1/>
 </doc>

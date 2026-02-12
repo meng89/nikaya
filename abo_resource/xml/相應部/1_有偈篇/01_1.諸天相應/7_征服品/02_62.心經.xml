@@ -1,49 +1,22 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0062.htm
-        </source_page>
+        <source_page>SN/SN0062.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.1.62
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 1.62
-            </sutta_num>
+            <sutta_num>SN.1.62</sutta_num>
+            <sutta_num type="SC">SN 1.62</sutta_num>
         </sutta_nums>
-        <start>
-            62
-        </start>
-        <end>
-            62
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部1相應62經/心經
-            </span>
-            (諸天相應/有偈篇/祇夜)(莊春江譯)[SA.1009]
-        </source_title>
-        <relevant>
-            [SA.1009]
-        </relevant>
-        <title>
-            心經
-        </title>
-        <mtime>
-            2025-08-16 01:52:32 +0800
-        </mtime>
+        <start>62</start>
+        <end>62</end>
+        <source_title><span class="sutra_name">相應部1相應62經/心經</span>(諸天相應/有偈篇/祇夜)(莊春江譯)[SA.1009]</source_title>
+        <relevant>[SA.1009]</relevant>
+        <title>心經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「世間被什麼引導呢？被什麼<ln id="1">牽引</ln>呢？</p>
-        <p>　　　什麼是<gn id="522">一法</gn>，一切就是順從控制者呢？」</p>
-        <p>　　「世間被心引導，被心牽引，</p>
-        <p>　　　心是一法，一切就是順從控制者。」</p>
-    </body>
-    <notes>
-        <note id="1">
-            「拘牽(SA.1009)」，南傳作「被牽引」(parikassati，原意為「拉著繞轉」)，菩提比丘長老英譯為「被到處拖」(is…dragged here and there, SN.1.62)，或「被拖繞」(is…dragged around, AN.4.186)。按：《顯揚真義》以「拉入；引誘」(parikaḍḍhati, SN.1.62)解說，《滿足希求》以「被牽引」(ākaḍḍhiyati, AN.4.186)解說，今準此譯。
-        </note>
-    </notes>
+    <p>「世間被什麼引導呢？被什麼<t1>牽引</t1>呢？</p>
+    <p>什麼是<g522>一法</g522>，一切就是順從控制者呢？」</p>
+    <p>「世間被心引導，被心牽引，</p>
+    <p>心是一法，一切就是順從控制者。」</p>
+    <n1>「拘牽(SA.1009)」，南傳作「被牽引」(parikassati，原意為「拉著繞轉」)，菩提比丘長老英譯為「被到處拖」(is…dragged here and there, SN.1.62)，或「被拖繞」(is…dragged around, AN.4.186)。按：《顯揚真義》以「拉入；引誘」(parikaḍḍhati, SN.1.62)解說，《滿足希求》以「被牽引」(ākaḍḍhiyati, AN.4.186)解說，今準此譯。</n1>
 </doc>

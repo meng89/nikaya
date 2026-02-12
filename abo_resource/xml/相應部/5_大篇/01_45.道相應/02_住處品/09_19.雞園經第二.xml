@@ -1,46 +1,23 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1214.htm
-        </source_page>
+        <source_page>SN/SN1214.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.45.19
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 45.19
-            </sutta_num>
+            <sutta_num>SN.45.19</sutta_num>
+            <sutta_num type="SC">SN 45.19</sutta_num>
         </sutta_nums>
-        <start>
-            19
-        </start>
-        <end>
-            19
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部45相應19經/雞園經第二
-            </span>
-            (道相應/大篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>19</start>
+        <end>19</end>
+        <source_title><span class="sutra_name">相應部45相應19經/雞園經第二</span>(道相應/大篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            雞園經第二
-        </title>
-        <mtime>
-            2025-08-16 01:50:14 +0800
-        </mtime>
+        <title>雞園經第二</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　起源於巴連弗城。</p>
-        <p>　　「阿難<gn id="201">學友</gn>！被稱為『<gn id="381">梵行</gn>、梵行』，學友！什麼是梵行，什麼是梵行的完結呢？」</p>
-        <p>　　「跋陀學友！<gn id="44">好</gn>！好！跋陀學友！你的<gn id="563">想法</gn>是善的、辯才是善的、詢問是好的，跋陀學友！因為你這麼問：『阿難學友！被稱為「梵行、梵行」，學友！什麼是梵行，什麼是梵行的完結呢？』」</p>
-        <p>　　「是的，學友！」</p>
-        <p>　　「學友！這<gn id="525">八支聖道</gn>就是梵行，即：正見……（中略）正定。學友！凡貪的滅盡、瞋的滅盡、癡的滅盡，這是梵行的完結。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>起源於巴連弗城。</p>
+    <p>「阿難<g201>學友</g201>！被稱為『<g381>梵行</g381>、梵行』，學友！什麼是梵行，什麼是梵行的完結呢？」</p>
+    <p>「跋陀學友！<g44>好</g44>！好！跋陀學友！你的<g563>想法</g563>是善的、辯才是善的、詢問是好的，跋陀學友！因為你這麼問：『阿難學友！被稱為「梵行、梵行」，學友！什麼是梵行，什麼是梵行的完結呢？』」</p>
+    <p>「是的，學友！」</p>
+    <p>「學友！這<g525>八支聖道</g525>就是梵行，即：正見……（中略）正定。學友！凡貪的滅盡、瞋的滅盡、癡的滅盡，這是梵行的完結。」</p>
+    <n1/>
 </doc>

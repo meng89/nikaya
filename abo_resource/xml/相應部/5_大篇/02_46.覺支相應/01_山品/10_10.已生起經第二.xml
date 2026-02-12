@@ -1,45 +1,22 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1320.htm
-        </source_page>
+        <source_page>SN/SN1320.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.46.10
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 46.10
-            </sutta_num>
+            <sutta_num>SN.46.10</sutta_num>
+            <sutta_num type="SC">SN 46.10</sutta_num>
         </sutta_nums>
-        <start>
-            10
-        </start>
-        <end>
-            10
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部46相應10經/已生起經第二
-            </span>
-            (覺支相應/大篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>10</start>
+        <end>10</end>
+        <source_title><span class="sutra_name">相應部46相應10經/已生起經第二</span>(覺支相應/大篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            已生起經第二
-        </title>
-        <mtime>
-            2025-08-16 01:52:34 +0800
-        </mtime>
+        <title>已生起經第二</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「<gn id="31">比丘</gn>們！有這<gn id="524">七覺支</gn>，已<gn id="94">修習</gn>、已<gn id="95">多作</gn>，未生起者不在<gn id="8">善逝</gn>之律外其它地生起，哪七個？<gn id="315">念覺支</gn>……（中略）<gn id="314">平靜覺支</gn>。比丘們！這是七覺支，已修習、已多作，未生起者不在善逝之律外其它地生起。」</p>
-        <p>　　山品第一，其<gn id="35">攝頌</gn>：</p>
-        <p>　　「喜馬拉雅山、身體、戒，衣服、比丘與庫達利亞，</p>
-        <p>　　　重閣與優波瓦那，已生起二則在後。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「<g31>比丘</g31>們！有這<g524>七覺支</g524>，已<g94>修習</g94>、已<g95>多作</g95>，未生起者不在<g8>善逝</g8>之律外其它地生起，哪七個？<g315>念覺支</g315>……（中略）<g314>平靜覺支</g314>。比丘們！這是七覺支，已修習、已多作，未生起者不在善逝之律外其它地生起。」</p>
+    <p>山品第一，其<g35>攝頌</g35>：</p>
+    <p>「喜馬拉雅山、身體、戒，衣服、比丘與庫達利亞，</p>
+    <p>重閣與優波瓦那，已生起二則在後。」</p>
+    <n1/>
 </doc>

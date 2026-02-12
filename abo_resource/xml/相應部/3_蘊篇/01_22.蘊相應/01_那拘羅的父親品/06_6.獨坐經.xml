@@ -1,44 +1,20 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0524.htm
-        </source_page>
+        <source_page>SN/SN0524.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.22.6
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 22.6
-            </sutta_num>
+            <sutta_num>SN.22.6</sutta_num>
+            <sutta_num type="SC">SN 22.6</sutta_num>
         </sutta_nums>
-        <start>
-            6
-        </start>
-        <end>
-            6
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部22相應6經/獨坐經
-            </span>
-            (蘊相應/蘊篇/修多羅)(莊春江譯)[SA.67]
-        </source_title>
-        <relevant>
-            [SA.67]
-        </relevant>
-        <title>
-            獨坐經
-        </title>
-        <mtime>
-            2025-08-16 01:50:10 +0800
-        </mtime>
+        <start>6</start>
+        <end>6</end>
+        <source_title><span class="sutra_name">相應部22相應6經/獨坐經</span>(蘊相應/蘊篇/修多羅)(莊春江譯)[SA.67]</source_title>
+        <relevant>[SA.67]</relevant>
+        <title>獨坐經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　起源於舍衛城。</p>
-        <p>　　「<gn id="31">比丘</gn>們！你們要著手<gn id="739">努力</gn>於<gn id="92">獨坐</gn>，比丘們！獨坐的比丘如實知道，如實知道什麼？色的<gn id="67">集起</gn>與滅沒、受的集起與滅沒、想的集起與滅沒、諸行的集起與滅沒、識的集起與滅沒。</p>
-        <p>　　……（中略）(應該依前經那樣使之被細說)。」</p>
-    </body>
-    <notes/>
+    <p>起源於舍衛城。</p>
+    <p>「<g31>比丘</g31>們！你們要著手<g739>努力</g739>於<g92>獨坐</g92>，比丘們！獨坐的比丘如實知道，如實知道什麼？色的<g67>集起</g67>與滅沒、受的集起與滅沒、想的集起與滅沒、諸行的集起與滅沒、識的集起與滅沒。</p>
+    <p>……（中略）(應該依前經那樣使之被細說)。」</p>
 </doc>

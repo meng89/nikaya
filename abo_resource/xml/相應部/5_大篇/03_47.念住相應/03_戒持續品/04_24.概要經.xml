@@ -1,45 +1,20 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1421.htm
-        </source_page>
+        <source_page>SN/SN1421.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.47.24
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 47.24
-            </sutta_num>
+            <sutta_num>SN.47.24</sutta_num>
+            <sutta_num type="SC">SN 47.24</sutta_num>
         </sutta_nums>
-        <start>
-            24
-        </start>
-        <end>
-            24
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部47相應24經/概要經
-            </span>
-            (念住相應/大篇/修多羅)(莊春江譯)[SA.606]
-        </source_title>
-        <relevant>
-            [SA.606]
-        </relevant>
-        <title>
-            概要經
-        </title>
-        <mtime>
-            2025-08-16 01:51:10 +0800
-        </mtime>
+        <start>24</start>
+        <end>24</end>
+        <source_title><span class="sutra_name">相應部47相應24經/概要經</span>(念住相應/大篇/修多羅)(莊春江譯)[SA.606]</source_title>
+        <relevant>[SA.606]</relevant>
+        <title>概要經</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　起源於舍衛城。</p>
-        <p>　　「<gn id="31">比丘</gn>們！有這<gn id="286">四念住</gn>，哪四個？比丘們！這裡，比丘<gn id="176">在身上隨看身地</gn>住：熱心的、正知的、有念的，調伏世間中的<gn id="435">貪婪</gn>、憂後；在諸受上……（中略）在心上……（中略）在諸法上隨看法地住：熱心的、正知的、有念的，調伏世間中的貪婪、憂後。比丘們！這是四念住。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>起源於舍衛城。</p>
+    <p>「<g31>比丘</g31>們！有這<g286>四念住</g286>，哪四個？比丘們！這裡，比丘<g176>在身上隨看身地</g176>住：熱心的、正知的、有念的，調伏世間中的<g435>貪婪</g435>、憂後；在諸受上……（中略）在心上……（中略）在諸法上隨看法地住：熱心的、正知的、有念的，調伏世間中的貪婪、憂後。比丘們！這是四念住。」</p>
+    <n1/>
 </doc>

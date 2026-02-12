@@ -1,45 +1,20 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0738.htm
-        </source_page>
+        <source_page>SN/SN0738.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.25.3
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 25.3
-            </sutta_num>
+            <sutta_num>SN.25.3</sutta_num>
+            <sutta_num type="SC">SN 25.3</sutta_num>
         </sutta_nums>
-        <start>
-            3
-        </start>
-        <end>
-            3
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部25相應3經/識經
-            </span>
-            (入相應/蘊篇/如來記說)(莊春江譯)[SA.892]
-        </source_title>
-        <relevant>
-            [SA.892]
-        </relevant>
-        <title>
-            識經
-        </title>
-        <mtime>
-            2025-08-16 01:52:34 +0800
-        </mtime>
+        <start>3</start>
+        <end>3</end>
+        <source_title><span class="sutra_name">相應部25相應3經/識經</span>(入相應/蘊篇/如來記說)(莊春江譯)[SA.892]</source_title>
+        <relevant>[SA.892]</relevant>
+        <title>識經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　起源於舍衛城。</p>
-        <p>　　「<gn id="31">比丘</gn>們！眼識是無常的、變易的、變異的；耳識……鼻識……舌識……身識……意識是無常的、變易的、變異的。比丘們！凡……（中略）<gn id="160">以正覺為彼岸</gn>的[<gn id="165">入流者</gn>]。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>起源於舍衛城。</p>
+    <p>「<g31>比丘</g31>們！眼識是無常的、變易的、變異的；耳識……鼻識……舌識……身識……意識是無常的、變易的、變異的。比丘們！凡……（中略）<g160>以正覺為彼岸</g160>的[<g165>入流者</g165>]。」</p>
+    <n1/>
 </doc>

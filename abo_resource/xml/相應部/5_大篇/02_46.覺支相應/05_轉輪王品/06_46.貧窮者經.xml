@@ -1,43 +1,20 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1356.htm
-        </source_page>
+        <source_page>SN/SN1356.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.46.46
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 46.46
-            </sutta_num>
+            <sutta_num>SN.46.46</sutta_num>
+            <sutta_num type="SC">SN 46.46</sutta_num>
         </sutta_nums>
-        <start>
-            46
-        </start>
-        <end>
-            46
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部46相應46經/貧窮者經
-            </span>
-            (覺支相應/大篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>46</start>
+        <end>46</end>
+        <source_title><span class="sutra_name">相應部46相應46經/貧窮者經</span>(覺支相應/大篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            貧窮者經
-        </title>
-        <mtime>
-            2025-08-16 01:49:40 +0800
-        </mtime>
+        <title>貧窮者經</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「<gn id="45">大德</gn>！被稱為『貧窮者、貧窮者』，大德！什麼情形被稱為『貧窮者』呢？」</p>
-        <p>　　「<gn id="31">比丘</gn>！對<gn id="524">七覺支</gn>未自我<gn id="94">修習</gn>、未自我<gn id="95">多作</gn>者被稱為『貧窮者』，對哪七個？對<gn id="315">念覺支</gn>……（中略）對<gn id="314">平靜覺支</gn>。比丘！對七覺支未自我修習、未自我多作者被稱為『貧窮者』。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「<g45>大德</g45>！被稱為『貧窮者、貧窮者』，大德！什麼情形被稱為『貧窮者』呢？」</p>
+    <p>「<g31>比丘</g31>！對<g524>七覺支</g524>未自我<g94>修習</g94>、未自我<g95>多作</g95>者被稱為『貧窮者』，對哪七個？對<g315>念覺支</g315>……（中略）對<g314>平靜覺支</g314>。比丘！對七覺支未自我修習、未自我多作者被稱為『貧窮者』。」</p>
+    <n1/>
 </doc>

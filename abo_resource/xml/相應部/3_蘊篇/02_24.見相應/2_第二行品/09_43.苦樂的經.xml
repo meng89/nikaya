@@ -1,44 +1,19 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0730.htm
-        </source_page>
+        <source_page>SN/SN0730.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.24.43
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 24.43
-            </sutta_num>
+            <sutta_num>SN.24.43</sutta_num>
+            <sutta_num type="SC">SN 24.43</sutta_num>
         </sutta_nums>
-        <start>
-            43
-        </start>
-        <end>
-            43
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部24相應43經/苦樂的經
-            </span>
-            (見相應/蘊篇/弟子記說)(莊春江譯)[SA.166]
-        </source_title>
-        <relevant>
-            [SA.166]
-        </relevant>
-        <title>
-            苦樂的經
-        </title>
-        <mtime>
-            2025-08-16 01:52:48 +0800
-        </mtime>
+        <start>43</start>
+        <end>43</end>
+        <source_title><span class="sutra_name">相應部24相應43經/苦樂的經</span>(見相應/蘊篇/弟子記說)(莊春江譯)[SA.166]</source_title>
+        <relevant>[SA.166]</relevant>
+        <title>苦樂的經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「……『我是苦樂的，<gn id="863">死後無病</gn>。』呢？」……（中略）</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「……『我是苦樂的，<g863>死後無病</g863>。』呢？」……（中略）</p>
+    <n1/>
 </doc>

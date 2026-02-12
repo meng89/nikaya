@@ -1,47 +1,22 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1076.htm
-        </source_page>
+        <source_page>SN/SN1076.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.36.24
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 36.24
-            </sutta_num>
+            <sutta_num>SN.36.24</sutta_num>
+            <sutta_num type="SC">SN 36.24</sutta_num>
         </sutta_nums>
-        <start>
-            24
-        </start>
-        <end>
-            24
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部36相應24經/以前經
-            </span>
-            (受相應/處篇/修多羅)(莊春江譯)[SA.475]
-        </source_title>
-        <relevant>
-            [SA.475]
-        </relevant>
-        <title>
-            以前經
-        </title>
-        <mtime>
-            2025-08-16 01:47:12 +0800
-        </mtime>
+        <start>24</start>
+        <end>24</end>
+        <source_title><span class="sutra_name">相應部36相應24經/以前經</span>(受相應/處篇/修多羅)(莊春江譯)[SA.475]</source_title>
+        <relevant>[SA.475]</relevant>
+        <title>以前經</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「<gn id="31">比丘</gn>們！當就在我<gn id="185">正覺</gn>以前，還是未<gn id="75">現正覺</gn>的<gn id="186">菩薩</gn>時想這個：『什麼是受？什麼是受<gn id="67">集</gn>？什麼是導向受集道跡？什麼是受<gn id="68">滅</gn>？什麼是導向受<gn id="69">滅道跡</gn>？什麼是受的<gn id="295">樂味</gn>？什麼是<gn id="293">過患</gn>？什麼是<gn id="294">出離</gn>？』</p>
-        <p>　　比丘們！那個我想這個：『有這三受：樂受、苦受、不苦不樂受，這些被稱為受。</p>
-        <p>　　以觸集而有受集；渴愛是導向受集道跡。……（中略）</p>
-        <p>　　凡在受上意欲貪的調伏、意欲貪的捨斷，這是受的出離。』」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「<g31>比丘</g31>們！當就在我<g185>正覺</g185>以前，還是未<g75>現正覺</g75>的<g186>菩薩</g186>時想這個：『什麼是受？什麼是受<g67>集</g67>？什麼是導向受集道跡？什麼是受<g68>滅</g68>？什麼是導向受<g69>滅道跡</g69>？什麼是受的<g295>樂味</g295>？什麼是<g293>過患</g293>？什麼是<g294>出離</g294>？』</p>
+    <p>比丘們！那個我想這個：『有這三受：樂受、苦受、不苦不樂受，這些被稱為受。</p>
+    <p>以觸集而有受集；渴愛是導向受集道跡。……（中略）</p>
+    <p>凡在受上意欲貪的調伏、意欲貪的捨斷，這是受的出離。』」</p>
+    <n1/>
 </doc>

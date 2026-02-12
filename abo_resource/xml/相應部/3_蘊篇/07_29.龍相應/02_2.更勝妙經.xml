@@ -1,43 +1,20 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0777.htm
-        </source_page>
+        <source_page>SN/SN0777.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.29.2
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 29.2
-            </sutta_num>
+            <sutta_num>SN.29.2</sutta_num>
+            <sutta_num type="SC">SN 29.2</sutta_num>
         </sutta_nums>
-        <start>
-            2
-        </start>
-        <end>
-            2
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部29相應2經/更勝妙經
-            </span>
-            (龍相應/蘊篇/如來記說)(莊春江譯)
-        </source_title>
+        <start>2</start>
+        <end>2</end>
+        <source_title><span class="sutra_name">相應部29相應2經/更勝妙經</span>(龍相應/蘊篇/如來記說)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            更勝妙經
-        </title>
-        <mtime>
-            2025-08-16 01:52:28 +0800
-        </mtime>
+        <title>更勝妙經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　起源於舍衛城。</p>
-        <p>　　「<gn id="31">比丘</gn>們！有這四種龍的出生(胎)，哪四種？卵生龍、胎生龍、濕生龍、<gn id="346">化生</gn>龍。比丘們！在那裡，胎生、濕生、化生龍比卵生龍更勝妙；比丘們！在那裡，濕生、化生龍比胎生、卵生龍更勝妙；比丘們！在那裡，化生龍比卵生、胎生、濕生龍更勝妙，比丘們！這是四種龍的出生(胎)。」 </p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>起源於舍衛城。</p>
+    <p>「<g31>比丘</g31>們！有這四種龍的出生(胎)，哪四種？卵生龍、胎生龍、濕生龍、<g346>化生</g346>龍。比丘們！在那裡，胎生、濕生、化生龍比卵生龍更勝妙；比丘們！在那裡，濕生、化生龍比胎生、卵生龍更勝妙；比丘們！在那裡，化生龍比卵生、胎生、濕生龍更勝妙，比丘們！這是四種龍的出生(胎)。」 </p>
+    <n1/>
 </doc>

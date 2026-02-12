@@ -1,42 +1,19 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1515.htm
-        </source_page>
+        <source_page>SN/SN1515.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.48.63
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 48.63
-            </sutta_num>
+            <sutta_num>SN.48.63</sutta_num>
+            <sutta_num type="SC">SN 48.63</sutta_num>
         </sutta_nums>
-        <start>
-            63
-        </start>
-        <end>
-            63
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部48相應63經/遍知經
-            </span>
-            (根相應/大篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>63</start>
+        <end>63</end>
+        <source_title><span class="sutra_name">相應部48相應63經/遍知經</span>(根相應/大篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            遍知經
-        </title>
-        <mtime>
-            2025-08-16 01:49:00 +0800
-        </mtime>
+        <title>遍知經</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「<gn id="31">比丘</gn>們！有這五根，已<gn id="94">修習</gn>、已<gn id="95">多作</gn>，轉起<gn id="889">[生命]旅途的遍知</gn>，哪五個？信根……（中略）慧根。比丘們！這是五根，已修習、已多作，轉起[生命]旅途的遍知。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「<g31>比丘</g31>們！有這五根，已<g94>修習</g94>、已<g95>多作</g95>，轉起<g889>[生命]旅途的遍知</g889>，哪五個？信根……（中略）慧根。比丘們！這是五根，已修習、已多作，轉起[生命]旅途的遍知。」</p>
+    <n1/>
 </doc>

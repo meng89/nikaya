@@ -1,54 +1,27 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0118.htm
-        </source_page>
+        <source_page>SN/SN0118.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.3.7
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 3.7
-            </sutta_num>
+            <sutta_num>SN.3.7</sutta_num>
+            <sutta_num type="SC">SN 3.7</sutta_num>
         </sutta_nums>
-        <start>
-            7
-        </start>
-        <end>
-            7
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部3相應7經/法庭經
-            </span>
-            (憍薩羅相應/有偈篇/祇夜)(莊春江譯)[SA.1231]
-        </source_title>
-        <relevant>
-            [SA.1231]
-        </relevant>
-        <title>
-            法庭經
-        </title>
-        <mtime>
-            2025-08-16 01:52:14 +0800
-        </mtime>
+        <start>7</start>
+        <end>7</end>
+        <source_title><span class="sutra_name">相應部3相應7經/法庭經</span>(憍薩羅相應/有偈篇/祇夜)(莊春江譯)[SA.1231]</source_title>
+        <relevant>[SA.1231]</relevant>
+        <title>法庭經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　起源於舍衛城。</p>
-        <p>　　在一旁坐下的憍薩羅國波斯匿王對<gn id="12">世尊</gn>說這個：</p>
-        <p>　　「<gn id="45">大德</gn>！這裡，當坐在法庭時，我看見富有的、大富的、大財富的、多金銀的、多財產資具的、多財穀的<gn id="116">剎帝利</gn>富翁、婆羅門富翁、<gn id="103">屋主</gn>富翁，欲之因、欲之因由、因為欲故意虛妄地說，大德！那個我想這個：『現在，我受夠了法庭，<ln id="1">現在賢面將被法庭被看到</ln>。』」</p>
-        <p>　　「（這是這樣，大王！這是這樣，大王！）</p>
-        <p>　　大王！凡那些富有的、大富的、大財富的、多金銀的、多財產資具的、多財穀的剎帝利富翁、婆羅門富翁、屋主富翁，欲之因、欲之因由、因為欲故意虛妄地說，那對他們將有長久的不利、苦。」</p>
-        <p>　　世尊說這個……（中略）：</p>
-        <p>　　「在受用諸欲上貪著者們，在諸欲上貪求者們、迷昏頭者們，</p>
-        <p>　　　他們越界不覺醒，如鹿對佈置陷阱的詐欺者，</p>
-        <p>　　　之後他們有苦澀的，因為那個的果報是惡的。[SN.3.6]」</p>
-    </body>
-    <notes>
-        <note id="1">
-            「現在賢面將以法庭被看到」(bhadramukho dāni aḍḍakaraṇena paññāyissatī’”ti)，菩提比丘長英譯為：「現在是好面將被知道他的審判。」(Now it is Good Face who will be known by his judgements.)。按：《顯揚真義》說：當國王坐在法庭中時知道大臣(amaccā)收賄(lañjaṃ)，而想：「毘琉璃(viṭaṭūbho, Viḍūḍabho)將軍現在將主持自己的統治。」依此，「賢面」是國王的兒子毘琉璃，但菩提比丘長老依〈本生〉No.465的因緣(序)說前將軍Bandhula的可能性比毘琉璃大。
-        </note>
-    </notes>
+    <p>起源於舍衛城。</p>
+    <p>在一旁坐下的憍薩羅國波斯匿王對<g12>世尊</g12>說這個：</p>
+    <p>「<g45>大德</g45>！這裡，當坐在法庭時，我看見富有的、大富的、大財富的、多金銀的、多財產資具的、多財穀的<g116>剎帝利</g116>富翁、婆羅門富翁、<g103>屋主</g103>富翁，欲之因、欲之因由、因為欲故意虛妄地說，大德！那個我想這個：『現在，我受夠了法庭，<t1>現在賢面將被法庭被看到</t1>。』」</p>
+    <p>「（這是這樣，大王！這是這樣，大王！）</p>
+    <p>大王！凡那些富有的、大富的、大財富的、多金銀的、多財產資具的、多財穀的剎帝利富翁、婆羅門富翁、屋主富翁，欲之因、欲之因由、因為欲故意虛妄地說，那對他們將有長久的不利、苦。」</p>
+    <p>世尊說這個……（中略）：</p>
+    <p>「在受用諸欲上貪著者們，在諸欲上貪求者們、迷昏頭者們，</p>
+    <p>他們越界不覺醒，如鹿對佈置陷阱的詐欺者，</p>
+    <p>之後他們有苦澀的，因為那個的果報是惡的。[SN.3.6]」</p>
+    <n1>「現在賢面將以法庭被看到」(bhadramukho dāni aḍḍakaraṇena paññāyissatī’”ti)，菩提比丘長英譯為：「現在是好面將被知道他的審判。」(Now it is Good Face who will be known by his judgements.)。按：《顯揚真義》說：當國王坐在法庭中時知道大臣(amaccā)收賄(lañjaṃ)，而想：「毘琉璃(viṭaṭūbho, Viḍūḍabho)將軍現在將主持自己的統治。」依此，「賢面」是國王的兒子毘琉璃，但菩提比丘長老依〈本生〉No.465的因緣(序)說前將軍Bandhula的可能性比毘琉璃大。</n1>
 </doc>

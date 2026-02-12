@@ -1,43 +1,20 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0447.htm
-        </source_page>
+        <source_page>SN/SN0447.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.17.26
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 17.26
-            </sutta_num>
+            <sutta_num>SN.17.26</sutta_num>
+            <sutta_num type="SC">SN 17.26</sutta_num>
         </sutta_nums>
-        <start>
-            26
-        </start>
-        <end>
-            26
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部17相應26經/沙門婆羅門經第二
-            </span>
-            (利得恭敬相應/因緣篇/如來記說)(莊春江譯)
-        </source_title>
+        <start>26</start>
+        <end>26</end>
+        <source_title><span class="sutra_name">相應部17相應26經/沙門婆羅門經第二</span>(利得恭敬相應/因緣篇/如來記說)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            沙門婆羅門經第二
-        </title>
-        <mtime>
-            2025-08-16 01:47:02 +0800
-        </mtime>
+        <title>沙門婆羅門經第二</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　住在舍衛城……（中略）。 </p>
-        <p>　　「<gn id="31">比丘</gn>們！凡任何<gn id="29">沙門</gn>或<gn id="17">婆羅門</gn>不如實知道利得、恭敬、名聲的<gn id="67">集起</gn>、滅沒、<gn id="295">樂味</gn>、<gn id="293">過患</gn>、<gn id="294">出離</gn>……（中略）知道……（中略）以證智自作證後……<gn id="66">進入後住於</gn>……。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>住在舍衛城……（中略）。 </p>
+    <p>「<g31>比丘</g31>們！凡任何<g29>沙門</g29>或<g17>婆羅門</g17>不如實知道利得、恭敬、名聲的<g67>集起</g67>、滅沒、<g295>樂味</g295>、<g293>過患</g293>、<g294>出離</g294>……（中略）知道……（中略）以證智自作證後……<g66>進入後住於</g66>……。」</p>
+    <n1/>
 </doc>

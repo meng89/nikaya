@@ -1,49 +1,24 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0232.htm
-        </source_page>
+        <source_page>SN/SN0232.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.9.12
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 9.12
-            </sutta_num>
+            <sutta_num>SN.9.12</sutta_num>
+            <sutta_num type="SC">SN 9.12</sutta_num>
         </sutta_nums>
-        <start>
-            12
-        </start>
-        <end>
-            12
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部9相應12經/中午經
-            </span>
-            (林相應/有偈篇/祇夜)(莊春江譯)[SA.1335]
-        </source_title>
-        <relevant>
-            [SA.1335]
-        </relevant>
-        <title>
-            中午經
-        </title>
-        <mtime>
-            2025-08-16 01:48:08 +0800
-        </mtime>
+        <start>12</start>
+        <end>12</end>
+        <source_title><span class="sutra_name">相應部9相應12經/中午經</span>(林相應/有偈篇/祇夜)(莊春江譯)[SA.1335]</source_title>
+        <relevant>[SA.1335]</relevant>
+        <title>中午經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　<gn id="2">有一次</gn>，<gn id="39">某位比丘</gn>住在憍薩羅國某處叢林中。</p>
-        <p>　　那時，那位住在那處叢林中的天神去見那位比丘。抵達後，在那位比丘面前說這<gn id="281">偈頌</gn>：</p>
-        <p>　　「在中午時分已住立時，在鳥兒們已安靜時，</p>
-        <p>　　　廣大的<gn id="142">林野</gn>就出聲，那個恐怖在我心中出現。」</p>
-        <p>　　「在中午時分已住立時，在鳥兒們已安靜時，</p>
-        <p>　　　廣大的林野就出聲，那個喜樂在我心中出現。」[SN.1.15]</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p><g2>有一次</g2>，<g39>某位比丘</g39>住在憍薩羅國某處叢林中。</p>
+    <p>那時，那位住在那處叢林中的天神去見那位比丘。抵達後，在那位比丘面前說這<g281>偈頌</g281>：</p>
+    <p>「在中午時分已住立時，在鳥兒們已安靜時，</p>
+    <p>廣大的<g142>林野</g142>就出聲，那個恐怖在我心中出現。」</p>
+    <p>「在中午時分已住立時，在鳥兒們已安靜時，</p>
+    <p>廣大的林野就出聲，那個喜樂在我心中出現。」[SN.1.15]</p>
+    <n1/>
 </doc>

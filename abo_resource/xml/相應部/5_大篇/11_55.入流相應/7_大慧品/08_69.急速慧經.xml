@@ -1,42 +1,19 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1692.htm
-        </source_page>
+        <source_page>SN/SN1692.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.55.69
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 55.69
-            </sutta_num>
+            <sutta_num>SN.55.69</sutta_num>
+            <sutta_num type="SC">SN 55.69</sutta_num>
         </sutta_nums>
-        <start>
-            69
-        </start>
-        <end>
-            69
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部55相應69經/急速慧經
-            </span>
-            (入流相應/大篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>69</start>
+        <end>69</end>
+        <source_title><span class="sutra_name">相應部55相應69經/急速慧經</span>(入流相應/大篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            急速慧經
-        </title>
-        <mtime>
-            2025-08-16 01:50:34 +0800
-        </mtime>
+        <title>急速慧經</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「……（中略）轉起急速慧的狀態。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「……（中略）轉起急速慧的狀態。」</p>
+    <n1/>
 </doc>

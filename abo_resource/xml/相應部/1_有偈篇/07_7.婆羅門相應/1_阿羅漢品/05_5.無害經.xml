@@ -1,53 +1,26 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0191.htm
-        </source_page>
+        <source_page>SN/SN0191.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.7.5
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 7.5
-            </sutta_num>
+            <sutta_num>SN.7.5</sutta_num>
+            <sutta_num type="SC">SN 7.5</sutta_num>
         </sutta_nums>
-        <start>
-            5
-        </start>
-        <end>
-            5
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部7相應5經/無害經
-            </span>
-            (婆羅門相應/有偈篇/祇夜)(莊春江譯)[SA.1156]
-        </source_title>
-        <relevant>
-            [SA.1156]
-        </relevant>
-        <title>
-            無害經
-        </title>
-        <mtime>
-            2025-08-16 01:51:44 +0800
-        </mtime>
+        <start>5</start>
+        <end>5</end>
+        <source_title><span class="sutra_name">相應部7相應5經/無害經</span>(婆羅門相應/有偈篇/祇夜)(莊春江譯)[SA.1156]</source_title>
+        <relevant>[SA.1156]</relevant>
+        <title>無害經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　起源於舍衛城。</p>
-        <p>　　那時，<ln id="1">無害婆羅墮若婆羅門</ln>去見<gn id="12">世尊</gn>。抵達後，與世尊一起互相問候。交換應該被互相問候的友好交談後，在一旁坐下。在一旁坐下的無害婆羅墮若婆羅門對世尊說這個：</p>
-        <p>　　「<gn id="80">喬達摩</gn>尊師！我是無害；喬達摩尊師！我是無害。」</p>
-        <p>　　「而像這樣如果你是如名字，你是無害者，</p>
-        <p>　　　凡以身與以語，以及意不傷害，</p>
-        <p>　　　他確實是無害者：凡不傷害他人。」</p>
-        <p>　　在這麼說時，無害婆羅墮若婆羅門對世尊說這個：</p>
-        <p>　　「太偉大了，喬達摩尊師！……（中略）他證知：……然後<gn id="200">尊者</gn>婆羅墮若成為眾<gn id="5">阿羅漢</gn>之一。」</p>
-    </body>
-    <notes>
-        <note id="1">
-            「不害(SA.1156)；無害(GA)」，南傳作「無害婆羅墮若」(ahiṃsakabhāradvājo)，菩提比丘長老英譯為「無害」(the Harmless)。按：《顯揚真義》說，或婆羅墮若問無害的問題，因此作結集時(saṅgītikārehi)取的名字，亦或他以無害為名，婆羅墮若為姓。
-        </note>
-    </notes>
+    <p>起源於舍衛城。</p>
+    <p>那時，<t1>無害婆羅墮若婆羅門</t1>去見<g12>世尊</g12>。抵達後，與世尊一起互相問候。交換應該被互相問候的友好交談後，在一旁坐下。在一旁坐下的無害婆羅墮若婆羅門對世尊說這個：</p>
+    <p>「<g80>喬達摩</g80>尊師！我是無害；喬達摩尊師！我是無害。」</p>
+    <p>「而像這樣如果你是如名字，你是無害者，</p>
+    <p>凡以身與以語，以及意不傷害，</p>
+    <p>他確實是無害者：凡不傷害他人。」</p>
+    <p>在這麼說時，無害婆羅墮若婆羅門對世尊說這個：</p>
+    <p>「太偉大了，喬達摩尊師！……（中略）他證知：……然後<g200>尊者</g200>婆羅墮若成為眾<g5>阿羅漢</g5>之一。」</p>
+    <n1>「不害(SA.1156)；無害(GA)」，南傳作「無害婆羅墮若」(ahiṃsakabhāradvājo)，菩提比丘長老英譯為「無害」(the Harmless)。按：《顯揚真義》說，或婆羅墮若問無害的問題，因此作結集時(saṅgītikārehi)取的名字，亦或他以無害為名，婆羅墮若為姓。</n1>
 </doc>

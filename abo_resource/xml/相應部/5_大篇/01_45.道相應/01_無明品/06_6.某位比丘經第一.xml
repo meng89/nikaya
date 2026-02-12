@@ -1,49 +1,22 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1201.htm
-        </source_page>
+        <source_page>SN/SN1201.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.45.6
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 45.6
-            </sutta_num>
+            <sutta_num>SN.45.6</sutta_num>
+            <sutta_num type="SC">SN 45.6</sutta_num>
         </sutta_nums>
-        <start>
-            6
-        </start>
-        <end>
-            6
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部45相應6經/
-                <a onmouseover="note(this,39);">
-                    某位比丘
-                </a>
-                經第一
-            </span>
-            (道相應/大篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>6</start>
+        <end>6</end>
+        <source_title><span class="sutra_name">相應部45相應6經/<a onmouseover="note(this,39);">某位比丘</a>經第一</span>(道相應/大篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            某位比丘經第一
-        </title>
-        <mtime>
-            2025-08-16 01:51:20 +0800
-        </mtime>
+        <title>某位比丘經第一</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　起源於舍衛城。</p>
-        <p>　　那時，某位比丘去見<gn id="12">世尊</gn>……（中略）在一旁坐下的那位比丘對世尊說這個：</p>
-        <p>　　「<gn id="45">大德</gn>！被稱為『<gn id="381">梵行</gn>、梵行』，大德！什麼是梵行，什麼是梵行的完結呢？」</p>
-        <p>　　「比丘！這<gn id="525">八支聖道</gn>是梵行，即：正見……（中略）正定。比丘！凡貪的滅盡、瞋的滅盡、癡的滅盡，這是梵行的完結。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>起源於舍衛城。</p>
+    <p>那時，某位比丘去見<g12>世尊</g12>……（中略）在一旁坐下的那位比丘對世尊說這個：</p>
+    <p>「<g45>大德</g45>！被稱為『<g381>梵行</g381>、梵行』，大德！什麼是梵行，什麼是梵行的完結呢？」</p>
+    <p>「比丘！這<g525>八支聖道</g525>是梵行，即：正見……（中略）正定。比丘！凡貪的滅盡、瞋的滅盡、癡的滅盡，這是梵行的完結。」</p>
+    <n1/>
 </doc>

@@ -1,44 +1,21 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1483.htm
-        </source_page>
+        <source_page>SN/SN1483.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.48.31
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 48.31
-            </sutta_num>
+            <sutta_num>SN.48.31</sutta_num>
+            <sutta_num type="SC">SN 48.31</sutta_num>
         </sutta_nums>
-        <start>
-            31
-        </start>
-        <end>
-            31
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部48相應31經/概要經
-            </span>
-            (根相應/大篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>31</start>
+        <end>31</end>
+        <source_title><span class="sutra_name">相應部48相應31經/概要經</span>(根相應/大篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            概要經
-        </title>
-        <mtime>
-            2025-08-16 01:45:04 +0800
-        </mtime>
+        <title>概要經</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head>
+            <p>4.樂根品</p>
+        </head>
     </meta>
-    <head>
-        <p>4.樂根品</p>
-    </head>
-    <body>
-        <p>　　「<gn id="31">比丘</gn>們！有這五根，哪五個？樂根、苦根、喜悅根、憂根、<gn id="228">平靜根</gn>，比丘們！這是五根。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「<g31>比丘</g31>們！有這五根，哪五個？樂根、苦根、喜悅根、憂根、<g228>平靜根</g228>，比丘們！這是五根。」</p>
+    <n1/>
 </doc>

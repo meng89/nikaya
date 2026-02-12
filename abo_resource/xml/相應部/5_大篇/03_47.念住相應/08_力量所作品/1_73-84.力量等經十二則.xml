@@ -1,47 +1,24 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1450.htm
-        </source_page>
+        <source_page>SN/SN1450.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.47.73-84
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 47.73-84
-            </sutta_num>
+            <sutta_num>SN.47.73-84</sutta_num>
+            <sutta_num type="SC">SN 47.73-84</sutta_num>
         </sutta_nums>
-        <start>
-            73
-        </start>
-        <end>
-            84
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部47相應 73-84經/力量等經十二則
-            </span>
-            (念住相應/大篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>73</start>
+        <end>84</end>
+        <source_title><span class="sutra_name">相應部47相應 73-84經/力量等經十二則</span>(念住相應/大篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            力量等經十二則
-        </title>
-        <mtime>
-            2025-08-16 01:50:48 +0800
-        </mtime>
+        <title>力量等經十二則</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head>
+            <p>8.力量所作品</p>
+        </head>
     </meta>
-    <head>
-        <p>8.力量所作品</p>
-    </head>
-    <body>
-        <p>　　「<gn id="31">比丘</gn>們！猶如當任何應該被力量作的工作被作時……（中略）。」應該使之被細說。[按：全品應如SN.45.149-160那樣]</p>
-        <p>　　力量所作品第八，其<gn id="35">攝頌</gn>：</p>
-        <p>　　「力量、種子與龍，樹木、瓶子及穗，</p>
-        <p>　　　虛空與二則雨雲，船、屋舍、河。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「<g31>比丘</g31>們！猶如當任何應該被力量作的工作被作時……（中略）。」應該使之被細說。[按：全品應如SN.45.149-160那樣]</p>
+    <p>力量所作品第八，其<g35>攝頌</g35>：</p>
+    <p>「力量、種子與龍，樹木、瓶子及穗，</p>
+    <p>虛空與二則雨雲，船、屋舍、河。」</p>
+    <n1/>
 </doc>

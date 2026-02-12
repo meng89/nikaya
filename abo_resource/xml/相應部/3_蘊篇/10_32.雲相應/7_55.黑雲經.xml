@@ -1,45 +1,21 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0806.htm
-        </source_page>
+        <source_page>SN/SN0806.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.32.55
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 32.55
-            </sutta_num>
+            <sutta_num>SN.32.55</sutta_num>
+            <sutta_num type="SC">SN 32.55</sutta_num>
         </sutta_nums>
-        <start>
-            55
-        </start>
-        <end>
-            55
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部32相應55經/黑雲經
-            </span>
-            (雲相應/蘊篇/如來記說)(莊春江譯)[SA.871]
-        </source_title>
-        <relevant>
-            [SA.871]
-        </relevant>
-        <title>
-            黑雲經
-        </title>
-        <mtime>
-            2025-08-16 01:46:12 +0800
-        </mtime>
+        <start>55</start>
+        <end>55</end>
+        <source_title><span class="sutra_name">相應部32相應55經/黑雲經</span>(雲相應/蘊篇/如來記說)(莊春江譯)[SA.871]</source_title>
+        <relevant>[SA.871]</relevant>
+        <title>黑雲經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　起源於舍衛城。</p>
-        <p>　　在一旁坐下的那位<gn id="31">比丘</gn>對<gn id="12">世尊</gn>說這個：</p>
-        <p>　　「<gn id="45">大德</gn>！什麼因、什麼<gn id="180">緣</gn>，以那個有時變黑呢？」</p>
-        <p>　　「比丘！有名叫黑雲的天神，每當祂們這麼想：『<gn id="928">讓我們住於自己的喜樂</gn>。』時，隨從祂們的心願後變黑。比丘！這是因、這是緣，以那個有時變黑。」 </p>
-    </body>
-    <notes/>
+    <p>起源於舍衛城。</p>
+    <p>在一旁坐下的那位<g31>比丘</g31>對<g12>世尊</g12>說這個：</p>
+    <p>「<g45>大德</g45>！什麼因、什麼<g180>緣</g180>，以那個有時變黑呢？」</p>
+    <p>「比丘！有名叫黑雲的天神，每當祂們這麼想：『<g928>讓我們住於自己的喜樂</g928>。』時，隨從祂們的心願後變黑。比丘！這是因、這是緣，以那個有時變黑。」 </p>
 </doc>

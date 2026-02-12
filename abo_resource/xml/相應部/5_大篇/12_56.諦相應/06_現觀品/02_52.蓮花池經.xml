@@ -1,46 +1,21 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1749.htm
-        </source_page>
+        <source_page>SN/SN1749.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.56.52
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 56.52
-            </sutta_num>
+            <sutta_num>SN.56.52</sutta_num>
+            <sutta_num type="SC">SN 56.52</sutta_num>
         </sutta_nums>
-        <start>
-            52
-        </start>
-        <end>
-            52
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部56相應52經/蓮花池經
-            </span>
-            (諦相應/大篇/修多羅)(莊春江譯)[SA.440]
-        </source_title>
-        <relevant>
-            [SA.440]
-        </relevant>
-        <title>
-            蓮花池經
-        </title>
-        <mtime>
-            2025-08-16 01:50:30 +0800
-        </mtime>
+        <start>52</start>
+        <end>52</end>
+        <source_title><span class="sutra_name">相應部56相應52經/蓮花池經</span>(諦相應/大篇/修多羅)(莊春江譯)[SA.440]</source_title>
+        <relevant>[SA.440]</relevant>
+        <title>蓮花池經</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「<gn id="31">比丘</gn>們！猶如被水充滿的、滿到邊緣的、能被烏鴉喝飲的蓮花池長五十<gn id="148">由旬</gn>，寬五十由旬，深五十由旬。男子以茅草尖從那裡取出水，比丘們！你們怎麼想它，哪個是比較多的呢：凡被茅草尖取出的水，或凡蓮花池的水？」</p>
-        <p>　　「<gn id="45">大德</gn>！這正是比較多的，即：蓮花池的水，被茅草尖取出的水是少量的。被茅草尖取出的水比較蓮花池的水後，不來到計算，也不來到比較，也不來到十六分之一的部分。」</p>
-        <p>　　「同樣的，比丘們！……<gn id="24">聖弟子</gn>……（中略）努力應該被作。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「<g31>比丘</g31>們！猶如被水充滿的、滿到邊緣的、能被烏鴉喝飲的蓮花池長五十<g148>由旬</g148>，寬五十由旬，深五十由旬。男子以茅草尖從那裡取出水，比丘們！你們怎麼想它，哪個是比較多的呢：凡被茅草尖取出的水，或凡蓮花池的水？」</p>
+    <p>「<g45>大德</g45>！這正是比較多的，即：蓮花池的水，被茅草尖取出的水是少量的。被茅草尖取出的水比較蓮花池的水後，不來到計算，也不來到比較，也不來到十六分之一的部分。」</p>
+    <p>「同樣的，比丘們！……<g24>聖弟子</g24>……（中略）努力應該被作。」</p>
+    <n1/>
 </doc>

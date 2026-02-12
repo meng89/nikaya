@@ -1,5 +1,3 @@
-import re
-
 import abo.page_parsing
 import abo.utils
 
@@ -32,21 +30,21 @@ def load_from_htm():
             root, mtime, body_lines, notes, div_nikaya = abo.page_parsing.read_page(htm, 2)
 
             body = abo.page_parsing.htm_lines_to_xml_lines(body_lines)
-            body = abo.page_parsing.lines_to_body(body)
+            body = abo.page_parsing.lines_to_es(body)
 
             xml = abo.utils.make_xml(source_page=htm,
-                                        sutta_nums=[],
-                                        start=str(index),
-                                        end=str(index),
-                                        mtime=mtime,
-                                        ctime=None,
-                                        source_title=None,
-                                        relevant=None,
-                                        title_line=[sutta_name],
-                                        head=None,
-                                        body=body,
-                                        notes=notes
-                                        )
+                                     sutta_nums=[],
+                                     start=str(index),
+                                     end=str(index),
+                                     mtime=mtime,
+                                     ctime=None,
+                                     source_title=None,
+                                     relevant=None,
+                                     title_line=[sutta_name],
+                                     head=None,
+                                     body_es=body,
+                                     notes=notes
+                                     )
 
             l1.append((sutta_name, xml))
 

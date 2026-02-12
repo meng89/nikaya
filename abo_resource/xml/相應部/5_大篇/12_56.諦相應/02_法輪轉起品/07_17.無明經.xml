@@ -1,45 +1,22 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1714.htm
-        </source_page>
+        <source_page>SN/SN1714.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.56.17
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 56.17
-            </sutta_num>
+            <sutta_num>SN.56.17</sutta_num>
+            <sutta_num type="SC">SN 56.17</sutta_num>
         </sutta_nums>
-        <start>
-            17
-        </start>
-        <end>
-            17
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部56相應17經/無明經
-            </span>
-            (諦相應/大篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>17</start>
+        <end>17</end>
+        <source_title><span class="sutra_name">相應部56相應17經/無明經</span>(諦相應/大篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            無明經
-        </title>
-        <mtime>
-            2025-08-16 01:49:46 +0800
-        </mtime>
+        <title>無明經</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　在一旁坐下的那位<gn id="31">比丘</gn>對<gn id="12">世尊</gn>說這個：</p>
-        <p>　　「<gn id="45">大德</gn>！被稱為『<gn id="207">無明</gn>、無明』，大德！什麼是無明？而什麼情形是<gn id="645">進入無明者</gn>？」</p>
-        <p>　　「比丘！凡在苦上的無知、在苦集上的無知、在苦滅上的無知、在導向苦<gn id="69">滅道跡</gn>上的無知，比丘！這被稱為無明，而這個情形是進入無明者。</p>
-        <p>　　比丘！因此，在這裡，『這是苦。』努力應該被作……（中略）『這是導向苦滅道跡。』努力應該被作。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>在一旁坐下的那位<g31>比丘</g31>對<g12>世尊</g12>說這個：</p>
+    <p>「<g45>大德</g45>！被稱為『<g207>無明</g207>、無明』，大德！什麼是無明？而什麼情形是<g645>進入無明者</g645>？」</p>
+    <p>「比丘！凡在苦上的無知、在苦集上的無知、在苦滅上的無知、在導向苦<g69>滅道跡</g69>上的無知，比丘！這被稱為無明，而這個情形是進入無明者。</p>
+    <p>比丘！因此，在這裡，『這是苦。』努力應該被作……（中略）『這是導向苦滅道跡。』努力應該被作。」</p>
+    <n1/>
 </doc>

@@ -1,42 +1,19 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1258.htm
-        </source_page>
+        <source_page>SN/SN1258.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.45.92-95
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 45.92-95
-            </sutta_num>
+            <sutta_num>SN.45.92-95</sutta_num>
+            <sutta_num type="SC">SN 45.92-95</sutta_num>
         </sutta_nums>
-        <start>
-            92
-        </start>
-        <end>
-            95
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部45相應 92-95經/傾向東經第二等四則
-            </span>
-            (道相應/大篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>92</start>
+        <end>95</end>
+        <source_title><span class="sutra_name">相應部45相應 92-95經/傾向東經第二等四則</span>(道相應/大篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            傾向東經第二等四則
-        </title>
-        <mtime>
-            2025-08-16 01:50:58 +0800
-        </mtime>
+        <title>傾向東經第二等四則</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「<gn id="31">比丘</gn>們！猶如耶牟那河是傾向東的、斜向東的、坡斜向東的。同樣的，比丘們！……（中略）比丘們！猶如阿致羅筏底河是傾向東的、斜向東的、坡斜向東的。同樣的，比丘們！……（中略）比丘們！猶如薩羅浮河是傾向東的、斜向東的、坡斜向東的。同樣的，比丘們！……（中略）比丘們！猶如摩醯河是傾向東的、斜向東的、坡斜向東的。同樣的，比丘們！比丘……（中略）。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「<g31>比丘</g31>們！猶如耶牟那河是傾向東的、斜向東的、坡斜向東的。同樣的，比丘們！……（中略）比丘們！猶如阿致羅筏底河是傾向東的、斜向東的、坡斜向東的。同樣的，比丘們！……（中略）比丘們！猶如薩羅浮河是傾向東的、斜向東的、坡斜向東的。同樣的，比丘們！……（中略）比丘們！猶如摩醯河是傾向東的、斜向東的、坡斜向東的。同樣的，比丘們！比丘……（中略）。」</p>
+    <n1/>
 </doc>

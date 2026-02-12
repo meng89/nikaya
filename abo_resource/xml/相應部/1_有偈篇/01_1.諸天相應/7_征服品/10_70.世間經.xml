@@ -1,52 +1,25 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0070.htm
-        </source_page>
+        <source_page>SN/SN0070.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.1.70
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 1.70
-            </sutta_num>
+            <sutta_num>SN.1.70</sutta_num>
+            <sutta_num type="SC">SN 1.70</sutta_num>
         </sutta_nums>
-        <start>
-            70
-        </start>
-        <end>
-            70
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部1相應70經/世間經
-            </span>
-            (諸天相應/有偈篇/祇夜)(莊春江譯)[SA.1008]
-        </source_title>
-        <relevant>
-            [SA.1008]
-        </relevant>
-        <title>
-            世間經
-        </title>
-        <mtime>
-            2025-08-16 01:49:30 +0800
-        </mtime>
+        <start>70</start>
+        <end>70</end>
+        <source_title><span class="sutra_name">相應部1相應70經/世間經</span>(諸天相應/有偈篇/祇夜)(莊春江譯)[SA.1008]</source_title>
+        <relevant>[SA.1008]</relevant>
+        <title>世間經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「世間在什麼上被生起？在什麼上作親密交往？</p>
-        <p>　　　世間執取什麼後，世間在什麼上被惱害？」</p>
-        <p>　　「世間在<ln id="1">六</ln>上被生起，在六上作親密交往，</p>
-        <p>　　　就執取六後，世間在六上被惱害。」</p>
-        <p>　　征服品第七，其<gn id="35">攝頌</gn>：</p>
-        <p>　　「名、心、渴愛，結、繫縛，</p>
-        <p>　　　被折磨、被綁住、被覆蓋，想要與世間它們為十。」</p>
-    </body>
-    <notes>
-        <note id="1">
-            「六法(SA.1008)」，南傳作「六」，《顯揚真義》說：在六內處生起中這被名為生起，在六外處中作親密交往，對六內處執取後，在六外處之中被惱害(Chasu hi ajjhattikāyatanesu uppannesu ayaṃ uppanno nāma hoti, chasu bāhiresu santhavaṃ karoti, channaṃ ajjhattikānaṃ upādāya chasu bāhiresu vihaññatīti)。
-        </note>
-    </notes>
+    <p>「世間在什麼上被生起？在什麼上作親密交往？</p>
+    <p>世間執取什麼後，世間在什麼上被惱害？」</p>
+    <p>「世間在<t1>六</t1>上被生起，在六上作親密交往，</p>
+    <p>就執取六後，世間在六上被惱害。」</p>
+    <p>征服品第七，其<g35>攝頌</g35>：</p>
+    <p>「名、心、渴愛，結、繫縛，</p>
+    <p>被折磨、被綁住、被覆蓋，想要與世間它們為十。」</p>
+    <n1>「六法(SA.1008)」，南傳作「六」，《顯揚真義》說：在六內處生起中這被名為生起，在六外處中作親密交往，對六內處執取後，在六外處之中被惱害(Chasu hi ajjhattikāyatanesu uppannesu ayaṃ uppanno nāma hoti, chasu bāhiresu santhavaṃ karoti, channaṃ ajjhattikānaṃ upādāya chasu bāhiresu vihaññatīti)。</n1>
 </doc>

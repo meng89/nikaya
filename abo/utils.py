@@ -1,7 +1,3 @@
-from typing import NewType
-
-
-
 
 import re
 import copy
@@ -70,7 +66,7 @@ def debug_print_es(l):
     print(s)
 
                             # SN.1.1   1     1
-def make_xml(source_page, sutta_nums, start, end, mtime, ctime, source_title, relevant, title_line, head, body, notes) -> xl.Xml:
+def make_xml(source_page, sutta_nums, start, end, mtime, ctime, source_title, relevant, title_line, head, body_es, notes) -> xl.Xml:
     doc = xl.Element("doc")
     meta = doc.ekid("meta")
 
@@ -115,15 +111,15 @@ def make_xml(source_page, sutta_nums, start, end, mtime, ctime, source_title, re
         ctime_e.kids.append(ctime)
 
     if head:
-        doc.kids.append(head)
+        meta.kids.append(head)
     else:
-        doc.ekid("head")
-    doc.kids.append(body)
-    doc.kids.append(notes)
+        meta.ekid("head")
+
+    doc.kids.extend(body_es)
+    doc.kids.extend(notes)
     xml = xl.Xml(root=doc)
     return xml
 
-WRITE_DONT_DO_TAGS = ["source_page", "sutta_num", "start", "end", "name", "mtime", "ctime", "relevant", "p", "note", "title", "source_title"]
 
 
 def get_pin_name(body_lines):

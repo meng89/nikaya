@@ -1,45 +1,22 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0442.htm
-        </source_page>
+        <source_page>SN/SN0442.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.17.21
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 17.21
-            </sutta_num>
+            <sutta_num>SN.17.21</sutta_num>
+            <sutta_num type="SC">SN 17.21</sutta_num>
         </sutta_nums>
-        <start>
-            21
-        </start>
-        <end>
-            21
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部17相應21經/婦女經
-            </span>
-            (利得恭敬相應/因緣篇/如來記說)(莊春江譯)
-        </source_title>
+        <start>21</start>
+        <end>21</end>
+        <source_title><span class="sutra_name">相應部17相應21經/婦女經</span>(利得恭敬相應/因緣篇/如來記說)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            婦女經
-        </title>
-        <mtime>
-            2025-08-16 01:50:28 +0800
-        </mtime>
+        <title>婦女經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head>
+            <p>3.第三品</p>
+        </head>
     </meta>
-    <head>
-        <p>3.第三品</p>
-    </head>
-    <body>
-        <p>　　住在舍衛城……（中略）。</p>
-        <p>　　「<gn id="31">比丘</gn>們！利得、恭敬、名聲是恐怖的……（中略）。比丘們！一對一(獨處)的婦女不<gn id="530">持續遍取</gn>他的心而利得、恭敬、名聲持續遍取他的心。比丘們！利得、恭敬、名聲是這麼恐畏……（中略）。比丘們！應該被你們這麼學！」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>住在舍衛城……（中略）。</p>
+    <p>「<g31>比丘</g31>們！利得、恭敬、名聲是恐怖的……（中略）。比丘們！一對一(獨處)的婦女不<g530>持續遍取</g530>他的心而利得、恭敬、名聲持續遍取他的心。比丘們！利得、恭敬、名聲是這麼恐畏……（中略）。比丘們！應該被你們這麼學！」</p>
+    <n1/>
 </doc>

@@ -1,43 +1,20 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1209.htm
-        </source_page>
+        <source_page>SN/SN1209.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.45.14
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 45.14
-            </sutta_num>
+            <sutta_num>SN.45.14</sutta_num>
+            <sutta_num type="SC">SN 45.14</sutta_num>
         </sutta_nums>
-        <start>
-            14
-        </start>
-        <end>
-            14
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部45相應14經/生起經第一
-            </span>
-            (道相應/大篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>14</start>
+        <end>14</end>
+        <source_title><span class="sutra_name">相應部45相應14經/生起經第一</span>(道相應/大篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            生起經第一
-        </title>
-        <mtime>
-            2025-08-16 01:53:32 +0800
-        </mtime>
+        <title>生起經第一</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　起源於舍衛城。</p>
-        <p>　　「<gn id="31">比丘</gn>們！有這些八法，已<gn id="94">修習</gn>、已<gn id="95">多作</gn>，未生起的不離<gn id="4">如來</gn>、<gn id="5">阿羅漢</gn>、<gn id="6">遍正覺者</gn>的出現生起，哪八個？即：正見……（中略）正定。比丘們！這是八法，已修習、已多作，未生起的不離如來、阿羅漢、遍正覺者的出現生起。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>起源於舍衛城。</p>
+    <p>「<g31>比丘</g31>們！有這些八法，已<g94>修習</g94>、已<g95>多作</g95>，未生起的不離<g4>如來</g4>、<g5>阿羅漢</g5>、<g6>遍正覺者</g6>的出現生起，哪八個？即：正見……（中略）正定。比丘們！這是八法，已修習、已多作，未生起的不離如來、阿羅漢、遍正覺者的出現生起。」</p>
+    <n1/>
 </doc>

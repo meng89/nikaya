@@ -1,42 +1,19 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1090.htm
-        </source_page>
+        <source_page>SN/SN1090.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.37.7
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 37.7
-            </sutta_num>
+            <sutta_num>SN.37.7</sutta_num>
+            <sutta_num type="SC">SN 37.7</sutta_num>
         </sutta_nums>
-        <start>
-            7
-        </start>
-        <end>
-            7
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部37相應7經/嫉妒者經
-            </span>
-            (婦女相應/處篇/如來記說)(莊春江譯)
-        </source_title>
+        <start>7</start>
+        <end>7</end>
+        <source_title><span class="sutra_name">相應部37相應7經/嫉妒者經</span>(婦女相應/處篇/如來記說)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            嫉妒者經
-        </title>
-        <mtime>
-            2025-08-16 01:48:32 +0800
-        </mtime>
+        <title>嫉妒者經</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「阿那律！具備五法的婦女，以身體的崩解，死後往生<gn id="109">苦界</gn>、<gn id="110">惡趣</gn>、<gn id="111">下界</gn>、地獄，哪五個？她是無信者、是無<gn id="250">慚</gn>者、是無<gn id="251">愧</gn>者、是嫉妒者、是劣慧者，阿那律！具備這五法的婦女，以身體的崩解，死後往生苦界、惡趣、下界、地獄。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「阿那律！具備五法的婦女，以身體的崩解，死後往生<g109>苦界</g109>、<g110>惡趣</g110>、<g111>下界</g111>、地獄，哪五個？她是無信者、是無<g250>慚</g250>者、是無<g251>愧</g251>者、是嫉妒者、是劣慧者，阿那律！具備這五法的婦女，以身體的崩解，死後往生苦界、惡趣、下界、地獄。」</p>
+    <n1/>
 </doc>

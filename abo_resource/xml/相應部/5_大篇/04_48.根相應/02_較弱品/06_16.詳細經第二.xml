@@ -1,48 +1,21 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1468.htm
-        </source_page>
+        <source_page>SN/SN1468.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.48.16
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 48.16
-            </sutta_num>
+            <sutta_num>SN.48.16</sutta_num>
+            <sutta_num type="SC">SN 48.16</sutta_num>
         </sutta_nums>
-        <start>
-            16
-        </start>
-        <end>
-            16
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部48相應16經/詳細經第二
-            </span>
-            (根相應/大篇/修多羅)(莊春江譯)[SA.653]
-        </source_title>
-        <relevant>
-            [SA.653]
-        </relevant>
-        <title>
-            詳細經第二
-        </title>
-        <mtime>
-            2025-08-16 01:47:36 +0800
-        </mtime>
+        <start>16</start>
+        <end>16</end>
+        <source_title><span class="sutra_name">相應部48相應16經/詳細經第二</span>(根相應/大篇/修多羅)(莊春江譯)[SA.653]</source_title>
+        <relevant>[SA.653]</relevant>
+        <title>詳細經第二</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「<gn id="31">比丘</gn>們！有這五根，哪五個？信根……（中略）慧根。比丘們！這是五根。</p>
-        <p>　　比丘們！這五根的達成者、完成者是<gn id="5">阿羅漢</gn>；較之弱者是<gn id="297">中般涅槃</gn>者；較之弱者是<gn id="298">生般涅槃</gn>者；較之弱者是<gn id="299">無行般涅槃</gn>者；較之弱者是<gn id="300">有行般涅槃</gn>者；較之弱者是<gn id="301">上流到阿迦膩吒</gn>者；較之弱者是<gn id="208">一來</gn>者；較之弱者是<gn id="165">入流者</gn>；較之弱者是<gn id="167">隨法行</gn>者；較之弱者是<gn id="166">隨信行</gn>者。</p>
-        <p>　　比丘們！像這樣，<ln id="1">根的不同有果的不同</ln>，果的不同有人的不同。」</p>
-    </body>
-    <notes>
-        <note id="1">
-            「根波羅蜜因緣知果波羅蜜(SA.653)」，南傳作「根的不同有果的不同」(indriyavemattatā phalavemattatā hoti)，菩提比丘長老英譯為「由於在機能上不同而在結果上有不同」(due to a difference in the faculties there is a difference in the fruits)。按：《顯揚真義》說，以種種根而有種種果；以種種果而有種種人(indriyanānattena phalanānattaṃ, phalanānattena puggalanānattanti)。
-        </note>
-    </notes>
+    <p>「<g31>比丘</g31>們！有這五根，哪五個？信根……（中略）慧根。比丘們！這是五根。</p>
+    <p>比丘們！這五根的達成者、完成者是<g5>阿羅漢</g5>；較之弱者是<g297>中般涅槃</g297>者；較之弱者是<g298>生般涅槃</g298>者；較之弱者是<g299>無行般涅槃</g299>者；較之弱者是<g300>有行般涅槃</g300>者；較之弱者是<g301>上流到阿迦膩吒</g301>者；較之弱者是<g208>一來</g208>者；較之弱者是<g165>入流者</g165>；較之弱者是<g167>隨法行</g167>者；較之弱者是<g166>隨信行</g166>者。</p>
+    <p>比丘們！像這樣，<t1>根的不同有果的不同</t1>，果的不同有人的不同。」</p>
+    <n1>「根波羅蜜因緣知果波羅蜜(SA.653)」，南傳作「根的不同有果的不同」(indriyavemattatā phalavemattatā hoti)，菩提比丘長老英譯為「由於在機能上不同而在結果上有不同」(due to a difference in the faculties there is a difference in the fruits)。按：《顯揚真義》說，以種種根而有種種果；以種種果而有種種人(indriyanānattena phalanānattaṃ, phalanānattena puggalanānattanti)。</n1>
 </doc>

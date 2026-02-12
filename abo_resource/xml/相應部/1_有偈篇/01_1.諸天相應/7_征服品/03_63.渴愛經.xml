@@ -1,47 +1,22 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0063.htm
-        </source_page>
+        <source_page>SN/SN0063.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.1.63
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 1.63
-            </sutta_num>
+            <sutta_num>SN.1.63</sutta_num>
+            <sutta_num type="SC">SN 1.63</sutta_num>
         </sutta_nums>
-        <start>
-            63
-        </start>
-        <end>
-            63
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部1相應63經/渴愛經
-            </span>
-            (諸天相應/有偈篇/祇夜)(莊春江譯)
-        </source_title>
+        <start>63</start>
+        <end>63</end>
+        <source_title><span class="sutra_name">相應部1相應63經/渴愛經</span>(諸天相應/有偈篇/祇夜)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            渴愛經
-        </title>
-        <mtime>
-            2025-08-16 01:52:42 +0800
-        </mtime>
+        <title>渴愛經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「世間被什麼引導呢？被什麼<ln id="1">牽引</ln>呢？</p>
-        <p>　　　什麼是<gn id="522">一法</gn>，一切就是順從控制者呢呢？」</p>
-        <p>　　「世間被渴愛引導，被渴愛牽引，</p>
-        <p>　　　渴愛是一法，一切就是順從控制者。」</p>
-    </body>
-    <notes>
-        <note id="1">
-            參看SN.1.62。
-        </note>
-    </notes>
+    <p>「世間被什麼引導呢？被什麼<t1>牽引</t1>呢？</p>
+    <p>什麼是<g522>一法</g522>，一切就是順從控制者呢呢？」</p>
+    <p>「世間被渴愛引導，被渴愛牽引，</p>
+    <p>渴愛是一法，一切就是順從控制者。」</p>
+    <n1>參看SN.1.62。</n1>
 </doc>

@@ -1,42 +1,19 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1478.htm
-        </source_page>
+        <source_page>SN/SN1478.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.48.26
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 48.26
-            </sutta_num>
+            <sutta_num>SN.48.26</sutta_num>
+            <sutta_num type="SC">SN 48.26</sutta_num>
         </sutta_nums>
-        <start>
-            26
-        </start>
-        <end>
-            26
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部48相應26經/入流者經
-            </span>
-            (根相應/大篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>26</start>
+        <end>26</end>
+        <source_title><span class="sutra_name">相應部48相應26經/入流者經</span>(根相應/大篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            入流者經
-        </title>
-        <mtime>
-            2025-08-16 01:47:40 +0800
-        </mtime>
+        <title>入流者經</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「<gn id="31">比丘</gn>們！有這些六根，哪六個？眼根……（中略）意根，比丘們！當聖弟子如實知道這些六根的<gn id="67">集起</gn>、滅沒、<gn id="295">樂味</gn>、<gn id="293">過患</gn>、<gn id="294">出離</gn>，比丘們！這位聖弟子被稱為<gn id="165">入流者</gn>、不墮惡趣法者、<gn id="159">決定者</gn>、<gn id="160">正覺為彼岸者</gn>。」 </p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「<g31>比丘</g31>們！有這些六根，哪六個？眼根……（中略）意根，比丘們！當聖弟子如實知道這些六根的<g67>集起</g67>、滅沒、<g295>樂味</g295>、<g293>過患</g293>、<g294>出離</g294>，比丘們！這位聖弟子被稱為<g165>入流者</g165>、不墮惡趣法者、<g159>決定者</g159>、<g160>正覺為彼岸者</g160>。」 </p>
+    <n1/>
 </doc>

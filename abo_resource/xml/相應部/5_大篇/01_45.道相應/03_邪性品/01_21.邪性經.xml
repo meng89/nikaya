@@ -1,46 +1,23 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1216.htm
-        </source_page>
+        <source_page>SN/SN1216.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.45.21
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 45.21
-            </sutta_num>
+            <sutta_num>SN.45.21</sutta_num>
+            <sutta_num type="SC">SN 45.21</sutta_num>
         </sutta_nums>
-        <start>
-            21
-        </start>
-        <end>
-            21
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部45相應21經/邪性經
-            </span>
-            (道相應/大篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>21</start>
+        <end>21</end>
+        <source_title><span class="sutra_name">相應部45相應21經/邪性經</span>(道相應/大篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            邪性經
-        </title>
-        <mtime>
-            2025-08-16 01:51:46 +0800
-        </mtime>
+        <title>邪性經</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head>
+            <p>3.邪性品</p>
+        </head>
     </meta>
-    <head>
-        <p>3.邪性品</p>
-    </head>
-    <body>
-        <p>　　起源於舍衛城。</p>
-        <p>　　「<gn id="31">比丘</gn>們！我將為你們教導邪性與正性，<gn id="43">你們要聽</gn>它！</p>
-        <p>　　比丘們！而什麼是邪性？即：邪見……（中略）邪定，比丘們！這被稱為邪性。比丘們！而什麼是正性呢？即：正見……（中略）正定，比丘們！這被稱為正性。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>起源於舍衛城。</p>
+    <p>「<g31>比丘</g31>們！我將為你們教導邪性與正性，<g43>你們要聽</g43>它！</p>
+    <p>比丘們！而什麼是邪性？即：邪見……（中略）邪定，比丘們！這被稱為邪性。比丘們！而什麼是正性呢？即：正見……（中略）正定，比丘們！這被稱為正性。」</p>
+    <n1/>
 </doc>

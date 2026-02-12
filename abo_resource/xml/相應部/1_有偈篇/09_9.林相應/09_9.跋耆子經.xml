@@ -1,54 +1,27 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0229.htm
-        </source_page>
+        <source_page>SN/SN0229.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.9.9
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 9.9
-            </sutta_num>
+            <sutta_num>SN.9.9</sutta_num>
+            <sutta_num type="SC">SN 9.9</sutta_num>
         </sutta_nums>
-        <start>
-            9
-        </start>
-        <end>
-            9
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部9相應9經/跋耆子經
-            </span>
-            (林相應/有偈篇/祇夜)(莊春江譯)[SA.1340]
-        </source_title>
-        <relevant>
-            [SA.1340]
-        </relevant>
-        <title>
-            跋耆子經
-        </title>
-        <mtime>
-            2025-08-16 01:51:30 +0800
-        </mtime>
+        <start>9</start>
+        <end>9</end>
+        <source_title><span class="sutra_name">相應部9相應9經/跋耆子經</span>(林相應/有偈篇/祇夜)(莊春江譯)[SA.1340]</source_title>
+        <relevant>[SA.1340]</relevant>
+        <title>跋耆子經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　<gn id="2">有一次</gn>，某位跋耆子<gn id="31">比丘</gn>住在毘舍離某處叢林中。</p>
-        <p>　　當時，在毘舍離的跋耆子有<ln id="1">整夜之行</ln>。</p>
-        <p>　　那時，那位比丘聽聞毘舍離的樂器、敲打的[節奏]、音樂吵鬧聲後，悲嘆著，在那時說這<gn id="281">偈頌</gn>：</p>
-        <p>　　「我們單獨住在<gn id="142">林野</gn>中，如被捨棄在林中的圓木，</p>
-        <p>　　　在像這樣的夜晚，誰比我們更糟嗎？」</p>
-        <p>　　那時，那位住在那處叢林中、對那位比丘有憐愍、想要利益、想要激起那位比丘<gn id="373">急迫感</gn>的天神去見那位比丘。抵達後，以偈頌對那位比丘說：</p>
-        <p>　　「你正是單獨住在林野中，如被捨棄在林中的圓木，</p>
-        <p>　　　許多者羨慕你的那個，如墮地獄者對到天界者。」</p>
-        <p>　　那時，那位比丘被那位天神激起急迫感，來到了急迫感。</p>
-    </body>
-    <notes>
-        <note id="1">
-            「整夜之行」(sabbaratticāro)，菩提比丘長老英譯為「整夜的慶典」(an all-night festival)。按：《顯揚真義》說，宣佈迦刺底迦慶典(kattikanakkhattaṃ)後，整個城市被旗幟旗子等裝飾後，使整夜之行被持續轉起(pavattito sabbaratticāro)。
-        </note>
-    </notes>
+    <p><g2>有一次</g2>，某位跋耆子<g31>比丘</g31>住在毘舍離某處叢林中。</p>
+    <p>當時，在毘舍離的跋耆子有<t1>整夜之行</t1>。</p>
+    <p>那時，那位比丘聽聞毘舍離的樂器、敲打的[節奏]、音樂吵鬧聲後，悲嘆著，在那時說這<g281>偈頌</g281>：</p>
+    <p>「我們單獨住在<g142>林野</g142>中，如被捨棄在林中的圓木，</p>
+    <p>在像這樣的夜晚，誰比我們更糟嗎？」</p>
+    <p>那時，那位住在那處叢林中、對那位比丘有憐愍、想要利益、想要激起那位比丘<g373>急迫感</g373>的天神去見那位比丘。抵達後，以偈頌對那位比丘說：</p>
+    <p>「你正是單獨住在林野中，如被捨棄在林中的圓木，</p>
+    <p>許多者羨慕你的那個，如墮地獄者對到天界者。」</p>
+    <p>那時，那位比丘被那位天神激起急迫感，來到了急迫感。</p>
+    <n1>「整夜之行」(sabbaratticāro)，菩提比丘長老英譯為「整夜的慶典」(an all-night festival)。按：《顯揚真義》說，宣佈迦刺底迦慶典(kattikanakkhattaṃ)後，整個城市被旗幟旗子等裝飾後，使整夜之行被持續轉起(pavattito sabbaratticāro)。</n1>
 </doc>

@@ -1,49 +1,24 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0182.htm
-        </source_page>
+        <source_page>SN/SN0182.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.6.11
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 6.11
-            </sutta_num>
+            <sutta_num>SN.6.11</sutta_num>
+            <sutta_num type="SC">SN 6.11</sutta_num>
         </sutta_nums>
-        <start>
-            11
-        </start>
-        <end>
-            11
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部6相應11經/常童子經
-            </span>
-            (梵天相應/有偈篇/祇夜)(莊春江譯)[SA.1190]
-        </source_title>
-        <relevant>
-            [SA.1190]
-        </relevant>
-        <title>
-            常童子經
-        </title>
-        <mtime>
-            2025-08-16 01:48:28 +0800
-        </mtime>
+        <start>11</start>
+        <end>11</end>
+        <source_title><span class="sutra_name">相應部6相應11經/常童子經</span>(梵天相應/有偈篇/祇夜)(莊春江譯)[SA.1190]</source_title>
+        <relevant>[SA.1190]</relevant>
+        <title>常童子經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head>
+            <p>2.第二品</p>
+        </head>
     </meta>
-    <head>
-        <p>2.第二品</p>
-    </head>
-    <body>
-        <p>　　<gn id="2">有一次</gn>，<gn id="12">世尊</gn>住在王舍城奢逼尼河畔。那時，在夜已深時，容色絕佳的<gn id="215">梵王常童子</gn>使整個奢逼尼河畔發光後，去見世尊。抵達後，向世尊<gn id="46">問訊</gn>後，在一旁站立。在一旁站立的梵王常童子在世尊的面前說這個<gn id="281">偈頌</gn>：</p>
-        <p>　　「<gn id="116">剎帝利</gn>在這人們中是最上的：凡依賴家系者們，</p>
-        <p>　　　<gn id="7">明行具足者</gn>，在天人中他是最上的。[MN.53, DN.3, DN.27, AN.11.10]」</p>
-        <p>　　梵王常童子說這個，<gn id="145">大師</gn>是認可者。那時，梵王常童子[想]：「大師是我的認可者。」向世尊問訊、<gn id="47">作右繞</gn>後，就在那裡消失。</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p><g2>有一次</g2>，<g12>世尊</g12>住在王舍城奢逼尼河畔。那時，在夜已深時，容色絕佳的<g215>梵王常童子</g215>使整個奢逼尼河畔發光後，去見世尊。抵達後，向世尊<g46>問訊</g46>後，在一旁站立。在一旁站立的梵王常童子在世尊的面前說這個<g281>偈頌</g281>：</p>
+    <p>「<g116>剎帝利</g116>在這人們中是最上的：凡依賴家系者們，</p>
+    <p><g7>明行具足者</g7>，在天人中他是最上的。[MN.53, DN.3, DN.27, AN.11.10]」</p>
+    <p>梵王常童子說這個，<g145>大師</g145>是認可者。那時，梵王常童子[想]：「大師是我的認可者。」向世尊問訊、<g47>作右繞</g47>後，就在那裡消失。</p>
+    <n1/>
 </doc>

@@ -1,44 +1,21 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0649.htm
-        </source_page>
+        <source_page>SN/SN0649.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.22.131
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 22.131
-            </sutta_num>
+            <sutta_num>SN.22.131</sutta_num>
+            <sutta_num type="SC">SN 22.131</sutta_num>
         </sutta_nums>
-        <start>
-            131
-        </start>
-        <end>
-            131
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部22相應131經/集起經
-            </span>
-            (蘊相應/蘊篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>131</start>
+        <end>131</end>
+        <source_title><span class="sutra_name">相應部22相應131經/集起經</span>(蘊相應/蘊篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            集起經
-        </title>
-        <mtime>
-            2025-08-16 01:45:22 +0800
-        </mtime>
+        <title>集起經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　住在波羅奈仙人落下處的鹿林。……（中略）  </p>
-        <p>　　「舍利弗<gn id="201">學友</gn>！被稱為『<gn id="207">無明</gn>、無明』，學友！什麼是無明？而什麼情形是<gn id="645">進入無明者</gn>？」</p>
-        <p>　　「學友！這裡，<gn id="74">未聽聞的一般人</gn>不如實知道色的<gn id="67">集起</gn>、滅沒、<gn id="295">樂味</gn>、<gn id="293">過患</gn>、<gn id="294">出離</gn>；受的……（中略）想的……諸行的……不如實知道識的集起、滅沒、樂味、過患、出離，學友！這被稱為無明，而這個情形是進入無明者。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>住在波羅奈仙人落下處的鹿林。……（中略）  </p>
+    <p>「舍利弗<g201>學友</g201>！被稱為『<g207>無明</g207>、無明』，學友！什麼是無明？而什麼情形是<g645>進入無明者</g645>？」</p>
+    <p>「學友！這裡，<g74>未聽聞的一般人</g74>不如實知道色的<g67>集起</g67>、滅沒、<g295>樂味</g295>、<g293>過患</g293>、<g294>出離</g294>；受的……（中略）想的……諸行的……不如實知道識的集起、滅沒、樂味、過患、出離，學友！這被稱為無明，而這個情形是進入無明者。」</p>
+    <n1/>
 </doc>

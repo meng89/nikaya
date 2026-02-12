@@ -1,42 +1,19 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1680.htm
-        </source_page>
+        <source_page>SN/SN1680.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.55.57
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 55.57
-            </sutta_num>
+            <sutta_num>SN.55.57</sutta_num>
+            <sutta_num type="SC">SN 55.57</sutta_num>
         </sutta_nums>
-        <start>
-            57
-        </start>
-        <end>
-            57
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部55相應57經/不還果經
-            </span>
-            (入流相應/大篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>57</start>
+        <end>57</end>
+        <source_title><span class="sutra_name">相應部55相應57經/不還果經</span>(入流相應/大篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            不還果經
-        </title>
-        <mtime>
-            2025-08-16 01:52:34 +0800
-        </mtime>
+        <title>不還果經</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「……（中略）<gn id="209">不還果</gn>的作證……（中略）轉起。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「……（中略）<g209>不還果</g209>的作證……（中略）轉起。」</p>
+    <n1/>
 </doc>

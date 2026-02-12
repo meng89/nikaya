@@ -1,42 +1,19 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1595.htm
-        </source_page>
+        <source_page>SN/SN1595.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.52.19
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 52.19
-            </sutta_num>
+            <sutta_num>SN.52.19</sutta_num>
+            <sutta_num type="SC">SN 52.19</sutta_num>
         </sutta_nums>
-        <start>
-            19
-        </start>
-        <end>
-            19
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部52相應19經/不同志向經
-            </span>
-            (阿那律相應/大篇/弟子記說)(莊春江譯)
-        </source_title>
+        <start>19</start>
+        <end>19</end>
+        <source_title><span class="sutra_name">相應部52相應19經/不同志向經</span>(阿那律相應/大篇/弟子記說)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            不同志向經
-        </title>
-        <mtime>
-            2025-08-16 01:48:24 +0800
-        </mtime>
+        <title>不同志向經</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「<gn id="201">學友</gn>們！而且，我以這<gn id="286">四念住</gn>的<gn id="658">已自我修習</gn>、已自我<gn id="95">多作</gn>，如實知道眾生的不同<gn id="257">志向</gn>之狀態。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「<g201>學友</g201>們！而且，我以這<g286>四念住</g286>的<g658>已自我修習</g658>、已自我<g95>多作</g95>，如實知道眾生的不同<g257>志向</g257>之狀態。」</p>
+    <n1/>
 </doc>

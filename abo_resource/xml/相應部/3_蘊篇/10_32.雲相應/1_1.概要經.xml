@@ -1,46 +1,23 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0800.htm
-        </source_page>
+        <source_page>SN/SN0800.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.32.1
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 32.1
-            </sutta_num>
+            <sutta_num>SN.32.1</sutta_num>
+            <sutta_num type="SC">SN 32.1</sutta_num>
         </sutta_nums>
-        <start>
-            1
-        </start>
-        <end>
-            1
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部32相應1經/概要經
-            </span>
-            (雲相應/蘊篇/如來記說)(莊春江譯)
-        </source_title>
+        <start>1</start>
+        <end>1</end>
+        <source_title><span class="sutra_name">相應部32相應1經/概要經</span>(雲相應/蘊篇/如來記說)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            概要經
-        </title>
-        <mtime>
-            2025-08-16 01:52:30 +0800
-        </mtime>
+        <title>概要經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head>
+            <p>32.(11).雲相應</p>
+        </head>
     </meta>
-    <head>
-        <p>32.(11).雲相應</p>
-    </head>
-    <body>
-        <p>　　起源於舍衛城。</p>
-        <p>　　「<gn id="31">比丘</gn>們！我將為你們教導雲眾天神，<gn id="43">你們要聽</gn>它！</p>
-        <p>　　比丘們！而什麼是雲眾天神？比丘們！有寒雲天神，有熱雲天神，有黑雲天神，有風雲天神，有雨雲天神，比丘們！這些被稱為雲眾天神。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>起源於舍衛城。</p>
+    <p>「<g31>比丘</g31>們！我將為你們教導雲眾天神，<g43>你們要聽</g43>它！</p>
+    <p>比丘們！而什麼是雲眾天神？比丘們！有寒雲天神，有熱雲天神，有黑雲天神，有風雲天神，有雨雲天神，比丘們！這些被稱為雲眾天神。」</p>
+    <n1/>
 </doc>

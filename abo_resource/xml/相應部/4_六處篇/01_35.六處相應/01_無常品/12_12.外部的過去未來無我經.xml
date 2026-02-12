@@ -1,50 +1,25 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0863.htm
-        </source_page>
+        <source_page>SN/SN0863.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.35.12
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 35.12
-            </sutta_num>
+            <sutta_num>SN.35.12</sutta_num>
+            <sutta_num type="SC">SN 35.12</sutta_num>
         </sutta_nums>
-        <start>
-            12
-        </start>
-        <end>
-            12
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部35相應12經/外部的過去未來無我經
-            </span>
-            (處相應/處篇/修多羅)(莊春江譯)[SA.208, SA.333]
-        </source_title>
-        <relevant>
-            [SA.208, SA.333]
-        </relevant>
-        <title>
-            外部的過去未來無我經
-        </title>
-        <mtime>
-            2025-08-16 01:50:24 +0800
-        </mtime>
+        <start>12</start>
+        <end>12</end>
+        <source_title><span class="sutra_name">相應部35相應12經/外部的過去未來無我經</span>(處相應/處篇/修多羅)(莊春江譯)[SA.208, SA.333]</source_title>
+        <relevant>[SA.208, SA.333]</relevant>
+        <title>外部的過去未來無我經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「<gn id="31">比丘</gn>們！過去、未來諸色是無我，更不用說現在！</p>
-        <p>　　比丘們！這樣看的<gn id="24">有聽聞的聖弟子</gn>在過去諸色上是無期待者，在未來諸色上不歡喜，對現在諸色是為了<gn id="15">厭</gn>、<gn id="77">離貪</gn>、<gn id="68">滅</gn>的修行者。</p>
-        <p>　　諸聲音……諸氣味……諸味道……諸<gn id="220">所觸</gn>……過去、未來的諸法是無我，更不用說現在！</p>
-        <p>　　比丘們！這樣看的有聽聞的聖弟子在過去諸法上是無期待者，在未來諸法不歡喜，對現在諸法是為了厭、離貪、滅的行者。」</p>
-        <p>　　無常品第一，其<gn id="35">攝頌</gn>：</p>
-        <p>　　「無常、苦與無我，自身內外三則，</p>
-        <p>　　　以凡無常三說，個個分自身內外。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「<g31>比丘</g31>們！過去、未來諸色是無我，更不用說現在！</p>
+    <p>比丘們！這樣看的<g24>有聽聞的聖弟子</g24>在過去諸色上是無期待者，在未來諸色上不歡喜，對現在諸色是為了<g15>厭</g15>、<g77>離貪</g77>、<g68>滅</g68>的修行者。</p>
+    <p>諸聲音……諸氣味……諸味道……諸<g220>所觸</g220>……過去、未來的諸法是無我，更不用說現在！</p>
+    <p>比丘們！這樣看的有聽聞的聖弟子在過去諸法上是無期待者，在未來諸法不歡喜，對現在諸法是為了厭、離貪、滅的行者。」</p>
+    <p>無常品第一，其<g35>攝頌</g35>：</p>
+    <p>「無常、苦與無我，自身內外三則，</p>
+    <p>以凡無常三說，個個分自身內外。」</p>
+    <n1/>
 </doc>

@@ -1,43 +1,20 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1566.htm
-        </source_page>
+        <source_page>SN/SN1566.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.51.25
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 51.25
-            </sutta_num>
+            <sutta_num>SN.51.25</sutta_num>
+            <sutta_num type="SC">SN 51.25</sutta_num>
         </sutta_nums>
-        <start>
-            25
-        </start>
-        <end>
-            25
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部51相應25經/大果經第一
-            </span>
-            (神足相應/大篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>25</start>
+        <end>25</end>
+        <source_title><span class="sutra_name">相應部51相應25經/大果經第一</span>(神足相應/大篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            大果經第一
-        </title>
-        <mtime>
-            2025-08-16 01:52:20 +0800
-        </mtime>
+        <title>大果經第一</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「<gn id="31">比丘</gn>們！有這<gn id="503">四神足</gn>，哪四個？比丘們！這裡，比丘<gn id="94">修習</gn><gn id="568">具備意欲定勤奮之行的神足</gn>；活力定……（中略）心定……（中略）修習<gn id="569">具備考察定勤奮之行的神足</gn>，比丘們！這是四神足。</p>
-        <p>　　比丘們！以這四神足的<gn id="658">已自我修習</gn>、已自我<gn id="95">多作</gn>，二果其中之一果能被比丘預期：<gn id="42">當生</gn><gn id="489">完全智</gn>，或在存在<gn id="323">有餘依</gn>時，為<gn id="209">阿那含</gn>位。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「<g31>比丘</g31>們！有這<g503>四神足</g503>，哪四個？比丘們！這裡，比丘<g94>修習</g94><g568>具備意欲定勤奮之行的神足</g568>；活力定……（中略）心定……（中略）修習<g569>具備考察定勤奮之行的神足</g569>，比丘們！這是四神足。</p>
+    <p>比丘們！以這四神足的<g658>已自我修習</g658>、已自我<g95>多作</g95>，二果其中之一果能被比丘預期：<g42>當生</g42><g489>完全智</g489>，或在存在<g323>有餘依</g323>時，為<g209>阿那含</g209>位。」</p>
+    <n1/>
 </doc>

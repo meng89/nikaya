@@ -86,7 +86,7 @@ def load_from_htm():
             source_title_line, head_lines, sutta_body_lines = suttas[index]
 
             body = abo.page_parsing.htm_lines_to_xml_lines(sutta_body_lines)
-            body = abo.page_parsing.lines_to_body(body)
+            body = abo.page_parsing.lines_to_es(body)
 
             head = abo.page_parsing.htm_lines_to_xml_lines(head_lines)
             head = abo.page_parsing.lines_to_head(head)
@@ -103,17 +103,17 @@ def load_from_htm():
                 ("SC", sutta_num_sc)
             ]
             xml = abo.utils.make_xml(source_page=htm,
-                                        sutta_nums=sutta_nums,
-                                        start=str(int(start)),
-                                        end=str(int(end)),
-                                        mtime=mtime,
-                                        ctime=None,
-                                        source_title=abo.utils.strip_crlf(matched[0][2]),
-                                        relevant=m.group(5),
-                                        title_line=[name or "无名"],
-                                        head=head,
-                                        body=body,
-                                        notes=notes)
+                                     sutta_nums=sutta_nums,
+                                     start=str(int(start)),
+                                     end=str(int(end)),
+                                     mtime=mtime,
+                                     ctime=None,
+                                     source_title=abo.utils.strip_crlf(matched[0][2]),
+                                     relevant=m.group(5),
+                                     title_line=[name or "无名"],
+                                     head=head,
+                                     body_es=body,
+                                     notes=notes)
 
             if pin is not None:
                 folder = pin

@@ -1,48 +1,23 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0756.htm
-        </source_page>
+        <source_page>SN/SN0756.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.27.1
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 27.1
-            </sutta_num>
+            <sutta_num>SN.27.1</sutta_num>
+            <sutta_num type="SC">SN 27.1</sutta_num>
         </sutta_nums>
-        <start>
-            1
-        </start>
-        <end>
-            1
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部27相應1經/眼經
-            </span>
-            (污染相應/蘊篇/如來記說)(莊春江譯)[SA.900]
-        </source_title>
-        <relevant>
-            [SA.900]
-        </relevant>
-        <title>
-            眼經
-        </title>
-        <mtime>
-            2025-08-16 01:47:36 +0800
-        </mtime>
+        <start>1</start>
+        <end>1</end>
+        <source_title><span class="sutra_name">相應部27相應1經/眼經</span>(污染相應/蘊篇/如來記說)(莊春江譯)[SA.900]</source_title>
+        <relevant>[SA.900]</relevant>
+        <title>眼經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head>
+            <p>27.(6).污染相應</p>
+        </head>
     </meta>
-    <head>
-        <p>27.(6).污染相應</p>
-    </head>
-    <body>
-        <p>　　起源於舍衛城。</p>
-        <p>　　「<gn id="31">比丘</gn>們！凡在眼上的意欲貪，這是心的<gn id="288">隨雜染</gn>；凡在耳上的意欲貪，這是心的隨雜染；凡在鼻上的意欲貪，這是心的隨雜染；凡在舌上的意欲貪，這是心的隨雜染；凡在身上的意欲貪，這是心的隨雜染；凡在意上的意欲貪，這是心的隨雜染。</p>
-        <p>　　比丘們！當在這六處上比丘心的隨雜染被捨斷，他的心是傾向離欲的；已遍<gn id="94">修習</gn>離欲的心可以認為在應該被證智作證的諸法上，是<gn id="412">適合作業的</gn>。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>起源於舍衛城。</p>
+    <p>「<g31>比丘</g31>們！凡在眼上的意欲貪，這是心的<g288>隨雜染</g288>；凡在耳上的意欲貪，這是心的隨雜染；凡在鼻上的意欲貪，這是心的隨雜染；凡在舌上的意欲貪，這是心的隨雜染；凡在身上的意欲貪，這是心的隨雜染；凡在意上的意欲貪，這是心的隨雜染。</p>
+    <p>比丘們！當在這六處上比丘心的隨雜染被捨斷，他的心是傾向離欲的；已遍<g94>修習</g94>離欲的心可以認為在應該被證智作證的諸法上，是<g412>適合作業的</g412>。」</p>
+    <n1/>
 </doc>

@@ -1,45 +1,22 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0773.htm
-        </source_page>
+        <source_page>SN/SN0773.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.28.8
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 28.8
-            </sutta_num>
+            <sutta_num>SN.28.8</sutta_num>
+            <sutta_num type="SC">SN 28.8</sutta_num>
         </sutta_nums>
-        <start>
-            8
-        </start>
-        <end>
-            8
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部28相應8經/非想非非想處經
-            </span>
-            (舍利弗相應/蘊篇/弟子記說)(莊春江譯)
-        </source_title>
+        <start>8</start>
+        <end>8</end>
+        <source_title><span class="sutra_name">相應部28相應8經/非想非非想處經</span>(舍利弗相應/蘊篇/弟子記說)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            非想非非想處經
-        </title>
-        <mtime>
-            2025-08-16 01:48:54 +0800
-        </mtime>
+        <title>非想非非想處經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　起源於舍衛城。</p>
-        <p>　　<gn id="200">尊者</gn>舍利弗……（中略）。 </p>
-        <p>　　「<gn id="201">學友</gn>！這裡，超越一切<gn id="533">無所有處</gn>後，我<gn id="66">進入後住於</gn><gn id="534">非想非非想處</gn>……（中略）。」</p>
-        <p>　　「……（中略）[或『我已從非想非非想處]出來。』」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>起源於舍衛城。</p>
+    <p><g200>尊者</g200>舍利弗……（中略）。 </p>
+    <p>「<g201>學友</g201>！這裡，超越一切<g533>無所有處</g533>後，我<g66>進入後住於</g66><g534>非想非非想處</g534>……（中略）。」</p>
+    <p>「……（中略）[或『我已從非想非非想處]出來。』」</p>
+    <n1/>
 </doc>

@@ -1,56 +1,29 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0039.htm
-        </source_page>
+        <source_page>SN/SN0039.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.1.39
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 1.39
-            </sutta_num>
+            <sutta_num>SN.1.39</sutta_num>
+            <sutta_num type="SC">SN 1.39</sutta_num>
         </sutta_nums>
-        <start>
-            39
-        </start>
-        <end>
-            39
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部1相應39經/雨神的女兒經第一
-            </span>
-            (諸天相應/有偈篇/祇夜)(莊春江譯)[SA.1274]
-        </source_title>
-        <relevant>
-            [SA.1274]
-        </relevant>
-        <title>
-            雨神的女兒經第一
-        </title>
-        <mtime>
-            2025-08-16 01:48:46 +0800
-        </mtime>
+        <start>39</start>
+        <end>39</end>
+        <source_title><span class="sutra_name">相應部1相應39經/雨神的女兒經第一</span>(諸天相應/有偈篇/祇夜)(莊春江譯)[SA.1274]</source_title>
+        <relevant>[SA.1274]</relevant>
+        <title>雨神的女兒經第一</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　<gn id="1">被我這麼聽聞</gn>：</p>
-        <p>　　<gn id="2">有一次</gn>，<gn id="12">世尊</gn>住在毘舍離大林重閣講堂。</p>
-        <p>　　那時，在夜已深時，容色絕佳的雨神女兒紅蓮使整個大林發光後，去見世尊。抵達後，向世尊<gn id="46">問訊</gn>後，在一旁站立。在一旁站立的那位雨神的女兒紅蓮女神在世尊的面前說這些<gn id="281">偈頌</gn>：</p>
-        <p>　　「在毘舍離林中居住者：眾生中最高的<gn id="185">正覺者</gn>，</p>
-        <p>　　　我是紅蓮我禮拜：雨神的女兒紅蓮。</p>
-        <p>　　　在以前只被我聽聞：被<gn id="629">有眼者</gn><gn id="355">領悟</gn>的法，</p>
-        <p>　　　現在我是證人我知道它：當牟尼、<gn id="8">善逝</gn>教導時。</p>
-        <p>　　　凡任何對聖法，行斥責的劣智慧者們，</p>
-        <p>　　　他們到達恐怖的<ln id="1">叫喚[地獄]</ln>，經驗長久的苦。</p>
-        <p>　　　但凡在聖法上，以接受以寂靜到達者，</p>
-        <p>　　　捨棄人身後，將使天身充滿。」[DN.20, 332段]</p>
-    </body>
-    <notes>
-        <note id="1">
-            「叫喚[地獄]」(roruvaṃ)，菩提比丘長老英譯為「羅盧瓦地獄」(Roruva Hell)。按：《顯揚真義》說，有兩個叫喚：煙叫喚(dhūmaroruvo)與「焰叫喚」(jālaroruvo)，前者是另一個(visuṃ)，後者名為無間大地獄(avīcimahānirayassevetaṃ)，在那裡，眾生被火燒時，他們一再地吼叫(punappunaṃ ravaṃ ravanti)，與AA.42.2的「涕哭地獄、大涕哭地獄」相當。
-        </note>
-    </notes>
+    <p><g1>被我這麼聽聞</g1>：</p>
+    <p><g2>有一次</g2>，<g12>世尊</g12>住在毘舍離大林重閣講堂。</p>
+    <p>那時，在夜已深時，容色絕佳的雨神女兒紅蓮使整個大林發光後，去見世尊。抵達後，向世尊<g46>問訊</g46>後，在一旁站立。在一旁站立的那位雨神的女兒紅蓮女神在世尊的面前說這些<g281>偈頌</g281>：</p>
+    <p>「在毘舍離林中居住者：眾生中最高的<g185>正覺者</g185>，</p>
+    <p>我是紅蓮我禮拜：雨神的女兒紅蓮。</p>
+    <p>在以前只被我聽聞：被<g629>有眼者</g629><g355>領悟</g355>的法，</p>
+    <p>現在我是證人我知道它：當牟尼、<g8>善逝</g8>教導時。</p>
+    <p>凡任何對聖法，行斥責的劣智慧者們，</p>
+    <p>他們到達恐怖的<t1>叫喚[地獄]</t1>，經驗長久的苦。</p>
+    <p>但凡在聖法上，以接受以寂靜到達者，</p>
+    <p>捨棄人身後，將使天身充滿。」[DN.20, 332段]</p>
+    <n1>「叫喚[地獄]」(roruvaṃ)，菩提比丘長老英譯為「羅盧瓦地獄」(Roruva Hell)。按：《顯揚真義》說，有兩個叫喚：煙叫喚(dhūmaroruvo)與「焰叫喚」(jālaroruvo)，前者是另一個(visuṃ)，後者名為無間大地獄(avīcimahānirayassevetaṃ)，在那裡，眾生被火燒時，他們一再地吼叫(punappunaṃ ravaṃ ravanti)，與AA.42.2的「涕哭地獄、大涕哭地獄」相當。</n1>
 </doc>

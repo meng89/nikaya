@@ -1,44 +1,19 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1414.htm
-        </source_page>
+        <source_page>SN/SN1414.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.47.17
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 47.17
-            </sutta_num>
+            <sutta_num>SN.47.17</sutta_num>
+            <sutta_num type="SC">SN 47.17</sutta_num>
         </sutta_nums>
-        <start>
-            17
-        </start>
-        <end>
-            17
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部47相應17經/聖經
-            </span>
-            (念住相應/大篇/修多羅)(莊春江譯)[SA.634]
-        </source_title>
-        <relevant>
-            [SA.634]
-        </relevant>
-        <title>
-            聖經
-        </title>
-        <mtime>
-            2025-08-16 01:46:46 +0800
-        </mtime>
+        <start>17</start>
+        <end>17</end>
+        <source_title><span class="sutra_name">相應部47相應17經/聖經</span>(念住相應/大篇/修多羅)(莊春江譯)[SA.634]</source_title>
+        <relevant>[SA.634]</relevant>
+        <title>聖經</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「<gn id="31">比丘</gn>們！有這<gn id="286">四念住</gn>，已<gn id="94">修習</gn>、已<gn id="95">多作</gn>，是聖的、<gn id="294">出離的</gn>，引導那樣行為者<gn id="181">苦的完全滅盡</gn>，哪四個？比丘們！這裡，比丘<gn id="176">在身上隨看身地</gn>住：熱心的、正知的、有念的，調伏世間中的<gn id="435">貪婪</gn>、憂後；在諸受上……（中略）在心上……（中略）在諸法上隨看法地住：熱心的、正知的、有念的，調伏世間中的貪婪、憂後。比丘們！這是四念住，已修習、已多作，是聖的、出離的，引導那樣行為者苦的完全滅盡。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「<g31>比丘</g31>們！有這<g286>四念住</g286>，已<g94>修習</g94>、已<g95>多作</g95>，是聖的、<g294>出離的</g294>，引導那樣行為者<g181>苦的完全滅盡</g181>，哪四個？比丘們！這裡，比丘<g176>在身上隨看身地</g176>住：熱心的、正知的、有念的，調伏世間中的<g435>貪婪</g435>、憂後；在諸受上……（中略）在心上……（中略）在諸法上隨看法地住：熱心的、正知的、有念的，調伏世間中的貪婪、憂後。比丘們！這是四念住，已修習、已多作，是聖的、出離的，引導那樣行為者苦的完全滅盡。」</p>
+    <n1/>
 </doc>

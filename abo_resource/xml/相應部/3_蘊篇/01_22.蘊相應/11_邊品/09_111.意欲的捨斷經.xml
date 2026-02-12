@@ -1,44 +1,21 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0629.htm
-        </source_page>
+        <source_page>SN/SN0629.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.22.111
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 22.111
-            </sutta_num>
+            <sutta_num>SN.22.111</sutta_num>
+            <sutta_num type="SC">SN 22.111</sutta_num>
         </sutta_nums>
-        <start>
-            111
-        </start>
-        <end>
-            111
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部22相應111經/意欲的捨斷經
-            </span>
-            (蘊相應/蘊篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>111</start>
+        <end>111</end>
+        <source_title><span class="sutra_name">相應部22相應111經/意欲的捨斷經</span>(蘊相應/蘊篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            意欲的捨斷經
-        </title>
-        <mtime>
-            2025-08-16 01:50:16 +0800
-        </mtime>
+        <title>意欲的捨斷經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　起源於舍衛城。 </p>
-        <p>　　「<gn id="31">比丘</gn>們！在色上凡意欲，凡貪，凡歡喜，凡渴愛，你們要捨斷它，這樣，那個色必將被捨斷，根被切斷，<gn id="147">[如]已斷根的棕櫚樹</gn>，<gn id="408">成為非有</gn>，<gn id="229">為未來不生之物</gn>。</p>
-        <p>　　在受上……（中略）在想上……在諸行上……在識上凡意欲，凡貪，凡歡喜，凡渴愛，你們要捨斷它，這樣，那個識必將被捨斷，根被切斷，[如]已斷根的棕櫚樹，成為非有，為未來不生之物。」[SN.23.9]</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>起源於舍衛城。 </p>
+    <p>「<g31>比丘</g31>們！在色上凡意欲，凡貪，凡歡喜，凡渴愛，你們要捨斷它，這樣，那個色必將被捨斷，根被切斷，<g147>[如]已斷根的棕櫚樹</g147>，<g408>成為非有</g408>，<g229>為未來不生之物</g229>。</p>
+    <p>在受上……（中略）在想上……在諸行上……在識上凡意欲，凡貪，凡歡喜，凡渴愛，你們要捨斷它，這樣，那個識必將被捨斷，根被切斷，[如]已斷根的棕櫚樹，成為非有，為未來不生之物。」[SN.23.9]</p>
+    <n1/>
 </doc>

@@ -1,43 +1,20 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1085.htm
-        </source_page>
+        <source_page>SN/SN1085.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.37.2
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 37.2
-            </sutta_num>
+            <sutta_num>SN.37.2</sutta_num>
+            <sutta_num type="SC">SN 37.2</sutta_num>
         </sutta_nums>
-        <start>
-            2
-        </start>
-        <end>
-            2
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部37相應2經/男子經
-            </span>
-            (婦女相應/處篇/如來記說)(莊春江譯)
-        </source_title>
+        <start>2</start>
+        <end>2</end>
+        <source_title><span class="sutra_name">相應部37相應2經/男子經</span>(婦女相應/處篇/如來記說)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            男子經
-        </title>
-        <mtime>
-            2025-08-16 01:54:14 +0800
-        </mtime>
+        <title>男子經</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　「<gn id="31">比丘</gn>們！具備五支的男子對婦女是<gn id="168">一向</gn>不合意者，哪五個？是不英俊者、是不富有者、是非有德行者、懶惰者、不為她得子孫者，比丘們！具備五支的男子對婦女是一向不合意者。</p>
-        <p>　　比丘們！具備五支的男子對婦女是一向合意者，哪五個？是英俊者、是富有者、是有德行者、是靈巧者不懶惰者、為她得子孫者，比丘們！具備五支的男子對婦女是一向合意者。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>「<g31>比丘</g31>們！具備五支的男子對婦女是<g168>一向</g168>不合意者，哪五個？是不英俊者、是不富有者、是非有德行者、懶惰者、不為她得子孫者，比丘們！具備五支的男子對婦女是一向不合意者。</p>
+    <p>比丘們！具備五支的男子對婦女是一向合意者，哪五個？是英俊者、是富有者、是有德行者、是靈巧者不懶惰者、為她得子孫者，比丘們！具備五支的男子對婦女是一向合意者。」</p>
+    <n1/>
 </doc>

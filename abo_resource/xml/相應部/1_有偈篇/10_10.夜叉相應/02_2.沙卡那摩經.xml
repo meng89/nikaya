@@ -1,49 +1,25 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN0236.htm
-        </source_page>
+        <source_page>SN/SN0236.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.10.2
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 10.2
-            </sutta_num>
+            <sutta_num>SN.10.2</sutta_num>
+            <sutta_num type="SC">SN 10.2</sutta_num>
         </sutta_nums>
-        <start>
-            2
-        </start>
-        <end>
-            2
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部10相應2經/沙卡那摩經
-            </span>
-            (夜叉相應/有偈篇/祇夜)(莊春江譯)[SA.577]
-        </source_title>
-        <relevant>
-            [SA.577]
-        </relevant>
-        <title>
-            沙卡那摩經
-        </title>
-        <mtime>
-            2025-08-16 01:48:28 +0800
-        </mtime>
+        <start>2</start>
+        <end>2</end>
+        <source_title><span class="sutra_name">相應部10相應2經/沙卡那摩經</span>(夜叉相應/有偈篇/祇夜)(莊春江譯)[SA.577]</source_title>
+        <relevant>[SA.577]</relevant>
+        <title>沙卡那摩經</title>
+        <mtime>2026-02-10 08:27:42 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　<gn id="2">有一次</gn>，<gn id="12">世尊</gn>住在王舍城<gn id="258">耆闍崛山</gn>。</p>
-        <p>　　那時，沙卡那摩迦<gn id="126">夜叉</gn>去見世尊。抵達後，以<gn id="281">偈頌</gn>對世尊說：</p>
-        <p>　　「對一切繫縛已被捨斷的，成為已擺脫的你，</p>
-        <p>　　　那對<gn id="29">沙門</gn>不好：凡你教誡其他人。」</p>
-        <p>　　「沙卡！凡無論以任何理由，親交被生起，</p>
-        <p>　　　有慧者不適合對他，以意(心)憐憫。</p>
-        <p>　　　如果以明淨意，凡他教誡其他人，</p>
-        <p>　　　他不因為那樣被連結：凡憐愍、同情。」</p>
-    </body>
-    <notes/>
+    <p><g2>有一次</g2>，<g12>世尊</g12>住在王舍城<g258>耆闍崛山</g258>。</p>
+    <p>那時，沙卡那摩迦<g126>夜叉</g126>去見世尊。抵達後，以<g281>偈頌</g281>對世尊說：</p>
+    <p>「對一切繫縛已被捨斷的，成為已擺脫的你，</p>
+    <p>那對<g29>沙門</g29>不好：凡你教誡其他人。」</p>
+    <p>「沙卡！凡無論以任何理由，親交被生起，</p>
+    <p>有慧者不適合對他，以意(心)憐憫。</p>
+    <p>如果以明淨意，凡他教誡其他人，</p>
+    <p>他不因為那樣被連結：凡憐愍、同情。」</p>
 </doc>

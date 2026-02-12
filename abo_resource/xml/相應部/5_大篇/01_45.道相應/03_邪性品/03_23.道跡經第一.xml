@@ -1,44 +1,21 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1218.htm
-        </source_page>
+        <source_page>SN/SN1218.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.45.23
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 45.23
-            </sutta_num>
+            <sutta_num>SN.45.23</sutta_num>
+            <sutta_num type="SC">SN 45.23</sutta_num>
         </sutta_nums>
-        <start>
-            23
-        </start>
-        <end>
-            23
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部45相應23經/道跡經第一
-            </span>
-            (道相應/大篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>23</start>
+        <end>23</end>
+        <source_title><span class="sutra_name">相應部45相應23經/道跡經第一</span>(道相應/大篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            道跡經第一
-        </title>
-        <mtime>
-            2025-08-16 01:54:30 +0800
-        </mtime>
+        <title>道跡經第一</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　起源於舍衛城。</p>
-        <p>　　「<gn id="31">比丘</gn>們！我將為你們教導邪道跡與正道跡，<gn id="43">你們要聽</gn>它！</p>
-        <p>　　比丘們！而什麼是邪道跡呢？即：邪見……（中略）邪定，比丘們！這被稱為邪道跡。比丘們！而什麼是正道跡呢？即：正見……（中略）正定，比丘們！這被稱為正道跡。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>起源於舍衛城。</p>
+    <p>「<g31>比丘</g31>們！我將為你們教導邪道跡與正道跡，<g43>你們要聽</g43>它！</p>
+    <p>比丘們！而什麼是邪道跡呢？即：邪見……（中略）邪定，比丘們！這被稱為邪道跡。比丘們！而什麼是正道跡呢？即：正見……（中略）正定，比丘們！這被稱為正道跡。」</p>
+    <n1/>
 </doc>

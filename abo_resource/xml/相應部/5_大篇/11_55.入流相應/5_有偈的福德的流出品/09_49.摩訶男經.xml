@@ -1,46 +1,23 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1672.htm
-        </source_page>
+        <source_page>SN/SN1672.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.55.49
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 55.49
-            </sutta_num>
+            <sutta_num>SN.55.49</sutta_num>
+            <sutta_num type="SC">SN 55.49</sutta_num>
         </sutta_nums>
-        <start>
-            49
-        </start>
-        <end>
-            49
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部55相應49經/摩訶男經
-            </span>
-            (入流相應/大篇/修多羅)(莊春江譯)
-        </source_title>
+        <start>49</start>
+        <end>49</end>
+        <source_title><span class="sutra_name">相應部55相應49經/摩訶男經</span>(入流相應/大篇/修多羅)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            摩訶男經
-        </title>
-        <mtime>
-            2025-08-16 01:48:16 +0800
-        </mtime>
+        <title>摩訶男經</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　起源於迦毘羅衛城。</p>
-        <p>　　<gn id="12">世尊</gn>對在一旁坐下的釋迦族摩訶男說這個：</p>
-        <p>　　「摩訶男！具備四法的<gn id="24">聖弟子</gn>是<gn id="165">入流者</gn>……（中略）、<gn id="160">以正覺為彼岸</gn>，哪四個？</p>
-        <p>　　摩訶男！這裡，聖弟子在佛上……（中略）在法上……（中略）在<gn id="375">僧團</gn>上……（中略）具備聖者喜愛的諸戒：無毀壞的……（中略）轉起定的。 </p>
-        <p>　　摩訶男！具備這四法的聖弟子是入流者、不墮惡趣法者、<gn id="159">決定者</gn>、<gn id="160">正覺為彼岸者</gn>。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>起源於迦毘羅衛城。</p>
+    <p><g12>世尊</g12>對在一旁坐下的釋迦族摩訶男說這個：</p>
+    <p>「摩訶男！具備四法的<g24>聖弟子</g24>是<g165>入流者</g165>……（中略）、<g160>以正覺為彼岸</g160>，哪四個？</p>
+    <p>摩訶男！這裡，聖弟子在佛上……（中略）在法上……（中略）在<g375>僧團</g375>上……（中略）具備聖者喜愛的諸戒：無毀壞的……（中略）轉起定的。 </p>
+    <p>摩訶男！具備這四法的聖弟子是入流者、不墮惡趣法者、<g159>決定者</g159>、<g160>正覺為彼岸者</g160>。」</p>
+    <n1/>
 </doc>

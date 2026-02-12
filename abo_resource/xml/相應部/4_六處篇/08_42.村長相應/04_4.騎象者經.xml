@@ -1,42 +1,19 @@
 <doc>
     <meta>
-        <source_page>
-            SN/SN1160.htm
-        </source_page>
+        <source_page>SN/SN1160.htm</source_page>
         <sutta_nums>
-            <sutta_num>
-                SN.42.4
-            </sutta_num>
-            <sutta_num type="SC">
-                SN 42.4
-            </sutta_num>
+            <sutta_num>SN.42.4</sutta_num>
+            <sutta_num type="SC">SN 42.4</sutta_num>
         </sutta_nums>
-        <start>
-            4
-        </start>
-        <end>
-            4
-        </end>
-        <source_title>
-            <span class="sutra_name">
-                相應部42相應4經/騎象者經
-            </span>
-            (村長相應/處篇/如來記說)(莊春江譯)
-        </source_title>
+        <start>4</start>
+        <end>4</end>
+        <source_title><span class="sutra_name">相應部42相應4經/騎象者經</span>(村長相應/處篇/如來記說)(莊春江譯)</source_title>
         <relevant/>
-        <title>
-            騎象者經
-        </title>
-        <mtime>
-            2025-08-16 01:49:30 +0800
-        </mtime>
+        <title>騎象者經</title>
+        <mtime>2026-02-10 08:27:43 +0800</mtime>
         <ctime/>
+        <head/>
     </meta>
-    <head/>
-    <body>
-        <p>　　那時，騎象者村長(領導者)去見<gn id="12">世尊</gn>。抵達後……（中略）「……從今天起<gn id="64">已終生歸依</gn>。」</p>
-    </body>
-    <notes>
-        <note id="1"/>
-    </notes>
+    <p>那時，騎象者村長(領導者)去見<g12>世尊</g12>。抵達後……（中略）「……從今天起<g64>已終生歸依</g64>。」</p>
+    <n1/>
 </doc>
