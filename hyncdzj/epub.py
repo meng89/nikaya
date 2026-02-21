@@ -33,16 +33,14 @@ def write_tree_to_userfiles(pre_path, tree, userfiles):
 
 
 def make_tree_data(data_infos):
-    tree_data = []
     data2 = []
     for info, data in data_infos:
         for dirs, infos2 in all_infos:
             for info2 in infos2:
                 if info2 == info:
-                    make_tree_data2(info.name, data, dirs, tree_data)
-                    data2.append((len(dirs), info, data))
+                    data2.append(([(None, None, d) for d in dirs], info, data))
 
-    return tree_data, data2
+    return data2
 
 def make_tree_data2(name, obj, dirs, data):
     for dir_ in dirs:
@@ -60,22 +58,21 @@ def make_sub_data(data, name):
 
 
 def build_epub_collection(title, cover_dir, full_path, data_infos, lang, tag):
-    all_book_data, data2 = make_tree_data(data_infos)
+    data3 = make_tree_data(data_infos)
     book_names = [lang.c(title)]
-    for info, data in data_infos:
-        data.append((lang.c(info.name), data))
 
     my_uuid = get_uuid("".join(book_names) + lang.en)
-    epub = make_epub(title, title, my_uuid.urn)
+    epub = make_epub(title, title, my_uuid.urn, lang)
 
     notes = hyncdzj.note.Notes()
     doc_files = {}
-    translators = []
-    for len_dirs, info, data in data2:
-        book_data = [((None, None, lang.c(info.name)), data)]
-        print(lang.c(info.name))
-        write_tree5(info, all_book_data, -len_dirs, book_data, doc_files, epub.mark.kids, notes, lang, [], 1, 1, None, None, None)
-        translators.extend(info.translators)
+    translators = set()
+    for prev_ngs, info, data in data3:
+        print(lang.c(info.name), info)
+        ds_depth = new_page_or_not.get_data_depth(data)
+
+        write_tree6(info, ds_depth, prev_ngs, [(None, None, lang.c(info.name))], data, 0, doc_files, epub.mark.kids, notes, lang, [], 1, 1, None, None, None)
+        translators.update(info.translators)
 
     book_info = base.Info(name="漢譯南傳大藏經", pali="Tipiṭaka", translators=tuple(translators))
     image_path = ebook_utils.make_cover_image(cover_dir, book_info, lang, tag, collection=True)
@@ -95,13 +92,14 @@ def build_epub_collection(title, cover_dir, full_path, data_infos, lang, tag):
 
 
 
-def make_epub(title, collection, identifier):
+def make_epub(title, collection, identifier, lang):
     epub = epubpacker.Epub()
     epub.meta.titles = [title]
     epub.meta.identifier = identifier
     epub.meta.others.append(xl.Element("meta", {"property": "belongs-to-collection", "id": "c01"},
                                        [collection]))
     epub.meta.others.append(xl.Element("meta", {"refines": "#c01", "property": "collection-type"}, ["series"]))
+    epub.meta.languages = [lang.xml, "pi", "en-US"]
     return epub
 
 def write_doc_files(doc_files, epub):
@@ -147,7 +145,10 @@ def build_epub(cover_dir, full_path, data, info, lang, tag):
 
     doc_files = {}
     book_data = [((None, None, lang.c(info.name)), data)]
-    write_tree5(info, data, 0, data, doc_files, epub.mark.kids, notes, lang, [], 1, 1, None, None, None, 0)
+
+    ds_depth = new_page_or_not.get_data_depth(data)
+    #write_tree5(info, data, 0, data, doc_files, epub.mark.kids, notes, lang, [], 1, 1, None, None, None, 0)
+    write_tree6(info, ds_depth, [], [], data, 0, doc_files, epub.mark.kids, notes, lang, [], 1, 1, None, None, None, 0)
 
     for path, xml in doc_files.items():
         xml: xl.Xml
@@ -226,9 +227,57 @@ def get_last_doc(docs):
 
 """
 经的上级标题需要写入第一个经里。
-
-
 """
+
+def write_tree6(info, ds_depth, p_ngs, ngs, obj, level_offset, doc_files, marks, notes, lang, marks_and_headings, depth, id_count, doc_path, html, body, doc_depth=None):
+    sub_marks = marks
+
+    if ngs:
+        mark, heading = make_mh(info, ngs, obj, marks, depth, id_count, level_offset)
+        marks_and_headings.append((mark, heading))
+        sub_marks = mark.kids
+    # 在第一个需要合并的经之前的节点创建 doc
+
+    if doc_path is None:
+        merge_or_not = new_page_or_not.merge_or_not(ngs, obj, ds_depth)
+        # 下级如果没有分页，此级就要合并
+        if merge_or_not:
+            doc_path, html, body = write_docs(doc_files, p_ngs + ngs, depth, lang, info)
+            doc_depth = depth
+
+    for sub_id_count, (namegroup, sub) in enumerate(obj, 1):
+
+        s_ngs = ngs + [namegroup]
+
+        if isinstance(sub, xl.Element):
+            write_doc6(info, p_ngs, s_ngs, level_offset, sub, doc_files, sub_marks, notes, lang,
+                                              marks_and_headings, depth + 1, sub_id_count, doc_path, html, body, doc_depth)
+        else:
+            write_tree6(info, ds_depth, p_ngs, s_ngs, sub, level_offset, doc_files, sub_marks, notes, lang,
+                                               marks_and_headings, depth + 1, sub_id_count, doc_path, html, body, doc_depth)
+
+def write_doc6(info, p_ngs, ngs, level_offset, obj, doc_files, marks, notes, lang, marks_and_headings, depth, id_count, doc_path, html, body, doc_depth):
+    if doc_path is None:
+        doc_path, html, body = write_docs(doc_files, p_ngs + ngs, depth, lang, info)
+        doc_depth = depth
+
+
+    # 把上级的 heading 写入文档先
+    write_marks_and_headings(marks_and_headings, body, doc_path)
+
+    if ngs:
+        mark, heading = make_mh(info, ngs, obj, marks, depth, id_count, level_offset)
+        mark.href = "{}#{}".format(doc_path, heading.attrs["id"])
+        body.kids.append(heading)
+
+    for e in obj.kids:
+        if isinstance(e, xl.Element) and re.match(r"^n\d+$", e.tag):
+            break
+
+        else:
+            html_es = xml_es_to_html([e], obj, notes, doc_depth, lang)
+            body.kids.extend(html_es)
+
 
 def write_tree5(info, book_data, level_offset, obj, doc_files, marks, notes, lang, marks_and_headings, depth, id_count, doc_path, html, body, doc_depth=None):
     sub_marks = marks
@@ -237,7 +286,6 @@ def write_tree5(info, book_data, level_offset, obj, doc_files, marks, notes, lan
         mark, heading = make_mh(info, namegroups, obj, marks, depth, id_count, level_offset)
         marks_and_headings.append((mark, heading))
         sub_marks = mark.kids
-    print("heihei:", namegroups)
     # 在第一个需要合并的经之前的节点创建 doc
     if doc_path is None:
         _, sub = obj[0]
@@ -298,8 +346,8 @@ def make_mh(info, namegroups, obj, marks, depth, id_count, level_offset):
     marks.append(mark)
     return mark, heading
 
-def write_docs(doc_files, namegroups, depth, lang, info):
-    test_path = [base.namegroup_to_filename(_ng) for _ng in namegroups]
+def write_docs(doc_files, ngs, depth, lang, info):
+    test_path = [base.namegroup_to_filename(ng) for ng in ngs]
     if not test_path:
         test_path = [lang.c(info.name)]
     doc_path = epub_utils.make_safe_path(doc_files.keys(), posixpath.join(*test_path) + ".xhtml")

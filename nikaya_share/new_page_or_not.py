@@ -28,6 +28,68 @@ from hyncdzj import book_modules
      检查子级的类型是xml的数量是否有大于 1，如果大于 1 说明子级是经，接下来就按照 3 的判断方法。
 """
 
+def merge_or_not(ngs, obj, ds_depth, max_hanzi_in_line=35, max_line_in_page=29):
+    namegroups = ngs
+
+    if ds_depth > 0:
+
+        serial_count = 0
+        on_serial = False
+
+        for start, _end, _name in namegroups:
+            if isinstance(start, int):
+                serial_count += 1
+                on_serial = True
+            else:
+                on_serial = False
+
+        if serial_count < ds_depth:
+            obj_type = "before_or_shesong"
+            small_count, medium_count, large_count = count_docs_size(obj, max_hanzi_in_line, max_line_in_page)
+            v = is_ratio_greater(small_count, large_count + medium_count, 1)
+            return v
+
+        elif serial_count == ds_depth:
+            if on_serial:
+                obj_type = "is_doc"
+                return True
+            else:
+                obj_type = "after_doc"
+                return True
+
+        raise Exception(ngs)
+
+    # 没有编号的书籍
+    else:
+        xml_count = 0
+        list_count = 0
+        for name, sub in obj:
+            if isinstance(sub, list):
+                list_count += 1
+            else:
+                xml_count += 1
+
+        if xml_count > 1:
+            obj_type = "is_doc"
+            small_count, medium_count, large_count = count_docs_size(obj, max_hanzi_in_line, max_line_in_page)
+            v = is_ratio_greater(small_count, large_count + medium_count, 1)
+            return v
+
+        elif xml_count == 1:
+            return False
+
+        else:
+            return False
+
+
+def get_serial_depth_by_ngs(ngs):
+    depth = 0
+    for (start, end, name) in ngs:
+        if isinstance(start, int):
+            depth += 1
+    return depth
+
+
 def new_page_or_not_smart(data, obj, max_hanzi_in_line = 35, max_line_in_page = 29):
     ancestor_objs = get_ancestor_objs(data, obj)
     if ancestor_objs:
@@ -51,7 +113,7 @@ def new_page_or_not_smart(data, obj, max_hanzi_in_line = 35, max_line_in_page = 
 
 def _new_page_or_not(data, obj, max_hanzi_in_line, max_line_in_page):
     namegroups = get_keys(data, obj)
-    serial_depth = get_serial_depth(data)
+    serial_depth = get_data_depth(data)
 
     if serial_depth > 0:
         serial_count = 0
@@ -128,7 +190,7 @@ def get_ancestor_objs(data, obj):
 
 
 # 遍历 data 查找 serial 深度
-def get_serial_depth(data):
+def get_data_depth(data):
     max_depth = 0
     for namegroup, sub in data:
         (start, end, name) = namegroup
@@ -137,7 +199,7 @@ def get_serial_depth(data):
         else:
             sub_depth = 0
         if isinstance(sub, list):
-            sub_sub_depth = get_serial_depth(sub)
+            sub_sub_depth = get_data_depth(sub)
         else:
             sub_sub_depth = 0
         cur_depth = sub_depth + sub_sub_depth

@@ -131,6 +131,7 @@ def make_series(info):
         if info in infos:
             return "·".join(["元亨寺　漢譯南傳大藏經"] + folders)
 
+    return "元亨寺"
     raise Exception(info)
 
 def xxx(info):
@@ -152,6 +153,12 @@ def xxx(info):
         background_color = "#228fbd"
         font_color = "#5c1c01"
         book_name_font_size = "20vh"
+
+    elif info.name == "漢譯南傳大藏經":
+        background_color = "white"
+        font_color = "black"
+        book_name_font_size = "20vh"
+
     else:
         raise Exception(info.name)
 

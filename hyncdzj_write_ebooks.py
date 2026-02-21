@@ -232,22 +232,27 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, collectio
                 try_run_job()
 
         if collection:
+
             if "epub" in my_types:
                 tag = None
                 info_datas = []
+                count = 0
                 for m2 in book_modules.all_modules:
                     load_path, tag2 = get_load_path(m2.info)
                     tag = tag2 or tag
                     info_datas.append((m2.info, get_data(lang, m2.info, load_path)))
+                    count += 1
+                    if count > 2:
+                        break
 
                 file_name = "{}_{}".format(zh_name, lang.c("合訂本"))
                 if tag:
                     file_name += "_{}".format(tag)
 
-                file_name += "_{}_{}".format({}, lang.zh, date)
+                file_name += "_{}_{}".format(lang.zh, date)
                 file_name += ".epub"
                 full_file_name = os.path.join(temp_td.name, file_name)
-                job = ("{}/{}".format(lang.zh, file_name), hyncdzj.epub.build_epub_collection(zh_name, cover_dir, full_file_name, info_datas, lang, tag))
+                job = ("{}/{}".format(lang.zh, file_name), hyncdzj.epub.build_epub_collection, (zh_name, cover_dir, full_file_name, info_datas, lang, tag))
                 jobs.append(job)
                 total += 1
                 try_run_job()
