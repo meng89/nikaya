@@ -1,19 +1,16 @@
-import typing
 import re
 import os
 import string
 import subprocess
 import shutil
-import math
-
 from datetime import datetime
 
 import xl
 
 import config
-from . import epub, ebook_utils, utils
-from public_modules import tag_str
-from hyncdzj import book_modules
+from . import epub, ebook_utils
+from nikaya_share import new_page_or_not
+
 
 MAIN = "main.tex"
 SUTTAS = "suttas.tex"
@@ -57,7 +54,8 @@ fonts = {
     "hei": "ss"
 }
 
-def build_pdf(full_path, data, module, lang, layout, font, tag, exit_after_done=False):
+
+def build_pdf(cover_dir, full_path, data, info, lang, layout, font, tag, exit_after_done=False):
     work_dir = full_path + "_work"
     out_dir = full_path + "_out"
     shutil.copytree(config.TEX_DIR, work_dir)
@@ -65,14 +63,15 @@ def build_pdf(full_path, data, module, lang, layout, font, tag, exit_after_done=
     os.makedirs(out_dir, exist_ok=True)
 
     w, h = layouts[layout]["cover_size"]
-    cover_image = ebook_utils.make_cover_image(module, lang, tag, w, h)
+    cover_image = ebook_utils.make_cover_image(cover_dir, info, lang, tag, w, h)
 
-    write_main_tex(work_dir, module, lang, layout, font, cover_image)
+    write_main_tex(work_dir, info, lang, layout, font, cover_image)
 
     #shutil.copy(os.path.join(config.HYNCDZJ_TEX_DIR, "{}.tex".format(layout)), work_dir)
 
     f = open(os.path.join(work_dir, SUTTAS), "w")
-    write_tree(f, module, [], data, lang, layouts[layout]["max_hanzi_in_line"], layouts[layout]["max_line_in_page"])
+    for _, obj in data:
+        write_tree(-1, data, f, info, obj, lang, layouts[layout]["max_hanzi_in_line"], layouts[layout]["max_line_in_page"])
     f.close()
 
     write_fontstex(work_dir, lang)
@@ -119,49 +118,38 @@ def build_pdf(full_path, data, module, lang, layout, font, tag, exit_after_done=
     stderr_file.close()
 
 
-def write_tree(f, module, namegroups, data: list, lang, max_hanzi_in_line, max_line_in_page, new_page=None):
+def write_tree(level_offset, book_data, f, info, obj, lang, max_hanzi_in_line, max_line_in_page):
 
-    if new_page is None and maybe_sub_is_doc(data) is True:
-        small_count, medium_count, large_count = count_docs_size(data, max_hanzi_in_line, max_line_in_page)
-        new_page = is_ratio_greater(large_count + medium_count, small_count, 1)
-        #print("here1", new_page, namegroups)
+    new_page = new_page_or_not.new_page_or_not_smart(book_data, obj, max_hanzi_in_line, max_line_in_page)
 
-    for index, (namegroup, obj) in enumerate(data):
-        if new_page is True and index > 0:
-            f.write("\\page[yes]\n")
+    namegroups = new_page_or_not.get_keys(book_data, obj, [])
+    #print("hh:",namegroups, new_page)
 
-        cur_namegroups = namegroups + [namegroup]
-        depth = len(cur_namegroups)
+    depth = len(namegroups)
+    if depth > 9:
+        print("depth too long", namegroups)
+        exit()
 
-        _, _, _, mark_name, title_range, title_name = epub.make_mark_and_heading(module, cur_namegroups, obj, 1)
+    _, _, _, mark_name, title_range, title_name = epub.make_mark_and_heading(info, namegroups, obj, 1, level_offset)
 
-        if title_range is not None:
-            sc_key = title_range
-            #title = "\\goto{{{}}}[url(https://suttacentral.net/{})]".format(title_range, title_range) + " " + title_name
-        else:
-            sc_key = None
-            #title = title_name
+    if title_range is not None:
+        sc_key = title_range
+        # title = "\\goto{{{}}}[url(https://suttacentral.net/{})]".format(title_range, title_range) + " " + title_name
+    else:
+        sc_key = None
+        # title = title_name
 
-        f.write(startsec(lang, depth, title_name, mark_name, title_name, sc_key))
+    f.write(startsec(lang, depth, title_name, mark_name, title_name, sc_key))
 
-        if isinstance(obj, xl.Element):
-            write_doc(f, obj, lang)
+    if isinstance(obj, xl.Element):
+        write_doc(f, obj, lang)
+    else:
+        assert isinstance(obj, list)
+        for _, sub in obj:
+            write_tree(level_offset, book_data, f, info, sub, lang, max_hanzi_in_line, max_line_in_page)
 
-        else:
-            assert isinstance(obj, list)
-            if new_page is None:
-                sub_new_page = None
-            else: # subs 已经被判定为doc了，是否分页也已经决定了，所以改标志为False，防止后续被分页。
-                sub_new_page = False
-            #print("here2", sub_new_page)
-            write_tree(f, module, cur_namegroups, obj, lang, max_hanzi_in_line, max_line_in_page, sub_new_page)
-
-        f.write(stopsec(depth))
-        if new_page is True:
-            f.write("\\page[yes]\n")
-
-    check = maybe_sub_is_doc(data)
-    if check:
+    f.write(stopsec(depth))
+    if new_page:
         f.write("\\page[yes]\n")
 
 
@@ -220,7 +208,7 @@ def ntrelpath(path1, path2):
     return path
 
 
-def write_main_tex(work_dir, module, lang, layout, font, cover_image):
+def write_main_tex(work_dir, info, lang, layout, font, cover_image):
     f = open(os.path.join(work_dir, MAIN), "r+", encoding='utf-8')
     main_t = f.read()
 
@@ -229,9 +217,9 @@ def write_main_tex(work_dir, module, lang, layout, font, cover_image):
         font_type="type-imp-myfonts-sc" if isinstance(lang, ebook_utils.SC) else "type-imp-myfonts-tc",
         layout=layout+".tex",
         font=fonts[font],
-        title=module.info.name,
-        author="、".join(module.info.translators) + lang.c("譯"),
-        keyword=lang.c("上座部佛教、南傳佛教、") + module.info.name,
+        title=info.name,
+        author="、".join(info.translators) + lang.c("譯"),
+        keyword=lang.c("上座部佛教、南傳佛教、") + info.name,
         date=date,
         cover_image=cover_image,
     )
@@ -299,6 +287,8 @@ _map = {
     7: ("subsubsubsubsubject", "\\tfxx "),
     8: ("subsubsubsubsubsubject", "\\tfxx "),
     9: ("subsubsubsubsubsubsubject", "\\tfxx "),
+    10: ("subsubsubsubsubsubsubsubject", "\\tfxx "),
+    11: ("subsubsubsubsubsubsubsubject", "\\tfxx "),
 }
 
 def startsec(lang, depth, title, bookmark, toctext, sc_key=None, abo_key=None):
@@ -453,96 +443,3 @@ def xxx(p_kids):
         delete_tail = False
 
     return  kids, delete_head, delete_tail
-
-
-def get_max_depth(data, depth = 0):
-    max_depth = 0
-    for _, obj in data:
-        if isinstance(obj, list):
-            max_depth = max(max_depth, get_max_depth(obj, depth + 1))
-    return max_depth
-
-
-def maybe_sub_is_doc(obj:list):
-    node_count = 0
-    doc_count = 0
-    for namegroup, sub in obj:
-        if isinstance(sub, list):
-            node_count += 1
-        elif isinstance(sub, xl.Element):
-            doc_count += 1
-        else:
-            raise Exception
-
-    if doc_count > 1:
-        return True
-    else:
-        return False
-
-
-def is_sub_doc(obj:list):
-    node_count = 0
-    doc_count = 0
-    for namegroup, sub in obj:
-        if isinstance(sub, xl.Xml):
-            doc_count += 1
-        elif isinstance(sub, list):
-            node_count += 1
-    if doc_count > 1:
-        return True
-    else:
-        return False
-
-
-
-
-def count_docs_size(obj: list, max_hanzi_in_line, max_line_in_page, other_rate=0.5):
-    small_page_count = 0
-    large_page_count = 0
-    medium_page_count = 0
-
-
-    for name, sub in obj:
-        #line_count = 3 # 标题和空格
-        page_line_count = 0
-        line_count = 0
-        if isinstance(sub, xl.Xml):
-            line_count += count_xml_line(sub, max_hanzi_in_line, other_rate)
-        elif isinstance(sub, list):
-            line_count = count_data_line(sub, max_hanzi_in_line, other_rate)
-
-        if line_count < max_line_in_page * 0.7:
-            small_page_count += 1
-        elif line_count > max_line_in_page:
-            large_page_count += 1
-        else:
-            medium_page_count += 1
-    return small_page_count, medium_page_count, large_page_count
-
-
-def count_data_line(obj: list, max_hanzi_in_line, other_rate):
-    line_count = 3
-    for _, sub in obj:
-        if isinstance(sub, list):
-            line_count += count_data_line(sub, max_hanzi_in_line, other_rate)
-        elif isinstance(sub, xl.Xml):
-            line_count += count_xml_line(sub, max_hanzi_in_line, other_rate)
-    return line_count
-
-def count_xml_line(obj: xl.Xml, max_hanzi_in_line, other_rate):
-    line_count = 3
-    root = obj.root
-    for p in root.find_kids("p"):
-        txt = utils.line_to_txt(p.kids)
-        cjk_count, other_count = tag_str.count(txt.strip())
-        line_count += math.ceil((cjk_count + 2 + other_count * other_rate) / max_hanzi_in_line)
-    return line_count
-
-def is_ratio_greater(num1, num2, threshold):
-    try:
-        if num1 / num2 > threshold:
-            return True
-        else:
-            return False
-    except ZeroDivisionError:
-        return True

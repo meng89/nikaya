@@ -36,7 +36,7 @@ class Notes:
             if _path != last_page_path:
                 last_page_path = _path
                 title = self.note_name+"第{}页".format(self._get_page_index(index))
-                html, body = epub.make_doc(last_page_path, lang, title)
+                html, body = epub.make_doc(1, lang, title)
                 body.attrs["class"] = "note"
                 #last_html = html
                 h1 = body.ekid("h1")

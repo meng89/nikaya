@@ -126,40 +126,36 @@ class SC(Lang):
         return "简体版"
 
 
-def make_series(module):
-    for dire, ms in book_modules.categories:
-        if module in ms:
-            series = "元亨寺　漢譯南傳大藏經·" + dire
-            if module in book_modules.dh_modules:
-                series += "·小部"
-            return series
-    raise Exception
+def make_series(info):
+    for folders, infos in book_modules.all_infos:
+        if info in infos:
+            return "·".join(["元亨寺　漢譯南傳大藏經"] + folders)
 
+    raise Exception(info)
 
-
-def xxx(m):
-    name = m.info.name
+def xxx(info):
+    name = info.name
     #if name.endswith("經"):
     #    name = name[:-1]
 
-    if m in book_modules.jing[1] or m in book_modules.dh_modules or m in book_modules.wai[1]:
+    if info in book_modules.jing_infos[1] or info in book_modules.xiao_infos[1] or info in book_modules.wai_infos[1]:
         background_color = "#4ea455"
         font_color = "#5F005A"
         book_name_font_size = "20vh"
 
-    elif m in book_modules.lv[1]:
+    elif info in book_modules.lv_infos[1]:
         background_color = "orange"
         font_color = "#073c9f"
         book_name_font_size = "20vh"
 
-    elif m in book_modules.lun[1]:
+    elif info in book_modules.lun_infos[1]:
         background_color = "#228fbd"
         font_color = "#5c1c01"
         book_name_font_size = "20vh"
     else:
-        raise Exception(m.info.name)
+        raise Exception(info.name)
 
-    if m in book_modules.dh_modules or m in book_modules.wai[1]:
+    if info in book_modules.xiao_infos[1] or info in book_modules.wai_infos[1]:
         background_color = "#abc476"
         font_color = "#71356c"
         book_name_font_size = "12.5vh"
@@ -181,16 +177,16 @@ def xxx(m):
     return name, background_color, font_color, book_name_font_size, book_name_space_margin
 
 
-def make_cover_image(module, lang: Lang, tag=None, width=1600, height=2560):
+def make_cover_image(cover_dir, info, lang: Lang, tag=None, width=1600, height=2560, collection=False):
     # translated_date = read_mtime(data)
-    filename = "{}_{}_{}".format(module.info.name, lang.zh, today())
+    filename = "{}_{}_{}".format(info.name, lang.zh, today())
     xhtml_filename = filename + ".xhtml"
 
     image_filename = "{}_{}x{}.png".format(filename, width, height)
 
-    os.makedirs(config.HYNCDZJ_COVER_DIR, exist_ok=True)
+    os.makedirs(cover_dir, exist_ok=True)
 
-    image_path = os.path.join(config.HYNCDZJ_COVER_DIR, image_filename)
+    image_path = os.path.join(cover_dir, image_filename)
 
     if not os.path.exists(image_path):
         _template_str = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../resource/cover.xhtml")).read()
@@ -219,7 +215,7 @@ def make_cover_image(module, lang: Lang, tag=None, width=1600, height=2560):
             font_name = "Source Han Sans TW"
             book_name_font_name = "AR PL UKai TW"
 
-        new_name, background_color, font_color, book_name_font_size, book_name_space_margin = xxx(module)
+        new_name, background_color, font_color, book_name_font_size, book_name_space_margin = xxx(info)
 
         dharma_wheel_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                          "../resource/Original_Dharma_Wheel.svg")
@@ -235,14 +231,14 @@ def make_cover_image(module, lang: Lang, tag=None, width=1600, height=2560):
             book_name_space_margin = book_name_space_margin,
             translate_font_name = font_name,
             footer_font_name = font_name + " Medium",
-            series = lang.c(make_series(module)),
+            series = lang.c(make_series(info)),
             book_name="<span class=\"space\">&#8204;</span>".join(lang.c(new_name)),
-            translator = "、".join(module.info.translators),
+            translator = "、".join(info.translators),
             translate = "　" + lang.c("譯"),
             footer = lang.c("基于 CBETA 資料") + "　" + footer2,
         )
 
-        cover_xhtml_path = os.path.join(config.HYNCDZJ_COVER_DIR, xhtml_filename)
+        cover_xhtml_path = os.path.join(cover_dir, xhtml_filename)
         open(cover_xhtml_path, "w").write(doc_str)
 
 

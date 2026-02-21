@@ -24,8 +24,9 @@ body > * {
 }
 
 h1, h2, h3, h4, h5, h6, h7 {
+    display: block; /* for h7.. */
     font-family: "Source Sans 3", "Source Sans 4", /* Linux */
-                 "DejaVu Sans" /* Linux 兜底 */
+                 "DejaVu Sans", /* Linux 兜底 */
                  "Segoe UI", /* Windows */
                  "Helvetica Neue", /* MacOS */
                  Arial, /* Windows MacOS 兜底 */

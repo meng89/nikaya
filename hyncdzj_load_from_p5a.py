@@ -716,7 +716,7 @@ def ld_get(d, key):
     return None
 
 
-def merge_same_name(d: base.Folder):
+def merge_same_name(d):
     new_list = []
     for name, obj in d:
         if name in ("", None):
@@ -733,7 +733,7 @@ def merge_same_name(d: base.Folder):
     return new_list
 
 
-def remove_single_root(d: base.Folder):
+def remove_single_root(d):
     if len(d) == 1:
         name, single = d[0]
         d = single
@@ -742,7 +742,7 @@ def remove_single_root(d: base.Folder):
 ########################################################################################################################
 
 
-def split_folder_twn(data: base.Folder):
+def split_folder_twn(data):
     new_folder = []
     for name, obj in data:
         if isinstance(obj, list):

@@ -58,7 +58,49 @@ def try_run_job(do_print=True):
         jobs.pop(0)
 
 
-def main(_help=False, debug=False, types=None, langs=None, books=None, layouts=None, fonts=None):
+sc_datas = []
+tc_datas = []
+def get_data(lang, info, load_dir):
+    tc_data = None
+    for info2, data in tc_datas:
+        if info2 == info:
+            tc_data = data
+
+    if tc_data is None:
+        print("加载数据: {:2}".format(info.name), end="", flush=True)
+        tc_data = base.load_from_disk(load_dir)
+        print(" ✅")
+        tc_datas.append((info, tc_data))
+
+    if isinstance(lang, hyncdzj.ebook_utils.TC):
+        return tc_data
+
+    for info2, data in sc_datas:
+        if info2 == info:
+            return data
+    #print("机换数据: {:2}".format(info.name), end="", flush=True)
+    sc_data = hyncdzj.trans_data(tc_data, lang.c)
+    #print(" ✅")
+    sc_datas.append((info, sc_data))
+    return sc_data
+
+def get_load_path(info):
+    simple_filled_path = os.path.join(config.SIMPLE_FILLED_DIR, info.name)
+    simple_filling_path = os.path.join(config.SIMPLE_FILLING_DIR, info.name)
+
+    if os.path.exists(simple_filled_path):
+        load_path = simple_filled_path
+        tag = "已充填"
+    elif os.path.exists(simple_filling_path):
+        load_path = simple_filling_path
+        tag = "充填中"
+    else:
+        load_path = os.path.join(config.HYNCDZJ_SIMPLE_XML_DIR, info.name)
+        tag = None
+
+    return load_path, tag
+
+def main(_help=False, debug=False, types=None, langs=None, books=None, collection=False, layouts=None, fonts=None):
     config.DEBUG = debug
 
     all_types = ["pdf", "epub"]
@@ -111,6 +153,7 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, layouts=N
         print("types:", all_types)
         print("langs:", [lang.en for lang in all_langs])
         print("books:", [m.__name__.split(".")[-1] for m in book_modules.all_modules])
+        print("collection:", collection)
         print("layouts:", list(all_layouts))
         print("fonts:", list(all_fonts))
         print()
@@ -128,42 +171,21 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, layouts=N
 
     global total
 
-    config.HYNCDZJ_COVER_DIR = os.path.join(temp_td.name, "cover")
+    cover_dir = os.path.join(temp_td.name, "cover")
     date = datetime.today().strftime('%Y.%m.%d')
 
     dirs = set()
-    for count, m in enumerate(my_modules, start=1):
 
-        print("Loading data: {:2}/{} {}".format(count, len(my_modules), m.info.name), end="", flush=True)
-        simple_filled_path = os.path.join(config.SIMPLE_FILLED_DIR, m.info.name)
-        simple_filling_path = os.path.join(config.SIMPLE_FILLING_DIR, m.info.name)
+    for lang in my_langs:
+        zh_name = lang.c("元亨寺_漢譯南傳大藏經")
 
-        if os.path.exists(simple_filled_path):
-            data = base.load_from_disk(simple_filled_path)
-            tag = "已充填"
-        elif os.path.exists(simple_filling_path):
-            data = base.load_from_disk(simple_filling_path)
-            tag = "充填中"
-        else:
-            simple_path = os.path.join(config.HYNCDZJ_SIMPLE_XML_DIR, m.info.name)
-            data = base.load_from_disk(simple_path)
-            tag = None
+        for count, m in enumerate(my_modules, start=1):
+            load_path, tag = get_load_path(m.info)
 
-        print(" ✅")
-        time.sleep(0.1)
-
-        for lang in my_langs:
-
+            data = get_data(lang, m.info, load_path)
             if isinstance(lang, hyncdzj.ebook_utils.SC):
-                translated_data = hyncdzj.trans_data(data, lang.c)
-                if debug:
-                    _noindex_data = hyncdzj.trans_noindex_data(data)
-                    sc_data_path = os.path.join(temp_td.name, "sc_data", m.info.name)
-                    base.write_to_disk(sc_data_path, _noindex_data)
-            else:
-                translated_data = data
-
-            zh_name = lang.c("元亨寺_漢譯南傳大藏經")
+                sc_data_path = os.path.join(temp_td.name, "sc_data", m.info.name)
+                base.write_to_disk(sc_data_path, data)
 
             classi = [lang.c(x) for x in book_modules.get_classification(m)]
 
@@ -184,17 +206,15 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, layouts=N
 
                         dirs.add(package_dir)
 
-
                         full_file_name = os.path.join(temp_td.name, package_dir, *classi, file_name)
 
                         os.makedirs(os.path.dirname(full_file_name), exist_ok=True)
-                        job = ("{}/{}_{}/{}".format(lang.zh, layout, font, file_name), hyncdzj.pdf.build_pdf, (full_file_name, translated_data, m, lang, layout, font, tag, True))
+                        job = ("{}/{}_{}/{}".format(lang.zh, layout, font, file_name), hyncdzj.pdf.build_pdf, (cover_dir, full_file_name, data, m.info, lang, layout, font, tag, True))
                         jobs.append(job)
                         total += 1
                         try_run_job()
 
             if "epub" in my_types:
-                epub_dir_name = zh_name+ "_" + lang.zh + "_EPUB"
                 file_name = "{}".format(lang.c(m.info.name))
                 if tag:
                     file_name += "_{}".format(tag)
@@ -207,7 +227,28 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, layouts=N
                 full_file_name = os.path.join(temp_td.name, package_dir, *classi, file_name)
 
                 os.makedirs(os.path.dirname(full_file_name), exist_ok=True)
-                jobs.append(("{}/{}".format(lang.zh, file_name), hyncdzj.epub.build_epub, (full_file_name, translated_data, m, lang, tag, True)))
+                jobs.append(("{}/{}".format(lang.zh, file_name), hyncdzj.epub.build_epub, (cover_dir, full_file_name, data, m.info, lang, tag)))
+                total += 1
+                try_run_job()
+
+        if collection:
+            if "epub" in my_types:
+                tag = None
+                info_datas = []
+                for m2 in book_modules.all_modules:
+                    load_path, tag2 = get_load_path(m2.info)
+                    tag = tag2 or tag
+                    info_datas.append((m2.info, get_data(lang, m2.info, load_path)))
+
+                file_name = "{}_{}".format(zh_name, lang.c("合訂本"))
+                if tag:
+                    file_name += "_{}".format(tag)
+
+                file_name += "_{}_{}".format({}, lang.zh, date)
+                file_name += ".epub"
+                full_file_name = os.path.join(temp_td.name, file_name)
+                job = ("{}/{}".format(lang.zh, file_name), hyncdzj.epub.build_epub_collection(zh_name, cover_dir, full_file_name, info_datas, lang, tag))
+                jobs.append(job)
                 total += 1
                 try_run_job()
 

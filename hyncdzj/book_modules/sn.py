@@ -49,6 +49,15 @@ def name_to_group(name: str, xiangying_index):
     if name.endswith("篇"):
         return (None, None, name), xiangying_index
 
+    if name == "〔五一～五五〕第五十一～五十五　不現見（一～五）":
+        return (None, None, "不現見"), xiangying_index
+    if name == "第五十一　不現見（一）":
+        return (51, 51, "不現見"), xiangying_index
+    if name == "第五十二～五十四　不現見（二～四）":
+        return(52, 54, "不現見"), xiangying_index
+    if name == "第五十五　不現見（五）":
+        return (55, 55, "不現見"), xiangying_index
+
     m = re.match(r"^第[一二三四五六七八九十〇]+　(\S+)$", name)
     if m:
         new_name = m.group(1)
@@ -75,6 +84,13 @@ def name_to_group(name: str, xiangying_index):
         new_name = m.group(2)
         return (start, end, new_name), xiangying_index
 
+    if name == "〔一三～二〇〕第三～第十　金環——地方之美人":
+        return (None, None, "金環——地方之美人"), xiangying_index
+
+    # 界蘊品 里
+    if name == "〔一二～二〇〕第二～第十":
+        return (None, None, None), xiangying_index
+
     #'〔七二～八〇〕第二～第十\u3000不知（之一）'
     #'〔二五～二六〕第三～四\u3000無常（一～二）'
     #'〔一一～二〇〕第十一\u3000布施利益（一）'
@@ -88,12 +104,10 @@ def name_to_group(name: str, xiangying_index):
         return(start, end, new_name), xiangying_index
 
     if name == "〔三八～四三〕第八　父、第九　兄弟、第十　姊妹、第十一　子、第十二　女、第十三　妻":
-        start = 38
-        end = 43
+        #start = 38
+        #end = 43
         new_name = "父、兄弟、姊妹、子、女、妻"
-        return (start, end, new_name), xiangying_index
+        return (None, None, new_name), xiangying_index
 
-    if name == "第五十二～五十四\u3000不現見（二～四）":
-        return (52, 54, "不現見（二～四）"), xiangying_index
 
     return (None, None, name), xiangying_index

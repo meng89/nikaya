@@ -4,6 +4,7 @@ import uuid
 import math
 import posixpath
 import string
+import sys
 from urllib.parse import urlsplit
 
 import cn2an
@@ -12,17 +13,114 @@ import epubpacker
 import xl
 
 import config
-from . import base
+from nikaya_share import base
 from . import ebook_utils
-import hyncdzj.utils
+from nikaya_share import utils
 import hyncdzj.note
-#from public_modules import tag_str
+from nikaya_share import new_page_or_not, epub_utils
+from hyncdzj.book_modules import all_infos
+
+
+import sys
+sys.setrecursionlimit(1000000)
+
+
+def write_tree_to_userfiles(pre_path, tree, userfiles):
+    for name, obj in tree:
+        my_path = posixpath.join(pre_path, name)
+        if isinstance(obj, xl.Xml):
+            pass
+
+
+def make_tree_data(data_infos):
+    tree_data = []
+    data2 = []
+    for info, data in data_infos:
+        for dirs, infos2 in all_infos:
+            for info2 in infos2:
+                if info2 == info:
+                    make_tree_data2(info.name, data, dirs, tree_data)
+                    data2.append((len(dirs), info, data))
+
+    return tree_data, data2
+
+def make_tree_data2(name, obj, dirs, data):
+    for dir_ in dirs:
+        data = make_sub_data(data, dir_)
+    data.append(((None, None, name), obj))
+    return data
+
+def make_sub_data(data, name):
+    for (_, _, name2), sub in data:
+        if name == name2:
+            return sub
+    sub_data = []
+    data.append(((None, None, name), sub_data))
+    return sub_data
+
+
+def build_epub_collection(title, cover_dir, full_path, data_infos, lang, tag):
+    all_book_data, data2 = make_tree_data(data_infos)
+    book_names = [lang.c(title)]
+    for info, data in data_infos:
+        data.append((lang.c(info.name), data))
+
+    my_uuid = get_uuid("".join(book_names) + lang.en)
+    epub = make_epub(title, title, my_uuid.urn)
+
+    notes = hyncdzj.note.Notes()
+    doc_files = {}
+    translators = []
+    for len_dirs, info, data in data2:
+        book_data = [((None, None, lang.c(info.name)), data)]
+        print(lang.c(info.name))
+        write_tree5(info, all_book_data, -len_dirs, book_data, doc_files, epub.mark.kids, notes, lang, [], 1, 1, None, None, None)
+        translators.extend(info.translators)
+
+    book_info = base.Info(name="漢譯南傳大藏經", pali="Tipiṭaka", translators=tuple(translators))
+    image_path = ebook_utils.make_cover_image(cover_dir, book_info, lang, tag, collection=True)
+    _write_cover(epub, image_path, lang)
+
+    notes = hyncdzj.note.Notes()
+    _write_readme(epub, notes, lang)
+
+    write_doc_files(doc_files, epub)
+    write_note_spile(notes, epub, lang)
+
+    make_marks_href(epub.mark.kids)
+
+    epub.write(full_path)
+
+    write_css(epub, lang)
 
 
 
-def build_epub(full_path, data, module, lang, tag, exit_after_done=False):
+def make_epub(title, collection, identifier):
     epub = epubpacker.Epub()
-    title = lang.c(module.info.name)
+    epub.meta.titles = [title]
+    epub.meta.identifier = identifier
+    epub.meta.others.append(xl.Element("meta", {"property": "belongs-to-collection", "id": "c01"},
+                                       [collection]))
+    epub.meta.others.append(xl.Element("meta", {"refines": "#c01", "property": "collection-type"}, ["series"]))
+    return epub
+
+def write_doc_files(doc_files, epub):
+    for path, xml in doc_files.items():
+        xml: xl.Xml
+        epub.userfiles[path] = xml.to_str(do_pretty=True,
+                                          dont_do_tags=["title", "h1", "h2", "h3", "h4", "h5", "h6", "h7", "a", "span",
+                                                        "p"])
+        epub.spine.append(path)
+
+def write_note_spile(notes, epub, lang):
+    for title, path, page in notes.get_pages(lang):
+        epub.userfiles[path] = page
+        epub.spine.append(path)
+
+
+def build_epub(cover_dir, full_path, data, info, lang, tag):
+    epub = epubpacker.Epub()
+    title = lang.c(info.name)
     epub.meta.titles = [title]
 
     # epub.meta.creators = ["莊春江({})".format(lang.c("譯"))] #todo
@@ -43,18 +141,18 @@ def build_epub(full_path, data, module, lang, tag, exit_after_done=False):
     docs = []
     #bns = [module.short]
 
-    _write_cover(epub, ebook_utils.make_cover_image(module, lang, tag), lang)
+    image_path = ebook_utils.make_cover_image(cover_dir, info, lang, tag)
+    _write_cover(epub, image_path, lang)
     #_write_homage(module, epub.mark.kids, docs, ln, gn, lang) #todo
 
+    doc_files = {}
+    book_data = [((None, None, lang.c(info.name)), data)]
+    write_tree5(info, data, 0, data, doc_files, epub.mark.kids, notes, lang, [], 1, 1, None, None, None, 0)
 
-    # _make_suttas(module, epub.mark.kids, docs, [(1, None, None, module.info.name)], data, notes, lang)
-
-    write_tree(module, data, epub.mark.kids, docs, [(1, None, None, module.info.name)], notes, lang, [])
-
-    for path, xml in docs:
+    for path, xml in doc_files.items():
         xml: xl.Xml
         epub.userfiles[path] = xml.to_str(do_pretty=True,
-                                          dont_do_tags=["title", "h1", "h2", "h3", "h4", "a", "span", "p"])
+                                          dont_do_tags=["title", "h1", "h2", "h3", "h4", "h5", "h6", "h7", "a", "span", "p"])
         epub.spine.append(path)
 
     for title, path, page in notes.get_pages(lang):
@@ -67,27 +165,6 @@ def build_epub(full_path, data, module, lang, tag, exit_after_done=False):
     make_marks_href(epub.mark.kids)
 
     epub.write(full_path)
-
-    if exit_after_done:
-        exit()
-
-def write_css(epub, lang):
-    css_t = open(os.path.join(config.RESOURCE_DIR, "../resource/style.css"), "r").read()
-
-    if isinstance(lang, ebook_utils.SC):
-        heading_font_name = """ "Microsoft YaHei", "PingFang SC", "思源黑体 CN" """
-        body_font_name = """ "Source Han Serif SC", "SimSun", "Songti SC" """
-
-    else:
-        heading_font_name = """ "Microsoft JhengHei", "PingFang TC", "思源黑體 TW" """
-        body_font_name = """ "Source Han Serif TC", "PMingLiU", "Songti TC" """
-
-    css_str = string.Template(css_t).substitute(
-        heading_font_name = heading_font_name,
-        body_font_name = body_font_name,
-
-    )
-    epub.userfiles["style.css"] = css_str
 
 
 def make_marks_href(marks):
@@ -142,106 +219,103 @@ class IdGenerate:
         self._serial += 1
         return _id
 
-
-def write_tree(module, data, marks, docs, parent_namegroups, notes, lang, marks_and_headings):
-    for namegroup, obj in data:
-        file_index, start, end, name = namegroup
-        cur_namegroups = parent_namegroups + [namegroup]
-
-        doc_path = branch_to_doc_path(cur_namegroups)
-        html, body = make_doc(doc_path, lang, name)
-        id_generate = IdGenerate()
+def get_last_doc(docs):
+    for namegroup, (new_html, new_body) in docs:
+        pass
 
 
-        # 短经合并到一个页面
-        if isinstance(obj, list) and is_leaf(namegroup, obj) and is_join_needed(obj):
-            mark, heading, _, _, _, _,= make_mark_and_heading(module, cur_namegroups, obj, 1)
-            marks_and_headings.append((mark, heading))
-            marks.append(mark)
-            #body.kids.append(heading)
-            docs.append((doc_path, html))
+"""
+经的上级标题需要写入第一个经里。
 
-            for m, h in marks_and_headings:
-                _id = id_generate.get_one()
-                h.attrs["id"] = _id
-                body.kids.append(h)
-                m.href = "{}#{}".format(doc_path, _id)
-            marks_and_headings.clear()
 
-            write_leaf_to_page(module, obj, mark.kids, cur_namegroups, notes, lang, doc_path, html, body)
+"""
 
-        elif isinstance(obj, xl.Element):
-            docs.append((doc_path, html))
-            mark, heading, _, _, _, _ = make_mark_and_heading(module, cur_namegroups, obj, 2)
-            marks_and_headings.append((mark, heading))
-            marks.append(mark)
-            #body.kids.append(heading)
+def write_tree5(info, book_data, level_offset, obj, doc_files, marks, notes, lang, marks_and_headings, depth, id_count, doc_path, html, body, doc_depth=None):
+    sub_marks = marks
+    namegroups = new_page_or_not.get_keys(book_data, obj, [])
+    if namegroups:
+        mark, heading = make_mh(info, namegroups, obj, marks, depth, id_count, level_offset)
+        marks_and_headings.append((mark, heading))
+        sub_marks = mark.kids
+    print("heihei:", namegroups)
+    # 在第一个需要合并的经之前的节点创建 doc
+    if doc_path is None:
+        _, sub = obj[0]
+        sub_new_page = new_page_or_not.new_page_or_not_smart(book_data, sub)
+        # 下级如果没有分页，此级就要合并
+        if sub_new_page is False:
+            doc_path, html, body = write_docs(doc_files, namegroups, depth, lang, info)
+            doc_depth = depth
 
-            docs.append((doc_path, html))
-            for m, h in marks_and_headings:
-                _id = id_generate.get_one()
-                h.attrs["id"] = _id
-                body.kids.append(h)
-                m.href = "{}#{}".format(doc_path, _id)
-            marks_and_headings.clear()
+    for sub_id_count, (namegroup, sub) in enumerate(obj, 1):
 
-            write_doc_to_page(module, obj, mark.kids, cur_namegroups, notes, lang, doc_path, html, body, "doc_1")
 
+        if isinstance(sub, xl.Element):
+            doc_path, html, body = write_doc5(info, book_data, level_offset, sub, doc_files, sub_marks, notes, lang,
+                                              marks_and_headings, depth + 1, sub_id_count, doc_path, html, body, doc_depth)
         else:
-            assert isinstance(obj, list)
-            mark, heading, _, _, _, _ = make_mark_and_heading(module, cur_namegroups, obj, 1)
-            marks.append(mark)
-            marks_and_headings.append((mark, heading))
-            write_tree(module, obj, mark.kids, docs, cur_namegroups, notes, lang, marks_and_headings)
+            doc_path, html, body = write_tree5(info, book_data, level_offset, sub, doc_files, sub_marks, notes, lang,
+                                               marks_and_headings, depth + 1, sub_id_count, doc_path, html, body, doc_depth)
+
+    new_page = new_page_or_not.new_page_or_not_smart(book_data, obj)
+    if new_page:
+        doc_path, html, body = None, None, None
+    return doc_path, html, body
 
 
-def write_leaf_to_page(module, data, marks, parent_branch, notes, lang, doc_path, html, body):
-    for count, (namegroup, obj) in enumerate(data, start=1):
-        cur_namegroups = parent_branch + [namegroup]
-        doc_id = "doc_" + str(count)
-        mark, heading, _, _, _, _ = make_mark_and_heading(module, cur_namegroups, obj, 2)
-        marks.append(mark)
-        heading.attrs["id"] = doc_id
-        mark.href = doc_path + "#" + doc_id
+def write_doc5(info, book_data, level_offset, obj, doc_files, marks, notes, lang, marks_and_headings, depth, id_count, doc_path, html, body, doc_depth):
+    namegroups = new_page_or_not.get_keys(book_data, obj, [])
+
+    if doc_path is None:
+        doc_path, html, body = write_docs(doc_files, namegroups, depth, lang, info)
+        doc_depth = depth
+
+    # 把上级的 heading 写入文档先
+    write_marks_and_headings(marks_and_headings, body, doc_path)
+
+    if namegroups:
+        mark, heading = make_mh(info, namegroups, obj, marks, depth, id_count, level_offset)
+        mark.href = "{}#{}".format(doc_path, heading.attrs["id"])
         body.kids.append(heading)
-        write_doc_to_page(module, obj, mark.kids, parent_branch, notes, lang, doc_path, html, body, doc_id)
 
-
-def write_doc_to_page(module, obj, marks, cur_namegroups, notes, lang, doc_path, html, body, doc_id):
-    sub_count = 0
     for e in obj.kids:
         if isinstance(e, xl.Element) and re.match(r"^n\d+$", e.tag):
             break
 
-        elif isinstance(e, xl.Element) and e.tag == "sub":
-            name_group = sub_to_namegroup(e)
-            mark, heading, is_serial, _, _, _ = make_mark_and_heading(module, cur_namegroups + [name_group], obj, 3)
-            heading.attrs["class"] = "sub"
-            heading.attrs["id"] = "sub_" + str(sub_count)
-            if is_serial:
-                heading.attrs["class"] = heading.attrs["class"] + " serial_sub"
-            mark.href = doc_path + "#" + heading.attrs["id"]
-            marks.append(mark)
-            body.kids.append(heading)
-            sub_count += 1
-
-        elif isinstance(e, xl.Element) and e.tag.startswith("sub"):
-            name_group = sub_to_namegroup(e)
-            mark, heading, is_serial, _, _, _ = make_mark_and_heading(module, cur_namegroups + [name_group], obj, 3)
-            heading.attrs["class"] = "sub"
-            heading.attrs["id"] = "sub_" + str(sub_count)
-            mark.href = doc_path + "#" + heading.attrs["id"]
-            marks.append(mark)
-            body.kids.append(heading)
-            sub_count += 1
-
         else:
-            html_es = xml_es_to_html([e], obj, notes, doc_path, lang)
+            html_es = xml_es_to_html([e], obj, notes, doc_depth, lang)
             body.kids.extend(html_es)
 
+    new_page = new_page_or_not.new_page_or_not_smart(book_data, obj)
+    if new_page:
+        doc_path, html, body = None, None, None
+    return doc_path, html, body
 
-def make_mark_and_heading(module, namegroups, obj, heading_level):
-    file_index, start, end, name = namegroups[-1]
+
+def make_mh(info, namegroups, obj, marks, depth, id_count, level_offset):
+    mark, heading, _, _, _, _, = make_mark_and_heading(info, namegroups, obj, depth, level_offset)
+    heading.attrs["id"] = "id_{}_{}".format(depth, id_count)
+    marks.append(mark)
+    return mark, heading
+
+def write_docs(doc_files, namegroups, depth, lang, info):
+    test_path = [base.namegroup_to_filename(_ng) for _ng in namegroups]
+    if not test_path:
+        test_path = [lang.c(info.name)]
+    doc_path = epub_utils.make_safe_path(doc_files.keys(), posixpath.join(*test_path) + ".xhtml")
+    html, body = make_doc(depth, lang)
+    doc_files[doc_path] = html
+    return doc_path, html, body
+
+def write_marks_and_headings(marks_and_headings, body, doc_path):
+    for index, (m, h) in enumerate(marks_and_headings):
+        body.kids.insert(index, h)
+        m.href = "{}#{}".format(doc_path, h.attrs["id"])
+    marks_and_headings.clear()
+
+
+def make_mark_and_heading(info, namegroups, obj, heading_level, level_offset):
+    start, end, name = namegroups[-1]
     if start is None:
         range_start, range_end = read_range(obj)
         if range_start is None:
@@ -251,12 +325,12 @@ def make_mark_and_heading(module, namegroups, obj, heading_level):
     else:
         mark_range = ""
 
-    epub_heading = xl.Element("h{}".format(heading_level))
+    epub_heading = xl.Element("h{}".format(heading_level)) #max(heading_level + level_offset, 1)))
     serials = []
     serial_names = []
     last_start = None
     names = []
-    for (file_index, start, end, name) in namegroups:
+    for (start, end, name) in namegroups:
         if start is not None:
             serials.append((start, end))
             serial_names.append(name)
@@ -274,7 +348,7 @@ def make_mark_and_heading(module, namegroups, obj, heading_level):
         _range_str = ".".join(ranges)
         name_str = "/".join([or_kong(sn) for sn in serial_names])
 
-        range_str = module.info.abbr + _range_str
+        range_str = info.abbr + _range_str
         a = xl.Element("a", {"href": "https://suttacentral.net/" + range_str}, [range_str])
         epub_heading.kids.append(a)
         epub_heading.kids.append("　")
@@ -298,16 +372,16 @@ def read_range(obj):
 
 
 def read_start(obj):
-    if isinstance(obj, xl.Xml):
-        for e in obj.root.kids:
+    if isinstance(obj, xl.Element):
+        for e in obj.kids:
             if isinstance(e, xl.Element) and e.tag.startswith("sub"):
-                _file_index, start, _end, _name = sub_to_namegroup(e)
+                start, _end, _name = sub_to_namegroup(e)
                 if start is not None:
                     return start
         return None
     # is isinstance(obj, list)
     for sub_namegroup, sub_obj in obj:
-        _file_index, start, _end, _name = sub_namegroup
+        start, _end, _name = sub_namegroup
         if start is not None:
             return start
         else:
@@ -317,16 +391,16 @@ def read_start(obj):
     return None
 
 def read_end(obj: list):
-    if isinstance(obj, xl.Xml):
-        for e in obj.root.kids[::-1]:
+    if isinstance(obj, xl.Element):
+        for e in obj.kids[::-1]:
             if isinstance(e, xl.Element) and e.tag.startswith("sub"):
-                _file_index, _start, end, _name = sub_to_namegroup(e)
+                _start, end, _name = sub_to_namegroup(e)
                 if end is not None:
                     return end
         return None
 
     for sub_namegroup, sub_obj in obj[::-1]:
-        _file_index, _start, end, _name = sub_namegroup
+        _start, end, _name = sub_namegroup
         if end is not None:
             return end
         else:
@@ -390,10 +464,10 @@ def read_name_es_from_sub(e):
             name_es.append(x)
     return name_es
 
+
 ES = list[xl.Element | str]
 
-def xml_es_to_html(es: ES, root, notes: hyncdzj.note.Notes, doc_path, lang) -> ES:
-
+def xml_es_to_html(es: ES, root, notes: hyncdzj.note.Notes, doc_depth, lang) -> ES:
     new_es = []
     for e in es:
         if isinstance(e, xl.Element):
@@ -404,12 +478,12 @@ def xml_es_to_html(es: ES, root, notes: hyncdzj.note.Notes, doc_path, lang) -> E
                 key = m_t.group(1)
                 n_kids = get_note_by_key(root, key)
                 link = notes.add_note(n_kids)
-                href = relpath(link, doc_path)
+                href = relpath(link, "x/" * (doc_depth -2) + "xyz")
                 a.attrs["href"] = href
 
                 if len(e.kids) > 0:
                     a.attrs["class"] = "noteref"
-                    a.kids.extend(xml_es_to_html(e.kids, root, notes, doc_path, lang))
+                    a.kids.extend(xml_es_to_html(e.kids, root, notes, doc_depth, lang))
                 else:
                     a.attrs["class"] = "no_text_noteref"
                     a.kids.append("注")
@@ -418,7 +492,7 @@ def xml_es_to_html(es: ES, root, notes: hyncdzj.note.Notes, doc_path, lang) -> E
 
             elif e.tag == "p":
                 p = xl.Element("p")
-                p.kids.extend(xml_es_to_html(e.kids, root, notes, doc_path, lang))
+                p.kids.extend(xml_es_to_html(e.kids, root, notes, doc_depth, lang))
                 new_es.append(p)
 
             elif e.tag == "j":
@@ -428,14 +502,14 @@ def xml_es_to_html(es: ES, root, notes: hyncdzj.note.Notes, doc_path, lang) -> E
                 poem_wrapper.kids.extend([poem_author, poem])
                 if "a" in e.attrs.keys():
                     p = poem_author.ekid("p")
-                    p.kids.extend(xml_es_to_html([e.attrs["a"]], root, notes, doc_path, lang))
+                    p.kids.extend(xml_es_to_html([e.attrs["a"]], root, notes, doc_depth, lang))
 
                 add_space = False
                 if isinstance(e.kids[0].kids[0], str) and e.kids[0].kids[0][0] == "「":
                     add_space = True
                 for p in e.kids:
                     p2 = poem.ekid("p")
-                    _new_es = xml_es_to_html(p.kids, root, notes, doc_path, lang)
+                    _new_es = xml_es_to_html(p.kids, root, notes, doc_depth, lang)
                     if isinstance(p.kids[0], str) and p.kids[0][0] == "「":
                         p2_kids = _new_es
                     else:
@@ -487,86 +561,27 @@ def get_note_by_key(root: xl.Element, key: str):
     raise Exception("Note not found")
 
 
-def branch_to_doc_path(branch: list):
-    filenames = []
-    for namegroup in branch:
-        filename = base.fullnamegroup_to_filename(namegroup)
-        filenames.append(filename)
-    return posixpath.join("", *filenames) + ".xhtml"
 
 
-def branch_to_nums_and_names(branch: list):
-    nums = []
-    names = []
-    for namegroup in branch:
-        file_index, start, end, name = namegroup
-        if start is not None:
-            nums.append((start, end))
-            names.append(name)
+def write_css(epub, lang):
+    css_t = open(os.path.join(config.RESOURCE_DIR, "style.css"), "r").read()
 
-    return nums, names
+    if isinstance(lang, ebook_utils.SC):
+        heading_font_name = """ "Microsoft YaHei", "PingFang SC", "思源黑体 CN" """
+        body_font_name = """ "Source Han Serif SC", "SimSun", "Songti SC" """
 
-
-def is_join_needed(obj):
-    small_page, large_page = count_page(obj)
-    try:
-        if small_page / large_page > 1:
-            return True
-        else:
-            return False
-    except ZeroDivisionError:
-        return True
-
-
-def count_page(obj):
-    # 检查是否需要把这里面的所有页面都合并在一起
-    # 因为有些经文字太少，一些（哪些?）阅读器没有拼页功能，导致频繁翻页，上下相关的经文不在一个页面上。
-    small_page = 0
-    large_page = 0
-
-    for name, obj in obj:
-        if isinstance(obj, list):
-            small_page2, large_page2 = count_page(obj)
-            small_page += small_page2
-            large_page += large_page2
-            continue
-
-
-        line_count = 0
-        for p in obj.find_kids("p"):
-            txt = hyncdzj.utils.line_to_txt(p.kids)
-            line_count += math.ceil(len(txt)/40)
-
-        if line_count <= 30:
-            small_page += 1
-        else:
-            large_page += 1
-
-    return small_page, large_page
-
-
-def is_leaf(namegroup, obj):
-    if namegroup[1] is not None:
-        return False
-    if not isinstance(obj, list):
-        return False
-
-    file_count = 0
-    dir_count = 0
-
-    for (file_index, sub_start, sub_end, sub_name), sub_obj in obj:
-        if isinstance(sub_obj, list):
-            dir_count += 1
-        elif isinstance(sub_obj, xl.Xml) and sub_name is not None:
-            file_count += 1
-
-    if dir_count == 0:
-        return True
     else:
-        return False
+        heading_font_name = """ "Microsoft JhengHei", "PingFang TC", "思源黑體 TW" """
+        body_font_name = """ "Source Han Serif TC", "PMingLiU", "Songti TC" """
+
+    css_str = string.Template(css_t).substitute(
+        heading_font_name = heading_font_name,
+        body_font_name = body_font_name,
+    )
+    epub.userfiles["style.css"] = css_str
 
 
-def make_doc(doc_path, lang, title=None):
+def make_doc(depth, lang, title=None):
     html = xl.Element("html", {"xmlns:epub": "http://www.idpf.org/2007/ops",
                                "xmlns": "http://www.w3.org/1999/xhtml",
                                "xml:lang": lang.xml,
@@ -576,29 +591,12 @@ def make_doc(doc_path, lang, title=None):
     if title:
         _title = head.ekid("title", kids=[title])
 
-    _make_css_link(head, relpath("style.css", doc_path), "css1")
-    #_make_css_link(head, relpath("_css/user_css1.css", doc_path), "user_css1")
-    #_make_css_link(head, relpath("_css/user_css2.css", doc_path), "user_css2")
-    #_make_js_link(head, relpath(js.js1_path, doc_path), "js1")
-    #_make_js_link(head, relpath("_js/user_js1.js", doc_path), "user_js1")
-    #_make_js_link(head, relpath("_js/user_js2.js", doc_path), "user_js2")
+    href = "../" * (depth - 2) + "style.css"
+    link = head.ekid("link", {"rel": "stylesheet", "type": "text/css", "href": href})
+    link.attrs["id"] = "css1"
 
     body = html.ekid("body")
     return html, body
-
-
-def _make_css_link(head, href, id_=None):
-    link = head.ekid("link", {"rel": "stylesheet", "type": "text/css", "href": href})
-    if id_:
-        link.attrs["id"] = id_
-    return link
-
-
-def _make_js_link(head, src, id_=None):
-    script = head.ekid("script", {"type": "text/javascript", "src": src})
-    if id_:
-        script.attrs["id"] = id_
-    return script
 
 
 def relpath(path1, path2):
@@ -624,8 +622,8 @@ def relpath(path1, path2):
 def _write_cover(epub, cover_image_path, lang):
     base_name = os.path.basename(cover_image_path)
     epub.userfiles[base_name] = open(cover_image_path, "rb").read()
-    cover_doc_path = "../resource/cover.xhtml"
-    html, body = make_doc(cover_doc_path, lang, "封面")
+    cover_doc_path = "cover.xhtml"
+    html, body = make_doc(2, lang, "封面")
     #body.attrs["style"] = "text-align: center;"
     body.attrs["class"] = "cover"
 
@@ -670,7 +668,7 @@ ZZSM = (
 
 def _write_readme(epub, notes, lang):
     doc_path = "readme.xhtml"
-    html, body = make_doc(doc_path, lang, lang.c("製作說明"))
+    html, body = make_doc(1, lang, lang.c("製作說明"))
 
     body.attrs["class"] = "readme"
 
