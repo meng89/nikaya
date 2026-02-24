@@ -2,97 +2,21 @@ import os
 import string
 
 import selenium.webdriver
-import opencc
-
 import config
 
-
-_table = [
-    ("「", "“"),
-    ("」", "”"),
-    ("『", "‘"),
-    ("』", "’"),
-]
-
-class Lang:
-    def c(self, s):
-        return s
-
-    @property
-    def xml(self):
-        return None
-
-    @property
-    def zh(self):
-        return None
-
-    @property
-    def en(self):
-        return None
-
-    @property
-    def han_version(self):
-        return None
+from nikaya_share import SC
 
 
-class TC(Lang):
-    def c(self, s):
-        return s
-
-    @property
-    def xml(self):
-        return "zh-Hant"
-
-    @property
-    def zh(self):
-        return "繁"
-
-    @property
-    def en(self):
-        return "tc"
-
-    @property
-    def han_version(self):
-        return "傳統中文版"
-
-
-class SC(Lang):
-    def __init__(self):
-        self._converter = opencc.OpenCC('tw2sp.json')
-
-    def c(self, s):
-        if s:
-            return self._converter.convert(s)
-        else:
-            return s
-
-    @property
-    def xml(self):
-        return "zh-Hans"
-
-    @property
-    def zh(self):
-        return "简"
-
-    @property
-    def en(self):
-        return "sc"
-
-    @property
-    def han_version(self):
-        return "简体版"
-
-
-def make_cover(module, lang: Lang, width=1600, height=2560):
+def make_cover_image(cover_dir, info, lang, width=1600, height=2560, onebook=False):
     # translated_date = read_mtime(data)
-    filename = "{}_{}_{}".format(module.name_han, lang.zh, today())
+    filename = "{}_{}_{}".format(info.name, lang.zh, today())
     xhtml_filename = filename + ".xhtml"
 
     image_filename = "{}_{}x{}.png".format(filename, width, height)
 
-    os.makedirs(config.ABO_COVER_DIR, exist_ok=True)
+    os.makedirs(cover_dir, exist_ok=True)
 
-    image_path = os.path.join(config.ABO_COVER_DIR, image_filename)
+    image_path = os.path.join(cover_dir, image_filename)
 
     if not os.path.exists(image_path):
         _template_str = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "cover.xhtml")).read()
@@ -103,12 +27,12 @@ def make_cover(module, lang: Lang, width=1600, height=2560):
 
         t = string.Template(template_str)
 
-        if len(module.name_han) == 2:
+        if len(info.name) == 2:
             # 半角：&nbsp;
             # 全角：&emsp;
-            title_hant = module.name_han[0] + "&#160;&#160;" + module.name_han[1]
+            title_hant = info.name[0] + "&#160;&#160;" + info.name[1]
         else:
-            title_hant = module.name_han
+            title_hant = info.name
 
         if title_hant == "長老尼阿波陀那":
             title_hant = "長老尼<br/><nobr>阿波陀那</nobr>"
@@ -118,7 +42,7 @@ def make_cover(module, lang: Lang, width=1600, height=2560):
             title_hant = "<nobr>{}</nobr>".format(title_hant)
 
         doc_str = t.substitute(han=lang.c(title_hant),
-                               pali=module.name_pali,
+                               pali=info.pali,
                                version=lang.han_version,
                                translator="莊春江" + lang.c("譯"),
                                # translated=lang.c(translated_date + " 更新"),
@@ -146,12 +70,6 @@ def today():
     return datetime.fromtimestamp(time.time()).astimezone().strftime("%Y年%m月%d日")
 
 
-def read_mtime(data: list):
-    from datetime import datetime
-    ts = read_timestamp(data)
-    return datetime.fromtimestamp(ts).astimezone().strftime("%Y年%m月%d日")
-
-
 def any_min(x, y):
     if x is None:
         return y
@@ -166,17 +84,3 @@ def any_max(a, b):
     if b is None:
         return a
     return max(a, b)
-
-
-def read_timestamp(data):
-    import dateutil.parser
-    import xl
-    newest_ts = None
-    for _name, obj in data:
-        if isinstance(obj, list):
-            newest_ts = any_max(newest_ts, read_timestamp(obj))
-        elif isinstance(obj, xl.Xml):
-            mtime = obj.root.find_descendants("mtime")[0]
-            ts = dateutil.parser.parse(mtime.kids[0]).timestamp()
-            newest_ts = any_max(newest_ts, ts)
-    return newest_ts

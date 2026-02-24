@@ -6,21 +6,17 @@ import time
 import sys
 import config
 import shutil
-
-import multiprocessing
-
-from nikaya_share import base
-
-multiprocessing.set_start_method("fork") # only POSIX
+import zipfile
+#multiprocessing.set_start_method("fork") # only POSIX
 from multiprocessing import Process
 
+import nikaya_share
 import hyncdzj.base
 import hyncdzj.epub
 import hyncdzj.pdf
-
 from hyncdzj import book_modules
-
 import hyncdzj.ebook_utils
+
 
 total = 0
 jobs =  []
@@ -28,6 +24,8 @@ running = []
 finished = 0
 
 max_processes = os.cpu_count()
+
+
 def try_run_job(do_print=True):
     global running, finished
 
@@ -58,6 +56,12 @@ def try_run_job(do_print=True):
         jobs.pop(0)
 
 
+def wating_job_done():
+    while jobs or running:
+        time.sleep(0.01)
+        try_run_job(True)
+
+
 sc_datas = []
 tc_datas = []
 def get_data(lang, info, load_dir):
@@ -67,12 +71,12 @@ def get_data(lang, info, load_dir):
             tc_data = data
 
     if tc_data is None:
-        print("加载数据: {:2}".format(info.name), end="", flush=True)
-        tc_data = base.load_from_disk(load_dir)
+        print("Loading Data: {:2}".format(info.name), end="", flush=True)
+        tc_data = nikaya_share.load_from_disk(load_dir)
         print(" ✅")
         tc_datas.append((info, tc_data))
 
-    if isinstance(lang, hyncdzj.ebook_utils.TC):
+    if isinstance(lang, nikaya_share.TC):
         return tc_data
 
     for info2, data in sc_datas:
@@ -100,7 +104,8 @@ def get_load_path(info):
 
     return load_path, tag
 
-def main(_help=False, debug=False, types=None, langs=None, books=None, collection=False, layouts=None, fonts=None):
+
+def main(_help=False, debug=False, types=None, langs=None, books=None, onebook=False, layouts=None, fonts=None):
     config.DEBUG = debug
 
     all_types = ["pdf", "epub"]
@@ -109,7 +114,7 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, collectio
     else:
         my_types = all_types
 
-    all_langs = [hyncdzj.ebook_utils.SC(), hyncdzj.ebook_utils.TC()]
+    all_langs = [nikaya_share.SC(), nikaya_share.TC()]
     if langs:
         my_langs = []
         for lang in langs.split(","):
@@ -153,7 +158,7 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, collectio
         print("types:", all_types)
         print("langs:", [lang.en for lang in all_langs])
         print("books:", [m.__name__.split(".")[-1] for m in book_modules.all_modules])
-        print("collection:", collection)
+        print("onebook:", onebook)
         print("layouts:", list(all_layouts))
         print("fonts:", list(all_fonts))
         print()
@@ -165,38 +170,64 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, collectio
     print("显示简略使用说明：", sys.argv[0], "help")
     print()
     start_time = time.time()
-    temp_td = tempfile.TemporaryDirectory(prefix="A_汉译南传大藏经_")
+    temp_td = tempfile.TemporaryDirectory(prefix="A_元亨寺_汉译南传大藏经_")
     print("电子书目录：", temp_td.name)
     print("进程数:", max_processes)
 
     global total
 
-    cover_dir = os.path.join(temp_td.name, "cover")
+    cover_dir = os.path.join(temp_td.name, "元亨寺_cover")
     date = datetime.today().strftime('%Y.%m.%d')
 
     dirs = set()
+    files = set()
 
     for lang in my_langs:
         zh_name = lang.c("元亨寺_漢譯南傳大藏經")
+
+        if onebook:
+            if "epub" in my_types:
+                tag = None
+                info_datas = []
+
+                for m2 in book_modules.all_modules:
+                    load_path, tag2 = get_load_path(m2.info)
+                    tag = tag2 or tag
+                    info_datas.append((m2.info, get_data(lang, m2.info, load_path)))
+
+                    if config.DEBUG:
+                        break
+
+                file_name = "{}_{}".format(zh_name, lang.c("合訂本"))
+                if tag:
+                    file_name += "_{}".format(tag)
+
+                file_name += "_{}_{}".format(lang.zh, date)
+                file_name += ".epub"
+                files.add(file_name)
+                full_file_name = os.path.join(temp_td.name, file_name)
+
+                job = (
+                    "{}/{}".format(lang.zh, file_name),
+                    hyncdzj.epub.build_epub_one_book,
+                    (nikaya_share.HYNCDZJ, zh_name, cover_dir, full_file_name, info_datas, lang, tag)
+                )
+
+                jobs.append(job)
+                total += 1
+                try_run_job()
 
         for count, m in enumerate(my_modules, start=1):
             load_path, tag = get_load_path(m.info)
 
             data = get_data(lang, m.info, load_path)
-            if isinstance(lang, hyncdzj.ebook_utils.SC):
-                sc_data_path = os.path.join(temp_td.name, "sc_data", m.info.name)
-                base.write_to_disk(sc_data_path, data)
 
             classi = [lang.c(x) for x in book_modules.get_classification(m)]
 
             if "pdf" in my_types:
                 for layout in my_layouts:
                     for font in my_fonts:
-                        pdf_dir_name = zh_name + "_" + lang.zh + "_PDF"
-                        layout_dir_name = pdf_dir_name + "_" + layout
-                        font_dir_name = layout_dir_name + "_" + font
 
-                        date_dir_name = font_dir_name + "_" + date
                         package_dir = "{}_{}_PDF_{}_{}_{}".format(zh_name, lang.zh, layout, font, date)
 
                         file_name = "{}".format(lang.c(m.info.name))
@@ -209,7 +240,13 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, collectio
                         full_file_name = os.path.join(temp_td.name, package_dir, *classi, file_name)
 
                         os.makedirs(os.path.dirname(full_file_name), exist_ok=True)
-                        job = ("{}/{}_{}/{}".format(lang.zh, layout, font, file_name), hyncdzj.pdf.build_pdf, (cover_dir, full_file_name, data, m.info, lang, layout, font, tag, True))
+
+                        job = (
+                            "{}/{}_{}/{}".format(lang.zh, layout, font, file_name),
+                            hyncdzj.pdf.build_pdf,
+                            (nikaya_share.HYNCDZJ, cover_dir, full_file_name, data, m.info, lang, layout, font, tag, True)
+                        )
+
                         jobs.append(job)
                         total += 1
                         try_run_job()
@@ -227,40 +264,17 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, collectio
                 full_file_name = os.path.join(temp_td.name, package_dir, *classi, file_name)
 
                 os.makedirs(os.path.dirname(full_file_name), exist_ok=True)
-                jobs.append(("{}/{}".format(lang.zh, file_name), hyncdzj.epub.build_epub, (cover_dir, full_file_name, data, m.info, lang, tag)))
+
+                jobs.append(
+                    ("{}/{}".format(lang.zh, file_name),
+                     hyncdzj.epub.build_epub,
+                     (nikaya_share.HYNCDZJ, cover_dir, full_file_name, data, m.info, lang, tag))
+                )
+
                 total += 1
                 try_run_job()
 
-        if collection:
-
-            if "epub" in my_types:
-                tag = None
-                info_datas = []
-                count = 0
-                for m2 in book_modules.all_modules:
-                    load_path, tag2 = get_load_path(m2.info)
-                    tag = tag2 or tag
-                    info_datas.append((m2.info, get_data(lang, m2.info, load_path)))
-                    count += 1
-                    if count > 2:
-                        break
-
-                file_name = "{}_{}".format(zh_name, lang.c("合訂本"))
-                if tag:
-                    file_name += "_{}".format(tag)
-
-                file_name += "_{}_{}".format(lang.zh, date)
-                file_name += ".epub"
-                full_file_name = os.path.join(temp_td.name, file_name)
-                job = ("{}/{}".format(lang.zh, file_name), hyncdzj.epub.build_epub_collection, (zh_name, cover_dir, full_file_name, info_datas, lang, tag))
-                jobs.append(job)
-                total += 1
-                try_run_job()
-
-
-    while jobs or running:
-        time.sleep(0.01)
-        try_run_job(True)
+    wating_job_done()
 
     end_time = time.time()
 
@@ -268,6 +282,19 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, collectio
         for dir_name in dirs:
             output_dirname = os.path.join(temp_td.name, dir_name)
             shutil.make_archive(output_dirname, 'zip', output_dirname)
+
+            shutil.rmtree(output_dirname)
+
+        for file_name in files:
+            full_file_name = os.path.join(temp_td.name, file_name)
+            zf = zipfile.ZipFile(full_file_name + ".zip", "w")
+            zf.write(full_file_name, arcname=os.path.basename(file_name))
+            zf.close()
+
+            os.remove(full_file_name)
+
+        shutil.rmtree(cover_dir)
+
 
     print()
     print("用时:", format_seconds(end_time - start_time))

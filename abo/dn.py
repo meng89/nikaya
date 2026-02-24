@@ -2,19 +2,23 @@ import re
 
 import abo.page_parsing
 import abo.utils
+from nikaya_share import Info
 
 
-name_han = "長部"
-name_pali = "Digha Nikāya"
-short = "DN"
-htmls = ["DN/DN{:0>2d}.htm".format(x) for x in range(1, 35)]
+info = Info(
+    name = "長部",
+    pali = "Digha Nikāya",
+    translators = ("莊春江",),
+    abbr = "DN",
+    htmls = ["DN/DN{:0>2d}.htm".format(x) for x in range(1, 35)],
+)
 
 
 def load_from_htm():
     data = []
     pin = []
 
-    for htm in htmls:
+    for htm in info.htmls:
         root, mtime, body_lines, notes, div_nikaya = abo.page_parsing.read_page(htm, 2)
 
         # 長部1經/梵網經(戒蘊品[第一])(莊春江譯)[DA.21]
@@ -35,7 +39,7 @@ def load_from_htm():
             pin_m = pin_matched[0][0]
             pin_name = pin_m.group(1)
             pin = []
-            data.append((pin_name, pin))
+            data.append(((None, None, pin_name), pin))
 
         body = abo.page_parsing.htm_lines_to_xml_lines(sutta_body_lines)
         body = abo.page_parsing.lines_to_es(body)
@@ -63,6 +67,6 @@ def load_from_htm():
                                  body_es=body,
                                  notes=notes)
 
-        pin.append((sutta_num_sc, xml))
+        pin.append(((int(start), int(end), name), xml))
 
     return data

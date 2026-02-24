@@ -2,27 +2,29 @@ import re
 
 import abo.page_parsing
 import abo.utils
+from nikaya_share import Info
+
+
+da_htmls = ["Ni/Ni{}.htm".format(x) for x in range(1, 17)]
+xiao_htmls = ["Ni/Ni{}.htm".format(x) for x in range(17, 40)]
+
+
+info = Info(
+    name = "義釋", #
+    pali = "Niddesa",
+    abbr = "Ni",
+    translators = ("莊春江",),
+    htmls = da_htmls + xiao_htmls,
+)
 
 
 # 与 SC 经号差别较大
 
-name_han = "義釋" #
-name_pali = "Niddesa"
-short = "Ni"
-
-
-da_htmls = ["Ni/Ni{}.htm".format(x) for x in range(1, 17)]
-
-xiao_htmls = ["Ni/Ni{}.htm".format(x) for x in range(17, 40)]
-
-
-htmls = da_htmls + xiao_htmls
-
 
 def load_from_htm():
     data = [
-        ("大義釋", load_(da_htmls)),
-        ("小義釋", load_(xiao_htmls))
+        ((None, None, "大義釋"), load_(da_htmls)),
+        ((None, None, "小義釋"), load_(xiao_htmls))
     ]
     return data
 
@@ -51,6 +53,6 @@ def load_(htmls_):
                                  notes = notes
                                  )
         m = re.match(r"Ni/(.*).htm", htm)
-        data.append((m.group(1), xml))
+        data.append(((None, None, m.group(1)), xml))
 
     return data

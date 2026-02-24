@@ -1,11 +1,16 @@
 import abo.page_parsing
 import abo.utils
+from nikaya_share import Info
 
 
-name_han = "彌蘭王問經"
-name_pali = "Milindapañha"
-short = "Mi"
-htmls = ["Mi/Mi{}.htm".format(x) for x in range(1, 37)]
+info = Info(
+    name = "彌蘭王問經",
+    pali = "Milindapañha",
+    abbr = "Mi",
+    translators = ("莊春江",),
+    htmls = ["Mi/Mi{}.htm".format(x) for x in range(1, 37)],
+)
+
 
 d = {
     "外談論": ["沙竭城", "過去業", "彌蘭王", "摩訶先那", "尊者那先", "證須陀洹", "證阿羅漢", "到沙竭城", "彌蘭往見"],
@@ -16,13 +21,14 @@ d = {
     "比喻之問": ["本母", "驢子品", "海洋品", "地品", "白蟻品", "獅子品", "猴子品", "水瓶品", "結論"]
 }
 
+
 def load_from_htm():
     data = []
 
     index = 0
     for l1_name, sutta_names in d.items():
         l1 = []
-        data.append((l1_name, l1))
+        data.append(((None, None, l1_name), l1))
 
         for sutta_name in sutta_names:
             index += 1
@@ -46,6 +52,6 @@ def load_from_htm():
                                      notes=notes
                                      )
 
-            l1.append((sutta_name, xml))
+            l1.append(((None, None, sutta_name), xml))
 
     return data

@@ -2,12 +2,16 @@ import re
 
 import abo.page_parsing
 import abo.utils
+from nikaya_share import Info
 
 
-name_han = "法句"
-name_pali = "Dhammapada"
-short = "Dh"
-htmls = ["Dh/Dh{}.htm".format(x) for x in range(1, 27)]
+info = Info(
+    name = "法句",
+    pali = "Dhammapada",
+    abbr = "Dh",
+    translators = ("莊春江",),
+    htmls = ["Dh/Dh{}.htm".format(x) for x in range(1, 27)],
+)
 
 # SC 的经号是每一个偈子就是一个经
 
@@ -15,7 +19,7 @@ htmls = ["Dh/Dh{}.htm".format(x) for x in range(1, 27)]
 def load_from_htm():
     data = []
 
-    for htm in htmls:
+    for htm in info.htmls:
         root, mtime, nikaya_lines, notes, div_nikaya = abo.page_parsing.read_page(htm, 2)
 
         matchs = abo.utils.match_line(nikaya_lines, [re.compile(r"(\d+)\.(.+品.*)")])
@@ -55,6 +59,6 @@ def load_from_htm():
                                  notes=notes
                                  )
 
-        data.append((sutta_num, xml))
+        data.append(((int(m.group(1)), int(m.group(1)), title_line[0]), xml))
 
     return data

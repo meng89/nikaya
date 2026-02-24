@@ -3,13 +3,16 @@ import re
 import abo.page_parsing
 import abo.utils
 
-from . import th
+from nikaya_share import Info
 
-name_han = "長老尼偈"
-name_pali = "Therīgāthā"
-short = "Thig"
 
-htmls = ["Ti/Ti{}.htm".format(x) for x in range(1, 74)]
+info = Info(
+    name = "長老尼偈",
+    pali = "Therīgāthā",
+    abbr = "Thig",
+    translators = ("莊春江",),
+    htmls = ["Ti/Ti{}.htm".format(x) for x in range(1, 74)],
+)
 
 
 def load_from_htm():
@@ -17,7 +20,7 @@ def load_from_htm():
     pian_serial = None
     pian = None
 
-    for htm in htmls:
+    for htm in info.htmls:
         root, mtime, nikaya_lines, notes, div_nikaya = abo.page_parsing.read_page(htm, 2)
 
         matchs = abo.utils.match_line(nikaya_lines, [re.compile(r"^(\d+)\.(.+長老尼偈).*$")])
@@ -37,7 +40,7 @@ def load_from_htm():
             pian_serial = pian_m.group(1)
             pian_name = pian_m.group(2)
             pian = []
-            data.append(("{}.{}".format(pian_serial, pian_name), pian))
+            data.append(((int(pian_serial), int(pian_serial), pian_name), pian))
 
 
         body_lines = abo.page_parsing.htm_lines_to_xml_lines(body_lines)
@@ -68,6 +71,6 @@ def load_from_htm():
                                  notes = notes
                                  )
 
-        pian.append((sutta_num, xml))
+        pian.append(((int(serial), int(serial), title_line[0]), xml))
 
     return data

@@ -1,10 +1,9 @@
-from nikaya_share import base
+from nikaya_share import Info
 
 
-# 譬喻/本行
-info = base.Info(
+info = Info(
     serial = 17,
-    name = "譬喻經",
+    name = "譬喻經", ## 譬喻/本行
     pali = "Apadāna",
     translators = ("悟醒",),
     abbr = "AP",

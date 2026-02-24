@@ -1,15 +1,17 @@
 import re
 
-from jinja2 import meta
-
 import abo.page_parsing
 import abo.utils
+from nikaya_share import Info
 
 
-name_han = "經集"
-name_pali = "Suttanipāta"
-short = "Su"
-htmls = ["Su/Su{}.htm".format(x) for x in range(1, 74)]
+info = Info(
+    name = "經集",
+    pali = "Suttanipāta",
+    abbr = "Su",
+    translators = ("莊春江",),
+    htmls = ["Su/Su{}.htm".format(x) for x in range(1, 74)],
+)
 
 
 # 原网页头部经号和页面经号略乱。使用 SC 经号
@@ -24,7 +26,7 @@ def load_from_htm():
 
     sutta_serial = 0
 
-    for htm in htmls:
+    for htm in info.htmls:
         root, mtime, nikaya_lines, notes, div_nikaya = abo.page_parsing.read_page(htm, 2)
         p = re.compile(r"^(\d+)\.(.+(?:經|所問|偈))(?:\(\d+\.\))?(.*)$")
         p2 = re.compile(r"^(\d*)(序　偈)\(\d+\.\)(.*)$")
@@ -45,7 +47,7 @@ def load_from_htm():
             pin_serial = pin_m.group(1)
             pin_num = "{}.{}".format(pin_m.group(1), pin_m.group(2))
             pin = []
-            data.append((pin_num, pin))
+            data.append(((int(pin_serial), int(pin_serial), pin_m.group(2)), pin))
             sutta_serial = 0
 
         head_lines = abo.page_parsing.htm_lines_to_xml_lines(head_lines)
@@ -73,6 +75,7 @@ def load_from_htm():
                                  body_es= body,
                                  notes = notes
                                  )
-        pin.append((sutta_num, xml))
+
+        pin.append(((int(sutta_serial), int(sutta_serial), m.group(2)), xml))
 
     return data

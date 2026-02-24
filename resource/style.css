@@ -85,18 +85,26 @@ body.cover {
     height: 100vh;           /* 确保body高度填满整个视口 */
     margin: 0;               /* 移除默认margin */
 }
-body.cover   img {
+body.cover img {
     max-width: 100%;         /* 图片最大不超过父容器宽度 */
     max-height: 100%;        /* 图片最大不超过父容器高度 */
 }
 
-
-body.homage {
-    display: flex; /* 将body设置为弹性容器 */
-    align-items: center; /* 使子元素在垂直方向上居中 */
-    min-height: 100vh; /* 让body占据整个视口高度，确保垂直居中有效 */
-    justify-content: center; /* 水平居中 */
+body.hyncdzj_homage, body.abo_homage {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 居中 */
+    justify-content: center;
+    text-align: center;
+  }
+body.hyncdzj_homage > p {
+    text-indent: 0em;
+    white-space: nowrap; /* 禁止换行 */
+    font-size: 18vw; /* 让body占据整个视口高度，确保垂直居中有效 */
 }
+
 
 .poem_wrapper {
     display: grid;
@@ -108,8 +116,12 @@ body.homage {
     text-align: right; /* 让作者名字靠右，贴近诗句 */
     font-weight: bold;
 }
-
 /* 诗句样式 */
 .poem_lines {
     text-align: center; /* 诗句文字本身居中 */
+}
+
+
+body.readme > p {
+    text-indent: 0em;
 }

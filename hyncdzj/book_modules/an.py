@@ -4,9 +4,10 @@ import cn2an
 
 import xl
 
-from nikaya_share import base
+from nikaya_share import Info
 
-info = base.Info(
+
+info = Info(
     serial = 7,
     name = "增支部",
     pali = "Aṅguttara Nikāya",

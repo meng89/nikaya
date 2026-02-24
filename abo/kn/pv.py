@@ -1,21 +1,23 @@
 import re
 
-import xl
-
 import abo.page_parsing
 import abo.utils
+from nikaya_share import Info
 
 
-name_han = "餓鬼事"
-name_pali = "Petavatthu"
-short = "Pv"
-htmls = ["Pv/Pv{}.htm".format(x) for x in range(1, 52)]
+info = Info(
+    name = "餓鬼事",
+    pali = "Petavatthu",
+    abbr = "Pv",
+    translators = ("莊春江",),
+    htmls = ["Pv/Pv{}.htm".format(x) for x in range(1, 52)],
+)
 
 
 def load_from_htm():
     data = []
     pin = None
-    for htm in htmls:
+    for htm in info.htmls:
         root, mtime, nikaya_lines, notes, div_nikaya = abo.page_parsing.read_page(htm, 2)
         p = re.compile(r"(\d+)\.(.+(?:餓鬼事|裁判官))(?:\((\d+)\.\))?\*?")
         matchs = abo.utils.match_line(nikaya_lines, [p])
@@ -36,7 +38,7 @@ def load_from_htm():
             m = pin_matchs[0][0]
             pin_name = m.group(1)
             pin = []
-            data.append((pin_name, pin))
+            data.append(((None, None, pin_name), pin))
 
         body_lines = abo.page_parsing.htm_lines_to_xml_lines(body_lines)
         body = abo.page_parsing.lines_to_es(body_lines)
@@ -63,6 +65,6 @@ def load_from_htm():
                                  body_es= body,
                                  notes = notes)
 
-        pin.append((sutta_num, xml))
+        pin.append(((int(sutta_serial), int(sutta_serial), sutta_name), xml))
 
     return data

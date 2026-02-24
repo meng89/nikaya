@@ -2,20 +2,22 @@ import re
 
 import abo.page_parsing
 import abo.utils
+from nikaya_share import Info
 
 
-name_han = "長老阿波陀那" #譬喻
-name_pali = "Therāpadāna"
-
-htmls = ["Ap/Ap{}.htm".format(x) for x in range(1, 564)]
+info = Info(
+    name = "長老阿波陀那", #譬喻
+    pali = "Therāpadāna",
+    translators = ("莊春江",),
+    abbr = "Tha-ap",
+    htmls = ["Ap/Ap{}.htm".format(x) for x in range(1, 564)]
+)
 
 # 品名都是首经的名字，意义不大。这里经文编号依照 suttacentral 风格重编，品不参与编排经号。
 
-short = "Tha-ap"
-
 
 def load_from_htm():
-    return load_from_htm_real(htmls, short)
+    return load_from_htm_real(info.htmls, info.abbr)
 
 
 def load_from_htm_real(_htmls, _short):
@@ -40,7 +42,7 @@ def load_from_htm_real(_htmls, _short):
             pin_m = pin_matchs[0][0]
             pin_name = pin_m.group(1)
             pin = []
-            data.append((pin_name, pin))
+            data.append(((None, None, pin_name), pin))
 
         body_lines = abo.page_parsing.htm_lines_to_xml_lines(body_lines)
         body = abo.page_parsing.lines_to_es(body_lines)
@@ -69,6 +71,6 @@ def load_from_htm_real(_htmls, _short):
                                  )
 
         filename = "{}{}".format(_short, sutta_serial)
-        pin.append((filename, xml))
+        pin.append(((int(sutta_serial), int(sutta_serial), sutta_name), xml))
 
     return data

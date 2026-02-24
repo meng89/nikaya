@@ -2,18 +2,22 @@ import re
 
 import abo.page_parsing
 import abo.utils
+from nikaya_share import Info
 
 
-name_han = "小誦" # 自说经
-name_pali = "Khuddakapāṭha"
-short = "Kh"
-htmls = ["Kh/Kh{}.htm".format(x) for x in range(1, 10)]
+info = Info(
+    name = "小誦",
+    pali = "Khuddakapāṭha",
+    abbr = "Kh",
+    translators = ("莊春江",),
+    htmls = ["Kh/Kh{}.htm".format(x) for x in range(1, 10)],
+)
 
 
 def load_from_htm():
     data = []
 
-    for htm in htmls:
+    for htm in info.htmls:
         root, mtime, body_lines, notes, div_nikaya = abo.page_parsing.read_page(htm, 2)
 
         parttern = re.compile(r"(\d)\.(三歸依|十學處|三十二行相|童問.*|.+經.*)")
@@ -62,6 +66,6 @@ def load_from_htm():
                                  notes=notes
                                  )
 
-        data.append((sutta_num, xml))
+        data.append(((int(sutta_serial), int(sutta_serial), title_line[0]), xml))
 
     return data

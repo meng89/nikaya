@@ -1,10 +1,8 @@
 import os
 import re
 import uuid
-import math
 import posixpath
 import string
-import sys
 from urllib.parse import urlsplit
 
 import cn2an
@@ -13,16 +11,14 @@ import epubpacker
 import xl
 
 import config
-from nikaya_share import base
+import nikaya_share
 from . import ebook_utils
-from nikaya_share import utils
 import hyncdzj.note
 from nikaya_share import new_page_or_not, epub_utils
 from hyncdzj.book_modules import all_infos
 
-
-import sys
-sys.setrecursionlimit(1000000)
+import abo.ebook_utils
+import abo.note
 
 
 def write_tree_to_userfiles(pre_path, tree, userfiles):
@@ -32,15 +28,19 @@ def write_tree_to_userfiles(pre_path, tree, userfiles):
             pass
 
 
-def make_tree_data(data_infos):
+def make_tree_data(data_infos, lang):
     data2 = []
+    translators = []
     for info, data in data_infos:
         for dirs, infos2 in all_infos:
             for info2 in infos2:
                 if info2 == info:
-                    data2.append(([(None, None, d) for d in dirs], info, data))
+                    data2.append(([(None, None, lang.c(d)) for d in dirs], info, data))
+                    for t in info.translators:
+                        if t not in translators:
+                            translators.append(t)
 
-    return data2
+    return data2, tuple(translators)
 
 def make_tree_data2(name, obj, dirs, data):
     for dir_ in dirs:
@@ -57,42 +57,22 @@ def make_sub_data(data, name):
     return sub_data
 
 
-def build_epub_collection(title, cover_dir, full_path, data_infos, lang, tag):
-    data3 = make_tree_data(data_infos)
-    book_names = [lang.c(title)]
+def make_marks(ngs, marks):
+    for ng in ngs:
+        marks = make_mark(ng, marks)
+    return marks
 
-    my_uuid = get_uuid("".join(book_names) + lang.en)
-    epub = make_epub(title, title, my_uuid.urn, lang)
-
-    notes = hyncdzj.note.Notes()
-    doc_files = {}
-    translators = set()
-    for prev_ngs, info, data in data3:
-        print(lang.c(info.name), info)
-        ds_depth = new_page_or_not.get_data_depth(data)
-
-        write_tree6(info, ds_depth, prev_ngs, [(None, None, lang.c(info.name))], data, 0, doc_files, epub.mark.kids, notes, lang, [], 1, 1, None, None, None)
-        translators.update(info.translators)
-
-    book_info = base.Info(name="漢譯南傳大藏經", pali="Tipiṭaka", translators=tuple(translators))
-    image_path = ebook_utils.make_cover_image(cover_dir, book_info, lang, tag, collection=True)
-    _write_cover(epub, image_path, lang)
-
-    notes = hyncdzj.note.Notes()
-    _write_readme(epub, notes, lang)
-
-    write_doc_files(doc_files, epub)
-    write_note_spile(notes, epub, lang)
-
-    make_marks_href(epub.mark.kids)
-
-    epub.write(full_path)
-
-    write_css(epub, lang)
+def make_mark(ng, marks):
+    _, _, name = ng
+    for mark in marks:
+        if mark.title == name:
+            return mark.kids
+    sub_mark = epubpacker.Mark(title=name)
+    marks.append(sub_mark)
+    return sub_mark.kids
 
 
-
-def make_epub(title, collection, identifier, lang):
+def create_epub(title, collection, identifier, lang):
     epub = epubpacker.Epub()
     epub.meta.titles = [title]
     epub.meta.identifier = identifier
@@ -116,39 +96,83 @@ def write_note_spile(notes, epub, lang):
         epub.spine.append(path)
 
 
-def build_epub(cover_dir, full_path, data, info, lang, tag):
-    epub = epubpacker.Epub()
-    title = lang.c(info.name)
-    epub.meta.titles = [title]
+def build_epub_one_book(type_, title, cover_dir, full_path, data_infos, lang, tag):
+    data3, translators = make_tree_data(data_infos, lang)
+    book_names = [lang.c(title)]
 
-    # epub.meta.creators = ["莊春江({})".format(lang.c("譯"))] #todo
-    #ts = ebook_utils.read_timestamp(data)
-    #epub.meta.date = datetime.fromtimestamp(ts).astimezone().strftime("%Y-%m-%dT%H:%M:%SZ")
-    epub.meta.languages = [lang.xml, "pi", "en-US"]
+    my_uuid = get_uuid("".join(book_names) + lang.en)
+    epub = create_epub(title, title, my_uuid.urn, lang)
 
-    my_uuid = get_uuid(title + lang.en)
-    epub.meta.identifier = my_uuid.urn
+    notes = hyncdzj.note.Notes()
 
-    epub.meta.others.append(xl.Element("meta", {"property": "belongs-to-collection", "id": "c01"},
-                                       [lang.c("漢譯南傳大藏經")]))
-    epub.meta.others.append(xl.Element("meta", {"refines": "#c01", "property": "collection-type"}, ["series"]))
+    if type_ is nikaya_share.HYNCDZJ:
+        book_info = nikaya_share.Info(name="漢譯南傳大藏經", pali="Tipiṭaka", translators=tuple(translators))
+        image_path = ebook_utils.make_cover_image(cover_dir, book_info, lang, tag, onebook=True)
+    else:
+
+        book_info = nikaya_share.Info(name="漢譯藏經", pali="Sutta Piṭaka", translators=tuple(translators))
+        image_path =  abo.ebook_utils.make_cover_image(cover_dir, book_info, lang, tag, onebook=True)
+    _write_cover(epub, image_path, lang)
+
+    if type_ is nikaya_share.HYNCDZJ:
+        _write_homage_hyncdzj(epub, lang)
+    else:
+        _write_homage_abo(epub, lang)
+        _write_fanli(epub, lang)
+
+
+    doc_files = {}
+    for prev_ngs, info, data in data3:
+        ds_depth = new_page_or_not.get_data_depth(data)
+
+        nh_ngs = prev_ngs + [(None, None, lang.c(info.name))]
+        marks = make_marks(nh_ngs, epub.mark.kids)
+        root_depth = len(nh_ngs) -1
+        write_tree6(type_, info, ds_depth, nh_ngs, [], data, root_depth, doc_files, marks, notes, lang, [], 0, 1, None, None, None)
+
+    write_css(epub, lang)
+    write_note_spile(notes, epub, lang)
+    write_doc_files(doc_files, epub)
+
+    if type_ is nikaya_share.HYNCDZJ:
+        _write_readme(README_HYNCDZJ, epub, notes, lang)
+    else:
+        _write_readme(README_ABO, epub, notes, lang)
+
+    make_marks_href(epub.mark.kids)
+
+    epub.write(full_path)
 
     write_css(epub, lang)
 
-    notes = hyncdzj.note.Notes()
-    docs = []
-    #bns = [module.short]
 
-    image_path = ebook_utils.make_cover_image(cover_dir, info, lang, tag)
+def build_epub(type_, cover_dir, full_path, data, info, lang, tag):
+    title = lang.c(info.name)
+    my_uuid = get_uuid(title + lang.en)
+    epub = create_epub(title, title, my_uuid.urn, lang)
+
+    notes = hyncdzj.note.Notes()
+
+    if type_ is nikaya_share.HYNCDZJ:
+        image_path = ebook_utils.make_cover_image(cover_dir, info, lang, tag, onebook=True)
+    else:
+        image_path = abo.ebook_utils.make_cover_image(cover_dir, info, lang, tag, onebook=True)
     _write_cover(epub, image_path, lang)
+
+    if type_ is nikaya_share.HYNCDZJ:
+        _write_homage_hyncdzj(epub, lang)
+    else:
+        _write_fanli(epub, lang)
+        _write_homage_abo(epub, lang)
+
+
+    write_css(epub, lang)
+
     #_write_homage(module, epub.mark.kids, docs, ln, gn, lang) #todo
 
     doc_files = {}
-    book_data = [((None, None, lang.c(info.name)), data)]
-
     ds_depth = new_page_or_not.get_data_depth(data)
-    #write_tree5(info, data, 0, data, doc_files, epub.mark.kids, notes, lang, [], 1, 1, None, None, None, 0)
-    write_tree6(info, ds_depth, [], [], data, 0, doc_files, epub.mark.kids, notes, lang, [], 1, 1, None, None, None, 0)
+    write_tree6(type_, info, ds_depth, [], [], data, -1, doc_files, epub.mark.kids, notes, lang, [], 0, 1, None, None, None)
 
     for path, xml in doc_files.items():
         xml: xl.Xml
@@ -160,8 +184,10 @@ def build_epub(cover_dir, full_path, data, info, lang, tag):
         epub.userfiles[path] = page
         epub.spine.append(path)
 
-    _write_readme(epub, notes, lang)
-    #_write_readme(epub, lang)
+    if type_ is nikaya_share.HYNCDZJ:
+        _write_readme(README_HYNCDZJ, epub, notes, lang)
+    else:
+        _write_readme(README_ABO, epub, notes, lang)
 
     make_marks_href(epub.mark.kids)
 
@@ -220,20 +246,16 @@ class IdGenerate:
         self._serial += 1
         return _id
 
-def get_last_doc(docs):
-    for namegroup, (new_html, new_body) in docs:
-        pass
-
 
 """
 经的上级标题需要写入第一个经里。
 """
 
-def write_tree6(info, ds_depth, p_ngs, ngs, obj, level_offset, doc_files, marks, notes, lang, marks_and_headings, depth, id_count, doc_path, html, body, doc_depth=None):
+def write_tree6(type_, info, ds_depth, p_ngs, ngs, obj, root_depth, doc_files, marks, notes, lang, marks_and_headings, depth, id_count, doc_path, html, body, doc_depth=None):
     sub_marks = marks
 
     if ngs:
-        mark, heading = make_mh(info, ngs, obj, marks, depth, id_count, level_offset)
+        mark, heading = make_mh(info, ngs, obj, marks, depth, id_count)
         marks_and_headings.append((mark, heading))
         sub_marks = mark.kids
     # 在第一个需要合并的经之前的节点创建 doc
@@ -242,31 +264,30 @@ def write_tree6(info, ds_depth, p_ngs, ngs, obj, level_offset, doc_files, marks,
         merge_or_not = new_page_or_not.merge_or_not(ngs, obj, ds_depth)
         # 下级如果没有分页，此级就要合并
         if merge_or_not:
-            doc_path, html, body = write_docs(doc_files, p_ngs + ngs, depth, lang, info)
-            doc_depth = depth
+            doc_depth = root_depth + depth
+            doc_path, html, body = write_docs(doc_files, p_ngs + ngs, doc_depth, lang, info)
 
     for sub_id_count, (namegroup, sub) in enumerate(obj, 1):
-
         s_ngs = ngs + [namegroup]
 
         if isinstance(sub, xl.Element):
-            write_doc6(info, p_ngs, s_ngs, level_offset, sub, doc_files, sub_marks, notes, lang,
-                                              marks_and_headings, depth + 1, sub_id_count, doc_path, html, body, doc_depth)
+            write_doc6(type_, info, p_ngs, s_ngs, root_depth, sub, doc_files, sub_marks, notes, lang,
+                       marks_and_headings, depth + 1, sub_id_count, doc_path, html, body, doc_depth)
         else:
-            write_tree6(info, ds_depth, p_ngs, s_ngs, sub, level_offset, doc_files, sub_marks, notes, lang,
-                                               marks_and_headings, depth + 1, sub_id_count, doc_path, html, body, doc_depth)
+            write_tree6(type_, info, ds_depth, p_ngs, s_ngs, sub, root_depth, doc_files, sub_marks, notes, lang,
+                        marks_and_headings, depth + 1, sub_id_count, doc_path, html, body, doc_depth)
 
-def write_doc6(info, p_ngs, ngs, level_offset, obj, doc_files, marks, notes, lang, marks_and_headings, depth, id_count, doc_path, html, body, doc_depth):
+
+def write_doc6(type_, info, p_ngs, ngs, root_depth, obj, doc_files, marks, notes, lang, marks_and_headings, depth, id_count, doc_path, html, body, doc_depth):
     if doc_path is None:
-        doc_path, html, body = write_docs(doc_files, p_ngs + ngs, depth, lang, info)
-        doc_depth = depth
-
+        doc_depth = root_depth + depth
+        doc_path, html, body = write_docs(doc_files, p_ngs + ngs, doc_depth, lang, info)
 
     # 把上级的 heading 写入文档先
     write_marks_and_headings(marks_and_headings, body, doc_path)
 
     if ngs:
-        mark, heading = make_mh(info, ngs, obj, marks, depth, id_count, level_offset)
+        mark, heading = make_mh(info, ngs, obj, marks, depth, id_count)
         mark.href = "{}#{}".format(doc_path, heading.attrs["id"])
         body.kids.append(heading)
 
@@ -279,75 +300,14 @@ def write_doc6(info, p_ngs, ngs, level_offset, obj, doc_files, marks, notes, lan
             body.kids.extend(html_es)
 
 
-def write_tree5(info, book_data, level_offset, obj, doc_files, marks, notes, lang, marks_and_headings, depth, id_count, doc_path, html, body, doc_depth=None):
-    sub_marks = marks
-    namegroups = new_page_or_not.get_keys(book_data, obj, [])
-    if namegroups:
-        mark, heading = make_mh(info, namegroups, obj, marks, depth, id_count, level_offset)
-        marks_and_headings.append((mark, heading))
-        sub_marks = mark.kids
-    # 在第一个需要合并的经之前的节点创建 doc
-    if doc_path is None:
-        _, sub = obj[0]
-        sub_new_page = new_page_or_not.new_page_or_not_smart(book_data, sub)
-        # 下级如果没有分页，此级就要合并
-        if sub_new_page is False:
-            doc_path, html, body = write_docs(doc_files, namegroups, depth, lang, info)
-            doc_depth = depth
-
-    for sub_id_count, (namegroup, sub) in enumerate(obj, 1):
-
-
-        if isinstance(sub, xl.Element):
-            doc_path, html, body = write_doc5(info, book_data, level_offset, sub, doc_files, sub_marks, notes, lang,
-                                              marks_and_headings, depth + 1, sub_id_count, doc_path, html, body, doc_depth)
-        else:
-            doc_path, html, body = write_tree5(info, book_data, level_offset, sub, doc_files, sub_marks, notes, lang,
-                                               marks_and_headings, depth + 1, sub_id_count, doc_path, html, body, doc_depth)
-
-    new_page = new_page_or_not.new_page_or_not_smart(book_data, obj)
-    if new_page:
-        doc_path, html, body = None, None, None
-    return doc_path, html, body
-
-
-def write_doc5(info, book_data, level_offset, obj, doc_files, marks, notes, lang, marks_and_headings, depth, id_count, doc_path, html, body, doc_depth):
-    namegroups = new_page_or_not.get_keys(book_data, obj, [])
-
-    if doc_path is None:
-        doc_path, html, body = write_docs(doc_files, namegroups, depth, lang, info)
-        doc_depth = depth
-
-    # 把上级的 heading 写入文档先
-    write_marks_and_headings(marks_and_headings, body, doc_path)
-
-    if namegroups:
-        mark, heading = make_mh(info, namegroups, obj, marks, depth, id_count, level_offset)
-        mark.href = "{}#{}".format(doc_path, heading.attrs["id"])
-        body.kids.append(heading)
-
-    for e in obj.kids:
-        if isinstance(e, xl.Element) and re.match(r"^n\d+$", e.tag):
-            break
-
-        else:
-            html_es = xml_es_to_html([e], obj, notes, doc_depth, lang)
-            body.kids.extend(html_es)
-
-    new_page = new_page_or_not.new_page_or_not_smart(book_data, obj)
-    if new_page:
-        doc_path, html, body = None, None, None
-    return doc_path, html, body
-
-
-def make_mh(info, namegroups, obj, marks, depth, id_count, level_offset):
-    mark, heading, _, _, _, _, = make_mark_and_heading(info, namegroups, obj, depth, level_offset)
+def make_mh(info, namegroups, obj, marks, depth, id_count):
+    mark, heading, _, _, _, _, = make_mark_and_heading(info, namegroups, obj, depth)
     heading.attrs["id"] = "id_{}_{}".format(depth, id_count)
     marks.append(mark)
     return mark, heading
 
 def write_docs(doc_files, ngs, depth, lang, info):
-    test_path = [base.namegroup_to_filename(ng) for ng in ngs]
+    test_path = [nikaya_share.namegroup_to_filename(ng) for ng in ngs]
     if not test_path:
         test_path = [lang.c(info.name)]
     doc_path = epub_utils.make_safe_path(doc_files.keys(), posixpath.join(*test_path) + ".xhtml")
@@ -362,7 +322,7 @@ def write_marks_and_headings(marks_and_headings, body, doc_path):
     marks_and_headings.clear()
 
 
-def make_mark_and_heading(info, namegroups, obj, heading_level, level_offset):
+def make_mark_and_heading(info, namegroups, obj, heading_level):
     start, end, name = namegroups[-1]
     if start is None:
         range_start, range_end = read_range(obj)
@@ -469,7 +429,7 @@ def read_end(obj: list):
 def sub_to_namegroup(e):
     s = read_text_from_sub(e)
     s = "1_" + s  #在头部添加适配 filename_to_namegroup 的虚字符
-    return base.filename_to_namegroup(s)
+    return nikaya_share.filename_to_namegroup(s)
 
 def read_serial_from_sub(e):
     s = read_text_from_sub(e)
@@ -519,16 +479,16 @@ def xml_es_to_html(es: ES, root, notes: hyncdzj.note.Notes, doc_depth, lang) -> 
     new_es = []
     for e in es:
         if isinstance(e, xl.Element):
-            m_t = re.match(r"^t(\d+)$", e.tag)
-            m_n = re.match(r"^n\d+$", e.tag)
+            m_t = re.match(r"^t(\d+)$", e.tag) # 本地注解
+            m_n = re.match(r"^n\d+$", e.tag) # doc n元素
+            m_g = re.match(r"^g(\d+)$", e.tag) # 庄春江 全局注解
             if m_t:
                 a = xl.Element("a", attrs={"epub:type": "noteref"})
                 key = m_t.group(1)
+
                 n_kids = get_note_by_key(root, key)
                 link = notes.add_note(n_kids)
-                href = relpath(link, "x/" * (doc_depth -2) + "xyz")
-                a.attrs["href"] = href
-
+                a.attrs["href"] = "../" * doc_depth + link
                 if len(e.kids) > 0:
                     a.attrs["class"] = "noteref"
                     a.kids.extend(xml_es_to_html(e.kids, root, notes, doc_depth, lang))
@@ -536,6 +496,15 @@ def xml_es_to_html(es: ES, root, notes: hyncdzj.note.Notes, doc_depth, lang) -> 
                     a.attrs["class"] = "no_text_noteref"
                     a.kids.append("注")
 
+                new_es.append(a)
+
+            elif m_g:
+                abo_gn = abo.note.get_global_notes()
+                a = xl.Element("a", attrs={"epub:type": "noteref"})
+                n_kids = abo_gn.get_es(m_g.group(1))
+                link = notes.add_note(n_kids)
+                a.attrs["href"] = "../" * doc_depth + link
+                a.kids.extend(xml_es_to_html(e.kids, root, notes, doc_depth, lang))
                 new_es.append(a)
 
             elif e.tag == "p":
@@ -639,7 +608,7 @@ def make_doc(depth, lang, title=None):
     if title:
         _title = head.ekid("title", kids=[title])
 
-    href = "../" * (depth - 2) + "style.css"
+    href = "../" * depth + "style.css"
     link = head.ekid("link", {"rel": "stylesheet", "type": "text/css", "href": href})
     link.attrs["id"] = "css1"
 
@@ -667,6 +636,8 @@ def relpath(path1, path2):
         return posixpath.relpath(path1_2, posixpath.dirname(path2_2)) + (("#" + fragment) if fragment else "")
 
 
+
+
 def _write_cover(epub, cover_image_path, lang):
     base_name = os.path.basename(cover_image_path)
     epub.userfiles[base_name] = open(cover_image_path, "rb").read()
@@ -683,51 +654,124 @@ def _write_cover(epub, cover_image_path, lang):
     epub.mark.kids.append(epubpacker.Mark("封面", cover_doc_path))
     epub.spine.append(cover_doc_path)
 
+HOMAGE_LINE = [
+    "歸命彼世尊",
+    "應供等覺者"
+]
 
-def _write_homage(_module, marks, docs, notes, lang):
+def _write_homage_hyncdzj(epub, lang):
     doc_path = "homage.xhtml"
-    html, body = make_doc(doc_path, lang, lang.c("禮敬偈"))
-    body.attrs["class"] = "homage"
+    html, body = make_doc(0, lang, lang.c("禮敬偈"))
+    body.attrs["class"] = "hyncdzj_homage"
 
-    #outdiv = body.ekid("div", {"class": "homage_out"})
-    #indiv = outdiv.ekid("div", {"class": "homage_in"})
+    for line in HOMAGE_LINE:
+        p = body.ekid("p")
+        p.kids.append(lang.c(line))
 
-    kids = []
+    htmlstr = xl.Xml(root=html).to_str(do_pretty=True, dont_do_tags=["p"])
+    epub.userfiles[doc_path] = htmlstr
+    epub.spine.append(doc_path)
+    epub.mark.kids.append(epubpacker.Mark(lang.c("禮敬偈"), doc_path))
+
+
+
+def _write_homage_abo(epub, lang):
+    doc_path = "homage.xhtml"
+    html, body = make_doc(0, lang, lang.c("禮敬世尊"))
+    body.attrs["class"] = "abo_homage"
+    _h1 = body.ekid("h1", {"class": "title"}, ["禮敬世尊"])
+
     p = body.ekid("p")
-    p.kids.extend(xml_es_to_html(kids, html, notes, doc_path, lang))
-    #indiv.kids.append())
+    p.kids = ["對那位世尊、阿羅漢、遍正覺者禮敬"]
 
-    docs.append((doc_path, html))
-    marks.append(epubpacker.Mark(lang.c("禮敬偈"), doc_path))
+    htmlstr = xl.Xml(root=html).to_str(do_pretty=True, dont_do_tags=["p"])
+    epub.userfiles[doc_path] = htmlstr
+    epub.spine.append(doc_path)
+    epub.mark.kids.append(epubpacker.Mark(lang.c("禮敬世尊"), doc_path))
 
 
-_project_link = "https://github.com/meng89/hyncdzj/books"
-_yunpan_link = "https://www.jianguoyun.com/p/DbBOkGwQnbmtChjWkpIGIAA"
-_my_mail = "observerchan@gmail.com"
+FANLI = (
+    "1.巴利語經文與經號均依 tipitaka.org (緬甸版)。",
 
-ZZSM = (
-    ["此佛经译著权归属于元亨寺及其译者。", xl.Element("a", {"href": "https://www.cbeta.org/"}, ["CBETA"],)," 做了数字化工作。"],
-    # ["在本人读经的过程中，会按照上下文填充省略的部分，以及对不懂的词句进行了解并加上注释。若您愿意帮助填充和注释，请联系我。"],
-    ["下载请访问", xl.Element("a", {"href": "{}".format(_project_link)}, ["项目主页"]),
-     "或", xl.Element("a", {"href": "{}".format(_yunpan_link)}, ["云盘"]),],
-    ["如有任何与此电子书制作程序相关的问题，或者电子书获取困难，请联系我：", xl.Element("a", {"href": "mailto:{}".format(_my_mail)}, [_my_mail])]
+    "2.巴利語經文之譯詞，依拙編《簡要巴漢辭典》，詞性、語態儘量維持與巴利語原文相同，並採「直譯」原則。"
+     "譯文之「性、數、格、語態」儘量符合原文，「呼格」(稱呼；呼叫某人)以標點符號「！」表示。",
+
+    "3.註解中作以比對的英譯，採用Bhikkhu Ñaṇamoli and Bhikkhu Bodhi,Wisdom Publication,1995年版譯本為主。",
+
+    "4.《顯揚真義》(Sāratthappakāsinī, 核心義理的說明)為《相應部》的註釋書，"
+     "《破斥猶豫》(Papañcasūdaṇī, 虛妄的破壞)為《中部》的註釋書，"
+     "《吉祥悅意》(Sumaṅgalavilāsinī, 善吉祥的優美)為《長部》的註釋書，"
+     "《滿足希求》(Manorathapūraṇī, 心願的充滿)為《增支部》的註釋書，"
+     "《勝義光明》(paramatthajotikā, 最上義的說明)為《小部/經集》等的註釋書，"
+     "《勝義燈》(paramatthadīpanī, 最上義的註釋)為《小部/長老偈》等的註釋書。",
+
+    "5.前後相關或對比的詞就可能以「；」區隔強調，而不只限於句或段落。"
 )
 
+def _write_fanli(epub, lang):
+    doc_path = "fanli.xhtml"
+    html, body = make_doc(0, lang, "凡例")
+    body.attrs["class"] = "fanli"
+    _h1 = body.ekid("h1", {"class": "title"}, ["凡例"])
 
-def _write_readme(epub, notes, lang):
+    for line in FANLI:
+        _p = body.ekid("p")
+        _p.kids.add(lang.c(line))
+
+    htmlstr = xl.Xml(root=html).to_str(do_pretty=True, dont_do_tags=["p"])
+    epub.userfiles[doc_path] = htmlstr
+    epub.spine.append(doc_path)
+    epub.mark.kids.append(epubpacker.Mark("凡例", doc_path))
+
+
+_releases_link = "https://github.com/meng89/hyncdzj/releases"
+_releases_e = xl.Element("a", {"href": _releases_link}, [_releases_link])
+
+_yunpan_link = "https://www.jianguoyun.com/p/DbBOkGwQnbmtChjWkpIGIAA"
+_yunpan_e = xl.Element("a", {"href": _yunpan_link}, [_yunpan_link])
+
+_my_mail = "observerchan@gmail.com"
+_my_mail_e = xl.Element("a", {"href": "mailto:{}".format(_my_mail)}, [_my_mail])
+_cbeta = xl.Element("a", {"href": "https://www.cbeta.org/"}, ["CBETA"],)
+
+README_HYNCDZJ = (
+    ["此佛经译著权归属于元亨寺及其译者。电子书基于 ", _cbeta, " 数字化数据制作。"],
+    # ["在本人读经的过程中，会按照上下文填充省略的部分，以及对不懂的词句进行了解并加上注释。若您愿意帮助填充和注释，请联系我。"],
+    ["获取最新制作的电子书，请访问项目 Releases 页面：", _releases_e],
+    ["或访问坚果云盘：", _yunpan_e],
+    ["如有任何与此电子书制作程序相关的问题，或者电子书获取困难，请联系我：", _my_mail_e]
+)
+
+_ccc_e = xl.Element("a", {"href": "https://agama.buddhason.org"}, ["莊春江讀經站"])
+README_ABO = (
+    ["此汉译佛经数据来自", _ccc_e, "，一切相关权利归于译者。"],
+    ["原文是繁体中文，简体版由程序转换，可能会出现转换错误。电子书目录以及经文标题部分可能有一些修改，正文部分与原页面相同，但可能丢失了一部分链接和格式等元数据。"],
+    ["点击经文的汉字标题会打开莊春江读经站的经文原始页面，原始页面有巴利语对照，以及与经文相关的其它经文链接。"],
+    ["在电子书里，点击标题前面的经号，如 SN1.1，可以访问 suttacentral.net 网站里此章节译文列表页面。点击标题可以访问原页面。",
+     "部分书籍没有整理出对应的经号，已有的经号有可能会有对应错误。若您发现有这样的错误，请联系我，谢谢！"],
+    ["获取最新制作的电子书，请访问项目 Releases 页面："],
+    [_releases_e],
+    [" 或访问云盘："],
+    [_yunpan_e],
+    #("如果打不开上面的链接，请尝试这个云盘链接：", xl.Element("a", {"href": "{}".format(_yunpan_link)}, [_yunpan_link])),
+    ["如有任何与此电子书制作程序相关的问题，或者电子书获取困难，请联系我："],
+    [_my_mail_e]
+)
+
+def _write_readme(readme, epub, notes, lang):
     doc_path = "readme.xhtml"
-    html, body = make_doc(1, lang, lang.c("製作說明"))
+    html, body = make_doc(0, lang, lang.c("說明"))
 
     body.attrs["class"] = "readme"
 
-    _h1 = body.ekid("h1", {"class": "title"}, [lang.c("製作說明")])
-    for line in ZZSM:
+    _h1 = body.ekid("h1", {"class": "title"}, [lang.c("說明")])
+    for line in readme:
         _p = body.ekid("p", kids=xml_es_to_html(line, html, notes, doc_path, lang))
 
     htmlstr = xl.Xml(root=html).to_str(do_pretty=True, dont_do_tags=["p"])
     epub.userfiles[doc_path] = htmlstr
     epub.spine.append(doc_path)
-    epub.mark.kids.append(epubpacker.Mark(lang.c("製作說明"), doc_path))
+    epub.mark.kids.append(epubpacker.Mark(lang.c("說明"), doc_path))
 
 
 def get_uuid(s):

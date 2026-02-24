@@ -66,7 +66,7 @@ def debug_print_es(l):
     print(s)
 
                             # SN.1.1   1     1
-def make_xml(source_page, sutta_nums, start, end, mtime, ctime, source_title, relevant, title_line, head, body_es, notes) -> xl.Xml:
+def make_xml(source_page, sutta_nums, start, end, mtime, ctime, source_title, relevant, title_line, head, body_es, notes):
     doc = xl.Element("doc")
     meta = doc.ekid("meta")
 
@@ -117,8 +117,8 @@ def make_xml(source_page, sutta_nums, start, end, mtime, ctime, source_title, re
 
     doc.kids.extend(body_es)
     doc.kids.extend(notes)
-    xml = xl.Xml(root=doc)
-    return xml
+    #xml = xl.Xml(root=doc)
+    return doc
 
 
 

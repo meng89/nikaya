@@ -2,20 +2,23 @@ import re
 
 import abo.page_parsing
 import abo.utils
+from nikaya_share import Info
 
 
-name_han = "中部"
-name_pali = "Majjhima Nikāya"
-short = "MN"
-htmls = ["MN/MN{:0>3d}.htm".format(x) for x in range(1, 153)]
-
+info = Info(
+    name = "中部",
+    pali = "Majjhima Nikāya",
+    translators = ("莊春江",),
+    abbr = "MN",
+    htmls = ["MN/MN{:0>3d}.htm".format(x) for x in range(1, 153)]
+)
 
 def load_from_htm():
     data = []
     jd = None
     pin = None
 
-    for htm in htmls:
+    for htm in info.htmls:
         root, mtime, body_lines, notes, div_nikaya = abo.page_parsing.read_page(htm, 2)
 
         # 中部1經/根本法門經(根本法門品[1])(莊春江譯)[MA.106, AA.44.6]
@@ -36,7 +39,7 @@ def load_from_htm():
             m = jd_matched[0][0]
             jd_name = m.group(1)
             jd = []
-            data.append((jd_name, jd))
+            data.append(((None, None, jd_name), jd))
             pin = None
 
 
@@ -47,7 +50,7 @@ def load_from_htm():
             m = pin_matched[0][0]
             pin_name = m.group(1)
             pin = []
-            jd.append((pin_name, pin))
+            jd.append(((None, None, pin_name), pin))
 
         body = abo.page_parsing.htm_lines_to_xml_lines(sutta_body_lines)
         body = abo.page_parsing.lines_to_es(body)
@@ -77,6 +80,6 @@ def load_from_htm():
                                  body_es=body,
                                  notes=notes)
 
-        pin.append((sutta_num_sc, xml))
+        pin.append(((int(start), int(end), name), xml))
 
     return data

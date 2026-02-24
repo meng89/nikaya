@@ -2,17 +2,21 @@ import re
 
 import abo.page_parsing
 import abo.utils
+from nikaya_share import Info
 
 
-name_han = "佛種姓"
-name_pali = "Buddhavaṃsa"
-short = "Bv"
-htmls = ["Bv/Bv{}.htm".format(x) for x in range(1, 30)]
+info = Info(
+    name = "佛種姓",
+    pali = "Buddhavaṃsa",
+    abbr = "Bv",
+    translators = ("莊春江",),
+    htmls = ["Bv/Bv{}.htm".format(x) for x in range(1, 30)],
+)
 
 
 def load_from_htm():
     data = []
-    for htm in htmls:
+    for htm in info.htmls:
         root, mtime, nikaya_lines, notes, div_nikaya = abo.page_parsing.read_page(htm, 2)
 
         # todo report 3.燃燈佛種性
@@ -33,10 +37,10 @@ def load_from_htm():
         head_lines = abo.page_parsing.htm_lines_to_xml_lines(head_lines)
         head = abo.page_parsing.lines_to_head(head_lines)
 
-        sutta_num = "{}.{}".format(short, sutta_serial)
+        sutta_num = "{}.{}".format(info.abbr, sutta_serial)
         sutta_nums = [
             (None, sutta_num),
-            ("SC", "{} {}".format(short, sutta_serial))
+            ("SC", "{} {}".format(info.abbr, sutta_serial))
         ]
 
         xml = abo.utils.make_xml(source_page = htm,
@@ -53,6 +57,6 @@ def load_from_htm():
                                  notes = notes
                                  )
 
-        data.append((sutta_num, xml))
+        data.append(((int(sutta_serial), int(sutta_serial), sutta_name), xml))
 
     return data

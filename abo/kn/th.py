@@ -1,15 +1,17 @@
-import copy
 import re
 
 import abo.page_parsing
 import abo.utils
+from nikaya_share import Info
 
 
-name_han = "長老偈"
-name_pali = "Theragāthā"
-short = "Thag" # 例如：Thag.1.1。数字品名似乎只是为了分割大篇幅，意义不大。这里经文编号依照 suttacentral 风格重编，品不参与计算经号。
-
-htmls = ["Th/Th{}.htm".format(x) for x in range(1, 113)]
+info = Info(
+    name = "長老偈",
+    pali = "Theragāthā",
+    abbr = "Thag", # 例如：Thag.1.1。数字品名似乎只是为了分割大篇幅，意义不大。这里经文编号依照 suttacentral 风格重编，品不参与计算经号。
+    translators = ("莊春江",),
+    htmls = ["Th/Th{}.htm".format(x) for x in range(1, 113)]
+)
 
 
 def load_from_htm():
@@ -20,7 +22,7 @@ def load_from_htm():
 
     last = None
 
-    for htm in htmls:
+    for htm in info.htmls:
         root, mtime, nikaya_lines, notes, div_nikaya = abo.page_parsing.read_page(htm, 2)
 
         matchs = abo.utils.match_line(nikaya_lines, [re.compile(r"^\d+\.(.+長老偈).*$")])
@@ -38,7 +40,7 @@ def load_from_htm():
             pian_serial = pian_m.group(1)
             pian_name = pian_m.group(2)
             pian_num = pian_serial + "." + pian_name
-            data.append((pian_num, pian))
+            data.append(((int(pian_serial), int(pian_serial), pian_name), pian))
             last = pian
             ji_serial = 0
 
@@ -48,7 +50,7 @@ def load_from_htm():
             assert len(pin_matchs) == 1
             pin_m = pin_matchs[0][0]
             pin = []
-            pian.append((pin_m.group(1), pin))
+            pian.append(((None, None, pin_m.group(1)), pin))
             last = pin
 
 
@@ -86,7 +88,7 @@ def load_from_htm():
                                      body_es= body,
                                      notes = notes,
                                      )
-
-            last.append((sutta_num, xml))
+            name = title_line[0].replace("/", "-")
+            last.append(((int(ji_serial), int(ji_serial), name), xml))
 
     return data

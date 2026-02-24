@@ -1,7 +1,7 @@
-from nikaya_share import base
+from nikaya_share import Info
 
 
-info = base.Info(
+info = Info(
     serial = 8,
     name = "小誦經",
     pali = "Khuddakapāṭha",

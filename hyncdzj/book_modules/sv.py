@@ -1,9 +1,9 @@
 import re
 
-from nikaya_share import base
+from nikaya_share import Info
 
 
-info = base.Info(
+info = Info(
     serial = 1,
     name = "經分別",
     pali = "Suttavibhaṅga",

@@ -2,10 +2,10 @@ import re
 
 import cn2an
 
-from nikaya_share import base
+from nikaya_share import Info
 
 
-info = base.Info(
+info = Info(
     serial = 4,
     name = "長部",
     pali = "Dīgha Nikāya",

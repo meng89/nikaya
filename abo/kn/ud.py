@@ -2,12 +2,16 @@ import re
 
 import abo.page_parsing
 import abo.utils
+from nikaya_share import Info
 
 
-name_han = "優陀那" # 自说经
-name_pali = "Udāna"
-short = "Ud"
-htmls = ["Ud/Ud{:0>2d}.htm".format(x) for x in range(1, 81)]
+info = Info(
+    name = "優陀那",
+    pali = "Udāna",
+    abbr = "Ud",
+    translators = ("莊春江",),
+    htmls = ["Ud/Ud{:0>2d}.htm".format(x) for x in range(1, 81)]
+)
 
 
 def load_from_htm():
@@ -15,7 +19,7 @@ def load_from_htm():
     pin = []
     pin_name = None
     sutta_serial = 0
-    for htm in htmls:
+    for htm in info.htmls:
         root, mtime, body_lines, notes, div_nikaya = abo.page_parsing.read_page(htm, 2)
 
         p = re.compile(r"^優陀那(\d+)經/(.+)\((\d)\.(.+品)\)\(莊春江譯\)(.*)$")
@@ -35,7 +39,7 @@ def load_from_htm():
             pin_name = new_pin_name
             pin = []
             pin_name_whole = pin_serial + "." + new_pin_name
-            data.append((pin_name_whole, pin))
+            data.append(((int(pin_serial), int(pin_serial), new_pin_name), pin))
             sutta_serial = 0
 
         suttas = abo.utils.split_sutta(body_lines, matches)
@@ -73,6 +77,6 @@ def load_from_htm():
                                  body_es=body,
                                  notes=notes)
 
-        pin.append((sutta_num_sc, xml))
+        pin.append(((sutta_serial, sutta_serial, m.group(2)), xml))
 
     return data

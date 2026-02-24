@@ -19,7 +19,7 @@ def load_from_htm():
 
 _gn = None
 
-def get_gn():
+def get_global_notes():
     global _gn
     if _gn is None:
         _gn = GlobalNotes()
@@ -89,7 +89,7 @@ class GlobalNotes:
             li = last_ol.ekid("li")
             li.attrs["id"] = note_id
             p = li.ekid("p")
-            p.kids.extend(abo.epub._xml_es_to_html(bns, note, last_html, lang, get_gn(), last_page_path, lang))
+            p.kids.extend(abo.epub._xml_es_to_html(bns, note, last_html, lang, get_global_notes(), last_page_path, lang))
 
         pages = []
         for title, path, xhtml in xhtmls:

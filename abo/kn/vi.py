@@ -1,28 +1,30 @@
 import re
 
-import xl
 
 import abo.page_parsing
 import abo.utils
+from nikaya_share import Info
 
 
-name_han = "天宮事"
-name_pali = "Vimānavatthu"
-short = "Vi"
-htmls = ["Vi/Vi{}.htm".format(x) for x in range(1, 86)]
-
+info = Info(
+    name = "天宮事",
+    pali = "Vimānavatthu",
+    abbr = "Vi",
+    translators = ("莊春江",),
+    htmls = ["Vi/Vi{}.htm".format(x) for x in range(1, 86)]
+)
 
 
 def load_from_htm():
     data = []
-    sexual_tiangong = None
+    x_tiangong = None
     pin = None
 
     sutta_serial = None
 
     after_18 = False
 
-    for htm in htmls:
+    for htm in info.htmls:
         root, mtime, nikaya_lines, notes, div_nikaya = abo.page_parsing.read_page(htm, 2)
 
 
@@ -58,8 +60,8 @@ def load_from_htm():
             assert len(sexual_matchs) == 1
             m = sexual_matchs[0][0]
             s_tg_name = m.group(1)
-            sexual_tiangong = []
-            data.append((s_tg_name, sexual_tiangong))
+            x_tiangong = []
+            data.append(((None, None, s_tg_name), x_tiangong))
             pin = None
 
         p = re.compile(r"^\d\.(.+品)$")
@@ -69,7 +71,7 @@ def load_from_htm():
             m = pin_matchs[0][0]
             pin_name = m.group(1)
             pin = []
-            sexual_tiangong.append((pin_name, pin))
+            x_tiangong.append(((None, None, pin_name), pin))
 
 
         head_lines = abo.page_parsing.htm_lines_to_xml_lines(head_lines)
@@ -97,6 +99,6 @@ def load_from_htm():
                                  body_es= body,
                                  notes = notes
                                  )
-        pin.append((sutta_num, xml))
+        pin.append(((int(sutta_serial), int(sutta_serial), sutta_name), xml))
 
     return data

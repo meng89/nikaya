@@ -9,6 +9,7 @@ import xl
 
 import config
 from . import epub, ebook_utils
+import nikaya_share
 from nikaya_share import new_page_or_not
 
 
@@ -55,7 +56,7 @@ fonts = {
 }
 
 
-def build_pdf(cover_dir, full_path, data, info, lang, layout, font, tag, exit_after_done=False):
+def build_pdf(type_, cover_dir, full_path, data, info, lang, layout, font, tag, exit_after_done=False):
     work_dir = full_path + "_work"
     out_dir = full_path + "_out"
     shutil.copytree(config.TEX_DIR, work_dir)
@@ -77,7 +78,12 @@ def build_pdf(cover_dir, full_path, data, info, lang, layout, font, tag, exit_af
     write_fontstex(work_dir, lang)
 
     _write_homage(work_dir, lang)
-    _write_zzsm(work_dir, lang)
+
+    if type_ is nikaya_share.HYNCDZJ:
+        _write_readme(epub.README_HYNCDZJ, work_dir, lang)
+    else:
+        _write_readme(epub.README_ABO, work_dir, lang)
+
 
     my_env = os.environ.copy()
     if os.name == "posix":
@@ -130,7 +136,7 @@ def write_tree(level_offset, book_data, f, info, obj, lang, max_hanzi_in_line, m
         print("depth too long", namegroups)
         exit()
 
-    _, _, _, mark_name, title_range, title_name = epub.make_mark_and_heading(info, namegroups, obj, 1, level_offset)
+    _, _, _, mark_name, title_range, title_name = epub.make_mark_and_heading(info, namegroups, obj, 1)
 
     if title_range is not None:
         sc_key = title_range
@@ -244,11 +250,11 @@ def _write_homage(work_dir, lang):
     f.close()
 
 
-def _write_zzsm(work_dir, lang):
+def _write_readme(readme, work_dir, lang):
     f = open(os.path.join(work_dir, "readme.tex"), "w", encoding="utf-8")
     f.write(startsec(lang, 1, "制作说明", "制作说明", "制作说明"))
-    for line in epub.ZZSM:
-        f.write(xml_to_tex(line, None, ebook_utils.Lang()))
+    for line in readme:
+        f.write(xml_to_tex(line, None, nikaya_share.Lang()))
         f.write("\n\\blank\n")
     if config.DEBUG:
         f.write("\\page[yes]\n")

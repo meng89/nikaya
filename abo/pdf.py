@@ -386,7 +386,7 @@ def _xml_to_tex(bns, es, lang, root=None):
             elif x.tag == "gn":
                 _text = _xml_to_tex(bns, x.kids, lang, root)
                 _text = lang.c(_text)
-                gn = note.get_gn()
+                gn = note.get_global_notes()
                 _note = gn.get_es(x.attrs["id"])
                 _note = utils.line_to_txt(_note)
                 #_note = _xml_to_tex(bns, _note, lang, root)

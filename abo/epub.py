@@ -38,7 +38,7 @@ def build_epub(full_path, data, module, lang, exit_after_done=False):
     epub.userfiles[css.css1_path] = css.css1[lang.en]
 
     ln = abo.note.LocalNotes()
-    gn = abo.note.get_gn()
+    gn = abo.note.get_global_notes()
     docs = []
     refs = []
     bns = [module.short]

@@ -2,22 +2,23 @@ import re
 
 import abo.page_parsing
 import abo.utils
-from abo.utils import get_name, make_xml, get_pin_name
-from . import th
+from nikaya_share import Info
 
 
-name_han = "無礙解道" #
-name_pali = "Paṭisambhidāmagga"
-short = "Ps"
-htmls = ["Ps/Ps{}.htm".format(x) for x in range(1, 31)]
-
+info = Info(
+    name = "無礙解道", #
+    pali = "Paṭisambhidāmagga",
+    abbr = "Ps",
+    translators = ("莊春江",),
+    htmls = ["Ps/Ps{}.htm".format(x) for x in range(1, 31)],
+)
 
 
 def load_from_htm():
     data = []
     pin = None
     pin_serial = None
-    for htm in htmls:
+    for htm in info.htmls:
         root, mtime, body_lines, notes, div_nikaya = abo.page_parsing.read_page(htm, 2)
 
         p = re.compile(r"^(\d+)\.(.+的談論)$")
@@ -42,7 +43,7 @@ def load_from_htm():
             pin_name = pin_m.group(2)
             pin_name_whole = pin_serial + "." + pin_name
             pin = []
-            data.append((pin_name_whole, pin))
+            data.append(((int(pin_serial), int(pin_serial), pin_name), pin))
 
         body = abo.page_parsing.htm_lines_to_xml_lines(sutta_body_lines)
         body = abo.page_parsing.lines_to_es(body)
@@ -70,6 +71,6 @@ def load_from_htm():
                                  body_es=body,
                                  notes=notes)
 
-        pin.append((sutta_num, xml))
+        pin.append(((int(sutta_serial), int(sutta_serial), m.group(2)), xml))
 
     return data

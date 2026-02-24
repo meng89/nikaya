@@ -2,10 +2,10 @@ import re
 
 import abo.page_parsing
 import abo.utils
-from nikaya_share import base
+from nikaya_share import Info
 
 
-info = base.Info(
+info = Info(
     name = "相應部",
     pali = "Saṃyutta Nikāya",
     translators = ("莊春江",),

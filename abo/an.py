@@ -4,12 +4,16 @@ import xl
 
 import abo.page_parsing
 import abo.utils
+from nikaya_share import Info
 
 
-name_han = "增支部"
-name_pali = "Aṅguttara Nikāya"
-short = "AN"
-htmls = ["AN/AN{:0>4d}.htm".format(x) for x in range(1, 1765)]
+info = Info(
+    name = "增支部",
+    pali = "Aṅguttara Nikāya",
+    translators = ("莊春江",),
+    abbr = "AN",
+    htmls = ["AN/AN{:0>4d}.htm".format(x) for x in range(1, 1765)]
+)
 
 
 def load_from_htm():
@@ -18,7 +22,7 @@ def load_from_htm():
     ze = None
     pin = None
     jp_seril = 0
-    for htm in htmls:
+    for htm in info.htmls:
         root, mtime, body_lines, notes, div_nikaya = abo.page_parsing.read_page(htm, 2)
 
         p = re.compile(r"^增支部(\d+)集(\d+)(?:-(\d+))?經(?:/(\S+))?\(莊春江譯\)(.*)$")
@@ -44,7 +48,7 @@ def load_from_htm():
             jp_m = jp_matched[0][0]
             jp_name = jp_m.group(1)
             jp = []
-            data.append(("{}.{}".format(jp_seril, jp_name), jp))
+            data.append(((jp_seril, jp_seril, jp_name), jp))
             ze = None
             pin = None
 
@@ -55,7 +59,7 @@ def load_from_htm():
             ze_m = ze_matched[0][0]
             ze_name = ze_m.group(1)
             ze = []
-            jp.append((ze_name, ze))
+            jp.append(((None, None, ze_name), ze))
             pin = None
 
         pin_p = re.compile(r"^\d+\.(\S+品\S*)")
@@ -70,7 +74,7 @@ def load_from_htm():
                 folder = ze
             else:
                 folder = jp
-            folder.append((pin_name, pin))
+            folder.append(((None, None, pin_name), pin))
 
 
         suttas = abo.utils.split_sutta(body_lines, matched)
@@ -121,7 +125,7 @@ def load_from_htm():
                 folder = ze
             else:
                 raise Exception
-            folder.append((sutta_num_sc, xml))
+            folder.append(((int(start), int(end), name), xml))
         #check_e(xml.root)
 
     return data
