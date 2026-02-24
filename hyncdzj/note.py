@@ -52,7 +52,7 @@ class Notes:
             li = last_ol.ekid("li")
             li.attrs["id"] = str(index)
             #p = li.ekid("p")
-            li.kids.extend(epub.xml_es_to_html(note, last_html, self, last_page_path, lang))
+            li.kids.extend(epub.xml_es_to_html(note, last_html, self, 1, lang))
 
         pages = []
         for title, path, xhtml in xhtmls:

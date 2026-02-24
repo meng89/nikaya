@@ -1,3 +1,4 @@
+@namespace epub "http://www.idpf.org/2007/ops";
 
 body {
     font-family: "Source Serif 4", "Source Serif 5", /* Linux */
@@ -63,7 +64,7 @@ h1, h2, h3, h4, h5, h6, h7 {
 }
 
 
-a.noteref {
+a[epub|type="noteref"]  {
     color: inherit;
     text-decoration-style: dotted;
     text-underline-offset: 0.2rem;
@@ -71,6 +72,8 @@ a.noteref {
 
 body.note ol {
     list-style: none;
+    padding-left: 0;
+    margin-left: 0;
 }
 
 a.suttaref_inbook {
@@ -104,6 +107,11 @@ body.hyncdzj_homage > p {
     white-space: nowrap; /* 禁止换行 */
     font-size: 18vw; /* 让body占据整个视口高度，确保垂直居中有效 */
 }
+body.abo_homage > p {
+    text-indent: 0em;
+    white-space: nowrap; /* 禁止换行 */
+    font-size: 6vw; /* 让body占据整个视口高度，确保垂直居中有效 */
+}
 
 
 .poem_wrapper {
@@ -122,6 +130,6 @@ body.hyncdzj_homage > p {
 }
 
 
-body.readme > p {
+body.fanli > p, body.readme > p {
     text-indent: 0em;
 }

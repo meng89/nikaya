@@ -156,7 +156,7 @@ def build_epub(type_, cover_dir, full_path, data, info, lang, tag):
     if type_ is nikaya_share.HYNCDZJ:
         image_path = ebook_utils.make_cover_image(cover_dir, info, lang, tag, onebook=True)
     else:
-        image_path = abo.ebook_utils.make_cover_image(cover_dir, info, lang, tag, onebook=True)
+        image_path = abo.ebook_utils.make_cover_image(cover_dir, info, lang, onebook=True)
     _write_cover(epub, image_path, lang)
 
     if type_ is nikaya_share.HYNCDZJ:
@@ -490,7 +490,6 @@ def xml_es_to_html(es: ES, root, notes: hyncdzj.note.Notes, doc_depth, lang) -> 
                 link = notes.add_note(n_kids)
                 a.attrs["href"] = "../" * doc_depth + link
                 if len(e.kids) > 0:
-                    a.attrs["class"] = "noteref"
                     a.kids.extend(xml_es_to_html(e.kids, root, notes, doc_depth, lang))
                 else:
                     a.attrs["class"] = "no_text_noteref"
@@ -546,6 +545,12 @@ def xml_es_to_html(es: ES, root, notes: hyncdzj.note.Notes, doc_depth, lang) -> 
                 new_es.append(e)
             elif e.tag == "table":
                 new_es.append(e)
+            elif e.tag == "meta":
+                pass
+            elif e.tag == "span":
+                new_es.extend(e.kids)
+            elif e.tag == "br":
+                pass
             else:
                 raise Exception("Unknown element type: {}".format(repr(e.to_str())))
 
@@ -679,7 +684,6 @@ def _write_homage_abo(epub, lang):
     doc_path = "homage.xhtml"
     html, body = make_doc(0, lang, lang.c("禮敬世尊"))
     body.attrs["class"] = "abo_homage"
-    _h1 = body.ekid("h1", {"class": "title"}, ["禮敬世尊"])
 
     p = body.ekid("p")
     p.kids = ["對那位世尊、阿羅漢、遍正覺者禮敬"]
@@ -716,7 +720,7 @@ def _write_fanli(epub, lang):
 
     for line in FANLI:
         _p = body.ekid("p")
-        _p.kids.add(lang.c(line))
+        _p.kids.append(lang.c(line))
 
     htmlstr = xl.Xml(root=html).to_str(do_pretty=True, dont_do_tags=["p"])
     epub.userfiles[doc_path] = htmlstr

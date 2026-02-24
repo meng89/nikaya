@@ -7,7 +7,8 @@ import sys
 import config
 import shutil
 import zipfile
-#multiprocessing.set_start_method("fork") # only POSIX
+import multiprocessing
+multiprocessing.set_start_method("fork") # only POSIX
 from multiprocessing import Process
 
 import nikaya_share
