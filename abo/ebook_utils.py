@@ -49,12 +49,11 @@ def make_cover_image(cover_dir, info, lang, width=1600, height=2560, onebook=Fal
                                created=lang.c(today() + " 製作"),
                                )
 
-        cover_xhtml_path = os.path.join(config.ABO_COVER_DIR, xhtml_filename)
+        cover_xhtml_path = os.path.join(cover_dir, xhtml_filename)
         open(cover_xhtml_path, "w").write(doc_str)
 
         options = selenium.webdriver.FirefoxOptions()
         options.add_argument("--headless")
-        #options.add_argument("--window-size=1600x2560")
         driver = selenium.webdriver.Firefox(options=options)
         driver.set_window_size(width, height + config.WINDOW_HEIGHT_OFFSET)
         driver.get("file://" + cover_xhtml_path)

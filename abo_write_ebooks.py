@@ -13,7 +13,7 @@ import abo.ebook_utils
 
 import nikaya_share
 import hyncdzj_write_ebooks
-from hyncdzj_write_ebooks import max_processes, total, jobs
+from hyncdzj_write_ebooks import max_processes, jobs
 from hyncdzj_write_ebooks import read_args, format_seconds, try_run_job, wating_job_done, get_load_path, get_data
 
 import hyncdzj.pdf
@@ -101,6 +101,39 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, onebook=F
     for lang in my_langs:
         zh_name = lang.c("莊春江_漢譯經藏")
 
+        if onebook:
+            if "epub" in my_types:
+                tag = None
+                info_datas = []
+
+                for m2 in abo.all_modules:
+                    load_path = os.path.join(config.ABO_XML_DIR, m2.info.name)
+                    tag = None
+                    info_datas.append((m2.info, get_data(lang, m2.info, load_path)))
+
+                    if config.DEBUG:
+                        break
+
+                file_name = "{}_{}".format(zh_name, lang.c("合訂本"))
+                if tag:
+                    file_name += "_{}".format(tag)
+
+                file_name += "_{}_{}".format(lang.zh, date)
+                file_name += ".epub"
+                files.add(file_name)
+                full_file_name = os.path.join(temp_td.name, file_name)
+
+                job = (
+                    "{}/{}".format(lang.zh, file_name),
+                    hyncdzj.epub.build_epub_one_book,
+                    (nikaya_share.ABO, zh_name, cover_dir, full_file_name, info_datas, lang, tag)
+                )
+
+                jobs.append(job)
+                hyncdzj_write_ebooks.total += 1
+                try_run_job()
+
+
         for count, m in enumerate(my_modules, start=1):
             load_path = os.path.join(config.ABO_XML_DIR, m.info.name)
             tag = None
@@ -178,7 +211,7 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, onebook=F
 
             os.remove(full_file_name)
 
-        shutil.rmtree(cover_dir)
+        shutil.rmtree(cover_dir, ignore_errors=True)
 
 
     print()

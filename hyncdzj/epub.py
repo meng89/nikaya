@@ -15,23 +15,22 @@ import nikaya_share
 from . import ebook_utils
 import hyncdzj.note
 from nikaya_share import new_page_or_not, epub_utils
-from hyncdzj.book_modules import all_infos
+import hyncdzj.book_modules
 
 import abo.ebook_utils
 import abo.note
 
 
-def write_tree_to_userfiles(pre_path, tree, userfiles):
-    for name, obj in tree:
-        my_path = posixpath.join(pre_path, name)
-        if isinstance(obj, xl.Xml):
-            pass
+def make_tree_data(type_, data_infos, lang):
+    if type_ is nikaya_share.HYNCDZJ:
+        all_infos = hyncdzj.book_modules.all_infos
+    else:
+        all_infos = abo.all_catalog
 
-
-def make_tree_data(data_infos, lang):
     data2 = []
     translators = []
     for info, data in data_infos:
+
         for dirs, infos2 in all_infos:
             for info2 in infos2:
                 if info2 == info:
@@ -97,7 +96,7 @@ def write_note_spile(notes, epub, lang):
 
 
 def build_epub_one_book(type_, title, cover_dir, full_path, data_infos, lang, tag):
-    data3, translators = make_tree_data(data_infos, lang)
+    data3, translators = make_tree_data(type_, data_infos, lang)
     book_names = [lang.c(title)]
 
     my_uuid = get_uuid("".join(book_names) + lang.en)
@@ -111,7 +110,7 @@ def build_epub_one_book(type_, title, cover_dir, full_path, data_infos, lang, ta
     else:
 
         book_info = nikaya_share.Info(name="漢譯藏經", pali="Sutta Piṭaka", translators=tuple(translators))
-        image_path =  abo.ebook_utils.make_cover_image(cover_dir, book_info, lang, tag, onebook=True)
+        image_path =  abo.ebook_utils.make_cover_image(cover_dir, book_info, lang, onebook=True)
     _write_cover(epub, image_path, lang)
 
     if type_ is nikaya_share.HYNCDZJ:
@@ -487,6 +486,10 @@ def xml_es_to_html(es: ES, root, notes: hyncdzj.note.Notes, doc_depth, lang) -> 
                 key = m_t.group(1)
 
                 n_kids = get_note_by_key(root, key)
+                if n_kids is None: # 庄春江 缺失注解
+                    new_es.extend(e.kids)
+                    continue
+
                 link = notes.add_note(n_kids)
                 a.attrs["href"] = "../" * doc_depth + link
                 if len(e.kids) > 0:
@@ -579,10 +582,9 @@ def get_note_by_key(root: xl.Element, key: str):
         if m_n:
             if key == m_n.group(1):
                 return e.kids
-
-    raise Exception("Note not found")
-
-
+    #print("Note not found:", key)
+    return None
+    raise Exception("Note not found", repr(key))
 
 
 def write_css(epub, lang):

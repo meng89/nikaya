@@ -124,6 +124,9 @@ def build_pdf(type_, cover_dir, full_path, data, info, lang, layout, font, tag, 
     stderr_file.close()
 
 
+def write_tree2(level_offset, book_data, f, info, obj, lang, max_hanzi_in_line, max_line_in_page):
+    pass
+
 def write_tree(level_offset, book_data, f, info, obj, lang, max_hanzi_in_line, max_line_in_page):
 
     new_page = new_page_or_not.new_page_or_not_smart(book_data, obj, max_hanzi_in_line, max_line_in_page)
