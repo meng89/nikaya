@@ -207,35 +207,32 @@
 \definecolor[pdfhighlight:莊春江][r=.93,g=.93,b=.93,]
 
 
-
 \useexternalfigure[cover][$cover_image]
 \defineoverlay[cover][{\externalfigure[cover][width=\paperwidth]}]
 
-\startsetups Background:cover
-\setupbackgrounds[page][background=cover]
-\stopsetups
-
-\startsetups Background:off
-% 只要把 background 留空或这设置成无效的名字，就会没有背景
-\setupbackgrounds[page][background=,]
-\stopsetups
-
-%\showframe
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\definelayout[zeromargin][
+  topspace=0mm,
+  backspace=0mm,
+  width=\paperwidth,
+  height=\paperheight,
+  header=0mm,
+  footer=0mm,
+]
 
 \startdocument
 
-\setups[clearheaderfooter]
-%\setuppagenumber[number=1]
-\setups[Background:cover]
-%\bookmark[notitle]{封面}
-\null
-\page
-\setups[Background:off]
+% 封面
+\setuplayout[zeromargin]
+\setupbackgrounds[page][background=cover]
+\startstandardmakeup[top=]
+\writetolist[part]{}{封面}
+\stopstandardmakeup
+\setuplayout[reset]
+\setupbackgrounds[page][background=,]
 
-
-%
+% 页面目录
 \startnolist[title={目录},bookmark={页面目录},list=,]
 \startcolor[TropicalRainForest]
 \placecontent
