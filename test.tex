@@ -1,4 +1,12 @@
+\startdocument
 
-\starttext
-\input{a}
-\stoptext
+\section{sec1}
+这里是正常的标题。
+
+% 在文档中间修改样式
+\setuphead[section][color=red, style=\tfc]
+
+\section{sec2}
+从这里开始，所有的 section 标题都会变成红色且加大字号。
+
+\stopdocument
