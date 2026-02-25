@@ -15,20 +15,10 @@
 \language[cn]
 \setscript[hanzi] % hyphenation
 
-%%%%%%%
-% 字体
-
-
-% mode 由命令行调用时提供
-
-% 字体
-%%%%%%%
 
 \startmode [debug]
   \showframe
 \stopmode
-
-
 
 
 \setupindenting[yes,first,2em]
@@ -124,8 +114,10 @@
 
 \definelist[notitle][part]
 
+# 页面之外的窗口里的目录
 \placebookmarks[part,title,subject,subsubject,subsubsubject,subsubsubsubject,subsubsubsubsubject,subsubsubsubsubsubject,subsubsubsubsubsubsubject,notitle,nolist]
 
+# 页面目录
 \setupcombinedlist[content]
     [list={notitle,part,title,subject,subsubject,subsubsubject,subsubsubsubject,subsubsubsubsubject,subsubsubsubsubsubject,subsubsubsubsubsubsubject},
      alternative=c,
@@ -194,8 +186,6 @@
   align=middle,
   alternative=normal,
 ]
-
-
 
 
 \setupinteractionscreen[option=bookmark]
