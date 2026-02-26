@@ -55,6 +55,75 @@ fonts = {
     "hei": "ss"
 }
 
+"""
+\\setuphead[part][style=\\tfd\\bf\\ss]
+\\setuphead[title][style=\\tfc\\bf\\ss]
+\\setuphead[subject][style=\\tfb\\bf\\ss]
+\\setuphead[subsubject][style=\\tfa\\bf\\ss]
+\\setuphead[subsubsubject][style=\\tf\\bf\\ss]
+\\setuphead[subsubsubsubject][style=\\tfx\\bf\\ss]
+\\setuphead[subsubsubsubsubject][style=\\tfxx\\bf\\ss]
+\\setuphead[subsubsubsubsubsubject][style=\\tfxx\\bf\\ss]
+\\setuphead[subsubsubsubsubsubsubject][style=\\tfxx\\bf\\ss]
+"""
+
+
+
+
+
+class Head:
+    heads = ["part", "title", "subject", "subsubject", "subsubsubject", "subsubsubsubject", "subsubsubsubsubject", "subsubsubsubsubsubject", "subsubsubsubsubsubsubject"]
+    font_sizes = ["tfd", "tfc", "tfb", "tfa", "tf", "tfx", "tfxx", "tfxx", "tfxx"]
+    def __init__(self, catalog_depth):
+        self.catalog_depth = catalog_depth
+
+    def _get_size(self, i):
+        try:
+            return Head.font_sizes[i - self.catalog_depth]
+        except IndexError:
+            return Head.font_sizes[0]
+
+    def setuphead(self):
+        s = ""
+        for count, head in Head.heads:
+            s += "\\setuphead[" + head + "][style=\\" + self._get_size(count) + "\\bf\\ss]\n"
+        return s
+
+    def startsec(self, depth, title, bookmark, toctext, lang, sc_key=None, abo_key=None):
+        sec = Head.heads[depth]
+        font_size = self._get_size(depth)
+        s = ""
+        s += "\\startalignment[center]\n"
+        s += "{\\darkred\n"
+        s += "\\setuphead[" + sec + "][before={\\testpage[4]\\blank[1*halfline]"
+
+        if sc_key:
+            s += "\\goto{" + font_size + "\\ss \\bf " + sc_key + "}[url(https://suttacentral.net/" + sc_key + ")]\\kern 0.5em"
+        else:
+            s += "\\strut"  # 若不添加，上面的居中命令就无效了，我也不知道为什么
+
+        s += "}]\n"
+
+        s += "\\start" + sec + "[\n"
+        s += "    title={{{}}},\n".format(title or "")
+        s += "    bookmark={{{}}},\n".format(bookmark)
+        s += "    list={" + (sc_key + " " if sc_key is not None else "") + toctext + "},]\n"
+
+        if abo_key:
+            s += "\\goto{(莊春江" + lang.c("譯") + ")}[url(https://suttacentral.net/" + abo_key + ")]\n"
+
+        s += "}\n"
+
+        s += "\\stopalignment\n"
+
+        s += "\\blank[1*halfline]\n\n"
+
+        return s
+
+    @staticmethod
+    def stop(depth):
+        return "\\stop{}\n\n".format(Head.heads[depth])
+
 
 def build_pdf(type_, cover_dir, full_path, data, info, lang, layout, font, tag, exit_after_done=False):
     work_dir = full_path + "_work"
@@ -124,8 +193,23 @@ def build_pdf(type_, cover_dir, full_path, data, info, lang, layout, font, tag, 
     stderr_file.close()
 
 
-def write_tree2(level_offset, book_data, f, info, obj, lang, max_hanzi_in_line, max_line_in_page):
-    pass
+def write_tree2(type_, info, head: Head, ds_depth, f, ngs, obj, depth, lang, max_hanzi_in_line, max_line_in_page, marge_or_not):
+    sub_merge_or_not = new_page_or_not.merge_or_not(ngs, obj, ds_depth)
+
+    for ng, sub in obj:
+        sub_ngs = ngs + [ng]
+        _, _, _, mark_name, title_range, title_name = epub.make_mark_and_heading(info, ngs, obj, 1)
+        start_str = head.startsec(depth, title_name, mark_name, title_name, title_range)
+        f.write(start_str)
+
+        if isinstance(sub, xl.Element):
+            pass
+        else:
+            assert isinstance(sub, xl.Element)
+
+        f.write(head.stop(depth))
+
+
 
 def write_tree(level_offset, book_data, f, info, obj, lang, max_hanzi_in_line, max_line_in_page):
 
