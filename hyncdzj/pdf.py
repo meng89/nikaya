@@ -249,7 +249,7 @@ def write_tree2(type_, info, texhead, ds_depth, f, ngs, obj, depth, lang, parent
 
     for ng, sub in obj:
         sub_ngs = ngs + [ng]
-        _, _, _, mark_name, title_range, title_name = epub.make_mark_and_heading(info, sub_ngs, obj, 1)
+        _, _, _, mark_name, title_range, title_name = epub.make_mark_and_heading(info, sub_ngs, sub, 1)
         start_str = texhead.startsec(depth, title_name, mark_name, title_name, lang, title_range)
         f.write(start_str)
 
