@@ -114,10 +114,10 @@
 
 \definelist[notitle][part]
 
-# 页面之外的窗口里的目录
+% 页面之外的窗口里的目录
 \placebookmarks[part,title,subject,subsubject,subsubsubject,subsubsubsubject,subsubsubsubsubject,subsubsubsubsubsubject,subsubsubsubsubsubsubject,notitle,nolist]
 
-# 页面目录
+% 页面目录
 \setupcombinedlist[content]
     [list={notitle,part,title,subject,subsubject,subsubsubject,subsubsubsubject,subsubsubsubsubject,subsubsubsubsubsubject,subsubsubsubsubsubsubject},
      alternative=c,
@@ -223,14 +223,14 @@
 \setupbackgrounds[page][background=,]
 
 % 页面目录
-\startnolist[title={目录},bookmark={页面目录},list=,]
+\startnolist[title={$mulu},bookmark={$mulu},list=,]
 \startcolor[TropicalRainForest]
 \placecontent
 \stopcolor
 \page[yes]
 \stopnolist
 
-\input{homage.tex}
+\input{$homage}
 
 \setups[mainheaderfooter]
 \input{suttas.tex}

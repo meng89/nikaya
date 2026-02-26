@@ -187,22 +187,41 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, onebook=F
         zh_name = lang.c("元亨寺_漢譯南傳大藏經")
 
         if onebook:
+            tag = None
+            info_datas = []
+
+            for m2 in book_modules.all_modules:
+                load_path, tag2 = get_load_path(m2.info)
+                tag = tag2 or tag
+                info_datas.append((m2.info, get_data(lang, m2.info, load_path)))
+
+                if config.DEBUG:
+                    break
+            file_name = "{}_{}".format(zh_name, lang.c("合訂本"))
+
+
+            if "pdf" in my_types:
+                for layout in my_layouts:
+                    for font in my_fonts:
+
+                        if tag:
+                            file_name += "_{}".format(tag)
+                        file_name += "_{}_{}".format(lang.zh, date)
+                        file_name += ".pdf"
+                        files.add(file_name)
+                        full_file_name = os.path.join(temp_td.name, file_name)
+                        job = (
+                            "{}/{}".format(lang.zh, file_name),
+                            hyncdzj.pdf.build_epub_one_book
+                            (nikaya_share.HYNCDZJ, cover_dir, full_file_name, info_datas, lang, layout, font, tag)
+                        )
+                        jobs.append(job)
+                        total += 1
+                        try_run_job()
+
             if "epub" in my_types:
-                tag = None
-                info_datas = []
-
-                for m2 in book_modules.all_modules:
-                    load_path, tag2 = get_load_path(m2.info)
-                    tag = tag2 or tag
-                    info_datas.append((m2.info, get_data(lang, m2.info, load_path)))
-
-                    if config.DEBUG:
-                        break
-
-                file_name = "{}_{}".format(zh_name, lang.c("合訂本"))
                 if tag:
                     file_name += "_{}".format(tag)
-
                 file_name += "_{}_{}".format(lang.zh, date)
                 file_name += ".epub"
                 files.add(file_name)
@@ -213,7 +232,6 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, onebook=F
                     hyncdzj.epub.build_epub_one_book,
                     (nikaya_share.HYNCDZJ, zh_name, cover_dir, full_file_name, info_datas, lang, tag)
                 )
-
                 jobs.append(job)
                 total += 1
                 try_run_job()
@@ -245,7 +263,7 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, onebook=F
                         job = (
                             "{}/{}_{}/{}".format(lang.zh, layout, font, file_name),
                             hyncdzj.pdf.build_pdf,
-                            (nikaya_share.HYNCDZJ, cover_dir, full_file_name, data, m.info, lang, layout, font, tag, True)
+                            (nikaya_share.HYNCDZJ, cover_dir, full_file_name, data, m.info, lang, layout, font, tag)
                         )
 
                         jobs.append(job)

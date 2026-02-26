@@ -11,6 +11,7 @@ import config
 from . import epub, ebook_utils
 import nikaya_share
 from nikaya_share import new_page_or_not
+import abo.ebook_utils
 
 
 MAIN = "main.tex"
@@ -71,7 +72,7 @@ fonts = {
 
 
 
-class Head:
+class TexHead:
     heads = ["part", "title", "subject", "subsubject", "subsubsubject", "subsubsubsubject", "subsubsubsubsubject", "subsubsubsubsubsubject", "subsubsubsubsubsubsubject"]
     font_sizes = ["tfd", "tfc", "tfb", "tfa", "tf", "tfx", "tfxx", "tfxx", "tfxx"]
     def __init__(self, catalog_depth):
@@ -79,18 +80,18 @@ class Head:
 
     def _get_size(self, i):
         try:
-            return Head.font_sizes[i - self.catalog_depth]
+            return "\\" + TexHead.font_sizes[i - self.catalog_depth]
         except IndexError:
-            return Head.font_sizes[0]
+            return "\\" + TexHead.font_sizes[0]
 
     def setuphead(self):
         s = ""
-        for count, head in Head.heads:
-            s += "\\setuphead[" + head + "][style=\\" + self._get_size(count) + "\\bf\\ss]\n"
+        for count, head in enumerate(TexHead.heads):
+            s += "\\setuphead[" + head + "][style=" + self._get_size(count) + "\\bf\\ss]\n"
         return s
 
     def startsec(self, depth, title, bookmark, toctext, lang, sc_key=None, abo_key=None):
-        sec = Head.heads[depth]
+        sec = TexHead.heads[depth]
         font_size = self._get_size(depth)
         s = ""
         s += "\\startalignment[center]\n"
@@ -98,7 +99,7 @@ class Head:
         s += "\\setuphead[" + sec + "][before={\\testpage[4]\\blank[1*halfline]"
 
         if sc_key:
-            s += "\\goto{" + font_size + "\\ss \\bf " + sc_key + "}[url(https://suttacentral.net/" + sc_key + ")]\\kern 0.5em"
+            s += "\\goto{" + font_size + " \\ss \\bf " + sc_key + "}[url(https://suttacentral.net/" + sc_key + ")]\\kern 0.5em"
         else:
             s += "\\strut"  # 若不添加，上面的居中命令就无效了，我也不知道为什么
 
@@ -122,10 +123,17 @@ class Head:
 
     @staticmethod
     def stop(depth):
-        return "\\stop{}\n\n".format(Head.heads[depth])
+        return "\\stop{}\n\n".format(TexHead.heads[depth])
+
+def writetolist(f, ngs):
+    s = ""
+    for index, (_, _, name) in enumerate(ngs):
+        s = "\\writetolist[" + TexHead.heads[index] + "]{}{" + name + "}\n"
+    f.write(s)
 
 
-def build_pdf(type_, cover_dir, full_path, data, info, lang, layout, font, tag, exit_after_done=False):
+def build_epub_one_book(type_, cover_dir, full_path, data_infos, lang, layout, font, tag):
+    data3, translators = epub.make_tree_data(type_, data_infos, lang)
     work_dir = full_path + "_work"
     out_dir = full_path + "_out"
     shutil.copytree(config.TEX_DIR, work_dir)
@@ -133,27 +141,65 @@ def build_pdf(type_, cover_dir, full_path, data, info, lang, layout, font, tag, 
     os.makedirs(out_dir, exist_ok=True)
 
     w, h = layouts[layout]["cover_size"]
-    cover_image = ebook_utils.make_cover_image(cover_dir, info, lang, tag, w, h)
-
-    write_main_tex(work_dir, info, lang, layout, font, cover_image)
-
-    #shutil.copy(os.path.join(config.HYNCDZJ_TEX_DIR, "{}.tex".format(layout)), work_dir)
-
-    f = open(os.path.join(work_dir, SUTTAS), "w")
-    for _, obj in data:
-        write_tree(-1, data, f, info, obj, lang, layouts[layout]["max_hanzi_in_line"], layouts[layout]["max_line_in_page"])
-    f.close()
-
+    if type_ is nikaya_share.HYNCDZJ:
+        _write_hyncdzj_homage(work_dir, lang)
+        _write_readme(epub.README_HYNCDZJ, work_dir, lang)
+        book_info = nikaya_share.Info(name="漢譯南傳大藏經", pali="Tipiṭaka", translators=tuple(translators))
+        cover_image_path = ebook_utils.make_cover_image(cover_dir, book_info, lang, tag, w, h, onebook=True)
+        write_main_tex(work_dir, book_info, lang, layout, font, "hyncdzj_homage.tex", cover_image_path)
+    else:
+        _write_abo_homage(work_dir, lang)
+        _write_readme(epub.README_ABO, work_dir, lang)
+        book_info = nikaya_share.Info(name="漢譯藏經", pali="Sutta Piṭaka", translators=tuple(translators))
+        cover_image_path =  abo.ebook_utils.make_cover_image(cover_dir, book_info, lang, w, h, onebook=True)
+        write_main_tex(work_dir, book_info, lang, layout, font, "abo_homage.tex", cover_image_path)
     write_fontstex(work_dir, lang)
 
-    _write_homage(work_dir, lang)
+    f = open(os.path.join(work_dir, SUTTAS), "w")
+    for prev_ngs, info, data in data3:
+        ds_depth = new_page_or_not.get_data_depth(data)
+        nh_ngs = prev_ngs + [(None, None, lang.c(info.name))]
+        writetolist(f, nh_ngs)
+        root_depth = len(nh_ngs) -1
+        texhead = TexHead(root_depth)
+        write_tree2(type_, info, texhead, ds_depth, f, [], data, 0, lang, False, layouts[layout]["max_hanzi_in_line"], layouts[layout]["max_line_in_page"])
 
+    complie_pdf(work_dir, out_dir, layout, full_path)
+
+
+def build_pdf(type_, cover_dir, full_path, data, info, lang, layout, font, tag):
+    work_dir = full_path + "_work"
+    out_dir = full_path + "_out"
+    shutil.copytree(config.TEX_DIR, work_dir)
+
+    os.makedirs(out_dir, exist_ok=True)
+
+    w, h = layouts[layout]["cover_size"]
     if type_ is nikaya_share.HYNCDZJ:
+        _write_hyncdzj_homage(work_dir, lang)
         _write_readme(epub.README_HYNCDZJ, work_dir, lang)
+        cover_image_path = ebook_utils.make_cover_image(cover_dir, info, lang, tag, w, h, onebook=True)
+        write_main_tex(work_dir, info, lang, layout, font, "hyncdzj_homage.tex", cover_image_path)
     else:
+        _write_abo_homage(work_dir, lang)
         _write_readme(epub.README_ABO, work_dir, lang)
+        cover_image_path =  abo.ebook_utils.make_cover_image(cover_dir, info, lang, w, h, onebook=True)
+        write_main_tex(work_dir, info, lang, layout, font, "abo_homage.tex", cover_image_path)
+    write_fontstex(work_dir, lang)
+
+    texhead = TexHead(0)
+    ds_depth = new_page_or_not.get_data_depth(data)
+    f = open(os.path.join(work_dir, SUTTAS), "w")
+    f.write(texhead.setuphead())
+    #for _, obj in data:
+    #    write_tree(-1, data, f, info, obj, lang, layouts[layout]["max_hanzi_in_line"], layouts[layout]["max_line_in_page"])
+    write_tree2(type_, info, texhead, ds_depth, f, [], data, 0, lang, False, layouts[layout]["max_hanzi_in_line"], layouts[layout]["max_line_in_page"])
+    f.close()
+
+    complie_pdf(work_dir, out_dir, layout, full_path)
 
 
+def complie_pdf(work_dir, out_dir, layout, full_path):
     my_env = os.environ.copy()
     if os.name == "posix":
         my_env["PATH"] = os.path.expanduser(config.CONTEXT_BIN_PATH) + ":" + my_env["PATH"]
@@ -185,29 +231,38 @@ def build_pdf(type_, cover_dir, full_path, data, info, lang, layout, font, tag, 
                 shutil.rmtree(out_dir)
         return p.returncode
 
-    return_code = _run()
-    if exit_after_done:
-        exit(return_code)
+    _run()
+    print("here")
 
     stdout_file.close()
     stderr_file.close()
 
 
-def write_tree2(type_, info, head: Head, ds_depth, f, ngs, obj, depth, lang, max_hanzi_in_line, max_line_in_page, marge_or_not):
-    sub_merge_or_not = new_page_or_not.merge_or_not(ngs, obj, ds_depth)
+def write_tree2(type_, info, texhead, ds_depth, f, ngs, obj, depth, lang, parent_merge_or_not, max_hanzi_in_line, max_line_in_page):
+    if parent_merge_or_not:
+        merge_or_not = True
+    else:
+        if len(ngs) == 0:
+            merge_or_not = False
+        else:
+            merge_or_not = new_page_or_not.merge_or_not(ngs, obj, ds_depth)
 
     for ng, sub in obj:
         sub_ngs = ngs + [ng]
-        _, _, _, mark_name, title_range, title_name = epub.make_mark_and_heading(info, ngs, obj, 1)
-        start_str = head.startsec(depth, title_name, mark_name, title_name, title_range)
+        _, _, _, mark_name, title_range, title_name = epub.make_mark_and_heading(info, sub_ngs, obj, 1)
+        start_str = texhead.startsec(depth, title_name, mark_name, title_name, lang, title_range)
         f.write(start_str)
 
         if isinstance(sub, xl.Element):
-            pass
+            write_doc(f, sub, lang)
         else:
-            assert isinstance(sub, xl.Element)
+            assert isinstance(sub, list)
+            write_tree2(type_, info, texhead, ds_depth, f, sub_ngs, sub, depth + 1, lang, merge_or_not, max_hanzi_in_line, max_line_in_page)
 
-        f.write(head.stop(depth))
+        f.write(texhead.stop(depth))
+
+    if not merge_or_not:
+        f.write("\\page[yes]\n")
 
 
 
@@ -301,7 +356,7 @@ def ntrelpath(path1, path2):
     return path
 
 
-def write_main_tex(work_dir, info, lang, layout, font, cover_image):
+def write_main_tex(work_dir, info, lang, layout, font, homage, cover_image):
     f = open(os.path.join(work_dir, MAIN), "r+", encoding='utf-8')
     main_t = f.read()
 
@@ -314,6 +369,8 @@ def write_main_tex(work_dir, info, lang, layout, font, cover_image):
         author="、".join(info.translators) + lang.c("譯"),
         keyword=lang.c("上座部佛教、南傳佛教、") + info.name,
         date=date,
+        mulu=lang.c("目錄"),
+        homage=homage,
         cover_image=cover_image,
     )
     f.seek(0)
@@ -322,15 +379,26 @@ def write_main_tex(work_dir, info, lang, layout, font, cover_image):
     f.close()
 
 
-def _write_homage(work_dir, lang):
-    f = open(os.path.join(work_dir, "homage.tex"), "r+", encoding="utf-8")
+def _write_hyncdzj_homage(work_dir, lang):
+    f = open(os.path.join(work_dir, "hyncdzj_homage.tex"), "r+", encoding="utf-8")
     homage_t = f.read()
-
     homeage = string.Template(homage_t).substitute(
+        title = lang.c("禮敬偈"),
         line1 = lang.c("歸命彼世尊"),
         line2 = lang.c("應供等覺者")
     )
+    f.seek(0)
+    f.truncate()
+    f.write(homeage)
+    f.close()
 
+def _write_abo_homage(work_dir, lang):
+    f = open(os.path.join(work_dir, "abo_homage.tex"), "r+", encoding="utf-8")
+    homage_t = f.read()
+    homeage = string.Template(homage_t).substitute(
+        title = lang.c("禮敬世尊"),
+        line = lang.c("對那位世尊、阿羅漢、遍正覺者禮敬"),
+    )
     f.seek(0)
     f.truncate()
     f.write(homeage)
@@ -339,14 +407,15 @@ def _write_homage(work_dir, lang):
 
 def _write_readme(readme, work_dir, lang):
     f = open(os.path.join(work_dir, "readme.tex"), "w", encoding="utf-8")
-    f.write(startsec(lang, 1, "制作说明", "制作说明", "制作说明"))
+    f.write(startsec(lang, 1, "说明", "说明", "说明"))
     for line in readme:
         f.write(xml_to_tex(line, None, nikaya_share.Lang()))
         f.write("\n\\blank\n")
+
     if config.DEBUG:
         f.write("\\page[yes]\n")
         lines = [
-            "Pali: Sammā-diṭṭhi, Sammā-saṅkappa, Sammā-vācā, Sammā-kammanta, Sammā-ājīva, Sammā-vāyāma, Sammā-sati, Sammā-samādhi",
+            "Pāḷi: Sammā-diṭṭhi, Sammā-saṅkappa, Sammā-vācā, Sammā-kammanta, Sammā-ājīva, Sammā-vāyāma, Sammā-sati, Sammā-samādhi",
             "EN: right view, right resolve, right speech, right conduct, right livelihood, right effort, right mindfulness, and right samadhi",
             "SC: 正见、正思维、正语、正业、正命、正精进、正念、正定",
             "TC: 正見、正思維、正語、正業、正命、正精進、正念、正定",
