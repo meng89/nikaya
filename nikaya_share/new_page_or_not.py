@@ -30,9 +30,7 @@ from hyncdzj import book_modules
 
 def merge_or_not(ngs, obj, ds_depth, max_hanzi_in_line=35, max_line_in_page=29):
     namegroups = ngs
-
     if ds_depth > 0:
-
         serial_count = 0
         on_serial = False
 

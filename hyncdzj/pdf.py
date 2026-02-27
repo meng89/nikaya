@@ -75,14 +75,19 @@ fonts = {
 class TexHead:
     heads = ["part", "title", "subject", "subsubject", "subsubsubject", "subsubsubsubject", "subsubsubsubsubject", "subsubsubsubsubsubject", "subsubsubsubsubsubsubject"]
     font_sizes = ["tfd", "tfc", "tfb", "tfa", "tf", "tfx", "tfxx", "tfxx", "tfxx"]
-    def __init__(self, catalog_depth):
-        self.catalog_depth = catalog_depth
+    def __init__(self, catalog_depth=None):
+        if catalog_depth:
+            self._sizes = []
+            for _ in range(catalog_depth):
+                self._sizes.append(TexHead.font_sizes[0])
+            self._sizes.extend(TexHead.font_sizes[:-catalog_depth])
+        else:
+            self._sizes = TexHead.font_sizes[:]
+        print(TexHead.heads)
+        print(self._sizes)
 
     def _get_size(self, i):
-        try:
-            return "\\" + TexHead.font_sizes[i - self.catalog_depth]
-        except IndexError:
-            return "\\" + TexHead.font_sizes[0]
+        return "\\" + self._sizes[i]
 
     def setuphead(self):
         s = ""
@@ -128,7 +133,7 @@ class TexHead:
 def writetolist(f, ngs):
     s = ""
     for index, (_, _, name) in enumerate(ngs):
-        s = "\\writetolist[" + TexHead.heads[index] + "]{}{" + name + "}\n"
+        s += "\\writetolist[" + TexHead.heads[index] + "]{}{" + name + "}\n"
     f.write(s)
 
 
@@ -154,15 +159,19 @@ def build_epub_one_book(type_, cover_dir, full_path, data_infos, lang, layout, f
         cover_image_path =  abo.ebook_utils.make_cover_image(cover_dir, book_info, lang, w, h, onebook=True)
         write_main_tex(work_dir, book_info, lang, layout, font, "abo_homage.tex", cover_image_path)
     write_fontstex(work_dir, lang)
-
+    print("qqq")
+    print("ddd", len(data3))
     f = open(os.path.join(work_dir, SUTTAS), "w")
     for prev_ngs, info, data in data3:
+        print("jbm")
         ds_depth = new_page_or_not.get_data_depth(data)
         nh_ngs = prev_ngs + [(None, None, lang.c(info.name))]
         writetolist(f, nh_ngs)
-        root_depth = len(nh_ngs) -1
+        root_depth = len(nh_ngs)
         texhead = TexHead(root_depth)
-        write_tree2(type_, info, texhead, ds_depth, f, [], data, 0, lang, False, layouts[layout]["max_hanzi_in_line"], layouts[layout]["max_line_in_page"])
+
+        f.write(texhead.setuphead())
+        write_tree2(type_, info, texhead, ds_depth, f, [], data, root_depth, lang, False, layouts[layout]["max_hanzi_in_line"], layouts[layout]["max_line_in_page"])
 
     complie_pdf(work_dir, out_dir, layout, full_path)
 
@@ -187,7 +196,7 @@ def build_pdf(type_, cover_dir, full_path, data, info, lang, layout, font, tag):
         write_main_tex(work_dir, info, lang, layout, font, "abo_homage.tex", cover_image_path)
     write_fontstex(work_dir, lang)
 
-    texhead = TexHead(0)
+    texhead = TexHead()
     ds_depth = new_page_or_not.get_data_depth(data)
     f = open(os.path.join(work_dir, SUTTAS), "w")
     f.write(texhead.setuphead())
@@ -239,7 +248,8 @@ def complie_pdf(work_dir, out_dir, layout, full_path):
 
 
 def write_tree2(type_, info, texhead, ds_depth, f, ngs, obj, depth, lang, parent_merge_or_not, max_hanzi_in_line, max_line_in_page):
-    if parent_merge_or_not:
+    print(ds_depth, new_page_or_not.merge_or_not(ngs, obj, ds_depth), ngs)
+    if parent_merge_or_not is True:
         merge_or_not = True
     else:
         if len(ngs) == 0:
@@ -261,8 +271,8 @@ def write_tree2(type_, info, texhead, ds_depth, f, ngs, obj, depth, lang, parent
 
         f.write(texhead.stop(depth))
 
-    if not merge_or_not:
-        f.write("\\page[yes]\n")
+        if merge_or_not is False:
+            f.write("\\page[yes]\n")
 
 
 

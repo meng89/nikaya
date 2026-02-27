@@ -212,7 +212,7 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, onebook=F
                         full_file_name = os.path.join(temp_td.name, file_name)
                         job = (
                             "{}/{}".format(lang.zh, file_name),
-                            hyncdzj.pdf.build_epub_one_book
+                            hyncdzj.pdf.build_epub_one_book,
                             (nikaya_share.HYNCDZJ, cover_dir, full_file_name, info_datas, lang, layout, font, tag)
                         )
                         jobs.append(job)
