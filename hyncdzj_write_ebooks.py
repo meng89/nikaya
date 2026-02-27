@@ -10,8 +10,11 @@ import zipfile
 import multiprocessing
 multiprocessing.set_start_method("fork") # only POSIX
 from multiprocessing import Process
+from types import ModuleType
 
 import nikaya_share
+
+import hyncdzj
 import hyncdzj.base
 import hyncdzj.epub
 import hyncdzj.pdf
@@ -106,6 +109,30 @@ def get_load_path(info):
     return load_path, tag
 
 
+def mtree_to_info_data_tree(tree:list, lang):
+    new_tree = []
+    translators = []
+    tag = False
+    for sub in tree:
+        if isinstance(sub, ModuleType):
+            load_path, sub_tag = get_load_path(sub.info)
+            data = get_data(lang, sub.info, load_path)
+            new_tree.append((lang.c(sub.info.name), sub.info, data))
+            sub_translators = sub.info.translators
+        else:
+            assert isinstance(sub, tuple)
+            name, l = sub
+            new_l, sub_translators, sub_tag =  mtree_to_info_data_tree(l, lang)
+            new_tree.append((lang.c(name), new_l))
+
+        tag = tag or sub_tag
+        for translator in sub_translators:
+            if translator not in translators:
+                translators.append(translator)
+
+    return new_tree, translators, tag
+
+
 def main(_help=False, debug=False, types=None, langs=None, books=None, onebook=False, layouts=None, fonts=None):
     config.DEBUG = debug
 
@@ -187,18 +214,12 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, onebook=F
         zh_name = lang.c("元亨寺_漢譯南傳大藏經")
 
         if onebook:
-            tag = None
-            info_datas = []
-
-            for m2 in book_modules.all_modules:
-                load_path, tag2 = get_load_path(m2.info)
-                tag = tag2 or tag
-                info_datas.append((m2.info, get_data(lang, m2.info, load_path)))
-
-                if config.DEBUG:
-                    break
+            if config.DEBUG:
+                tree = book_modules.module_tree_test
+            else:
+                tree = book_modules.module_tree
+            info_datas, translators, tag = mtree_to_info_data_tree(tree, lang)
             file_name = "{}_{}".format(zh_name, lang.c("合訂本"))
-
 
             if "pdf" in my_types:
                 for layout in my_layouts:
@@ -213,7 +234,7 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, onebook=F
                         job = (
                             "{}/{}".format(lang.zh, file_name),
                             hyncdzj.pdf.build_epub_one_book,
-                            (nikaya_share.HYNCDZJ, cover_dir, full_file_name, info_datas, lang, layout, font, tag)
+                            (nikaya_share.HYNCDZJ, cover_dir, full_file_name, info_datas, translators, lang, layout, font, tag)
                         )
                         jobs.append(job)
                         total += 1

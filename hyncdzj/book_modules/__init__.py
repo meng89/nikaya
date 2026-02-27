@@ -1,3 +1,5 @@
+
+
 from . import sv, pv, kd
 
 from . import kn_khp, kn_dhp, kn_ud, kn_iti, kn_snp, kn_vv, kn_pv, kn_thag, kn_thig, kn_ap, kn_jat, kn_ps, kn_bv, kn_cp, kn_nid1, kn_nid2
@@ -23,12 +25,29 @@ lun = (["論藏"], (ds, vb, dt, pp, ya, patthana, kv))
 lun_infos = _make_infos(lun)
 
 from . import mil, dipavamsa, mahavamsa, culavamsa, visuddhimagga, samantapasadika, abhidhammatthasangaha, dhammalipi
-wai = (["藏外"], [mil, dipavamsa, mahavamsa, culavamsa, visuddhimagga, samantapasadika, abhidhammatthasangaha, dhammalipi])
+wai_ms = [mil, dipavamsa, mahavamsa, culavamsa, visuddhimagga, samantapasadika, abhidhammatthasangaha, dhammalipi]
+wai = (["藏外"], wai_ms)
 wai_infos = _make_infos(wai)
 
 categories = (jing, xiao, lv, lun, wai)
 
 all_infos = (jing_infos, xiao_infos, lv_infos, lun_infos, wai_infos)
+
+
+module_tree = [
+    ("律藏", [sv, kd, pv]),
+    ("經藏", [dn, mn, sn, an, ("小部", dh_modules)]),
+    ("論藏", [ds, vb, dt, pp, ya, patthana, kv]),
+    ("藏外", wai_ms),
+]
+
+module_tree_test = [
+    ("律藏", [sv]),
+    ("經藏", [dn, mn, sn, an, ("小部", dh_modules[0:1])]),
+    ("論藏", [ds]),
+    ("藏外", wai_ms[0:1]),
+]
+
 
 def _make_all_modules():
     _all_modules = []

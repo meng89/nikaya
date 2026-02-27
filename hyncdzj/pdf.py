@@ -70,8 +70,6 @@ fonts = {
 
 
 
-
-
 class TexHead:
     heads = ["part", "title", "subject", "subsubject", "subsubsubject", "subsubsubsubject", "subsubsubsubsubject", "subsubsubsubsubsubject", "subsubsubsubsubsubsubject"]
     font_sizes = ["tfd", "tfc", "tfb", "tfa", "tf", "tfx", "tfxx", "tfxx", "tfxx"]
@@ -83,8 +81,6 @@ class TexHead:
             self._sizes.extend(TexHead.font_sizes[:-catalog_depth])
         else:
             self._sizes = TexHead.font_sizes[:]
-        print(TexHead.heads)
-        print(self._sizes)
 
     def _get_size(self, i):
         return "\\" + self._sizes[i]
@@ -130,15 +126,15 @@ class TexHead:
     def stop(depth):
         return "\\stop{}\n\n".format(TexHead.heads[depth])
 
-def writetolist(f, ngs):
+
+def writetolist(f, name, depth):
     s = ""
-    for index, (_, _, name) in enumerate(ngs):
-        s += "\\writetolist[" + TexHead.heads[index] + "]{}{" + name + "}\n"
+    s += "\\writetolist[" + TexHead.heads[depth] + "]{}{" + name + "}\n"
     f.write(s)
 
 
-def build_epub_one_book(type_, cover_dir, full_path, data_infos, lang, layout, font, tag):
-    data3, translators = epub.make_tree_data(type_, data_infos, lang)
+
+def build_epub_one_book(type_, cover_dir, full_path, info_datas, translators, lang, layout, font, tag):
     work_dir = full_path + "_work"
     out_dir = full_path + "_out"
     shutil.copytree(config.TEX_DIR, work_dir)
@@ -159,19 +155,28 @@ def build_epub_one_book(type_, cover_dir, full_path, data_infos, lang, layout, f
         cover_image_path =  abo.ebook_utils.make_cover_image(cover_dir, book_info, lang, w, h, onebook=True)
         write_main_tex(work_dir, book_info, lang, layout, font, "abo_homage.tex", cover_image_path)
     write_fontstex(work_dir, lang)
-    print("qqq")
-    print("ddd", len(data3))
-    f = open(os.path.join(work_dir, SUTTAS), "w")
-    for prev_ngs, info, data in data3:
-        print("jbm")
-        ds_depth = new_page_or_not.get_data_depth(data)
-        nh_ngs = prev_ngs + [(None, None, lang.c(info.name))]
-        writetolist(f, nh_ngs)
-        root_depth = len(nh_ngs)
-        texhead = TexHead(root_depth)
 
-        f.write(texhead.setuphead())
-        write_tree2(type_, info, texhead, ds_depth, f, [], data, root_depth, lang, False, layouts[layout]["max_hanzi_in_line"], layouts[layout]["max_line_in_page"])
+    f = open(os.path.join(work_dir, SUTTAS), "w")
+
+    def _xyz(_info_datas, _depth=0):
+        for _sub in _info_datas:
+            assert isinstance(_sub, tuple)
+            if len(_sub) == 3:
+                _name, _info, _data = _sub
+                writetolist(f, _name, _depth)
+                ds_depth = new_page_or_not.get_data_depth(_data)
+                texhead = TexHead(_depth + 1)
+                _s = texhead.setuphead()
+                f.write(_s)
+                write_tree2(type_, _info, texhead, ds_depth, f, [], _data, _depth + 1, lang, False,
+                            layouts[layout]["max_hanzi_in_line"], layouts[layout]["max_line_in_page"])
+
+            if len(_sub) == 2:
+                _name, _sub_list = _sub
+                writetolist(f, _name, _depth)
+                _xyz(_sub_list, _depth + 1)
+
+    _xyz(info_datas)
 
     complie_pdf(work_dir, out_dir, layout, full_path)
 
@@ -241,21 +246,19 @@ def complie_pdf(work_dir, out_dir, layout, full_path):
         return p.returncode
 
     _run()
-    print("here")
 
     stdout_file.close()
     stderr_file.close()
 
 
-def write_tree2(type_, info, texhead, ds_depth, f, ngs, obj, depth, lang, parent_merge_or_not, max_hanzi_in_line, max_line_in_page):
-    print(ds_depth, new_page_or_not.merge_or_not(ngs, obj, ds_depth), ngs)
-    if parent_merge_or_not is True:
-        merge_or_not = True
+def write_tree2(type_, info, texhead, ds_depth, f, ngs, obj, depth, lang, parent_is_continuous, max_hanzi_in_line, max_line_in_page):
+    if parent_is_continuous is True:
+        is_continuous = True
     else:
         if len(ngs) == 0:
-            merge_or_not = False
+            is_continuous = False
         else:
-            merge_or_not = new_page_or_not.merge_or_not(ngs, obj, ds_depth)
+            is_continuous = new_page_or_not.merge_or_not(ngs, obj, ds_depth)
 
     for ng, sub in obj:
         sub_ngs = ngs + [ng]
@@ -267,11 +270,11 @@ def write_tree2(type_, info, texhead, ds_depth, f, ngs, obj, depth, lang, parent
             write_doc(f, sub, lang)
         else:
             assert isinstance(sub, list)
-            write_tree2(type_, info, texhead, ds_depth, f, sub_ngs, sub, depth + 1, lang, merge_or_not, max_hanzi_in_line, max_line_in_page)
+            write_tree2(type_, info, texhead, ds_depth, f, sub_ngs, sub, depth + 1, lang, is_continuous, max_hanzi_in_line, max_line_in_page)
 
         f.write(texhead.stop(depth))
 
-        if merge_or_not is False:
+        if is_continuous is False:
             f.write("\\page[yes]\n")
 
 
