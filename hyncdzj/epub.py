@@ -95,8 +95,7 @@ def write_note_spile(notes, epub, lang):
         epub.spine.append(path)
 
 
-def build_epub_one_book(type_, title, cover_dir, full_path, data_infos, lang, tag):
-    data3, translators = make_tree_data(type_, data_infos, lang)
+def build_epub_one_book(type_, title, cover_dir, full_path, info_datas, translators, lang, tag):
     book_names = [lang.c(title)]
 
     my_uuid = get_uuid("".join(book_names) + lang.en)
@@ -116,18 +115,30 @@ def build_epub_one_book(type_, title, cover_dir, full_path, data_infos, lang, ta
     if type_ is nikaya_share.HYNCDZJ:
         _write_homage_hyncdzj(epub, lang)
     else:
-        _write_homage_abo(epub, lang)
         _write_fanli(epub, lang)
-
+        _write_homage_abo(epub, lang)
 
     doc_files = {}
-    for prev_ngs, info, data in data3:
-        ds_depth = new_page_or_not.get_data_depth(data)
 
-        nh_ngs = prev_ngs + [(None, None, lang.c(info.name))]
-        marks = make_marks(nh_ngs, epub.mark.kids)
-        root_depth = len(nh_ngs) -1
-        write_tree6(type_, info, ds_depth, nh_ngs, [], data, root_depth, doc_files, marks, notes, lang, [], 0, 1, None, None, None)
+    def _xyz(_info_datas, _marks, _pngs=None, _depth=0):
+        _pngs = _pngs or []
+        for _sub in _info_datas:
+            assert isinstance(_sub, tuple)
+            if len(_sub) == 3:
+                _name, _info, _data = _sub
+                _mark = epubpacker.Mark(_name)
+                _marks.append(_mark)
+                _ds_depth = new_page_or_not.get_data_depth(_data)
+                write_tree6(type_, _info, _ds_depth, _pngs + [(None, None, _name)], [], _data, _depth, doc_files, _mark.kids, notes, lang, [], 0,
+                            1, None, None, None)
+
+            if len(_sub) == 2:
+                _name, _sub_list = _sub
+                _mark = epubpacker.Mark(_name)
+                _marks.append(_mark)
+                _xyz(_sub_list, _mark.kids, _pngs + [(None, None, _name)], _depth + 1)
+
+    _xyz(info_datas, epub.mark.kids)
 
     write_css(epub, lang)
     write_note_spile(notes, epub, lang)

@@ -251,7 +251,7 @@ def main(_help=False, debug=False, types=None, langs=None, books=None, onebook=F
                 job = (
                     "{}/{}".format(lang.zh, file_name),
                     hyncdzj.epub.build_epub_one_book,
-                    (nikaya_share.HYNCDZJ, zh_name, cover_dir, full_file_name, info_datas, lang, tag)
+                    (nikaya_share.HYNCDZJ, zh_name, cover_dir, full_file_name, info_datas, translators, lang, tag)
                 )
                 jobs.append(job)
                 total += 1
