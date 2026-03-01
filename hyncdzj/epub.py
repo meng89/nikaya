@@ -265,7 +265,7 @@ def write_tree6(type_, info, ds_depth, p_ngs, ngs, obj, root_depth, doc_files, m
     sub_marks = marks
 
     if ngs:
-        mark, heading = make_mh(info, ngs, obj, marks, depth, id_count)
+        mark, heading = make_mh(info, ngs, obj, marks, depth, id_count, lang)
         marks_and_headings.append((mark, heading))
         sub_marks = mark.kids
     # 在第一个需要合并的经之前的节点创建 doc
@@ -282,13 +282,13 @@ def write_tree6(type_, info, ds_depth, p_ngs, ngs, obj, root_depth, doc_files, m
 
         if isinstance(sub, xl.Element):
             write_doc6(type_, info, p_ngs, s_ngs, root_depth, sub, doc_files, sub_marks, notes, lang,
-                       marks_and_headings, depth + 1, sub_id_count, doc_path, html, body, doc_depth)
+                       marks_and_headings, depth + 1, sub_id_count, doc_path, body, doc_depth)
         else:
             write_tree6(type_, info, ds_depth, p_ngs, s_ngs, sub, root_depth, doc_files, sub_marks, notes, lang,
                         marks_and_headings, depth + 1, sub_id_count, doc_path, html, body, doc_depth)
 
 
-def write_doc6(type_, info, p_ngs, ngs, root_depth, obj, doc_files, marks, notes, lang, marks_and_headings, depth, id_count, doc_path, html, body, doc_depth):
+def write_doc6(type_, info, p_ngs, ngs, root_depth, obj, doc_files, marks, notes, lang, marks_and_headings, depth, id_count, doc_path, body, doc_depth):
     if doc_path is None:
         doc_depth = root_depth + depth
         doc_path, html, body = write_docs(doc_files, p_ngs + ngs, doc_depth, lang, info)
@@ -297,7 +297,7 @@ def write_doc6(type_, info, p_ngs, ngs, root_depth, obj, doc_files, marks, notes
     write_marks_and_headings(marks_and_headings, body, doc_path)
 
     if ngs:
-        mark, heading = make_mh(info, ngs, obj, marks, depth, id_count)
+        mark, heading = make_mh(info, ngs, obj, marks, depth, id_count, lang)
         mark.href = "{}#{}".format(doc_path, heading.attrs["id"])
         body.kids.append(heading)
 
@@ -310,8 +310,8 @@ def write_doc6(type_, info, p_ngs, ngs, root_depth, obj, doc_files, marks, notes
             body.kids.extend(html_es)
 
 
-def make_mh(info, namegroups, obj, marks, depth, id_count):
-    mark, heading, _, _, _, _, = make_mark_and_heading(info, namegroups, obj, depth)
+def make_mh(info, namegroups, obj, marks, depth, id_count, lang):
+    mark, heading, _, _, _, _, = make_mark_and_heading(info, namegroups, obj, depth, lang)
     heading.attrs["id"] = "id_{}_{}".format(depth, id_count)
     marks.append(mark)
     return mark, heading
@@ -332,7 +332,7 @@ def write_marks_and_headings(marks_and_headings, body, doc_path):
     marks_and_headings.clear()
 
 
-def make_mark_and_heading(info, namegroups, obj, heading_level):
+def make_mark_and_heading(info, namegroups, obj, heading_level, lang):
     start, end, name = namegroups[-1]
     if start is None:
         range_start, range_end = read_range(obj)
@@ -367,22 +367,39 @@ def make_mark_and_heading(info, namegroups, obj, heading_level):
         name_str = "/".join([or_kong(sn) for sn in serial_names])
 
         range_str = info.abbr + _range_str
-        a = xl.Element("a", {"href": "https://suttacentral.net/" + range_str}, [range_str])
+        a = xl.Element("a", {"class": "sc_link", "href": "https://suttacentral.net/" + range_str}, [range_str])
         epub_heading.kids.append(a)
-        epub_heading.kids.append("　")
-        epub_heading.kids.append(name_str)
+        epub_heading.kids.append(" ")
         is_serial = True
         mark_name = ranges[-1] + "." + or_kong(serial_names[-1]) + mark_range
-        epub_mark = epubpacker.Mark(mark_name)
     else:
         range_str = None
         name_str = or_kong(names[-1])
-        epub_heading.kids.append(name_str)
         mark_name = or_kong(names[-1]) + mark_range
-        epub_mark = epubpacker.Mark(mark_name)
         is_serial = False
 
+    epub_mark = epubpacker.Mark(mark_name)
+    epub_heading.kids.append(name_str)
+
+    source_page = get_source_page(obj)
+    if source_page is not None:
+        epub_heading.kids.append(" ")
+        _a = xl.Element("a", {"class": "abo_translate", "href": config.ABO_WEBSITE + "/" + source_page}, ["(莊春江" + lang.c("譯") + ")"])
+        epub_heading.kids.append(_a)
+
     return epub_mark, epub_heading, is_serial, mark_name, range_str, name_str
+
+
+def get_source_page(obj):
+    if not isinstance(obj, xl.Element):
+        return None
+
+    for e in obj.kids:
+        if isinstance(e, xl.Element) and e.tag == "meta":
+            for e2 in e.kids:
+                if isinstance(e2, xl.Element) and e2.tag == "source_page":
+                    return e2.kids[0]
+    return None
 
 
 def read_range(obj):
@@ -764,8 +781,8 @@ README_ABO = (
     ["此汉译佛经数据来自", _ccc_e, "，一切相关权利归于译者。"],
     ["原文是繁体中文，简体版由程序转换，可能会出现转换错误。电子书目录以及经文标题部分可能有一些修改，正文部分与原页面相同，但可能丢失了一部分链接和格式等元数据。"],
     ["点击经文的汉字标题会打开莊春江读经站的经文原始页面，原始页面有巴利语对照，以及与经文相关的其它经文链接。"],
-    ["在电子书里，点击标题前面的经号，如 SN1.1，可以访问 suttacentral.net 网站里此章节译文列表页面。点击标题可以访问原页面。",
-     "部分书籍没有整理出对应的经号，已有的经号有可能会有对应错误。若您发现有这样的错误，请联系我，谢谢！"],
+    ["在电子书里，点击标题前面的经号，如 SN1.1，可以访问 suttacentral.net 网站里此章节译文列表页面。点击标题后面的译者名可以访问原网页。",
+     "部分书籍没有整理出对应的经号，已有的经号有可能会有对应错误。"],
     ["获取最新制作的电子书，请访问项目 Releases 页面："],
     [_releases_e],
     [" 或访问云盘："],

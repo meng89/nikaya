@@ -9,6 +9,21 @@ all_catalog = [
     (["小部"], [x.info for x in kn.all_modules])
 ]
 
+module_tree = [
+    sn,
+    mn,
+    dn,
+    an,
+    ("小部", kn.all_modules)
+]
+
+module_tree_test = [
+    sn,
+    mn,
+    dn,
+    an,
+    ("小部", kn.all_modules[0:1])
+]
 
 def get_catalog_by_info(info):
     for catalog, infos in all_catalog:

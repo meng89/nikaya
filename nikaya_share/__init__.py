@@ -280,3 +280,15 @@ class SC(Lang):
     @property
     def han_version(self):
         return "简体版"
+
+
+def get_catalog(m, tree, catalog=None):
+    catalog = catalog or []
+    for x in tree:
+        if x is m:
+            return True, catalog
+        elif isinstance(x, tuple):
+            result, value = get_catalog(m, x[1], catalog + [x[0]])
+            if result:
+                return result, value
+    return False, None

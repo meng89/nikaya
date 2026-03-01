@@ -40,6 +40,19 @@ h1, h2, h3, h4, h5, h6, h7 {
     margin-bottom: 0.5em;
 }
 
+a {
+    color: Navy;
+}
+
+.sc_link {
+    font-size: 1.2em;
+    text-decoration: none;
+}
+.abo_translate {
+    font-size: 0.9em;
+    text-decoration: none; /* 去除下划线 */
+    /*color: black;          /* 设置字体颜色为黑色 */
+}
 
 .no_text_noteref {
     vertical-align: super; /* 设置为上标 */

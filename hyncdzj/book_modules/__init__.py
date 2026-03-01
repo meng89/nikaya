@@ -1,4 +1,4 @@
-
+from types import ModuleType
 
 from . import sv, pv, kd
 
@@ -47,7 +47,6 @@ module_tree_test = [
     ("論藏", [ds]),
     ("藏外", wai_ms[0:1]),
 ]
-
 
 def _make_all_modules():
     _all_modules = []

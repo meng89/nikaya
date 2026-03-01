@@ -12,6 +12,7 @@ from . import epub, ebook_utils
 import nikaya_share
 from nikaya_share import new_page_or_not
 import abo.ebook_utils
+import abo.note
 
 
 MAIN = "main.tex"
@@ -91,7 +92,7 @@ class TexHead:
             s += "\\setuphead[" + head + "][style=" + self._get_size(count) + "\\bf\\ss]\n"
         return s
 
-    def startsec(self, depth, title, bookmark, toctext, lang, sc_key=None, abo_key=None):
+    def startsec(self, depth, title, bookmark, toctext, lang, sc_key=None, source_page=None):
         sec = TexHead.heads[depth]
         font_size = self._get_size(depth)
         s = ""
@@ -111,8 +112,8 @@ class TexHead:
         s += "    bookmark={{{}}},\n".format(bookmark)
         s += "    list={" + (sc_key + " " if sc_key is not None else "") + toctext + "},]\n"
 
-        if abo_key:
-            s += "\\goto{(莊春江" + lang.c("譯") + ")}[url(https://suttacentral.net/" + abo_key + ")]\n"
+        if source_page:
+            s += "\\goto{(莊春江" + lang.c("譯") + ")}[url(" + config.ABO_WEBSITE + "/" + source_page + ")]\n"
 
         s += "}\n"
 
@@ -144,13 +145,13 @@ def build_epub_one_book(type_, cover_dir, full_path, info_datas, translators, la
     w, h = layouts[layout]["cover_size"]
     if type_ is nikaya_share.HYNCDZJ:
         _write_hyncdzj_homage(work_dir, lang)
-        _write_readme(epub.README_HYNCDZJ, work_dir, lang)
+        _write_readme(type_, epub.README_HYNCDZJ, work_dir, lang)
         book_info = nikaya_share.Info(name="漢譯南傳大藏經", pali="Tipiṭaka", translators=tuple(translators))
         cover_image_path = ebook_utils.make_cover_image(cover_dir, book_info, lang, tag, w, h, onebook=True)
         write_main_tex(work_dir, book_info, lang, layout, font, "hyncdzj_homage.tex", cover_image_path)
     else:
         _write_abo_homage(work_dir, lang)
-        _write_readme(epub.README_ABO, work_dir, lang)
+        _write_readme(type_, epub.README_ABO, work_dir, lang)
         book_info = nikaya_share.Info(name="漢譯藏經", pali="Sutta Piṭaka", translators=tuple(translators))
         cover_image_path =  abo.ebook_utils.make_cover_image(cover_dir, book_info, lang, w, h, onebook=True)
         write_main_tex(work_dir, book_info, lang, layout, font, "abo_homage.tex", cover_image_path)
@@ -191,12 +192,12 @@ def build_pdf(type_, cover_dir, full_path, data, info, lang, layout, font, tag):
     w, h = layouts[layout]["cover_size"]
     if type_ is nikaya_share.HYNCDZJ:
         _write_hyncdzj_homage(work_dir, lang)
-        _write_readme(epub.README_HYNCDZJ, work_dir, lang)
+        _write_readme(type_, epub.README_HYNCDZJ, work_dir, lang)
         cover_image_path = ebook_utils.make_cover_image(cover_dir, info, lang, tag, w, h, onebook=True)
         write_main_tex(work_dir, info, lang, layout, font, "hyncdzj_homage.tex", cover_image_path)
     else:
         _write_abo_homage(work_dir, lang)
-        _write_readme(epub.README_ABO, work_dir, lang)
+        _write_readme(type_, epub.README_ABO, work_dir, lang)
         cover_image_path =  abo.ebook_utils.make_cover_image(cover_dir, info, lang, w, h, onebook=True)
         write_main_tex(work_dir, info, lang, layout, font, "abo_homage.tex", cover_image_path)
     write_fontstex(work_dir, lang)
@@ -262,12 +263,13 @@ def write_tree2(type_, info, texhead, ds_depth, f, ngs, obj, depth, lang, parent
 
     for ng, sub in obj:
         sub_ngs = ngs + [ng]
-        _, _, _, mark_name, title_range, title_name = epub.make_mark_and_heading(info, sub_ngs, sub, 1)
-        start_str = texhead.startsec(depth, title_name, mark_name, title_name, lang, title_range)
+        _, _, _, mark_name, title_range, title_name = epub.make_mark_and_heading(info, sub_ngs, sub, 1, lang)
+        source_page = epub.get_source_page(sub)
+        start_str = texhead.startsec(depth, title_name, mark_name, title_name, lang, title_range, source_page)
         f.write(start_str)
 
         if isinstance(sub, xl.Element):
-            write_doc(f, sub, lang)
+            write_doc(type_, f, sub, lang)
         else:
             assert isinstance(sub, list)
             write_tree2(type_, info, texhead, ds_depth, f, sub_ngs, sub, depth + 1, lang, is_continuous, max_hanzi_in_line, max_line_in_page)
@@ -278,43 +280,7 @@ def write_tree2(type_, info, texhead, ds_depth, f, ngs, obj, depth, lang, parent
             f.write("\\page[yes]\n")
 
 
-
-def write_tree(level_offset, book_data, f, info, obj, lang, max_hanzi_in_line, max_line_in_page):
-
-    new_page = new_page_or_not.new_page_or_not_smart(book_data, obj, max_hanzi_in_line, max_line_in_page)
-
-    namegroups = new_page_or_not.get_keys(book_data, obj, [])
-    #print("hh:",namegroups, new_page)
-
-    depth = len(namegroups)
-    if depth > 9:
-        print("depth too long", namegroups)
-        exit()
-
-    _, _, _, mark_name, title_range, title_name = epub.make_mark_and_heading(info, namegroups, obj, 1)
-
-    if title_range is not None:
-        sc_key = title_range
-        # title = "\\goto{{{}}}[url(https://suttacentral.net/{})]".format(title_range, title_range) + " " + title_name
-    else:
-        sc_key = None
-        # title = title_name
-
-    f.write(startsec(lang, depth, title_name, mark_name, title_name, sc_key))
-
-    if isinstance(obj, xl.Element):
-        write_doc(f, obj, lang)
-    else:
-        assert isinstance(obj, list)
-        for _, sub in obj:
-            write_tree(level_offset, book_data, f, info, sub, lang, max_hanzi_in_line, max_line_in_page)
-
-    f.write(stopsec(depth))
-    if new_page:
-        f.write("\\page[yes]\n")
-
-
-def write_doc(f, doc, lang):
+def write_doc(type_, f, doc, lang):
     for e in doc.kids:
         if isinstance(e, xl.Element) and re.match(r"^n\d+$", e.tag):
             break
@@ -328,7 +294,7 @@ def write_doc(f, doc, lang):
             pass
 
         else:
-            f.write(xml_to_tex([e], doc, lang))
+            f.write(xml_to_tex([e], doc, lang, type_))
 
 
 def write_fontstex(work_dir, lang):
@@ -418,11 +384,11 @@ def _write_abo_homage(work_dir, lang):
     f.close()
 
 
-def _write_readme(readme, work_dir, lang):
+def _write_readme(type_, readme, work_dir, lang):
     f = open(os.path.join(work_dir, "readme.tex"), "w", encoding="utf-8")
     f.write(startsec(lang, 1, "说明", "说明", "说明"))
     for line in readme:
-        f.write(xml_to_tex(line, None, nikaya_share.Lang()))
+        f.write(xml_to_tex(line, None, nikaya_share.Lang(), type_))
         f.write("\n\\blank\n")
 
     if config.DEBUG:
@@ -504,7 +470,7 @@ def stopsec(depth):
     return "\\stop{}\n\n".format(_map[depth][0])
 
 
-def xml_to_tex(es, doc, lang):
+def xml_to_tex(es, doc, lang, type_):
     s = ""
     for e in es:
         if isinstance(e, str):
@@ -514,18 +480,43 @@ def xml_to_tex(es, doc, lang):
 
         elif isinstance(e, xl.Element):
             m_t = re.match(r"^t(\d+)$", e.tag)
+            m_g = re.match(r"^g(\d+)$", e.tag)
             m_n = re.match(r"^n\d+$", e.tag)
+
             if m_t:
+                n_kids = epub.get_note_by_key(doc, m_t.group(1))
+
+                if n_kids is None: # 庄春江 缺失注解
+                    s += xml_to_tex(e.kids, doc, lang, type_)
+                    continue
+
+                _note = es_to_text(n_kids)
+
                 if e.kids:
                     assert (len(e.kids) == 1 and isinstance(e.kids[0], str))
                     text = e.kids[0]
-                    s += text
-                n_kids = epub.get_note_by_key(doc, m_t.group(1))
-                _note = es_to_text(n_kids)
+                else:
+                    text = ""
 
-                s += "\\zhfootnote{" + _note + "}"
-                #s += "\\high{{\\tfxx \\PDFhighlight[原始注解][{{{}}}]{{{}}}}}".format(_note, text or "㊟")
+                if type_ is nikaya_share.HYNCDZJ:
+                    s += text
+                    s += "\\zhfootnote{" + _note + "}"
+
+                else:
+                    assert type_ is nikaya_share.ABO
+                    s += "\\PDFhighlight[莊春江][{{{}}}]{{{}}}".format(_note, text)
+                    #s += "\\high{{\\tfxx \\PDFhighlight[原始注解][{{{}}}]{{{}}}}}".format(_note, text or "㊟")
                 #s += "\\high{\\tfxx \\PDFhighlight[原始注解][{" + _note + "}]{" + (text or "㊟") + "}}"
+
+            elif m_g:
+                assert type_ is nikaya_share.ABO
+                #assert len(e.kids) == 1 and isinstance(e.kids[0], str)
+                text = es_to_text(e.kids)
+                #text = e.kids[0]
+                abo_gn = abo.note.get_global_notes()
+                n_kids = abo_gn.get_es(m_g.group(1))
+                n_es = xml_to_tex(n_kids, doc, lang, type_)
+                s += "\\PDFhighlight[莊春江][{{{}}}]{{{}}}".format(n_es, text)
 
             elif m_t and False:
                 text = None
@@ -538,7 +529,7 @@ def xml_to_tex(es, doc, lang):
                 s += "\\high{\\tfxx \\PDFhighlight[原始注解][{" + _note + "}]{" + (text or "㊟") + "}}"
 
             elif e.tag == "p":
-                s += xml_to_tex(e.kids, doc, lang)
+                s += xml_to_tex(e.kids, doc, lang, type_)
                 s += "\n\n"
 
             elif e.tag == "j":
@@ -559,7 +550,7 @@ def xml_to_tex(es, doc, lang):
 
                     if lltp_str:
                         s += "\\dontleavehmode\\llap{{{}}}".format(lltp_str)
-                    s += xml_to_tex(kids, doc, lang)
+                    s += xml_to_tex(kids, doc, lang, type_)
                     if delete_tail:
                         s += "\\rlap{{{}}}".format("」")
                     s += "\n"
@@ -570,17 +561,23 @@ def xml_to_tex(es, doc, lang):
                 pass
 
             elif e.tag == "a":
-                s += "\\goto{" + xml_to_tex(e.kids, doc, lang) + "}[url(" + e.attrs["href"] + ")]"
+                s += "\\goto{" + xml_to_tex(e.kids, doc, lang, type_) + "}[url(" + e.attrs["href"] + ")]"
 
             elif e.tag == "list":
                 s += "\\startalignment[middle]\n"
                 s += "\\startlines\n"
                 for item in e.kids:
-                    s += xml_to_tex(item.kids, doc, lang)
+                    s += xml_to_tex(item.kids, doc, lang, type_)
                     s += "\n\n"
                 s += "\\stoplines\n"
                 s += "\\stopalignment\n"
 
+            elif e.tag == "meta":
+                pass
+            elif e.tag == "br":
+                s += "\\par\n"
+            elif e.tag == "span":
+                s += "".join(e.kids)
             else:
                 raise Exception("Unknown element type: {}".format(repr(e.to_str())))
         else:
