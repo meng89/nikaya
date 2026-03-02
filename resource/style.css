@@ -1,7 +1,7 @@
 @namespace epub "http://www.idpf.org/2007/ops";
 
 body {
-    font-family: "Source Serif 4", "Source Serif 5", /* Linux */
+    font-family: "Source Serif 4", "Source Serif 5", "Noto Serif", /* Linux */
                  "Liberation Serif", /* Linux 兜底 */
                  "Palatino Linotype", /* Windows */
                  Palatino, /* MacOS */
@@ -26,7 +26,7 @@ body > * {
 
 h1, h2, h3, h4, h5, h6, h7 {
     display: block; /* for h7.. */
-    font-family: "Source Sans 3", "Source Sans 4", /* Linux */
+    font-family: "Source Sans 3", "Source Sans 4", "Noto Sans", /* Linux */
                  "DejaVu Sans", /* Linux 兜底 */
                  "Segoe UI", /* Windows */
                  "Helvetica Neue", /* MacOS */
@@ -50,7 +50,7 @@ a {
     color: Purple;
 }
 .abo_translate {
-    font-size: 0.9em;
+    font-size: 1em;
     text-decoration: none; /* 去除下划线 */
     /*color: black;          /* 设置字体颜色为黑色 */
     color: Purple;

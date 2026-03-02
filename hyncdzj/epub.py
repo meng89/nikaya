@@ -619,12 +619,12 @@ def write_css(epub, lang):
     css_t = open(os.path.join(config.RESOURCE_DIR, "style.css"), "r").read()
 
     if isinstance(lang, ebook_utils.SC):
-        heading_font_name = """ "Microsoft YaHei", "PingFang SC", "思源黑体 CN" """
-        body_font_name = """ "Source Han Serif SC", "SimSun", "Songti SC" """
+        heading_font_name = """ "Microsoft YaHei", "PingFang SC", "思源黑体 CN", "Noto Sans CJK SC" """
+        body_font_name = """ "Source Han Serif SC", "Noto Serif CJK SC", "SimSun", "Songti SC" """
 
     else:
-        heading_font_name = """ "Microsoft JhengHei", "PingFang TC", "思源黑體 TW" """
-        body_font_name = """ "Source Han Serif TC", "PMingLiU", "Songti TC" """
+        heading_font_name = """ "Microsoft JhengHei", "PingFang TC", "思源黑體 TW", "Noto Sans CJK TC" """
+        body_font_name = """ "Source Han Serif TC", "Noto Serif CJK TC", "PMingLiU", "Songti TC" """
 
     css_str = string.Template(css_t).substitute(
         heading_font_name = heading_font_name,
@@ -761,8 +761,14 @@ def _write_fanli(epub, lang):
 _releases_link = "https://github.com/meng89/hyncdzj/releases"
 _releases_e = xl.Element("a", {"href": _releases_link}, [_releases_link])
 
-_yunpan_link = "https://www.jianguoyun.com/p/DbBOkGwQnbmtChjWkpIGIAA"
-_yunpan_e = xl.Element("a", {"href": _yunpan_link}, [_yunpan_link])
+_jianguoyun_link = "https://www.jianguoyun.com/p/DbBOkGwQnbmtChjWkpIGIAA"
+_jianguoyun_e = xl.Element("a", {"href": _jianguoyun_link}, [_jianguoyun_link])
+
+_lanzouyun_link = "https://wwaxq.lanzouv.com/b019vpg2hi"
+_lanzhouyun_e = xl.Element("a", {"href": _lanzouyun_link}, [_lanzouyun_link])
+
+_googleyunpan_link = "https://drive.google.com/drive/folders/1kCVtONm0Jq0LRz0Fp3WATg-F74dRGx4K?usp=sharing"
+_googleyunpan_e = xl.Element("a", {"href": _googleyunpan_link}, [_googleyunpan_link])
 
 _my_mail = "observerchan@gmail.com"
 _my_mail_e = xl.Element("a", {"href": "mailto:{}".format(_my_mail)}, [_my_mail])
@@ -770,10 +776,18 @@ _cbeta = xl.Element("a", {"href": "https://www.cbeta.org/"}, ["CBETA"],)
 
 README_HYNCDZJ = (
     ["此佛经译著权归属于元亨寺及其译者。电子书基于 ", _cbeta, " 数字化数据制作。"],
-    # ["在本人读经的过程中，会按照上下文填充省略的部分，以及对不懂的词句进行了解并加上注释。若您愿意帮助填充和注释，请联系我。"],
-    ["获取最新制作的电子书，请访问项目 Releases 页面：", _releases_e],
-    ["或访问坚果云盘：", _yunpan_e],
-    ["如有任何与此电子书制作程序相关的问题，或者电子书获取困难，请联系我：", _my_mail_e]
+
+    ["在电子书里，点击标题前面的经号，如 SN1.1，可以访问 suttacentral.net 网站里此章节译文列表页面。点击标题后面的译者名可以访问原网页。",
+     "部分书籍没有整理出对应的经号，已有的经号有可能会有对应错误。"],
+    ["获取最新制作的电子书，请访问一下云盘："],
+    ["蓝奏云（密码 123456）："],
+    [_lanzhouyun_e],
+    ["坚果云："],
+    [_jianguoyun_e],
+    ["Google 云盘："],
+    [_googleyunpan_e],
+    ["如有任何与此电子书制作程序相关的问题，或者电子书获取困难，请联系我："],
+    [_my_mail_e],
 )
 
 _ccc_e = xl.Element("a", {"href": "https://agama.buddhason.org"}, ["莊春江讀經站"])
@@ -781,15 +795,19 @@ README_ABO = (
     ["此汉译佛经数据来自", _ccc_e, "，一切相关权利归于译者。"],
     ["原文是繁体中文，简体版由程序转换，可能会出现转换错误。电子书目录以及经文标题部分可能有一些修改，正文部分与原页面相同，但可能丢失了一部分链接和格式等元数据。"],
     ["点击经文的汉字标题会打开莊春江读经站的经文原始页面，原始页面有巴利语对照，以及与经文相关的其它经文链接。"],
+
     ["在电子书里，点击标题前面的经号，如 SN1.1，可以访问 suttacentral.net 网站里此章节译文列表页面。点击标题后面的译者名可以访问原网页。",
      "部分书籍没有整理出对应的经号，已有的经号有可能会有对应错误。"],
-    ["获取最新制作的电子书，请访问项目 Releases 页面："],
-    [_releases_e],
-    [" 或访问云盘："],
-    [_yunpan_e],
+    ["获取最新制作的电子书，请访问一下云盘："],
+    ["蓝奏云（密码 123456）："],
+    [_lanzhouyun_e, " "],
+    ["坚果云："],
+    [_jianguoyun_e],
+    ["Google 云盘："],
+    [_googleyunpan_e],
     #("如果打不开上面的链接，请尝试这个云盘链接：", xl.Element("a", {"href": "{}".format(_yunpan_link)}, [_yunpan_link])),
     ["如有任何与此电子书制作程序相关的问题，或者电子书获取困难，请联系我："],
-    [_my_mail_e]
+    [_my_mail_e],
 )
 
 def _write_readme(readme, epub, notes, lang):

@@ -113,7 +113,7 @@ class TexHead:
         s += "    list={" + (sc_key + " " if sc_key is not None else "") + toctext + "},]\n"
 
         if source_page:
-            s += "\\goto{(莊春江" + lang.c("譯") + ")}[url(" + config.ABO_WEBSITE + "/" + source_page + ")]\n"
+            s += "\\kern 0.5em \\goto{" + font_size + " (莊春江" + lang.c("譯") + ")}[url(" + config.ABO_WEBSITE + "/" + source_page + ")]\n"
 
         s += "}\n"
 

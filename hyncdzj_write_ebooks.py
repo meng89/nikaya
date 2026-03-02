@@ -272,7 +272,7 @@ def main(_help=False, debug=False, translations=None, formats=None, langs=None, 
                                 hyncdzj.pdf.build_epub_one_book,
                                 (translation, cover_dir, full_file_name, info_datas, translators, lang, layout, font, tag)
                             )
-                            jobs.append(job)
+                            jobs.insert(0, job)
                             total += 1
                             try_run_job()
 
@@ -291,7 +291,7 @@ def main(_help=False, debug=False, translations=None, formats=None, langs=None, 
                         hyncdzj.epub.build_epub_one_book,
                         (translation, file_name, cover_dir, full_file_name, info_datas, translators, lang, tag)
                     )
-                    jobs.append(job)
+                    jobs.insert(0, job)
                     total += 1
                     try_run_job()
 
