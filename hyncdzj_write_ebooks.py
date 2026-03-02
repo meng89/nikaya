@@ -369,19 +369,18 @@ def main(_help=False, debug=False, translations=None, formats=None, langs=None, 
         for dir_name in dirs:
             output_dirname = os.path.join(temp_td.name, dir_name)
             shutil.make_archive(output_dirname, 'zip', output_dirname)
-
-            shutil.rmtree(output_dirname)
+            #shutil.rmtree(output_dirname)
 
         for file_name in files:
             full_file_name = os.path.join(temp_td.name, file_name)
             zf = zipfile.ZipFile(full_file_name + ".zip", "w")
             zf.write(full_file_name, arcname=os.path.basename(file_name))
             zf.close()
-
-            os.remove(full_file_name)
+            #os.remove(full_file_name)
 
         for cover_dir in cover_dirs:
-            shutil.rmtree(cover_dir)
+            #shutil.rmtree(cover_dir)
+            pass
 
     print()
     print("用时:", format_seconds(end_time - start_time))

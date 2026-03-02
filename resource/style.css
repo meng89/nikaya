@@ -45,13 +45,16 @@ a {
 }
 
 .sc_link {
-    font-size: 1.2em;
+    font-size: 1em;
     text-decoration: none;
+    color: Purple;
 }
 .abo_translate {
     font-size: 0.9em;
     text-decoration: none; /* 去除下划线 */
     /*color: black;          /* 设置字体颜色为黑色 */
+    color: Purple;
+    font-weight: normal;
 }
 
 .no_text_noteref {
