@@ -11,7 +11,6 @@ RESOURCE_DIR = os.path.join(PROJECT_ROOT, "resource")
 TEX_DIR = os.path.join(PROJECT_ROOT, "tex")
 
 ABO_RESOURCE_DIR = os.path.join(PROJECT_ROOT, "abo_resource")
-ABO_COVER_DIR = os.path.join(ABO_RESOURCE_DIR, "cover")
 ABO_DOWNLOAD_DIR = os.path.join(ABO_RESOURCE_DIR, "htm")
 ABO_XML_DIR = os.path.join(ABO_RESOURCE_DIR, "xml")
 
