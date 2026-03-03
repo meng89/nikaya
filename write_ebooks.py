@@ -300,14 +300,7 @@ def main(_help=False, debug=False, translations=None, formats=None, langs=None, 
 
                 data = get_data(lang, m.info, load_path)
 
-                if translation is nikaya_share.HYNCDZJ:
-                    module_tree = hyncdzj.book_modules.module_tree
-                else:
-                    module_tree = abo.module_tree
-
-                result, catalog = nikaya_share.get_catalog(m, module_tree)
-                assert result
-
+                catalog = nikaya_share.get_catalog_by_module(m)
 
                 if "pdf" in my_formats:
                     for layout in my_layouts:

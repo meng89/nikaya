@@ -71,14 +71,18 @@ def make_mark(ng, marks):
     return sub_mark.kids
 
 
-def create_epub(title, collection, identifier, lang):
+def create_epub(translation, title, collection, translators, identifier, lang):
     epub = epubpacker.Epub()
+    epub.meta.languages = [lang.xml, "pi", "en-US"]
     epub.meta.titles = [title]
+    epub.meta.creators.append((list(translators), "trl")) #trl aut
+    if translation is nikaya_share.HYNCDZJ:
+        epub.meta.contributors.append(("CBETA https://https://cbeta.org", "red"))
+    epub.meta.contributors.append(("https://github.com/meng89/nikaya", "bkp"))
     epub.meta.identifier = identifier
     epub.meta.others.append(xl.Element("meta", {"property": "belongs-to-collection", "id": "c01"},
                                        [collection]))
     epub.meta.others.append(xl.Element("meta", {"refines": "#c01", "property": "collection-type"}, ["series"]))
-    epub.meta.languages = [lang.xml, "pi", "en-US"]
     return epub
 
 def write_doc_files(doc_files, epub):
@@ -99,7 +103,7 @@ def build_epub_one_book(type_, title, cover_dir, full_path, info_datas, translat
     book_names = [lang.c(title)]
 
     my_uuid = get_uuid("".join(book_names) + lang.en)
-    epub = create_epub(title, title, my_uuid.urn, lang)
+    epub = create_epub(type_, title, title, translators, my_uuid.urn, lang)
 
     notes = hyncdzj.note.Notes()
 
@@ -159,7 +163,7 @@ def build_epub_one_book(type_, title, cover_dir, full_path, info_datas, translat
 def build_epub(type_, cover_dir, full_path, data, info, lang, tag):
     title = lang.c(info.name)
     my_uuid = get_uuid(title + lang.en)
-    epub = create_epub(title, title, my_uuid.urn, lang)
+    epub = create_epub(type_, title, title, info.translators, my_uuid.urn, lang)
 
     notes = hyncdzj.note.Notes()
 
@@ -774,41 +778,34 @@ _my_mail = "observerchan@gmail.com"
 _my_mail_e = xl.Element("a", {"href": "mailto:{}".format(_my_mail)}, [_my_mail])
 _cbeta = xl.Element("a", {"href": "https://www.cbeta.org/"}, ["CBETA"],)
 
-README_HYNCDZJ = (
-    ["此佛经译著权归属于元亨寺及其译者。电子书基于 ", _cbeta, " 数字化数据制作。"],
-
-    ["在电子书里，点击标题前面的经号，如 SN1.1，可以访问 suttacentral.net 网站里此章节译文列表页面。点击标题后面的译者名可以访问原网页。",
-     "部分书籍没有整理出对应的经号，已有的经号有可能会有对应错误。"],
-    ["获取最新制作的电子书，请访问一下云盘："],
-    ["蓝奏云（密码 123456）："],
-    [_lanzhouyun_e],
-    ["坚果云："],
+README_SHARE = [
+    ["点击标题前面的经号，如 SN1.1，可以打开 SuttaCentral.net 网站里含有此章节其它译文列表的页面。",
+     "部分书籍没有整理出对应的经号，已有的经号有可能有对应错误。"],
+    ["推荐在电脑上使用 Okular 阅读莊春江 PDF，使用 Calibre 里的 E-book viewer 阅读 EPUB。"],
+    ["获取莊春江和元亨寺的各种版本电子书：合订本，分割本、简体、繁体、PDF 以及 EPUB，请访问下面的云盘。"
+     "云盘里也收录蕭式球老师翻译的现代白话四部尼柯耶。"],
+    ["蓝奏云，密码 123456："],
+    [_lanzhouyun_e, " "],
+    ["坚果云，需要登录："],
     [_jianguoyun_e],
     ["Google 云盘："],
     [_googleyunpan_e],
+    # ("如果打不开上面的链接，请尝试这个云盘链接：", xl.Element("a", {"href": "{}".format(_yunpan_link)}, [_yunpan_link])),
     ["如有任何与此电子书制作程序相关的问题，或者电子书获取困难，请联系我："],
     [_my_mail_e],
-)
+]
+
+README_HYNCDZJ = [
+    ["此佛经译著权归属于元亨寺及其译者。电子书基于 ", _cbeta, " 数字化数据制作。"],
+] + README_SHARE
 
 _ccc_e = xl.Element("a", {"href": "https://agama.buddhason.org"}, ["莊春江讀經站"])
-README_ABO = (
-    ["此汉译佛经数据来自", _ccc_e, "，一切相关权利归于译者。"],
-    ["原文是繁体中文，简体版由程序转换，可能会出现转换错误。电子书目录以及经文标题部分可能有一些修改，正文部分与原页面相同，但可能丢失了一部分链接和格式等元数据。"],
-    ["点击经文的汉字标题会打开莊春江读经站的经文原始页面，原始页面有巴利语对照，以及与经文相关的其它经文链接。"],
-
-    ["在电子书里，点击标题前面的经号，如 SN1.1，可以访问 suttacentral.net 网站里此章节译文列表页面。点击标题后面的译者名可以访问原网页。",
-     "部分书籍没有整理出对应的经号，已有的经号有可能会有对应错误。"],
-    ["获取最新制作的电子书，请访问一下云盘："],
-    ["蓝奏云（密码 123456）："],
-    [_lanzhouyun_e, " "],
-    ["坚果云："],
-    [_jianguoyun_e],
-    ["Google 云盘："],
-    [_googleyunpan_e],
-    #("如果打不开上面的链接，请尝试这个云盘链接：", xl.Element("a", {"href": "{}".format(_yunpan_link)}, [_yunpan_link])),
-    ["如有任何与此电子书制作程序相关的问题，或者电子书获取困难，请联系我："],
-    [_my_mail_e],
-)
+README_ABO = [
+    ["此汉译佛经数据来自", _ccc_e, "，一切相关权利归于译者或权利所持有人。"],
+    ["本生经因未翻译完成，所以未制作电子书。"],
+    ["原文是繁体中文，简体版由程序转换，可能会出现转换错误。电子书的目录以及经文标题部分可能有一些修改，正文部分与原页面相同，但可能丢失了链接和文字格式等元数据。"],
+    ["点击经文的标题后面括号里的译者会打开莊春江读经站的经文原页，原页有巴利语对照，及与经文相关的其它经文链接。"],
+] + README_SHARE
 
 def _write_readme(readme, epub, notes, lang):
     doc_path = "readme.xhtml"
