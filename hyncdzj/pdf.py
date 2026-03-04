@@ -133,8 +133,7 @@ def writetolist(f, name, depth):
     f.write(s)
 
 
-
-def build_epub_one_book(type_, cover_dir, full_path, info_datas, translators, lang, layout, font, tag):
+def build_pdf_one_book(type_, cover_dir, full_path, info_datas, translators, lang, layout, font, tag):
     work_dir = full_path + "_work"
     out_dir = full_path + "_out"
     shutil.copytree(config.TEX_DIR, work_dir)
@@ -148,17 +147,19 @@ def build_epub_one_book(type_, cover_dir, full_path, info_datas, translators, la
         _write_readme(type_, epub.README_HYNCDZJ, work_dir, lang)
         book_info = nikaya_share.Info(name="漢譯南傳大藏經", pali="Tipiṭaka", translators=tuple(translators))
         _title = lang.c("元亨寺·漢譯南傳大藏經")
+        keywords = lang.c("元亨寺、漢譯南傳大藏經")
         cover_image_path = ebook_utils.make_cover_image(cover_dir, book_info, lang, tag, w, h, onebook=True)
-        write_main_tex(work_dir, _title, book_info, None, lang, layout, font, "hyncdzj_homage.tex", cover_image_path)
+        write_main_tex(work_dir, _title, book_info, keywords, lang, layout, font, "hyncdzj_homage.tex", cover_image_path)
     else:
         modes = ["abo"]
         _write_fanli(work_dir, lang)
         _write_abo_homage(work_dir, lang)
         _write_readme(type_, epub.README_ABO, work_dir, lang)
-        book_info = nikaya_share.Info(name="漢譯藏經", pali="Sutta Piṭaka", translators=tuple(translators))
-        _title = "莊春江·" + lang.c("漢譯藏經")
+        book_info = nikaya_share.Info(name="漢譯經藏", pali="Sutta Piṭaka", translators=tuple(translators))
+        _title = "莊春江·" + lang.c("漢譯經藏")
+        keywords = "莊春江、" + lang.c("漢譯經藏")
         cover_image_path =  abo.ebook_utils.make_cover_image(cover_dir, book_info, lang, w, h, onebook=True)
-        write_main_tex(work_dir, _title, book_info, None, lang, layout, font, "abo_homage.tex", cover_image_path)
+        write_main_tex(work_dir, _title, book_info, keywords, lang, layout, font, "abo_homage.tex", cover_image_path)
     write_fontstex(work_dir, lang)
 
     f = open(os.path.join(work_dir, SUTTAS), "w")
@@ -201,7 +202,8 @@ def build_pdf(type_, cover_dir, full_path, data, info, lang, layout, font, tag):
         cover_image_path = ebook_utils.make_cover_image(cover_dir, info, lang, tag, w, h, onebook=True)
         _catalog = nikaya_share.get_catalog_by_info(info)
         _title = lang.c("·".join(["元亨寺", "漢譯南傳大藏經"] + _catalog + [info.name]))
-        write_main_tex(work_dir, _title, info, _catalog, lang, layout, font, "hyncdzj_homage.tex", cover_image_path)
+        keywords = lang.c("、".join(["元亨寺", "漢譯南傳大藏經"] + _catalog + [info.name]))
+        write_main_tex(work_dir, _title, info, keywords, lang, layout, font, "hyncdzj_homage.tex", cover_image_path)
     else:
         modes = ["abo"]
         _write_fanli(work_dir, lang)
@@ -209,8 +211,9 @@ def build_pdf(type_, cover_dir, full_path, data, info, lang, layout, font, tag):
         _write_readme(type_, epub.README_ABO, work_dir, lang)
         cover_image_path =  abo.ebook_utils.make_cover_image(cover_dir, info, lang, w, h, onebook=True)
         _catalog = nikaya_share.get_catalog_by_info(info)
-        _title = "莊春江·" + lang.c("·".join(["漢譯藏經"] + _catalog + [info.name]))
-        write_main_tex(work_dir, _title, info, _catalog, lang, layout, font, "abo_homage.tex", cover_image_path)
+        _title = "莊春江·" + lang.c("·".join(["漢譯經藏"] + _catalog + [info.name]))
+        keywords = "莊春江、" + lang.c("、".join(["漢譯經藏"] + _catalog + [info.name]))
+        write_main_tex(work_dir, _title, info, keywords, lang, layout, font, "abo_homage.tex", cover_image_path)
     write_fontstex(work_dir, lang)
 
     texhead = TexHead()
@@ -309,6 +312,31 @@ def write_doc(type_, f, doc, lang):
             f.write(xml_to_tex([e], doc, lang, type_))
 
 
+def write_main_tex(work_dir, title, info, keywords, lang, layout, font, homage, cover_image):
+    f = open(os.path.join(work_dir, MAIN), "r+", encoding='utf-8')
+    main_t = f.read()
+
+    date = datetime.today().strftime('%Y-%m-%d')
+    main = string.Template(main_t).substitute(
+
+        font_type = "type-imp-myfonts-sc" if isinstance(lang, ebook_utils.SC) else "type-imp-myfonts-tc",
+        layout = layout + ".tex",
+        font = fonts[font],
+        title = title,
+        author = "、".join(info.translators) + lang.c("譯"),
+        keyword = lang.c("上座部佛教、南傳佛教、漢譯巴利聖典") + "、" + keywords,
+        date = date,
+        mulu = lang.c("目錄"),
+        homage = homage,
+        cover_image = cover_image,
+
+    )
+    f.seek(0)
+    f.truncate()
+    f.write(main)
+    f.close()
+
+
 def write_fontstex(work_dir, lang):
     type_name = "type-imp-myfonts-" + lang.en + ".tex"
 
@@ -345,47 +373,6 @@ def ntrelpath(path1, path2):
     except ValueError:
         path = path1
     return path
-
-
-<<<<<<< HEAD
-def write_main_tex(work_dir, info, keywords, lang, layout, font, homage, cover_image):
-=======
-def write_main_tex(work_dir, title, info, catalog, lang, layout, font, homage, cover_image):
-    catalog = catalog or []
->>>>>>> 87be7db5212d87a65132045fc8776844b093d055
-    f = open(os.path.join(work_dir, MAIN), "r+", encoding='utf-8')
-    main_t = f.read()
-
-    date = datetime.today().strftime('%Y-%m-%d')
-    main = string.Template(main_t).substitute(
-<<<<<<< HEAD
-        font_type="type-imp-myfonts-sc" if isinstance(lang, ebook_utils.SC) else "type-imp-myfonts-tc",
-        layout=layout+".tex",
-        font=fonts[font],
-        title=info.name,
-        author="、".join(info.translators) + lang.c("譯"),
-        keyword=lang.c("上座部佛教、南傳佛教、巴利聖典") + keywords,
-        date=date,
-        mulu=lang.c("目錄"),
-        homage=homage,
-        cover_image=cover_image,
-=======
-        font_type = "type-imp-myfonts-sc" if isinstance(lang, ebook_utils.SC) else "type-imp-myfonts-tc",
-        layout = layout + ".tex",
-        font = fonts[font],
-        title = title,
-        author = "、".join(info.translators) + lang.c("譯"),
-        keyword = lang.c("、".join(["上座部佛教", "南傳佛教", "巴利聖典"] + catalog + [info.name])),
-        date = date,
-        mulu = lang.c("目錄"),
-        homage = homage,
-        cover_image = cover_image,
->>>>>>> 87be7db5212d87a65132045fc8776844b093d055
-    )
-    f.seek(0)
-    f.truncate()
-    f.write(main)
-    f.close()
 
 
 def _write_hyncdzj_homage(work_dir, lang):

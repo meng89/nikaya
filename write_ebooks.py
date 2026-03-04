@@ -269,7 +269,7 @@ def main(_help=False, debug=False, translations=None, formats=None, langs=None, 
                             full_file_name = os.path.join(temp_td.name, file_name)
                             job = (
                                 "{}/{}".format(lang.zh, file_name),
-                                hyncdzj.pdf.build_epub_one_book,
+                                hyncdzj.pdf.build_pdf_one_book,
                                 (translation, cover_dir, full_file_name, info_datas, translators, lang, layout, font, tag)
                             )
                             jobs.insert(0, job)

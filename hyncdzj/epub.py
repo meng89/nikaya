@@ -104,14 +104,11 @@ def build_epub_one_book(type_, title, cover_dir, full_path, info_datas, translat
     if type_ is nikaya_share.HYNCDZJ:
         collection = lang.c("元亨寺·漢譯南傳大藏經")
     else:
-        collection = "莊春江·" + lang.c("漢譯藏經")
+        collection = "莊春江·" + lang.c("漢譯經藏")
 
     my_uuid = get_uuid("".join(book_names) + lang.en)
-<<<<<<< HEAD
-    epub = create_epub(title, collection, my_uuid.urn, lang)
-=======
-    epub = create_epub(type_, title, title, translators, my_uuid.urn, lang)
->>>>>>> 87be7db5212d87a65132045fc8776844b093d055
+
+    epub = create_epub(type_, title, title, collection, my_uuid.urn, lang)
 
     notes = hyncdzj.note.Notes()
 
@@ -120,7 +117,7 @@ def build_epub_one_book(type_, title, cover_dir, full_path, info_datas, translat
         image_path = ebook_utils.make_cover_image(cover_dir, book_info, lang, tag, onebook=True)
     else:
 
-        book_info = nikaya_share.Info(name="漢譯藏經", pali="Sutta Piṭaka", translators=tuple(translators))
+        book_info = nikaya_share.Info(name="漢譯經藏", pali="Sutta Piṭaka", translators=tuple(translators))
         image_path =  abo.ebook_utils.make_cover_image(cover_dir, book_info, lang, onebook=True)
     _write_cover(epub, image_path, lang)
 
@@ -171,16 +168,13 @@ def build_epub_one_book(type_, title, cover_dir, full_path, info_datas, translat
 def build_epub(type_, cover_dir, full_path, data, info, lang, tag):
     title = lang.c(info.name)
     my_uuid = get_uuid(title + lang.en)
-<<<<<<< HEAD
+
 
     if type_ is nikaya_share.HYNCDZJ:
         collection = lang.c("元亨寺·漢譯南傳大藏經")
     else:
-        collection = "莊春江·" + lang.c("漢譯藏經")
-    epub = create_epub(title, collection, my_uuid.urn, lang)
-=======
-    epub = create_epub(type_, title, title, info.translators, my_uuid.urn, lang)
->>>>>>> 87be7db5212d87a65132045fc8776844b093d055
+        collection = "莊春江·" + lang.c("漢譯經藏")
+    epub = create_epub(type_, title, title, collection, my_uuid.urn, lang)
 
     notes = hyncdzj.note.Notes()
 

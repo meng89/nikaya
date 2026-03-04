@@ -21,10 +21,8 @@ cn2an
 # 简繁转换
 OpenCC
 
-reportlab
-
 # EPUB
 epubpacker@git+https://github.com/meng89/epubpacker@dev#egg=epubpacker
 
 # XML
-xl@git+https://github.com/meng89/xl@dev#egg=xl
+xl @git+https://github.com/meng89/xl@dev#egg=xl
