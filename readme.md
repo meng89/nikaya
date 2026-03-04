@@ -14,6 +14,9 @@
 
 EPUB3 的格式的弹出注解如果不显示，请多试几个阅读器，推荐在电脑上使用 **Calibre** 软件里名为 **E-book viewer** 的程序阅读 EPUB3。
 
+![EPUB截图](./截图/屏幕截图epub.png)
+![PDF截图](./截图/屏幕截图pdf.png)
+
 ## 自己制作电子书
 项目文件里已包含转换好的经文数据目录树。克隆项目，安装好依赖，就可以制作 EPUB 了。
 制作 PDF 需要另外安装 ConTeXt 排版系统，以及各种字体，字体文件见 `tex/type-imp-myfonts-sc.tex` 和 `type-imp-myfonts-tc.tex`。
