@@ -4,16 +4,15 @@ import tempfile
 from datetime import datetime
 import time
 import sys
-import config
 import shutil
 import zipfile
-import multiprocessing
-multiprocessing.set_start_method("fork") # only POSIX
 from multiprocessing import Process
 from types import ModuleType
+import multiprocessing
+multiprocessing.set_start_method("fork") # only POSIX
 
+import config
 import nikaya_share
-
 import hyncdzj
 import hyncdzj.base
 import hyncdzj.epub
@@ -45,9 +44,9 @@ def try_run_job(do_print=True):
             count += 1
             finished += 1
             if do_print:
-                print("Running: {:2}, Finished: {:2}/{} ({:3}%)".format(
+                print("Running: {:2},  Finished: {:3}/{:3} {:3}%".format(
                     len(running) - count, finished, total, int((finished/total) * 100)), end="", flush=True)
-                print("  {} ✅".format(name))
+                print("  {}".format(name))
 
     running = new_running
 
@@ -179,23 +178,23 @@ def main(_help=False, debug=False, translations=None, formats=None, langs=None, 
     else:
         my_langs = all_langs
 
-    all_layouts = hyncdzj.pdf.layouts.keys()
     if layouts:
         my_layouts = []
-        _ls = layouts.split(",")
-        for _l in _ls:
-            for layout in all_layouts:
-                if layout.startswith(_l):
+        _layout_names = layouts.split(",")
+        for _layout_name in _layout_names:
+            for layout in hyncdzj.pdf.layouts:
+                if _layout_name == layout.name:
                     my_layouts.append(layout)
     else:
-        my_layouts = all_layouts
+        my_layouts = hyncdzj.pdf.layouts
 
-    all_fonts = hyncdzj.pdf.fonts.keys()
+    all_fonts = hyncdzj.pdf.fonts
     if fonts:
         my_fonts = []
-        for _l in fonts.split(","):
-            if _l in all_fonts:
-                my_fonts.append(_l)
+        for _font_name in fonts.split(","):
+            for font in hyncdzj.pdf.fonts:
+                if _font_name == font.name:
+                    my_fonts.append(font)
     else:
         my_fonts = all_fonts
 
@@ -205,8 +204,8 @@ def main(_help=False, debug=False, translations=None, formats=None, langs=None, 
         print("langs:", [lang.en for lang in all_langs])
         print("books:", "模块名称")
         print("onebook:", onebook)
-        print("layouts:", list(all_layouts))
-        print("fonts:", list(all_fonts))
+        print("layouts:", [layout.name for layout in hyncdzj.pdf.layouts])
+        print("fonts:", [font.name for font in hyncdzj.pdf.fonts])
         print()
         print("命令行举例，只制作《相应部》和《中部》的简体版，不要 EPUB，且包含所有页面布局为 letter 开头的 PDF：")
         print("./hyncdzj_write_ebooks.py books=sn,mn langs=sc types=pdf layouts=letter")
@@ -225,7 +224,7 @@ def main(_help=False, debug=False, translations=None, formats=None, langs=None, 
 
     date = datetime.today().strftime('%Y.%m.%d')
 
-    dirs = set()
+    pack_dirs = set()
     files = set()
 
     cover_dirs = set()
@@ -234,14 +233,16 @@ def main(_help=False, debug=False, translations=None, formats=None, langs=None, 
             if translation is nikaya_share.HYNCDZJ:
                 cover_dir = os.path.join(temp_td.name, "元亨寺_cover")
                 _book_modules = hyncdzj.book_modules
-                name = lang.c("元亨寺_漢譯南傳大藏經")
+                collection = lang.c("元亨寺_漢譯南傳大藏經")
+                coll = "元"
                 my_modules = get_books_modules(books, hyncdzj.book_modules.all_modules)
 
             else :
                 assert translation is nikaya_share.ABO
                 cover_dir = os.path.join(temp_td.name, "莊春江_cover")
                 _book_modules = abo
-                name = "莊春江_" + lang.c("漢譯經藏")
+                collection = "莊春江_" + lang.c("漢譯經藏")
+                coll = "莊"
                 my_modules = get_books_modules(books, abo.all_modules)
 
             cover_dirs.add(cover_dir)
@@ -253,22 +254,25 @@ def main(_help=False, debug=False, translations=None, formats=None, langs=None, 
                     tree = _book_modules.module_tree
 
                 info_datas, translators, tag = mtree_to_info_data_tree(translation, tree, lang)
-                _file_name = "{}_{}_{}".format(name, lang.c("合訂本"), lang.zh)
 
+                _file_name = "{}_{}_{}".format(collection, lang.c("合訂本"), lang.zh)
                 if "pdf" in my_formats:
                     for layout in my_layouts:
                         for font in my_fonts:
-                            file_name = _file_name
+
+                            file_name = _file_name + "_PDF"
                             if tag:
                                 file_name += "_{}".format(tag)
-                            file_name += "_{}_{}_{}".format(layout, font, date)
 
+                            file_name += "_{}".format(layout.name)
+                            file_name += "_{}".format(font.name)
+                            file_name += "_{}".format(date)
                             file_name += ".pdf"
 
                             files.add(file_name)
                             full_file_name = os.path.join(temp_td.name, file_name)
                             job = (
-                                "{}/{}".format(lang.zh, file_name),
+                                file_name,
                                 hyncdzj.pdf.build_pdf_one_book,
                                 (translation, cover_dir, full_file_name, info_datas, translators, lang, layout, font, tag)
                             )
@@ -287,9 +291,9 @@ def main(_help=False, debug=False, translations=None, formats=None, langs=None, 
                     full_file_name = os.path.join(temp_td.name, file_name)
 
                     job = (
-                        "{}/{}".format(lang.zh, file_name),
+                        file_name,
                         hyncdzj.epub.build_epub_one_book,
-                        (translation, file_name, cover_dir, full_file_name, info_datas, translators, lang, tag)
+                        (translation, cover_dir, full_file_name, info_datas, translators, lang, tag)
                     )
                     jobs.insert(0, job)
                     total += 1
@@ -300,55 +304,51 @@ def main(_help=False, debug=False, translations=None, formats=None, langs=None, 
 
                 data = get_data(lang, m.info, load_path)
 
-                catalog = nikaya_share.get_catalog_by_module(m)
+                catalog = nikaya_share.get_catalog_by_info(m.info)
 
                 if "pdf" in my_formats:
                     for layout in my_layouts:
                         for font in my_fonts:
+                            dir_name = "{}_{}_PDF_{}_{}_{}".format(collection, lang.zh, layout.name, font.name, date)
+                            pack_dirs.add(dir_name)
 
-                            package_dir = "{}_{}_PDF_{}_{}_{}".format(name, lang.zh, layout, font, date)
-
-                            file_name = "{}".format(lang.c(m.info.name))
+                            file_name = "{}_{}".format(coll, lang.c(m.info.name))
                             if tag:
-                                file_name += "_{}".format(tag)
+                                file_name += "_" + tag
                             file_name += ".pdf"
 
-                            dirs.add(package_dir)
-
-                            full_file_name = os.path.join(temp_td.name, package_dir, *catalog, file_name)
-
+                            show_name = os.path.join(dir_name, *catalog, file_name)
+                            full_file_name = os.path.join(temp_td.name, dir_name, *catalog, file_name)
                             os.makedirs(os.path.dirname(full_file_name), exist_ok=True)
 
                             job = (
-                                "{}/{}_{}/{}".format(lang.zh, layout, font, file_name),
+                                show_name,
                                 hyncdzj.pdf.build_pdf,
                                 (translation, cover_dir, full_file_name, data, m.info, lang, layout, font, tag)
                             )
-
                             jobs.append(job)
                             total += 1
                             try_run_job()
 
                 if "epub" in my_formats:
-                    file_name = "{}".format(lang.c(m.info.name))
+                    dir_name = "{}_{}_EPUB_{}".format(collection, lang.zh, date)
+                    pack_dirs.add(dir_name)
+
+                    file_name = "{}_{}".format(coll, lang.c(m.info.name))
                     if tag:
                         file_name += "_{}".format(tag)
                     file_name += ".epub"
 
-                    package_dir = "{}_{}_EPUB_{}".format(name, lang.zh, date)
-
-                    dirs.add(package_dir)
-
-                    full_file_name = os.path.join(temp_td.name, package_dir, *catalog, file_name)
-
+                    show_name = os.path.join(dir_name, *catalog, file_name)
+                    full_file_name = os.path.join(temp_td.name, dir_name, *catalog, file_name)
                     os.makedirs(os.path.dirname(full_file_name), exist_ok=True)
 
-                    jobs.append(
-                        ("{}/{}".format(lang.zh, file_name),
-                         hyncdzj.epub.build_epub,
-                         (translation, cover_dir, full_file_name, data, m.info, lang, tag))
+                    job = (
+                        show_name,
+                        hyncdzj.epub.build_epub,
+                        (translation, cover_dir, full_file_name, data, m.info, lang, tag)
                     )
-
+                    jobs.append(job)
                     total += 1
                     try_run_job()
 
@@ -359,7 +359,7 @@ def main(_help=False, debug=False, translations=None, formats=None, langs=None, 
     end_time = time.time()
 
     if not debug:
-        for dir_name in dirs:
+        for dir_name in pack_dirs:
             output_dirname = os.path.join(temp_td.name, dir_name)
             shutil.make_archive(output_dirname, 'zip', output_dirname)
             #shutil.rmtree(output_dirname)

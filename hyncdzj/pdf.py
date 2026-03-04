@@ -1,3 +1,4 @@
+import dataclasses
 import re
 import os
 import string
@@ -18,44 +19,32 @@ import abo.note
 MAIN = "main.tex"
 SUTTAS = "suttas.tex"
 
-layouts = {
-    "normal": {
-        "cover_size": (2126, 2835),
-        "max_hanzi_in_line": 35,
-        "max_line_in_page": 29,
-    },
+@dataclasses.dataclass
+class Layout:
+    name :str
+    cover_width :int
+    cover_height :int
+    max_hanzi_in_line :int
+    max_line_in_page :int
 
-    "A4": {
-        "cover_size": (2480, 3508),
-        "max_hanzi_in_line": 40,
-        "max_line_in_page": 43,
-    },
+layouts = [
+    Layout(name="普通", cover_width=2126, cover_height=2835, max_hanzi_in_line=35, max_line_in_page=29),
+    Layout(name="A4", cover_width=2480, cover_height=3508, max_hanzi_in_line=40, max_line_in_page=43),
+    Layout(name="xperia10v", cover_width=1080, cover_height=2520, max_hanzi_in_line=29, max_line_in_page=15),
+    Layout(name="ipad9th", cover_width=1620, cover_height=2160, max_hanzi_in_line=29, max_line_in_page=15),
+    Layout(name="kobo_forma", cover_width=1440, cover_height=1920, max_hanzi_in_line=27, max_line_in_page=25),
+]
 
-    "xperia10v": {
-        "cover_size": (1080, 2520),
-        "max_hanzi_in_line": 29,
-        "max_line_in_page": 15,
-    },
+@dataclasses.dataclass
+class Font:
+    name :str
+    tex_cmd: str
 
-    "ipad9th": {
-        "cover_size": (1620, 2160),
-        "max_hanzi_in_line": 29,
-        "max_line_in_page": 15,
-    },
-
-    "kobo_forma": {
-        "cover_size": (1440, 1920),
-        "max_hanzi_in_line": 27,
-        "max_line_in_page": 25,
-
-    },
-}
-
-fonts = {
-    "song": "rm",
-    "kai": "cg",
-    "hei": "ss"
-}
+fonts = [
+    Font(name="宋", tex_cmd="rm"),
+    Font(name="楷", tex_cmd="cg"),
+    Font(name="黑", tex_cmd="ss"),
+]
 
 """
 \\setuphead[part][style=\\tfd\\bf\\ss]
@@ -112,7 +101,7 @@ class TexHead:
         s += "    list={" + (sc_key + " " if sc_key is not None else "") + toctext + "},]\n"
 
         if source_page:
-            s += "\\kern 0.5em \\goto{" + font_size + " (莊春江" + lang.c("譯") + ")}[url(" + config.ABO_WEBSITE + "/" + source_page + ")]\n"
+            s += "\\kern 0.5em \\goto{" + font_size + " （莊春江" + lang.c("譯") + "）}[url(" + config.ABO_WEBSITE + "/" + source_page + ")]\n"
 
         s += "}\n"
 
@@ -140,7 +129,6 @@ def build_pdf_one_book(type_, cover_dir, full_path, info_datas, translators, lan
 
     os.makedirs(out_dir, exist_ok=True)
 
-    w, h = layouts[layout]["cover_size"]
     if type_ is nikaya_share.HYNCDZJ:
         modes = []
         _write_hyncdzj_homage(work_dir, lang)
@@ -148,7 +136,7 @@ def build_pdf_one_book(type_, cover_dir, full_path, info_datas, translators, lan
         book_info = nikaya_share.Info(name="漢譯南傳大藏經", pali="Tipiṭaka", translators=tuple(translators))
         _title = lang.c("元亨寺·漢譯南傳大藏經")
         keywords = lang.c("元亨寺、漢譯南傳大藏經")
-        cover_image_path = ebook_utils.make_cover_image(cover_dir, book_info, lang, tag, w, h, onebook=True)
+        cover_image_path = ebook_utils.make_cover_image(cover_dir, book_info, lang, tag, layout.cover_width, layout.cover_height, onebook=True)
         write_main_tex(work_dir, _title, book_info, keywords, lang, layout, font, "hyncdzj_homage.tex", cover_image_path)
     else:
         modes = ["abo"]
@@ -158,7 +146,7 @@ def build_pdf_one_book(type_, cover_dir, full_path, info_datas, translators, lan
         book_info = nikaya_share.Info(name="漢譯經藏", pali="Sutta Piṭaka", translators=tuple(translators))
         _title = "莊春江·" + lang.c("漢譯經藏")
         keywords = "莊春江、" + lang.c("漢譯經藏")
-        cover_image_path =  abo.ebook_utils.make_cover_image(cover_dir, book_info, lang, w, h, onebook=True)
+        cover_image_path =  abo.ebook_utils.make_cover_image(cover_dir, book_info, lang, layout.cover_width, layout.cover_height, onebook=True)
         write_main_tex(work_dir, _title, book_info, keywords, lang, layout, font, "abo_homage.tex", cover_image_path)
     write_fontstex(work_dir, lang)
 
@@ -175,7 +163,7 @@ def build_pdf_one_book(type_, cover_dir, full_path, info_datas, translators, lan
                 _s = texhead.setuphead()
                 f.write(_s)
                 write_tree(type_, _info, texhead, ds_depth, f, [], _data, _depth + 1, lang, False,
-                           layouts[layout]["max_hanzi_in_line"], layouts[layout]["max_line_in_page"])
+                           layout.max_hanzi_in_line, layout.max_line_in_page)
 
             if len(_sub) == 2:
                 _name, _sub_list = _sub
@@ -194,12 +182,12 @@ def build_pdf(type_, cover_dir, full_path, data, info, lang, layout, font, tag):
 
     os.makedirs(out_dir, exist_ok=True)
 
-    w, h = layouts[layout]["cover_size"]
+
     if type_ is nikaya_share.HYNCDZJ:
         modes = []
         _write_hyncdzj_homage(work_dir, lang)
         _write_readme(type_, epub.README_HYNCDZJ, work_dir, lang)
-        cover_image_path = ebook_utils.make_cover_image(cover_dir, info, lang, tag, w, h, onebook=True)
+        cover_image_path = ebook_utils.make_cover_image(cover_dir, info, lang, tag, layout.cover_width, layout.cover_height, onebook=True)
         _catalog = nikaya_share.get_catalog_by_info(info)
         _title = lang.c("·".join(["元亨寺", "漢譯南傳大藏經"] + _catalog + [info.name]))
         keywords = lang.c("、".join(["元亨寺", "漢譯南傳大藏經"] + _catalog + [info.name]))
@@ -209,7 +197,7 @@ def build_pdf(type_, cover_dir, full_path, data, info, lang, layout, font, tag):
         _write_fanli(work_dir, lang)
         _write_abo_homage(work_dir, lang)
         _write_readme(type_, epub.README_ABO, work_dir, lang)
-        cover_image_path =  abo.ebook_utils.make_cover_image(cover_dir, info, lang, w, h, onebook=True)
+        cover_image_path =  abo.ebook_utils.make_cover_image(cover_dir, info, lang, layout.cover_width, layout.cover_height, onebook=True)
         _catalog = nikaya_share.get_catalog_by_info(info)
         _title = "莊春江·" + lang.c("·".join(["漢譯經藏"] + _catalog + [info.name]))
         keywords = "莊春江、" + lang.c("、".join(["漢譯經藏"] + _catalog + [info.name]))
@@ -222,7 +210,7 @@ def build_pdf(type_, cover_dir, full_path, data, info, lang, layout, font, tag):
     f.write(texhead.setuphead())
     #for _, obj in data:
     #    write_tree(-1, data, f, info, obj, lang, layouts[layout]["max_hanzi_in_line"], layouts[layout]["max_line_in_page"])
-    write_tree(type_, info, texhead, ds_depth, f, [], data, 0, lang, False, layouts[layout]["max_hanzi_in_line"], layouts[layout]["max_line_in_page"])
+    write_tree(type_, info, texhead, ds_depth, f, [], data, 0, lang, False, layout.max_hanzi_in_line, layout.max_line_in_page)
     f.close()
 
     complie_pdf(work_dir, out_dir, layout, full_path, modes)
@@ -235,7 +223,7 @@ def complie_pdf(work_dir, out_dir, layout, full_path, modes=None):
         my_env["PATH"] = os.path.expanduser(config.CONTEXT_BIN_PATH) + ":" + my_env["PATH"]
     elif os.name == "nt":
         my_env["PATH"] = os.path.expanduser(config.CONTEXT_BIN_PATH) + ";" + my_env["PATH"]
-    mode_list = [layout]
+    mode_list = [layout.name]
     if config.DEBUG:
         mode_list.append("debug")
     all_modes = ",".join(mode_list + modes)
@@ -320,8 +308,8 @@ def write_main_tex(work_dir, title, info, keywords, lang, layout, font, homage, 
     main = string.Template(main_t).substitute(
 
         font_type = "type-imp-myfonts-sc" if isinstance(lang, ebook_utils.SC) else "type-imp-myfonts-tc",
-        layout = layout + ".tex",
-        font = fonts[font],
+        layout = layout.name + ".tex",
+        font = font.tex_cmd,
         title = title,
         author = "、".join(info.translators) + lang.c("譯"),
         keyword = lang.c("上座部佛教、南傳佛教、漢譯巴利聖典") + "、" + keywords,
@@ -606,7 +594,7 @@ def xml_to_tex(es, doc, lang, type_):
             else:
                 raise Exception("Unknown element type: {}".format(repr(e.to_str())))
         else:
-            raise Exception("Unknown element type: {}".format(repr(e.to_str())))
+            raise Exception("Unknown object: {}".format(repr(e.to_str())))
 
     return s
 

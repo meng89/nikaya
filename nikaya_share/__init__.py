@@ -283,20 +283,9 @@ class SC(Lang):
         return "简体版"
 
 
-def get_catalog_by_module(m):
-    return get_catalog_by_info(m.info)
 
 
-def _get_catalog_by_module(m, tree, catalog=None):
-    catalog = catalog or []
-    for x in tree:
-        if x is m:
-            return True, catalog
-        elif isinstance(x, tuple):
-            result, value = _get_catalog_by_module(m, x[1], catalog + [x[0]])
-            if result:
-                return result, value
-    return False, None
+
 
 
 def get_catalog_by_info(info):
@@ -309,13 +298,38 @@ def get_catalog_by_info(info):
 
     raise Exception("Catalog Not Found! Info:", info)
 
+
 def _get_catalog_by_info(info, tree, catalog=None):
     catalog = catalog or []
     for x in tree:
         if isinstance(x, ModuleType) and x.info == info:
             return True, catalog
         elif isinstance(x, tuple):
-            result, value = _get_catalog_by_info(info, x[1], catalog + [x[0]])
+            name, sub = x
+            result, value = _get_catalog_by_info(info, sub, catalog + [name])
             if result:
                 return result, value
     return False, None
+
+
+def get_count_by_info(info):
+    import hyncdzj.book_modules
+    import abo
+    for tree in (hyncdzj.book_modules.module_tree, abo.module_tree):
+        _, value = _get_count_by_info(info, tree)
+        if value:
+            return value
+    raise Exception(info)
+
+
+def _get_count_by_info(info, tree, count=0):
+    for x in tree:
+        count += 1
+        if isinstance(x, ModuleType) and x.info == info:
+            return True, count
+        elif isinstance(x, tuple):
+            _name, sub = x
+            count, value = _get_count_by_info(info, sub, count)
+            if value:
+                return count, value
+    return count, None

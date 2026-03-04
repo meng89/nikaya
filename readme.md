@@ -22,10 +22,10 @@ EPUB3 的格式的弹出注解如果不显示，请多试几个阅读器，推�
 制作 PDF 需要另外安装 ConTeXt 排版系统，以及各种字体，字体文件见 `tex/type-imp-myfonts-sc.tex` 和 `type-imp-myfonts-tc.tex`。
 
 **制作全部电子书**，包含莊春江译本、元亨寺译本、合订本、分割本、EPUB、PDF、简体、繁体:  
-``./write_ebooks.py onebook layouts=normal fonts=song ``
+``./write_ebooks.py onebook layouts=普通 fonts=宋 ``
 
 **只制作元亨寺合订本 PDF 繁体版**：  
-``./write_ebooks.py translations=y onebook books=none layouts=normal fonts=song formats=pdf langs=tc``
+``./write_ebooks.py translations=y onebook books=none layouts=普通 fonts=宋 formats=pdf langs=tc``
 
 **只制作莊春江相应部 EPUB 简体版**：  
 ``./write_ebooks.py translations=z books=sn langs=sc formats=epub``

@@ -71,18 +71,28 @@ def make_mark(ng, marks):
     return sub_mark.kids
 
 
-def create_epub(translation, title, collection, translators, identifier, lang):
+def get_coll_by_translation(translation, lang):
+    if translation is nikaya_share.HYNCDZJ:
+        return lang.c("元亨寺·漢譯南傳大藏經")
+    else:
+        return "莊春江·" + lang.c("漢譯經藏")
+
+
+def create_epub(translation, title, collection, translators, identifier, lang, position=None):
     epub = epubpacker.Epub()
-    epub.meta.languages = [lang.xml, "pi", "en-US"]
+    epub.meta.identifier = identifier
     epub.meta.titles = [title]
+    epub.meta.languages = [lang.xml, "pi", "en-US"]
+
     epub.meta.creators.append((list(translators), "trl")) #trl aut
     if translation is nikaya_share.HYNCDZJ:
         epub.meta.contributors.append(("CBETA https://https://cbeta.org", "red"))
     epub.meta.contributors.append(("https://github.com/meng89/nikaya", "bkp"))
-    epub.meta.identifier = identifier
-    epub.meta.others.append(xl.Element("meta", {"property": "belongs-to-collection", "id": "c01"},
-                                       [collection]))
-    epub.meta.others.append(xl.Element("meta", {"refines": "#c01", "property": "collection-type"}, ["series"]))
+
+    epub.meta.others.append(xl.Element("meta", {"property": "belongs-to-collection", "id": "c01"},[collection]))
+    epub.meta.others.append(xl.Element("meta", {"refines": "#c01", "property": "collection-type"}, ["set"])) # series
+    if position:
+        epub.meta.others.append(xl.Element("meta", {"refines": "#c01", "property": "group-position"}, [position]))
     return epub
 
 def write_doc_files(doc_files, epub):
@@ -99,16 +109,13 @@ def write_note_spile(notes, epub, lang):
         epub.spine.append(path)
 
 
-def build_epub_one_book(type_, title, cover_dir, full_path, info_datas, translators, lang, tag):
-    book_names = [lang.c(title)]
-    if type_ is nikaya_share.HYNCDZJ:
-        collection = lang.c("元亨寺·漢譯南傳大藏經")
-    else:
-        collection = "莊春江·" + lang.c("漢譯經藏")
+def build_epub_one_book(type_, cover_dir, full_file_name, info_datas, translators, lang, tag):
+    collection = get_coll_by_translation(type_, lang)
+    title = collection
 
-    my_uuid = get_uuid("".join(book_names) + lang.en)
+    my_uuid = get_uuid(title + lang.en)
 
-    epub = create_epub(type_, title, title, collection, my_uuid.urn, lang)
+    epub = create_epub(type_, title, collection, translators, my_uuid.urn, lang)
 
     notes = hyncdzj.note.Notes()
 
@@ -160,21 +167,22 @@ def build_epub_one_book(type_, title, cover_dir, full_path, info_datas, translat
 
     make_marks_href(epub.mark.kids)
 
-    epub.write(full_path)
+    epub.write(full_file_name)
 
     write_css(epub, lang)
 
 
 def build_epub(type_, cover_dir, full_path, data, info, lang, tag):
-    title = lang.c(info.name)
+    collection = get_coll_by_translation(type_, lang)
+    if type_ is nikaya_share.HYNCDZJ:
+        title = lang.c("元亨寺·" + info.name)
+    else:
+        title = "莊春江·" + lang.c(info.name)
+
     my_uuid = get_uuid(title + lang.en)
 
-
-    if type_ is nikaya_share.HYNCDZJ:
-        collection = lang.c("元亨寺·漢譯南傳大藏經")
-    else:
-        collection = "莊春江·" + lang.c("漢譯經藏")
-    epub = create_epub(type_, title, title, collection, my_uuid.urn, lang)
+    count = nikaya_share.get_count_by_info(info)
+    epub = create_epub(type_, title, collection, info.translators, my_uuid.urn, lang, str(count))
 
     notes = hyncdzj.note.Notes()
 
@@ -399,7 +407,7 @@ def make_mark_and_heading(info, namegroups, obj, heading_level, lang):
     source_page = get_source_page(obj)
     if source_page is not None:
         epub_heading.kids.append(" ")
-        _a = xl.Element("a", {"class": "abo_translate", "href": config.ABO_WEBSITE + "/" + source_page}, ["(莊春江" + lang.c("譯") + ")"])
+        _a = xl.Element("a", {"class": "abo_translate", "href": config.ABO_WEBSITE + "/" + source_page}, ["（莊春江" + lang.c("譯") + "）"])
         epub_heading.kids.append(_a)
 
     return epub_mark, epub_heading, is_serial, mark_name, range_str, name_str
