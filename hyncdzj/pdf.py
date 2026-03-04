@@ -335,7 +335,7 @@ def ntrelpath(path1, path2):
     return path
 
 
-def write_main_tex(work_dir, info, lang, layout, font, homage, cover_image):
+def write_main_tex(work_dir, info, keywords, lang, layout, font, homage, cover_image):
     f = open(os.path.join(work_dir, MAIN), "r+", encoding='utf-8')
     main_t = f.read()
 
@@ -346,7 +346,7 @@ def write_main_tex(work_dir, info, lang, layout, font, homage, cover_image):
         font=fonts[font],
         title=info.name,
         author="、".join(info.translators) + lang.c("譯"),
-        keyword=lang.c("上座部佛教、南傳佛教、") + info.name,
+        keyword=lang.c("上座部佛教、南傳佛教、巴利聖典") + keywords,
         date=date,
         mulu=lang.c("目錄"),
         homage=homage,

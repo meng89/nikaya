@@ -97,9 +97,13 @@ def write_note_spile(notes, epub, lang):
 
 def build_epub_one_book(type_, title, cover_dir, full_path, info_datas, translators, lang, tag):
     book_names = [lang.c(title)]
+    if type_ is nikaya_share.HYNCDZJ:
+        collection = lang.c("元亨寺·漢譯南傳大藏經")
+    else:
+        collection = "莊春江·" + lang.c("漢譯藏經")
 
     my_uuid = get_uuid("".join(book_names) + lang.en)
-    epub = create_epub(title, title, my_uuid.urn, lang)
+    epub = create_epub(title, collection, my_uuid.urn, lang)
 
     notes = hyncdzj.note.Notes()
 
@@ -159,7 +163,12 @@ def build_epub_one_book(type_, title, cover_dir, full_path, info_datas, translat
 def build_epub(type_, cover_dir, full_path, data, info, lang, tag):
     title = lang.c(info.name)
     my_uuid = get_uuid(title + lang.en)
-    epub = create_epub(title, title, my_uuid.urn, lang)
+
+    if type_ is nikaya_share.HYNCDZJ:
+        collection = lang.c("元亨寺·漢譯南傳大藏經")
+    else:
+        collection = "莊春江·" + lang.c("漢譯藏經")
+    epub = create_epub(title, collection, my_uuid.urn, lang)
 
     notes = hyncdzj.note.Notes()
 
