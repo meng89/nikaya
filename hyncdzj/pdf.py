@@ -70,7 +70,6 @@ fonts = {
 """
 
 
-
 class TexHead:
     heads = ["part", "title", "subject", "subsubject", "subsubsubject", "subsubsubsubject", "subsubsubsubsubject", "subsubsubsubsubsubject", "subsubsubsubsubsubsubject"]
     font_sizes = ["tfd", "tfc", "tfb", "tfa", "tf", "tfx", "tfxx", "tfxx", "tfxx"]
@@ -144,17 +143,22 @@ def build_epub_one_book(type_, cover_dir, full_path, info_datas, translators, la
 
     w, h = layouts[layout]["cover_size"]
     if type_ is nikaya_share.HYNCDZJ:
+        modes = []
         _write_hyncdzj_homage(work_dir, lang)
         _write_readme(type_, epub.README_HYNCDZJ, work_dir, lang)
         book_info = nikaya_share.Info(name="漢譯南傳大藏經", pali="Tipiṭaka", translators=tuple(translators))
+        _title = lang.c("元亨寺·漢譯南傳大藏經")
         cover_image_path = ebook_utils.make_cover_image(cover_dir, book_info, lang, tag, w, h, onebook=True)
-        write_main_tex(work_dir, book_info, lang, layout, font, "hyncdzj_homage.tex", cover_image_path)
+        write_main_tex(work_dir, _title, book_info, None, lang, layout, font, "hyncdzj_homage.tex", cover_image_path)
     else:
+        modes = ["abo"]
+        _write_fanli(work_dir, lang)
         _write_abo_homage(work_dir, lang)
         _write_readme(type_, epub.README_ABO, work_dir, lang)
         book_info = nikaya_share.Info(name="漢譯藏經", pali="Sutta Piṭaka", translators=tuple(translators))
+        _title = "莊春江·" + lang.c("漢譯藏經")
         cover_image_path =  abo.ebook_utils.make_cover_image(cover_dir, book_info, lang, w, h, onebook=True)
-        write_main_tex(work_dir, book_info, lang, layout, font, "abo_homage.tex", cover_image_path)
+        write_main_tex(work_dir, _title, book_info, None, lang, layout, font, "abo_homage.tex", cover_image_path)
     write_fontstex(work_dir, lang)
 
     f = open(os.path.join(work_dir, SUTTAS), "w")
@@ -169,8 +173,8 @@ def build_epub_one_book(type_, cover_dir, full_path, info_datas, translators, la
                 texhead = TexHead(_depth + 1)
                 _s = texhead.setuphead()
                 f.write(_s)
-                write_tree2(type_, _info, texhead, ds_depth, f, [], _data, _depth + 1, lang, False,
-                            layouts[layout]["max_hanzi_in_line"], layouts[layout]["max_line_in_page"])
+                write_tree(type_, _info, texhead, ds_depth, f, [], _data, _depth + 1, lang, False,
+                           layouts[layout]["max_hanzi_in_line"], layouts[layout]["max_line_in_page"])
 
             if len(_sub) == 2:
                 _name, _sub_list = _sub
@@ -179,7 +183,7 @@ def build_epub_one_book(type_, cover_dir, full_path, info_datas, translators, la
 
     _xyz(info_datas)
 
-    complie_pdf(work_dir, out_dir, layout, full_path)
+    complie_pdf(work_dir, out_dir, layout, full_path, modes)
 
 
 def build_pdf(type_, cover_dir, full_path, data, info, lang, layout, font, tag):
@@ -191,15 +195,22 @@ def build_pdf(type_, cover_dir, full_path, data, info, lang, layout, font, tag):
 
     w, h = layouts[layout]["cover_size"]
     if type_ is nikaya_share.HYNCDZJ:
+        modes = []
         _write_hyncdzj_homage(work_dir, lang)
         _write_readme(type_, epub.README_HYNCDZJ, work_dir, lang)
         cover_image_path = ebook_utils.make_cover_image(cover_dir, info, lang, tag, w, h, onebook=True)
-        write_main_tex(work_dir, info, lang, layout, font, "hyncdzj_homage.tex", cover_image_path)
+        _catalog = nikaya_share.get_catalog_by_info(info)
+        _title = lang.c("·".join(["元亨寺", "漢譯南傳大藏經"] + _catalog + [info.name]))
+        write_main_tex(work_dir, _title, info, _catalog, lang, layout, font, "hyncdzj_homage.tex", cover_image_path)
     else:
+        modes = ["abo"]
+        _write_fanli(work_dir, lang)
         _write_abo_homage(work_dir, lang)
         _write_readme(type_, epub.README_ABO, work_dir, lang)
         cover_image_path =  abo.ebook_utils.make_cover_image(cover_dir, info, lang, w, h, onebook=True)
-        write_main_tex(work_dir, info, lang, layout, font, "abo_homage.tex", cover_image_path)
+        _catalog = nikaya_share.get_catalog_by_info(info)
+        _title = "莊春江·" + lang.c("·".join(["漢譯藏經"] + _catalog + [info.name]))
+        write_main_tex(work_dir, _title, info, _catalog, lang, layout, font, "abo_homage.tex", cover_image_path)
     write_fontstex(work_dir, lang)
 
     texhead = TexHead()
@@ -208,13 +219,14 @@ def build_pdf(type_, cover_dir, full_path, data, info, lang, layout, font, tag):
     f.write(texhead.setuphead())
     #for _, obj in data:
     #    write_tree(-1, data, f, info, obj, lang, layouts[layout]["max_hanzi_in_line"], layouts[layout]["max_line_in_page"])
-    write_tree2(type_, info, texhead, ds_depth, f, [], data, 0, lang, False, layouts[layout]["max_hanzi_in_line"], layouts[layout]["max_line_in_page"])
+    write_tree(type_, info, texhead, ds_depth, f, [], data, 0, lang, False, layouts[layout]["max_hanzi_in_line"], layouts[layout]["max_line_in_page"])
     f.close()
 
-    complie_pdf(work_dir, out_dir, layout, full_path)
+    complie_pdf(work_dir, out_dir, layout, full_path, modes)
 
 
-def complie_pdf(work_dir, out_dir, layout, full_path):
+def complie_pdf(work_dir, out_dir, layout, full_path, modes=None):
+    modes = modes or []
     my_env = os.environ.copy()
     if os.name == "posix":
         my_env["PATH"] = os.path.expanduser(config.CONTEXT_BIN_PATH) + ":" + my_env["PATH"]
@@ -223,8 +235,8 @@ def complie_pdf(work_dir, out_dir, layout, full_path):
     mode_list = [layout]
     if config.DEBUG:
         mode_list.append("debug")
-    modes = ",".join(mode_list)
-    compile_cmd = """context --path="{}" "{}"/"{}" --mode={}""".format(work_dir, work_dir, MAIN, modes)
+    all_modes = ",".join(mode_list + modes)
+    compile_cmd = """context --path="{}" "{}"/"{}" --mode={}""".format(work_dir, work_dir, MAIN, all_modes)
 
     stdout_file = open(os.path.join(out_dir, "cmd_stdout"), "w", encoding="utf-8")
     stderr_file = open(os.path.join(out_dir, "cmd_stderr"), "w", encoding="utf-8")
@@ -252,7 +264,7 @@ def complie_pdf(work_dir, out_dir, layout, full_path):
     stderr_file.close()
 
 
-def write_tree2(type_, info, texhead, ds_depth, f, ngs, obj, depth, lang, parent_is_continuous, max_hanzi_in_line, max_line_in_page):
+def write_tree(type_, info, texhead, ds_depth, f, ngs, obj, depth, lang, parent_is_continuous, max_hanzi_in_line, max_line_in_page):
     if parent_is_continuous is True:
         is_continuous = True
     else:
@@ -272,7 +284,7 @@ def write_tree2(type_, info, texhead, ds_depth, f, ngs, obj, depth, lang, parent
             write_doc(type_, f, sub, lang)
         else:
             assert isinstance(sub, list)
-            write_tree2(type_, info, texhead, ds_depth, f, sub_ngs, sub, depth + 1, lang, is_continuous, max_hanzi_in_line, max_line_in_page)
+            write_tree(type_, info, texhead, ds_depth, f, sub_ngs, sub, depth + 1, lang, is_continuous, max_hanzi_in_line, max_line_in_page)
 
         f.write(texhead.stop(depth))
 
@@ -335,12 +347,18 @@ def ntrelpath(path1, path2):
     return path
 
 
+<<<<<<< HEAD
 def write_main_tex(work_dir, info, keywords, lang, layout, font, homage, cover_image):
+=======
+def write_main_tex(work_dir, title, info, catalog, lang, layout, font, homage, cover_image):
+    catalog = catalog or []
+>>>>>>> 87be7db5212d87a65132045fc8776844b093d055
     f = open(os.path.join(work_dir, MAIN), "r+", encoding='utf-8')
     main_t = f.read()
 
     date = datetime.today().strftime('%Y-%m-%d')
     main = string.Template(main_t).substitute(
+<<<<<<< HEAD
         font_type="type-imp-myfonts-sc" if isinstance(lang, ebook_utils.SC) else "type-imp-myfonts-tc",
         layout=layout+".tex",
         font=fonts[font],
@@ -351,6 +369,18 @@ def write_main_tex(work_dir, info, keywords, lang, layout, font, homage, cover_i
         mulu=lang.c("目錄"),
         homage=homage,
         cover_image=cover_image,
+=======
+        font_type = "type-imp-myfonts-sc" if isinstance(lang, ebook_utils.SC) else "type-imp-myfonts-tc",
+        layout = layout + ".tex",
+        font = fonts[font],
+        title = title,
+        author = "、".join(info.translators) + lang.c("譯"),
+        keyword = lang.c("、".join(["上座部佛教", "南傳佛教", "巴利聖典"] + catalog + [info.name])),
+        date = date,
+        mulu = lang.c("目錄"),
+        homage = homage,
+        cover_image = cover_image,
+>>>>>>> 87be7db5212d87a65132045fc8776844b093d055
     )
     f.seek(0)
     f.truncate()
@@ -362,7 +392,7 @@ def _write_hyncdzj_homage(work_dir, lang):
     f = open(os.path.join(work_dir, "hyncdzj_homage.tex"), "r+", encoding="utf-8")
     homage_t = f.read()
     homeage = string.Template(homage_t).substitute(
-        title = lang.c("禮敬偈"),
+        title = lang.c("歸敬偈"),
         line1 = lang.c("歸命彼世尊"),
         line2 = lang.c("應供等覺者")
     )
@@ -382,6 +412,14 @@ def _write_abo_homage(work_dir, lang):
     f.truncate()
     f.write(homeage)
     f.close()
+
+
+def _write_fanli(work_dir, lang):
+    f = open(os.path.join(work_dir, "fanli.tex"), "w", encoding="utf-8")
+    f.write(startsec(lang, 1, "凡例", "凡例", "凡例"))
+    for line in epub.FANLI:
+        f.write(xml_to_tex(lang.c(line), None, nikaya_share.Lang(), nikaya_share.ABO))
+        f.write("\n\\blank\n")
 
 
 def _write_readme(type_, readme, work_dir, lang):

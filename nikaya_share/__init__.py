@@ -3,6 +3,7 @@ import os
 import shutil
 import re
 from typing import Tuple
+from types import ModuleType
 
 import opencc
 
@@ -282,13 +283,39 @@ class SC(Lang):
         return "简体版"
 
 
-def get_catalog(m, tree, catalog=None):
+def get_catalog_by_module(m):
+    return get_catalog_by_info(m.info)
+
+
+def _get_catalog_by_module(m, tree, catalog=None):
     catalog = catalog or []
     for x in tree:
         if x is m:
             return True, catalog
         elif isinstance(x, tuple):
-            result, value = get_catalog(m, x[1], catalog + [x[0]])
+            result, value = _get_catalog_by_module(m, x[1], catalog + [x[0]])
+            if result:
+                return result, value
+    return False, None
+
+
+def get_catalog_by_info(info):
+    import hyncdzj.book_modules
+    import abo
+    for tree in (hyncdzj.book_modules.module_tree, abo.module_tree):
+        result, value = _get_catalog_by_info(info, tree)
+        if result:
+            return value
+
+    raise Exception("Catalog Not Found! Info:", info)
+
+def _get_catalog_by_info(info, tree, catalog=None):
+    catalog = catalog or []
+    for x in tree:
+        if isinstance(x, ModuleType) and x.info == info:
+            return True, catalog
+        elif isinstance(x, tuple):
+            result, value = _get_catalog_by_info(info, x[1], catalog + [x[0]])
             if result:
                 return result, value
     return False, None
