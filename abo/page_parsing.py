@@ -5,7 +5,7 @@ import xl
 
 import config
 
-from public_modules.dp import dp
+from nikaya_share.dp import dp
 
 
 def read_page(file_path, style=1):

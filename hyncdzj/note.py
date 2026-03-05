@@ -1,4 +1,12 @@
+import os
+import re
 import math
+
+import bs4
+
+import xl
+
+import config
 
 
 class Notes:
@@ -59,3 +67,37 @@ class Notes:
             pages.append((title, path, xhtml.to_str(do_pretty=True)))
 
         return pages
+
+
+_abo_gn = None
+
+def get_abo_global_notes():
+    global _abo_gn
+    if _abo_gn is None:
+        _abo_gn = GlobalNotes()
+    return _abo_gn
+
+
+class GlobalNotes:
+    def __init__(self):
+        self._htmls = ["note/note{}.htm".format(x) for x in range(10)]
+        self._notes = {}
+        self._filename = "note"
+
+    @property
+    def notes(self):
+        if self._notes:
+            return self._notes
+
+        for html in self._htmls:
+            data = open(os.path.join(config.ABO_DOWNLOAD_DIR, html), "r").read()
+            soup = bs4.BeautifulSoup(data, 'html5lib')
+            root = xl.parse(str(soup)).root
+            for div in root.find_descendants("div"):
+                if div.tag == "div" and div.attrs.get("id") is not None:
+                    m = re.match(r"^div(\d+)$", div.attrs.get("id"))
+                    self._notes[m.group(1)] = div.kids
+        return self._notes
+
+    def get_es(self, note_id):
+        return self.notes.get(note_id)

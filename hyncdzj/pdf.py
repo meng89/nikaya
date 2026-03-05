@@ -12,8 +12,7 @@ import config
 from . import epub, ebook_utils
 import nikaya_share
 from nikaya_share import new_page_or_not
-import abo.ebook_utils
-import abo.note
+from hyncdzj import note
 
 
 MAIN = "main.tex"
@@ -136,7 +135,7 @@ def build_pdf_one_book(type_, cover_dir, full_path, info_datas, translators, lan
         book_info = nikaya_share.Info(name="漢譯南傳大藏經", pali="Tipiṭaka", translators=tuple(translators))
         _title = lang.c("元亨寺·漢譯南傳大藏經")
         keywords = lang.c("元亨寺、漢譯南傳大藏經")
-        cover_image_path = ebook_utils.make_cover_image(cover_dir, book_info, lang, tag, layout.cover_width, layout.cover_height, onebook=True)
+        cover_image_path = ebook_utils.make_hyncdzj_cover_image(cover_dir, book_info, lang, tag, layout.cover_width, layout.cover_height, onebook=True)
         write_main_tex(work_dir, _title, book_info, keywords, lang, layout, font, "hyncdzj_homage.tex", cover_image_path)
     else:
         modes = ["abo"]
@@ -146,7 +145,7 @@ def build_pdf_one_book(type_, cover_dir, full_path, info_datas, translators, lan
         book_info = nikaya_share.Info(name="漢譯經藏", pali="Sutta Piṭaka", translators=tuple(translators))
         _title = "莊春江·" + lang.c("漢譯經藏")
         keywords = "莊春江、" + lang.c("漢譯經藏")
-        cover_image_path =  abo.ebook_utils.make_cover_image(cover_dir, book_info, lang, layout.cover_width, layout.cover_height, onebook=True)
+        cover_image_path =  ebook_utils.make_abo_cover_image(cover_dir, book_info, lang, layout.cover_width, layout.cover_height, onebook=True)
         write_main_tex(work_dir, _title, book_info, keywords, lang, layout, font, "abo_homage.tex", cover_image_path)
     write_fontstex(work_dir, lang)
 
@@ -187,7 +186,7 @@ def build_pdf(type_, cover_dir, full_path, data, info, lang, layout, font, tag):
         modes = []
         _write_hyncdzj_homage(work_dir, lang)
         _write_readme(type_, epub.README_HYNCDZJ, work_dir, lang)
-        cover_image_path = ebook_utils.make_cover_image(cover_dir, info, lang, tag, layout.cover_width, layout.cover_height, onebook=True)
+        cover_image_path = ebook_utils.make_hyncdzj_cover_image(cover_dir, info, lang, tag, layout.cover_width, layout.cover_height, onebook=True)
         _catalog = nikaya_share.get_catalog_by_info(info)
         _title = lang.c("·".join(["元亨寺", "漢譯南傳大藏經"] + _catalog + [info.name]))
         keywords = lang.c("、".join(["元亨寺", "漢譯南傳大藏經"] + _catalog + [info.name]))
@@ -197,7 +196,7 @@ def build_pdf(type_, cover_dir, full_path, data, info, lang, layout, font, tag):
         _write_fanli(work_dir, lang)
         _write_abo_homage(work_dir, lang)
         _write_readme(type_, epub.README_ABO, work_dir, lang)
-        cover_image_path =  abo.ebook_utils.make_cover_image(cover_dir, info, lang, layout.cover_width, layout.cover_height, onebook=True)
+        cover_image_path =  ebook_utils.make_abo_cover_image(cover_dir, info, lang, layout.cover_width, layout.cover_height, onebook=True)
         _catalog = nikaya_share.get_catalog_by_info(info)
         _title = "莊春江·" + lang.c("·".join(["漢譯經藏"] + _catalog + [info.name]))
         keywords = "莊春江、" + lang.c("、".join(["漢譯經藏"] + _catalog + [info.name]))
@@ -526,7 +525,7 @@ def xml_to_tex(es, doc, lang, type_):
                 #assert len(e.kids) == 1 and isinstance(e.kids[0], str)
                 text = es_to_text(e.kids)
                 #text = e.kids[0]
-                abo_gn = abo.note.get_global_notes()
+                abo_gn = note.get_abo_global_notes()
                 n_kids = abo_gn.get_es(m_g.group(1))
                 n_es = xml_to_tex(n_kids, doc, lang, type_)
                 s += "\\PDFhighlight[莊春江][{{{}}}]{{{}}}".format(n_es, text)

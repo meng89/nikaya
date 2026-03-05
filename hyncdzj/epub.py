@@ -17,9 +17,6 @@ import hyncdzj.note
 from nikaya_share import new_page_or_not, epub_utils
 import hyncdzj.book_modules
 
-import abo.ebook_utils
-import abo.note
-
 
 def make_tree_data(type_, data_infos, lang):
     if type_ is nikaya_share.HYNCDZJ:
@@ -121,11 +118,11 @@ def build_epub_one_book(type_, cover_dir, full_file_name, info_datas, translator
 
     if type_ is nikaya_share.HYNCDZJ:
         book_info = nikaya_share.Info(name="漢譯南傳大藏經", pali="Tipiṭaka", translators=tuple(translators))
-        image_path = ebook_utils.make_cover_image(cover_dir, book_info, lang, tag, onebook=True)
+        image_path = ebook_utils.make_hyncdzj_cover_image(cover_dir, book_info, lang, tag, onebook=True)
     else:
 
         book_info = nikaya_share.Info(name="漢譯經藏", pali="Sutta Piṭaka", translators=tuple(translators))
-        image_path =  abo.ebook_utils.make_cover_image(cover_dir, book_info, lang, onebook=True)
+        image_path =  ebook_utils.make_abo_cover_image(cover_dir, book_info, lang, onebook=True)
     _write_cover(epub, image_path, lang)
 
     if type_ is nikaya_share.HYNCDZJ:
@@ -187,9 +184,9 @@ def build_epub(type_, cover_dir, full_path, data, info, lang, tag):
     notes = hyncdzj.note.Notes()
 
     if type_ is nikaya_share.HYNCDZJ:
-        image_path = ebook_utils.make_cover_image(cover_dir, info, lang, tag, onebook=True)
+        image_path = ebook_utils.make_hyncdzj_cover_image(cover_dir, info, lang, tag, onebook=True)
     else:
-        image_path = abo.ebook_utils.make_cover_image(cover_dir, info, lang, onebook=True)
+        image_path = ebook_utils.make_abo_cover_image(cover_dir, info, lang, onebook=True)
     _write_cover(epub, image_path, lang)
 
     if type_ is nikaya_share.HYNCDZJ:
@@ -552,7 +549,7 @@ def xml_es_to_html(es: ES, root, notes: hyncdzj.note.Notes, doc_depth, lang) -> 
                 new_es.append(a)
 
             elif m_g:
-                abo_gn = abo.note.get_global_notes()
+                abo_gn = hyncdzj.note.get_abo_global_notes()
                 a = xl.Element("a", attrs={"epub:type": "noteref"})
                 n_kids = abo_gn.get_es(m_g.group(1))
                 link = notes.add_note(n_kids)

@@ -2,10 +2,9 @@
 import os
 
 import config
-from hyncdzj import base
 import hyncdzj_load_from_p5a
 from  hyncdzj import book_modules
-from nikaya_share import base
+import nikaya_share
 
 
 def main():
@@ -15,7 +14,7 @@ def main():
             print(data_dir)
             name, data = hyncdzj_load_from_p5a.load_book_by_module(m)
             os.makedirs(data_dir, exist_ok=True)
-            base.write_to_disk(data_dir, data)
+            nikaya_share.write_to_disk(data_dir, data)
             print()
 
 

@@ -6,9 +6,8 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 ABO_WEBSITE = "https://agama.buddhason.org"
 
 
-RESOURCE_DIR = os.path.join(PROJECT_ROOT, "resource")
-
-TEX_DIR = os.path.join(PROJECT_ROOT, "tex")
+RESOURCE_DIR = os.path.join(PROJECT_ROOT, "ebook_resource")
+TEX_DIR = os.path.join(RESOURCE_DIR, "tex")
 
 ABO_RESOURCE_DIR = os.path.join(PROJECT_ROOT, "abo_resource")
 ABO_DOWNLOAD_DIR = os.path.join(ABO_RESOURCE_DIR, "htm")
@@ -16,7 +15,7 @@ ABO_XML_DIR = os.path.join(ABO_RESOURCE_DIR, "xml")
 
 ABO_TEX_DIR = os.path.join(PROJECT_ROOT, "abo", "tex")
 
-HYNCDZJ_XML_DIR = os.path.join(PROJECT_ROOT, "hyndzj_xml")
+HYNCDZJ_XML_DIR = os.path.join(PROJECT_ROOT, "hyndzj_resource")
 HYNCDZJ_SIMPLE_XML_DIR = os.path.join(HYNCDZJ_XML_DIR, "simple_xml")
 SIMPLE_FILLING_DIR = os.path.join(HYNCDZJ_XML_DIR, "simple_充填中")
 os.makedirs(SIMPLE_FILLING_DIR, exist_ok=True)

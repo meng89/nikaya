@@ -255,7 +255,7 @@ def main(_help=False, debug=False, translations=None, formats=None, langs=None, 
 
                 info_datas, translators, tag = mtree_to_info_data_tree(translation, tree, lang)
 
-                _file_name = "{}_{}_{}".format(collection, lang.c("合訂本"), lang.zh)
+                _file_name = "{}_{}_{}".format(collection, lang.zh, lang.c("合訂本"))
                 if "pdf" in my_formats:
                     for layout in my_layouts:
                         for font in my_fonts:
@@ -282,6 +282,7 @@ def main(_help=False, debug=False, translations=None, formats=None, langs=None, 
 
                 if "epub" in my_formats:
                     file_name = _file_name
+                    file_name += "_EPUB"
                     if tag:
                         file_name += "_{}".format(tag)
                     file_name += "_{}".format(date)

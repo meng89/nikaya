@@ -2,7 +2,6 @@ import abc
 from abc import ABC
 
 import xl
-from public_modules.dp import dp
 
 
 cjk_table = [
@@ -130,7 +129,7 @@ def _split2basestr(s, out_type):
             last += c
 
         else:
-            dp("unknown character:", repr(c))
+            print("unknown character:", repr(c))
             basestrs.append(c)
 
     _reset_last()

@@ -1,13 +1,10 @@
 import math
-import functools
 
 import xl
 
-
-
 from . import utils
-from public_modules import tag_str
-from hyncdzj import book_modules
+from nikaya_share import tag_str
+
 
 """
 增支部前面的那些都是篇幅小的经，而且相关，如果每个这样的小经都是占用一个页面，翻页受累
@@ -27,6 +24,7 @@ from hyncdzj import book_modules
 4. 无编号书籍的情况
      检查子级的类型是xml的数量是否有大于 1，如果大于 1 说明子级是经，接下来就按照 3 的判断方法。
 """
+
 
 def merge_or_not(ngs, obj, ds_depth, max_hanzi_in_line=35, max_line_in_page=29):
     namegroups = ngs
@@ -86,105 +84,6 @@ def get_serial_depth_by_ngs(ngs):
         if isinstance(start, int):
             depth += 1
     return depth
-
-
-def new_page_or_not_smart(data, obj, max_hanzi_in_line = 35, max_line_in_page = 29):
-    ancestor_objs = get_ancestor_objs(data, obj)
-    if ancestor_objs:
-        objs = ancestor_objs[1:]
-    else:
-        return True
-        objs = []
-
-    bools = []
-    for _obj in objs:
-        value = _new_page_or_not(data, _obj, max_hanzi_in_line, max_line_in_page)
-        bools.append(value)
-
-    if False in bools:
-        return False
-
-    else:
-        value = _new_page_or_not(data, obj, max_hanzi_in_line, max_line_in_page)
-        return value
-
-
-def _new_page_or_not(data, obj, max_hanzi_in_line, max_line_in_page):
-    namegroups = get_keys(data, obj)
-    serial_depth = get_data_depth(data)
-
-    if serial_depth > 0:
-        serial_count = 0
-        on_serial = False
-        for start, _end, _name in namegroups:
-            if isinstance(start, int):
-                serial_count += 1
-                on_serial = True
-            else:
-                on_serial = False
-
-        if serial_count == serial_depth:
-            if on_serial:
-                obj_type = "is_doc"
-                parent_obj = get_ancestor_objs(data, obj)[-1]
-                small_count, medium_count, large_count = count_docs_size(parent_obj, max_hanzi_in_line, max_line_in_page)
-                v = is_ratio_greater(large_count + medium_count, small_count, 1)
-                return v
-            else:
-                obj_type = "after_doc"
-
-                return False
-
-        else:
-            obj_type = "before_or_shesong"
-            return True
-
-    # 没有编号的书籍
-    else:
-        parent_obj = get_ancestor_objs(data, obj)[-1]
-        xml_count = 0
-        list_count = 0
-        for name, sub in parent_obj:
-            if isinstance(sub, list):
-                list_count += 1
-            else:
-                xml_count += 1
-
-        if xml_count > 1:
-            obj_type = "is_doc"
-            small_count, medium_count, large_count = count_docs_size(parent_obj, max_hanzi_in_line, max_line_in_page)
-
-            return is_ratio_greater(large_count + medium_count, small_count, 1)
-
-        elif xml_count == 1:
-            return True
-
-        else:
-            return True
-
-
-ancestor_objs_cache = []
-def get_ancestor_objs2(data, obj):
-    global count_cache
-    for (a, b, v) in ancestor_objs_cache:
-        if a is data and b is obj:
-            return v
-
-    v = get_ancestor_objs(data, obj)
-    ancestor_objs_cache.append((data, obj, v))
-    return v
-
-
-
-def get_ancestor_objs(data, obj):
-    for namegroup, sub in data:
-        if sub is obj:
-            return [data]
-        if isinstance(sub, list):
-            objs = get_ancestor_objs(sub, obj)
-            if objs:
-                return [data] + objs
-    return None
 
 
 # 遍历 data 查找 serial 深度

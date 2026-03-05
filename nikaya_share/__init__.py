@@ -283,11 +283,6 @@ class SC(Lang):
         return "简体版"
 
 
-
-
-
-
-
 def get_catalog_by_info(info):
     import hyncdzj.book_modules
     import abo
