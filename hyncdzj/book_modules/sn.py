@@ -2,7 +2,7 @@ import re
 
 import cn2an
 
-from nikaya_share import Info
+from share import Info
 
 
 info = Info(

@@ -11,65 +11,14 @@ import epubpacker
 import xl
 
 import config
-import nikaya_share
+import share
 from . import ebook_utils
-import hyncdzj.note
-from nikaya_share import new_page_or_not, epub_utils
-import hyncdzj.book_modules
-
-
-def make_tree_data(type_, data_infos, lang):
-    if type_ is nikaya_share.HYNCDZJ:
-        all_infos = hyncdzj.book_modules.all_infos
-    else:
-        all_infos = abo.all_catalog
-
-    data2 = []
-    translators = []
-    for info, data in data_infos:
-
-        for dirs, infos2 in all_infos:
-            for info2 in infos2:
-                if info2 == info:
-                    data2.append(([(None, None, lang.c(d)) for d in dirs], info, data))
-                    for t in info.translators:
-                        if t not in translators:
-                            translators.append(t)
-
-    return data2, tuple(translators)
-
-def make_tree_data2(name, obj, dirs, data):
-    for dir_ in dirs:
-        data = make_sub_data(data, dir_)
-    data.append(((None, None, name), obj))
-    return data
-
-def make_sub_data(data, name):
-    for (_, _, name2), sub in data:
-        if name == name2:
-            return sub
-    sub_data = []
-    data.append(((None, None, name), sub_data))
-    return sub_data
-
-
-def make_marks(ngs, marks):
-    for ng in ngs:
-        marks = make_mark(ng, marks)
-    return marks
-
-def make_mark(ng, marks):
-    _, _, name = ng
-    for mark in marks:
-        if mark.title == name:
-            return mark.kids
-    sub_mark = epubpacker.Mark(title=name)
-    marks.append(sub_mark)
-    return sub_mark.kids
+import share.note
+from share import new_page_or_not, epub_utils
 
 
 def get_coll_by_translation(translation, lang):
-    if translation is nikaya_share.HYNCDZJ:
+    if translation is share.HYNCDZJ:
         return lang.c("元亨寺·漢譯南傳大藏經")
     else:
         return "莊春江·" + lang.c("漢譯經藏")
@@ -82,7 +31,7 @@ def create_epub(translation, title, collection, translators, identifier, lang, p
     epub.meta.languages = [lang.xml, "pi", "en-US"]
 
     epub.meta.creators.append((list(translators), "trl")) #trl aut
-    if translation is nikaya_share.HYNCDZJ:
+    if translation is share.HYNCDZJ:
         epub.meta.contributors.append(("CBETA https://https://cbeta.org", "red"))
     epub.meta.contributors.append(("https://github.com/meng89/nikaya", "bkp"))
 
@@ -106,26 +55,26 @@ def write_note_spile(notes, epub, lang):
         epub.spine.append(path)
 
 
-def build_epub_one_book(type_, cover_dir, full_file_name, info_datas, translators, lang, tag):
-    collection = get_coll_by_translation(type_, lang)
+def build_epub_one_book(translation, cover_dir, full_file_name, info_datas, translators, lang, tag):
+    collection = get_coll_by_translation(translation, lang)
     title = collection
 
     my_uuid = get_uuid(title + lang.en)
 
-    epub = create_epub(type_, title, collection, translators, my_uuid.urn, lang)
+    epub = create_epub(translation, title, collection, translators, my_uuid.urn, lang)
 
-    notes = hyncdzj.note.Notes()
+    notes = share.note.Notes()
 
-    if type_ is nikaya_share.HYNCDZJ:
-        book_info = nikaya_share.Info(name="漢譯南傳大藏經", pali="Tipiṭaka", translators=tuple(translators))
+    if translation is share.HYNCDZJ:
+        book_info = share.Info(name="漢譯南傳大藏經", pali="Tipiṭaka", translators=tuple(translators))
         image_path = ebook_utils.make_hyncdzj_cover_image(cover_dir, book_info, lang, tag, onebook=True)
     else:
 
-        book_info = nikaya_share.Info(name="漢譯經藏", pali="Sutta Piṭaka", translators=tuple(translators))
+        book_info = share.Info(name="漢譯經藏", pali="Sutta Piṭaka", translators=tuple(translators))
         image_path =  ebook_utils.make_abo_cover_image(cover_dir, book_info, lang, onebook=True)
     _write_cover(epub, image_path, lang)
 
-    if type_ is nikaya_share.HYNCDZJ:
+    if translation is share.HYNCDZJ:
         _write_homage_hyncdzj(epub, lang)
     else:
         _write_fanli(epub, lang)
@@ -142,8 +91,8 @@ def build_epub_one_book(type_, cover_dir, full_file_name, info_datas, translator
                 _mark = epubpacker.Mark(_name)
                 _marks.append(_mark)
                 _ds_depth = new_page_or_not.get_data_depth(_data)
-                write_tree6(type_, _info, _ds_depth, _pngs + [(None, None, _name)], [], _data, _depth, doc_files, _mark.kids, notes, lang, [], 0,
-                            1, None, None, None)
+                write_tree(translation, _info, _ds_depth, _pngs + [(None, None, _name)], [], _data, _depth, doc_files, _mark.kids, notes, lang, [], 0,
+                           1, None, None, None)
 
             if len(_sub) == 2:
                 _name, _sub_list = _sub
@@ -157,7 +106,7 @@ def build_epub_one_book(type_, cover_dir, full_file_name, info_datas, translator
     write_note_spile(notes, epub, lang)
     write_doc_files(doc_files, epub)
 
-    if type_ is nikaya_share.HYNCDZJ:
+    if translation is share.HYNCDZJ:
         _write_readme(README_HYNCDZJ, epub, notes, lang)
     else:
         _write_readme(README_ABO, epub, notes, lang)
@@ -169,40 +118,37 @@ def build_epub_one_book(type_, cover_dir, full_file_name, info_datas, translator
     write_css(epub, lang)
 
 
-def build_epub(type_, cover_dir, full_path, data, info, lang, tag):
-    collection = get_coll_by_translation(type_, lang)
-    if type_ is nikaya_share.HYNCDZJ:
+def build_epub(translation, cover_dir, full_path, data, info, lang, tag):
+    collection = get_coll_by_translation(translation, lang)
+    if translation is share.HYNCDZJ:
         title = lang.c("元亨寺·" + info.name)
     else:
         title = "莊春江·" + lang.c(info.name)
 
     my_uuid = get_uuid(title + lang.en)
 
-    count = nikaya_share.get_count_by_info(info)
-    epub = create_epub(type_, title, collection, info.translators, my_uuid.urn, lang, str(count))
+    count = share.get_count_by_info(info)
+    epub = create_epub(translation, title, collection, info.translators, my_uuid.urn, lang, str(count))
 
-    notes = hyncdzj.note.Notes()
+    notes = share.note.Notes()
 
-    if type_ is nikaya_share.HYNCDZJ:
-        image_path = ebook_utils.make_hyncdzj_cover_image(cover_dir, info, lang, tag, onebook=True)
+    if translation is share.HYNCDZJ:
+        image_path = ebook_utils.make_hyncdzj_cover_image(cover_dir, info, lang, tag, onebook=False)
     else:
-        image_path = ebook_utils.make_abo_cover_image(cover_dir, info, lang, onebook=True)
+        image_path = ebook_utils.make_abo_cover_image(cover_dir, info, lang, onebook=False)
     _write_cover(epub, image_path, lang)
 
-    if type_ is nikaya_share.HYNCDZJ:
+    if translation is share.HYNCDZJ:
         _write_homage_hyncdzj(epub, lang)
     else:
         _write_fanli(epub, lang)
         _write_homage_abo(epub, lang)
 
-
     write_css(epub, lang)
-
-    #_write_homage(module, epub.mark.kids, docs, ln, gn, lang) #todo
 
     doc_files = {}
     ds_depth = new_page_or_not.get_data_depth(data)
-    write_tree6(type_, info, ds_depth, [], [], data, -1, doc_files, epub.mark.kids, notes, lang, [], 0, 1, None, None, None)
+    write_tree(translation, info, ds_depth, [], [], data, -1, doc_files, epub.mark.kids, notes, lang, [], 0, 1, None, None, None)
 
     for path, xml in doc_files.items():
         xml: xl.Xml
@@ -214,7 +160,7 @@ def build_epub(type_, cover_dir, full_path, data, info, lang, tag):
         epub.userfiles[path] = page
         epub.spine.append(path)
 
-    if type_ is nikaya_share.HYNCDZJ:
+    if translation is share.HYNCDZJ:
         _write_readme(README_HYNCDZJ, epub, notes, lang)
     else:
         _write_readme(README_ABO, epub, notes, lang)
@@ -237,15 +183,6 @@ def make_mark_href(mark):
     return mark.href
 
 
-# refs = [("PS/Ps1.html", "id", "PS/PS.1.xhtml", "id2")]
-
-
-def _find_path(id_, docs):
-    for path, e in docs:
-        if _get_id(id_, e):
-            return True, path
-    return False, None
-
 def _get_id(id_, e: xl.Element):
     for kid in e.kids:
         if isinstance(kid, xl.Element):
@@ -265,23 +202,14 @@ def _get_id(id_, e: xl.Element):
 #     2.天子相應
 
 def or_kong(x):
-    return x or "【空】"
-
-
-class IdGenerate:
-    def __init__(self):
-        self._serial = 1
-    def get_one(self):
-        _id = "id{}".format(self._serial)
-        self._serial += 1
-        return _id
+    return x or "—"
 
 
 """
 经的上级标题需要写入第一个经里。
 """
 
-def write_tree6(type_, info, ds_depth, p_ngs, ngs, obj, root_depth, doc_files, marks, notes, lang, marks_and_headings, depth, id_count, doc_path, html, body, doc_depth=None):
+def write_tree(translation, info, ds_depth, p_ngs, ngs, obj, root_depth, doc_files, marks, notes, lang, marks_and_headings, depth, id_count, doc_path, html, body, doc_depth=None):
     sub_marks = marks
 
     if ngs:
@@ -301,14 +229,14 @@ def write_tree6(type_, info, ds_depth, p_ngs, ngs, obj, root_depth, doc_files, m
         s_ngs = ngs + [namegroup]
 
         if isinstance(sub, xl.Element):
-            write_doc6(type_, info, p_ngs, s_ngs, root_depth, sub, doc_files, sub_marks, notes, lang,
-                       marks_and_headings, depth + 1, sub_id_count, doc_path, body, doc_depth)
+            write_doc(info, p_ngs, s_ngs, root_depth, sub, doc_files, sub_marks, notes, lang,
+                      marks_and_headings, depth + 1, sub_id_count, doc_path, body, doc_depth)
         else:
-            write_tree6(type_, info, ds_depth, p_ngs, s_ngs, sub, root_depth, doc_files, sub_marks, notes, lang,
-                        marks_and_headings, depth + 1, sub_id_count, doc_path, html, body, doc_depth)
+            write_tree(translation, info, ds_depth, p_ngs, s_ngs, sub, root_depth, doc_files, sub_marks, notes, lang,
+                       marks_and_headings, depth + 1, sub_id_count, doc_path, html, body, doc_depth)
 
 
-def write_doc6(type_, info, p_ngs, ngs, root_depth, obj, doc_files, marks, notes, lang, marks_and_headings, depth, id_count, doc_path, body, doc_depth):
+def write_doc(info, p_ngs, ngs, root_depth, obj, doc_files, marks, notes, lang, marks_and_headings, depth, id_count, doc_path, body, doc_depth):
     if doc_path is None:
         doc_depth = root_depth + depth
         doc_path, html, body = write_docs(doc_files, p_ngs + ngs, doc_depth, lang, info)
@@ -337,7 +265,7 @@ def make_mh(info, namegroups, obj, marks, depth, id_count, lang):
     return mark, heading
 
 def write_docs(doc_files, ngs, depth, lang, info):
-    test_path = [nikaya_share.namegroup_to_filename(ng) for ng in ngs]
+    test_path = [share.namegroup_to_filename(ng) for ng in ngs]
     if not test_path:
         test_path = [lang.c(info.name)]
     doc_path = epub_utils.make_safe_path(doc_files.keys(), posixpath.join(*test_path) + ".xhtml")
@@ -476,7 +404,7 @@ def read_end(obj: list):
 def sub_to_namegroup(e):
     s = read_text_from_sub(e)
     s = "1_" + s  #在头部添加适配 filename_to_namegroup 的虚字符
-    return nikaya_share.filename_to_namegroup(s)
+    return share.filename_to_namegroup(s)
 
 def read_serial_from_sub(e):
     s = read_text_from_sub(e)
@@ -522,7 +450,7 @@ def read_name_es_from_sub(e):
 
 ES = list[xl.Element | str]
 
-def xml_es_to_html(es: ES, root, notes: hyncdzj.note.Notes, doc_depth, lang) -> ES:
+def xml_es_to_html(es: ES, root, notes: share.note.Notes, doc_depth, lang) -> ES:
     new_es = []
     for e in es:
         if isinstance(e, xl.Element):
@@ -549,7 +477,7 @@ def xml_es_to_html(es: ES, root, notes: hyncdzj.note.Notes, doc_depth, lang) -> 
                 new_es.append(a)
 
             elif m_g:
-                abo_gn = hyncdzj.note.get_abo_global_notes()
+                abo_gn = share.note.get_abo_global_notes()
                 a = xl.Element("a", attrs={"epub:type": "noteref"})
                 n_kids = abo_gn.get_es(m_g.group(1))
                 link = notes.add_note(n_kids)
@@ -638,7 +566,7 @@ def get_note_by_key(root: xl.Element, key: str):
 def write_css(epub, lang):
     css_t = open(os.path.join(config.RESOURCE_DIR, "style.css"), "r").read()
 
-    if isinstance(lang, ebook_utils.SC):
+    if isinstance(lang, share.SC):
         heading_font_name = """ "Microsoft YaHei", "PingFang SC", "思源黑体 CN", "Noto Sans CJK SC" """
         body_font_name = """ "Source Han Serif SC", "Noto Serif CJK SC", "SimSun", "Songti SC" """
 

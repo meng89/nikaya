@@ -47,12 +47,6 @@ EPUBCHECK = "/mnt/data/software/epubcheck-5.2.1/epubcheck.jar"
 XMLP5A_DIR = "/mnt/data/projects/xml-p5a/"
 
 
-LOG_PATH = os.path.join(PROJECT_ROOT, "abo_log.txt")
-
-#BROWSER = "/opt/firefox/firefox"
-BROWSER = "google-chrome-stable"
-#BROWSER = "microsoft-edge-stable"
 WINDOW_HEIGHT_OFFSET = 86
-
 
 DEBUG = False

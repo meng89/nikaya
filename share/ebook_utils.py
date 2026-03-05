@@ -5,7 +5,8 @@ import selenium.webdriver
 
 import config
 from hyncdzj import book_modules
-from nikaya_share import SC
+import share
+from share import SC
 
 
 _table = [
@@ -16,34 +17,26 @@ _table = [
 ]
 
 
-def make_series(info):
-    for folders, infos in book_modules.all_infos:
-        if info in infos:
-            return "·".join(["元亨寺　漢譯南傳大藏經"] + folders)
-
-    return "元亨寺"
-    raise Exception(info)
-
 def xxx(info):
     name = info.name
     #if name.endswith("經"):
     #    name = name[:-1]
 
-    if info in book_modules.jing_infos[1] or info in book_modules.xiao_infos[1] or info in book_modules.wai_infos[1]:
+    if info in book_modules.jing_infos or info in book_modules.xiao_infos or info in book_modules.wai_infos:
         background_color = "#4ea455"
         font_color = "#5F005A"
         series_font_size = "7vw"
         book_name_font_size = "20vh"
         translator_font_size = "9vh"
 
-    elif info in book_modules.lv_infos[1]:
+    elif info in book_modules.lv_infos:
         background_color = "orange"
         font_color = "#073c9f"
         series_font_size = "7vw"
         book_name_font_size = "20vh"
         translator_font_size = "9vh"
 
-    elif info in book_modules.lun_infos[1]:
+    elif info in book_modules.lun_infos:
         background_color = "#228fbd"
         font_color = "#5c1c01"
         series_font_size = "7vw"
@@ -60,7 +53,7 @@ def xxx(info):
     else:
         raise Exception(info.name)
 
-    if info in book_modules.xiao_infos[1] or info in book_modules.wai_infos[1]:
+    if info in book_modules.xiao_infos or info in book_modules.wai_infos:
         background_color = "#abc476"
         font_color = "#71356c"
         book_name_font_size = "12.5vh"
@@ -83,7 +76,11 @@ def xxx(info):
 
 
 def make_hyncdzj_cover_image(cover_dir, info, lang, tag=None, width=1600, height=2560, onebook=False):
-    # translated_date = read_mtime(data)
+    if onebook:
+        series = "元亨寺"
+    else:
+        series = "·".join(["元亨寺　漢譯南傳大藏經"] + share.get_catalog_by_info(info))
+
     filename = "{}_{}_{}".format(info.name, lang.zh, today())
     xhtml_filename = filename + ".xhtml"
 
@@ -137,7 +134,7 @@ def make_hyncdzj_cover_image(cover_dir, info, lang, tag=None, width=1600, height
             translate_font_name = font_name,
             translator_font_size = translator_font_size,
             footer_font_name = font_name + " Medium",
-            series = lang.c(make_series(info)),
+            series = lang.c(series),
             book_name="<span class=\"space\">&#8204;</span>".join(lang.c(new_name)),
             translator = "、".join(info.translators),
             translate = "　" + lang.c("譯"),

@@ -4,7 +4,7 @@ import cn2an
 
 import xl
 
-from nikaya_share import Info
+from share import Info
 
 
 info = Info(

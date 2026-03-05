@@ -1,65 +1,46 @@
-from types import ModuleType
+def _make_infos(ms):
+    return [m.info for m in ms]
+
 
 from . import sv, pv, kd
+lv_ms = [sv, kd, pv]
+lv_infos = _make_infos(lv_ms)
 
-from . import kn_khp, kn_dhp, kn_ud, kn_iti, kn_snp, kn_vv, kn_pv, kn_thag, kn_thig, kn_ap, kn_jat, kn_ps, kn_bv, kn_cp, kn_nid1, kn_nid2
-dh_modules = [kn_khp, kn_dhp, kn_ud, kn_iti, kn_snp, kn_vv, kn_pv, kn_thag, kn_thig, kn_ap, kn_jat, kn_ps, kn_bv, kn_cp, kn_nid1, kn_nid2]
-
-
-def _make_infos(x):
-    folder, ms = x
-    return folder, [m.info for m in ms]
-
-lv = (["律藏"], [sv, kd, pv])
-lv_infos = _make_infos(lv)
 
 from . import dn, mn, sn, an
-jing = (["經藏"], [dn, mn, sn, an])
-jing_infos = _make_infos(jing)
+jing_ms = [dn, mn, sn, an]
+jing_infos = _make_infos(jing_ms)
 
-xiao = (["經藏", "小部"], dh_modules)
-xiao_infos = _make_infos(xiao)
-#jing = ("經藏", [sn])
+
+from . import kn_khp, kn_dhp, kn_ud, kn_iti, kn_snp, kn_vv, kn_pv, kn_thag, kn_thig, kn_ap, kn_jat, kn_ps, kn_bv, kn_cp, kn_nid1, kn_nid2
+xiao_ms = [kn_khp, kn_dhp, kn_ud, kn_iti, kn_snp, kn_vv, kn_pv, kn_thag, kn_thig, kn_ap, kn_jat, kn_ps, kn_bv, kn_cp, kn_nid1, kn_nid2]
+xiao_infos = _make_infos(xiao_ms)
+
+
 from . import ds, vb, dt, pp, ya, patthana, kv
-lun = (["論藏"], (ds, vb, dt, pp, ya, patthana, kv))
-lun_infos = _make_infos(lun)
+lun_ms = [ds, vb, dt, pp, ya, patthana, kv]
+lun_infos = _make_infos(lun_ms)
+
+
 
 from . import mil, dipavamsa, mahavamsa, culavamsa, visuddhimagga, samantapasadika, abhidhammatthasangaha, dhammalipi
 wai_ms = [mil, dipavamsa, mahavamsa, culavamsa, visuddhimagga, samantapasadika, abhidhammatthasangaha, dhammalipi]
-wai = (["藏外"], wai_ms)
-wai_infos = _make_infos(wai)
+wai_infos = _make_infos(wai_ms)
 
-categories = (jing, xiao, lv, lun, wai)
 
-all_infos = (jing_infos, xiao_infos, lv_infos, lun_infos, wai_infos)
+all_modules = lv_ms + jing_ms + xiao_ms + lun_ms + wai_ms
 
 
 module_tree = [
-    ("律藏", [sv, kd, pv]),
-    ("經藏", [dn, mn, sn, an, ("小部", dh_modules)]),
-    ("論藏", [ds, vb, dt, pp, ya, patthana, kv]),
+    ("律藏", lv_ms),
+    ("經藏", [dn, mn, sn, an, ("小部", xiao_ms)]),
+    ("論藏", lun_ms),
     ("藏外", wai_ms),
 ]
 
 module_tree_test = [
     ("律藏", [sv]),
-    ("經藏", [dn, mn, sn, an, ("小部", dh_modules[0:1])]),
+    ("經藏", [mn, sn, ("小部", xiao_ms[0:1])]),
     ("論藏", [ds]),
     ("藏外", wai_ms[0:1]),
 ]
-
-def _make_all_modules():
-    _all_modules = []
-    for _, ms in categories:
-        for _m in ms:
-            _all_modules.append(_m)
-    return _all_modules
-
-all_modules = _make_all_modules()
-
-
-def get_classification(m):
-    for c, ms in categories:
-        if m in ms:
-            return c
-    raise Exception

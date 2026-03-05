@@ -2,7 +2,7 @@ import re
 
 import abo.page_parsing
 import abo.utils
-from nikaya_share import Info
+from share import Info
 
 
 da_htmls = ["Ni/Ni{}.htm".format(x) for x in range(1, 17)]

@@ -10,9 +10,9 @@ import xl
 
 import config
 from . import epub, ebook_utils
-import nikaya_share
-from nikaya_share import new_page_or_not
-from hyncdzj import note
+import share
+from share import new_page_or_not
+from share import note
 
 
 MAIN = "main.tex"
@@ -121,18 +121,18 @@ def writetolist(f, name, depth):
     f.write(s)
 
 
-def build_pdf_one_book(type_, cover_dir, full_path, info_datas, translators, lang, layout, font, tag):
+def build_pdf_one_book(translation, cover_dir, full_path, info_datas, translators, lang, layout, font, tag):
     work_dir = full_path + "_work"
     out_dir = full_path + "_out"
     shutil.copytree(config.TEX_DIR, work_dir)
 
     os.makedirs(out_dir, exist_ok=True)
 
-    if type_ is nikaya_share.HYNCDZJ:
+    if translation is share.HYNCDZJ:
         modes = []
         _write_hyncdzj_homage(work_dir, lang)
-        _write_readme(type_, epub.README_HYNCDZJ, work_dir, lang)
-        book_info = nikaya_share.Info(name="漢譯南傳大藏經", pali="Tipiṭaka", translators=tuple(translators))
+        _write_readme(translation, epub.README_HYNCDZJ, work_dir, lang)
+        book_info = share.Info(name="漢譯南傳大藏經", pali="Tipiṭaka", translators=tuple(translators))
         _title = lang.c("元亨寺·漢譯南傳大藏經")
         keywords = lang.c("元亨寺、漢譯南傳大藏經")
         cover_image_path = ebook_utils.make_hyncdzj_cover_image(cover_dir, book_info, lang, tag, layout.cover_width, layout.cover_height, onebook=True)
@@ -141,8 +141,8 @@ def build_pdf_one_book(type_, cover_dir, full_path, info_datas, translators, lan
         modes = ["abo"]
         _write_fanli(work_dir, lang)
         _write_abo_homage(work_dir, lang)
-        _write_readme(type_, epub.README_ABO, work_dir, lang)
-        book_info = nikaya_share.Info(name="漢譯經藏", pali="Sutta Piṭaka", translators=tuple(translators))
+        _write_readme(translation, epub.README_ABO, work_dir, lang)
+        book_info = share.Info(name="漢譯經藏", pali="Sutta Piṭaka", translators=tuple(translators))
         _title = "莊春江·" + lang.c("漢譯經藏")
         keywords = "莊春江、" + lang.c("漢譯經藏")
         cover_image_path =  ebook_utils.make_abo_cover_image(cover_dir, book_info, lang, layout.cover_width, layout.cover_height, onebook=True)
@@ -161,7 +161,7 @@ def build_pdf_one_book(type_, cover_dir, full_path, info_datas, translators, lan
                 texhead = TexHead(_depth + 1)
                 _s = texhead.setuphead()
                 f.write(_s)
-                write_tree(type_, _info, texhead, ds_depth, f, [], _data, _depth + 1, lang, False,
+                write_tree(translation, _info, texhead, ds_depth, f, [], _data, _depth + 1, lang, False,
                            layout.max_hanzi_in_line, layout.max_line_in_page)
 
             if len(_sub) == 2:
@@ -174,7 +174,7 @@ def build_pdf_one_book(type_, cover_dir, full_path, info_datas, translators, lan
     complie_pdf(work_dir, out_dir, layout, full_path, modes)
 
 
-def build_pdf(type_, cover_dir, full_path, data, info, lang, layout, font, tag):
+def build_pdf(translation, cover_dir, full_path, data, info, lang, layout, font, tag):
     work_dir = full_path + "_work"
     out_dir = full_path + "_out"
     shutil.copytree(config.TEX_DIR, work_dir)
@@ -182,12 +182,12 @@ def build_pdf(type_, cover_dir, full_path, data, info, lang, layout, font, tag):
     os.makedirs(out_dir, exist_ok=True)
 
 
-    if type_ is nikaya_share.HYNCDZJ:
+    if translation is share.HYNCDZJ:
         modes = []
         _write_hyncdzj_homage(work_dir, lang)
-        _write_readme(type_, epub.README_HYNCDZJ, work_dir, lang)
+        _write_readme(translation, epub.README_HYNCDZJ, work_dir, lang)
         cover_image_path = ebook_utils.make_hyncdzj_cover_image(cover_dir, info, lang, tag, layout.cover_width, layout.cover_height, onebook=True)
-        _catalog = nikaya_share.get_catalog_by_info(info)
+        _catalog = share.get_catalog_by_info(info)
         _title = lang.c("·".join(["元亨寺", "漢譯南傳大藏經"] + _catalog + [info.name]))
         keywords = lang.c("、".join(["元亨寺", "漢譯南傳大藏經"] + _catalog + [info.name]))
         write_main_tex(work_dir, _title, info, keywords, lang, layout, font, "hyncdzj_homage.tex", cover_image_path)
@@ -195,9 +195,9 @@ def build_pdf(type_, cover_dir, full_path, data, info, lang, layout, font, tag):
         modes = ["abo"]
         _write_fanli(work_dir, lang)
         _write_abo_homage(work_dir, lang)
-        _write_readme(type_, epub.README_ABO, work_dir, lang)
+        _write_readme(translation, epub.README_ABO, work_dir, lang)
         cover_image_path =  ebook_utils.make_abo_cover_image(cover_dir, info, lang, layout.cover_width, layout.cover_height, onebook=True)
-        _catalog = nikaya_share.get_catalog_by_info(info)
+        _catalog = share.get_catalog_by_info(info)
         _title = "莊春江·" + lang.c("·".join(["漢譯經藏"] + _catalog + [info.name]))
         keywords = "莊春江、" + lang.c("、".join(["漢譯經藏"] + _catalog + [info.name]))
         write_main_tex(work_dir, _title, info, keywords, lang, layout, font, "abo_homage.tex", cover_image_path)
@@ -209,7 +209,7 @@ def build_pdf(type_, cover_dir, full_path, data, info, lang, layout, font, tag):
     f.write(texhead.setuphead())
     #for _, obj in data:
     #    write_tree(-1, data, f, info, obj, lang, layouts[layout]["max_hanzi_in_line"], layouts[layout]["max_line_in_page"])
-    write_tree(type_, info, texhead, ds_depth, f, [], data, 0, lang, False, layout.max_hanzi_in_line, layout.max_line_in_page)
+    write_tree(translation, info, texhead, ds_depth, f, [], data, 0, lang, False, layout.max_hanzi_in_line, layout.max_line_in_page)
     f.close()
 
     complie_pdf(work_dir, out_dir, layout, full_path, modes)
@@ -254,7 +254,7 @@ def complie_pdf(work_dir, out_dir, layout, full_path, modes=None):
     stderr_file.close()
 
 
-def write_tree(type_, info, texhead, ds_depth, f, ngs, obj, depth, lang, parent_is_continuous, max_hanzi_in_line, max_line_in_page):
+def write_tree(translation, info, texhead, ds_depth, f, ngs, obj, depth, lang, parent_is_continuous, max_hanzi_in_line, max_line_in_page):
     if parent_is_continuous is True:
         is_continuous = True
     else:
@@ -271,10 +271,10 @@ def write_tree(type_, info, texhead, ds_depth, f, ngs, obj, depth, lang, parent_
         f.write(start_str)
 
         if isinstance(sub, xl.Element):
-            write_doc(type_, f, sub, lang)
+            write_doc(translation, f, sub, lang)
         else:
             assert isinstance(sub, list)
-            write_tree(type_, info, texhead, ds_depth, f, sub_ngs, sub, depth + 1, lang, is_continuous, max_hanzi_in_line, max_line_in_page)
+            write_tree(translation, info, texhead, ds_depth, f, sub_ngs, sub, depth + 1, lang, is_continuous, max_hanzi_in_line, max_line_in_page)
 
         f.write(texhead.stop(depth))
 
@@ -282,7 +282,7 @@ def write_tree(type_, info, texhead, ds_depth, f, ngs, obj, depth, lang, parent_
             f.write("\\page[yes]\n")
 
 
-def write_doc(type_, f, doc, lang):
+def write_doc(translation, f, doc, lang):
     for e in doc.kids:
         if isinstance(e, xl.Element) and re.match(r"^n\d+$", e.tag):
             break
@@ -296,7 +296,7 @@ def write_doc(type_, f, doc, lang):
             pass
 
         else:
-            f.write(xml_to_tex([e], doc, lang, type_))
+            f.write(xml_to_tex([e], doc, lang, translation))
 
 
 def write_main_tex(work_dir, title, info, keywords, lang, layout, font, homage, cover_image):
@@ -392,15 +392,15 @@ def _write_fanli(work_dir, lang):
     f = open(os.path.join(work_dir, "fanli.tex"), "w", encoding="utf-8")
     f.write(startsec(lang, 1, "凡例", "凡例", "凡例"))
     for line in epub.FANLI:
-        f.write(xml_to_tex(lang.c(line), None, nikaya_share.Lang(), nikaya_share.ABO))
+        f.write(xml_to_tex(lang.c(line), None, share.Lang(), share.ABO))
         f.write("\n\\blank\n")
 
 
-def _write_readme(type_, readme, work_dir, lang):
+def _write_readme(translation, readme, work_dir, lang):
     f = open(os.path.join(work_dir, "readme.tex"), "w", encoding="utf-8")
     f.write(startsec(lang, 1, "说明", "说明", "说明"))
     for line in readme:
-        f.write(xml_to_tex(line, None, nikaya_share.Lang(), type_))
+        f.write(xml_to_tex(line, None, share.Lang(), translation))
         f.write("\n\\blank\n")
 
     if config.DEBUG:
@@ -482,7 +482,7 @@ def stopsec(depth):
     return "\\stop{}\n\n".format(_map[depth][0])
 
 
-def xml_to_tex(es, doc, lang, type_):
+def xml_to_tex(es, doc, lang, translation):
     s = ""
     for e in es:
         if isinstance(e, str):
@@ -499,7 +499,7 @@ def xml_to_tex(es, doc, lang, type_):
                 n_kids = epub.get_note_by_key(doc, m_t.group(1))
 
                 if n_kids is None: # 庄春江 缺失注解
-                    s += xml_to_tex(e.kids, doc, lang, type_)
+                    s += xml_to_tex(e.kids, doc, lang, translation)
                     continue
 
                 _note = es_to_text(n_kids)
@@ -510,24 +510,24 @@ def xml_to_tex(es, doc, lang, type_):
                 else:
                     text = ""
 
-                if type_ is nikaya_share.HYNCDZJ:
+                if translation is share.HYNCDZJ:
                     s += text
                     s += "\\zhfootnote{" + _note + "}"
 
                 else:
-                    assert type_ is nikaya_share.ABO
+                    assert translation is share.ABO
                     s += "\\PDFhighlight[莊春江][{{{}}}]{{{}}}".format(_note, text)
                     #s += "\\high{{\\tfxx \\PDFhighlight[原始注解][{{{}}}]{{{}}}}}".format(_note, text or "㊟")
                 #s += "\\high{\\tfxx \\PDFhighlight[原始注解][{" + _note + "}]{" + (text or "㊟") + "}}"
 
             elif m_g:
-                assert type_ is nikaya_share.ABO
+                assert translation is share.ABO
                 #assert len(e.kids) == 1 and isinstance(e.kids[0], str)
                 text = es_to_text(e.kids)
                 #text = e.kids[0]
                 abo_gn = note.get_abo_global_notes()
                 n_kids = abo_gn.get_es(m_g.group(1))
-                n_es = xml_to_tex(n_kids, doc, lang, type_)
+                n_es = xml_to_tex(n_kids, doc, lang, translation)
                 s += "\\PDFhighlight[莊春江][{{{}}}]{{{}}}".format(n_es, text)
 
             elif m_t and False:
@@ -541,7 +541,7 @@ def xml_to_tex(es, doc, lang, type_):
                 s += "\\high{\\tfxx \\PDFhighlight[原始注解][{" + _note + "}]{" + (text or "㊟") + "}}"
 
             elif e.tag == "p":
-                s += xml_to_tex(e.kids, doc, lang, type_)
+                s += xml_to_tex(e.kids, doc, lang, translation)
                 s += "\n\n"
 
             elif e.tag == "j":
@@ -562,7 +562,7 @@ def xml_to_tex(es, doc, lang, type_):
 
                     if lltp_str:
                         s += "\\dontleavehmode\\llap{{{}}}".format(lltp_str)
-                    s += xml_to_tex(kids, doc, lang, type_)
+                    s += xml_to_tex(kids, doc, lang, translation)
                     if delete_tail:
                         s += "\\rlap{{{}}}".format("」")
                     s += "\n"
@@ -573,13 +573,13 @@ def xml_to_tex(es, doc, lang, type_):
                 pass
 
             elif e.tag == "a":
-                s += "\\goto{" + xml_to_tex(e.kids, doc, lang, type_) + "}[url(" + e.attrs["href"] + ")]"
+                s += "\\goto{" + xml_to_tex(e.kids, doc, lang, translation) + "}[url(" + e.attrs["href"] + ")]"
 
             elif e.tag == "list":
                 s += "\\startalignment[middle]\n"
                 s += "\\startlines\n"
                 for item in e.kids:
-                    s += xml_to_tex(item.kids, doc, lang, type_)
+                    s += xml_to_tex(item.kids, doc, lang, translation)
                     s += "\n\n"
                 s += "\\stoplines\n"
                 s += "\\stopalignment\n"

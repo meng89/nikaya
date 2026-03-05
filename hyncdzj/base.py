@@ -1,7 +1,5 @@
 import re
 
-
-
 import opencc
 
 import xl

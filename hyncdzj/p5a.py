@@ -30,9 +30,3 @@ def get_xmls_by_serial(juan):
         if int(m.group(1)) == juan:
             xmls.append(xml)
     return xmls
-
-
-
-if __name__ == "__main__":
-    print(get_xmls_by_serial(6))
-

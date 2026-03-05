@@ -3,7 +3,7 @@ import math
 import xl
 
 from . import utils
-from nikaya_share import tag_str
+from share import tag_str
 
 
 """

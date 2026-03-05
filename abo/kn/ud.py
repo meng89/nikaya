@@ -2,7 +2,7 @@ import re
 
 import abo.page_parsing
 import abo.utils
-from nikaya_share import Info
+from share import Info
 
 
 info = Info(

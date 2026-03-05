@@ -12,12 +12,13 @@ import multiprocessing
 multiprocessing.set_start_method("fork") # only POSIX
 
 import config
-import nikaya_share
+
 import hyncdzj
 import hyncdzj.base
-import hyncdzj.epub
-import hyncdzj.pdf
-import hyncdzj.ebook_utils
+import share
+import share.epub
+import share.pdf
+import share.ebook_utils
 import hyncdzj.book_modules
 
 import abo
@@ -78,11 +79,11 @@ def get_data(lang, info, load_dir):
     if tc_data is None:
         print("Loading Data: {:2}".format(info.name), end="", flush=True)
         print("({})".format("、".join(info.translators)), end="", flush=True)
-        tc_data = nikaya_share.load_from_disk(load_dir)
+        tc_data = share.load_from_disk(load_dir)
         print(" ✅")
         tc_datas.append((info, tc_data))
 
-    if isinstance(lang, nikaya_share.TC):
+    if isinstance(lang, share.TC):
         return tc_data
 
     for info2, data in sc_datas:
@@ -95,7 +96,7 @@ def get_data(lang, info, load_dir):
     return sc_data
 
 def get_load_path(type_, info):
-    if type_ is nikaya_share.HYNCDZJ:
+    if type_ is share.HYNCDZJ:
         simple_filled_path = os.path.join(config.SIMPLE_FILLED_DIR, info.name)
         simple_filling_path = os.path.join(config.SIMPLE_FILLING_DIR, info.name)
 
@@ -154,11 +155,11 @@ def main(_help=False, debug=False, translations=None, formats=None, langs=None, 
         my_translations = []
         for version in translations.split(","):
             if version.lower() in "z庄":
-                my_translations.append(nikaya_share.ABO)
+                my_translations.append(share.ABO)
             elif version.lower() in "y元":
-                my_translations.append(nikaya_share.HYNCDZJ)
+                my_translations.append(share.HYNCDZJ)
     else:
-        my_translations = [nikaya_share.HYNCDZJ, nikaya_share.ABO]
+        my_translations = [share.HYNCDZJ, share.ABO]
 
     config.DEBUG = debug
 
@@ -168,7 +169,7 @@ def main(_help=False, debug=False, translations=None, formats=None, langs=None, 
     else:
         my_formats = all_formats
 
-    all_langs = [nikaya_share.SC(), nikaya_share.TC()]
+    all_langs = [share.SC(), share.TC()]
     if langs:
         my_langs = []
         for lang in langs.split(","):
@@ -182,17 +183,17 @@ def main(_help=False, debug=False, translations=None, formats=None, langs=None, 
         my_layouts = []
         _layout_names = layouts.split(",")
         for _layout_name in _layout_names:
-            for layout in hyncdzj.pdf.layouts:
+            for layout in share.pdf.layouts:
                 if _layout_name == layout.name:
                     my_layouts.append(layout)
     else:
-        my_layouts = hyncdzj.pdf.layouts
+        my_layouts = share.pdf.layouts
 
-    all_fonts = hyncdzj.pdf.fonts
+    all_fonts = share.pdf.fonts
     if fonts:
         my_fonts = []
         for _font_name in fonts.split(","):
-            for font in hyncdzj.pdf.fonts:
+            for font in share.pdf.fonts:
                 if _font_name == font.name:
                     my_fonts.append(font)
     else:
@@ -204,8 +205,8 @@ def main(_help=False, debug=False, translations=None, formats=None, langs=None, 
         print("langs:", [lang.en for lang in all_langs])
         print("books:", "模块名称")
         print("onebook:", onebook)
-        print("layouts:", [layout.name for layout in hyncdzj.pdf.layouts])
-        print("fonts:", [font.name for font in hyncdzj.pdf.fonts])
+        print("layouts:", [layout.name for layout in share.pdf.layouts])
+        print("fonts:", [font.name for font in share.pdf.fonts])
         print()
         print("命令行举例，只制作《相应部》和《中部》的简体版，不要 EPUB，且包含所有页面布局为 letter 开头的 PDF：")
         print("./hyncdzj_write_ebooks.py books=sn,mn langs=sc types=pdf layouts=letter")
@@ -230,7 +231,7 @@ def main(_help=False, debug=False, translations=None, formats=None, langs=None, 
     cover_dirs = set()
     for lang in my_langs:
         for translation in my_translations:
-            if translation is nikaya_share.HYNCDZJ:
+            if translation is share.HYNCDZJ:
                 cover_dir = os.path.join(temp_td.name, "元亨寺_cover")
                 _book_modules = hyncdzj.book_modules
                 collection = lang.c("元亨寺_漢譯南傳大藏經")
@@ -238,7 +239,7 @@ def main(_help=False, debug=False, translations=None, formats=None, langs=None, 
                 my_modules = get_books_modules(books, hyncdzj.book_modules.all_modules)
 
             else :
-                assert translation is nikaya_share.ABO
+                assert translation is share.ABO
                 cover_dir = os.path.join(temp_td.name, "莊春江_cover")
                 _book_modules = abo
                 collection = "莊春江_" + lang.c("漢譯經藏")
@@ -273,7 +274,7 @@ def main(_help=False, debug=False, translations=None, formats=None, langs=None, 
                             full_file_name = os.path.join(temp_td.name, file_name)
                             job = (
                                 file_name,
-                                hyncdzj.pdf.build_pdf_one_book,
+                                share.pdf.build_pdf_one_book,
                                 (translation, cover_dir, full_file_name, info_datas, translators, lang, layout, font, tag)
                             )
                             jobs.insert(0, job)
@@ -293,7 +294,7 @@ def main(_help=False, debug=False, translations=None, formats=None, langs=None, 
 
                     job = (
                         file_name,
-                        hyncdzj.epub.build_epub_one_book,
+                        share.epub.build_epub_one_book,
                         (translation, cover_dir, full_file_name, info_datas, translators, lang, tag)
                     )
                     jobs.insert(0, job)
@@ -305,7 +306,7 @@ def main(_help=False, debug=False, translations=None, formats=None, langs=None, 
 
                 data = get_data(lang, m.info, load_path)
 
-                catalog = nikaya_share.get_catalog_by_info(m.info)
+                catalog = share.get_catalog_by_info(m.info)
 
                 if "pdf" in my_formats:
                     for layout in my_layouts:
@@ -324,7 +325,7 @@ def main(_help=False, debug=False, translations=None, formats=None, langs=None, 
 
                             job = (
                                 show_name,
-                                hyncdzj.pdf.build_pdf,
+                                share.pdf.build_pdf,
                                 (translation, cover_dir, full_file_name, data, m.info, lang, layout, font, tag)
                             )
                             jobs.append(job)
@@ -346,7 +347,7 @@ def main(_help=False, debug=False, translations=None, formats=None, langs=None, 
 
                     job = (
                         show_name,
-                        hyncdzj.epub.build_epub,
+                        share.epub.build_epub,
                         (translation, cover_dir, full_file_name, data, m.info, lang, tag)
                     )
                     jobs.append(job)

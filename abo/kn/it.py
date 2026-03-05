@@ -2,7 +2,7 @@ import re
 
 import abo.page_parsing
 from abo.utils import get_last_folder
-from nikaya_share import Info
+from share import Info
 
 
 info = Info(

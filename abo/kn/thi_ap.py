@@ -1,5 +1,5 @@
 from . import tha_ap
-from nikaya_share import Info
+from share import Info
 
 
 info = Info(
