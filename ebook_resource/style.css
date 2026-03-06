@@ -57,13 +57,7 @@ a {
     font-weight: normal;
 }
 
-.no_text_noteref {
-    vertical-align: super; /* 设置为上标 */
-    font-size: 0.75em;     /* 缩小字体大小，例如为原来的 75% */
-    line-height: 0;
-    text-indent: 0em;
 
-}
 .sutta_nums {
 /*
     font-family: "Noto Serif";
@@ -80,10 +74,18 @@ a {
 }
 
 
-a[epub|type="noteref"]  {
+a[epub|type="noteref"] {
     color: inherit;
     text-decoration-style: dotted;
     text-underline-offset: 0.2rem;
+}
+a.no_text_noteref {
+    vertical-align: super; /* 设置为上标 */
+    font-size: 0.8em;
+    line-height: 0;
+    text-indent: 0em;
+    color: darkgreen;
+    text-decoration: none;
 }
 
 body.note ol {
@@ -138,6 +140,7 @@ body.abo_homage > p {
     /*align-items: center; /* 垂直居中对齐 */
 }
 .poem_author {
+    /*border: 1px solid red;*/
     grid-column: 1;
     align-items: flex-start;
     text-align: right; /* 让作者名字靠右，贴近诗句 */
@@ -145,8 +148,13 @@ body.abo_homage > p {
     font-weight: bold;
 }
 .poem {
+    /*border: 1px solid red;*/
     grid-column: 2;
-
+    text-align: left;
+}
+.poem_right{
+    /*border: 1px solid red;*/
+    grid-column: 3
 }
 
 .poem_author p,

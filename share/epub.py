@@ -472,7 +472,7 @@ def xml_es_to_html(es: ES, root, notes: share.note.Notes, doc_depth, lang) -> ES
                     a.kids.extend(xml_es_to_html(e.kids, root, notes, doc_depth, lang))
                 else:
                     a.attrs["class"] = "no_text_noteref"
-                    a.kids.append("注")
+                    a.kids.append("※")
 
                 new_es.append(a)
 
@@ -494,25 +494,28 @@ def xml_es_to_html(es: ES, root, notes: share.note.Notes, doc_depth, lang) -> ES
                 poem_wrapper = xl.Element("div", attrs={"class": "poem_wrapper"})
                 poem_author = xl.Element("div", attrs={"class": "poem_author"})
                 poem = xl.Element("div", attrs={"class": "poem"})
+                #poem_right = xl.Element("div", attrs={"class": "poem_right"})
                 poem_wrapper.kids.extend([poem_author, poem])
                 if "a" in e.attrs.keys():
                     p = poem_author.ekid("p")
                     p.kids.extend(xml_es_to_html([e.attrs["a"]], root, notes, doc_depth, lang))
 
-                add_space = False
-                if isinstance(e.kids[0].kids[0], str) and e.kids[0].kids[0][0] == "「":
-                    add_space = True
                 for p in e.kids:
-                    p2 = poem.ekid("p")
                     _new_es = xml_es_to_html(p.kids, root, notes, doc_depth, lang)
-                    if isinstance(p.kids[0], str) and p.kids[0][0] == "「":
-                        p2_kids = _new_es
-                    else:
-                        if add_space:
-                            p2_kids = [" 　"] + _new_es
+                    before_blanks, after_blanks = get_blanks(root, p)
+
+                    if before_blanks:
+                        if isinstance(_new_es[0], str):
+                            _new_es[0] = before_blanks + _new_es[0]
                         else:
-                            p2_kids = _new_es
-                    p2.kids.extend(p2_kids)
+                            _new_es.insert(0, before_blanks)
+                    if after_blanks:
+                        if isinstance(_new_es[-1], str):
+                            _new_es[-1] = _new_es[-1] + after_blanks
+                        else:
+                            _new_es.append(after_blanks)
+
+                    poem.ekid("p", kids=_new_es)
                 new_es.append(poem_wrapper)
 
             elif m_n:
@@ -537,6 +540,58 @@ def xml_es_to_html(es: ES, root, notes: share.note.Notes, doc_depth, lang) -> ES
             new_es.append(e)
             #new_es.extend(tag_str.str_to_es(e))
     return new_es
+
+
+def get_blanks(obj, p):
+    real_length_max = 0
+    for x in obj.kids:
+        if isinstance(x, xl.Element) and x.tag == "j":
+            for _p in x.kids:
+                length = count_length(_p)
+                before = get_before(obj, _p)
+                real_length = length + before
+                real_length_max = max(real_length, real_length_max)
+
+    before = get_before(obj, p)
+    length = count_length(p)
+    after = real_length_max - before - length
+    return "　" * before, "　" * after
+
+def get_before(obj, p):
+    before_max = 0
+    for x in obj.kids:
+        if isinstance(x, xl.Element) and x.tag == "j":
+            for _p in x.kids:
+                before = count_before(_p)
+                before_max = max(before, before_max)
+
+    before = count_before(p)
+    return before_max - before
+
+def count_length(p):
+    long = 0
+    for e in p.kids:
+        if isinstance(e, xl.Element) and e.tag.startswith("t"):
+            long += 1
+        elif isinstance(e, str):
+            long += len(e)
+        else:
+            raise Exception("Unknown element type: {}".format(repr(e)))
+    return long
+
+
+def count_before(p):
+    x = 0
+    for e in p.kids:
+        if isinstance(e, xl.Element) and e.tag.startswith("t"):
+            x += 1
+        if isinstance(e, str):
+            for c in e:
+                if c == "「":
+                    x += 1
+                else:
+                    return x
+    return x
 
 
 def join_html_zwnj(es):
