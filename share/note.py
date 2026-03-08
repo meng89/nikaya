@@ -74,13 +74,13 @@ _abo_gn = None
 def get_abo_global_notes():
     global _abo_gn
     if _abo_gn is None:
-        _abo_gn = GlobalNotes()
+        _abo_gn = ABOGlobalNotes()
     return _abo_gn
 
 
-class GlobalNotes:
+class ABOGlobalNotes:
     def __init__(self):
-        self._htmls = ["note/note{}.htm".format(x) for x in range(10)]
+        self.htmls = ["note/note{}.htm".format(x) for x in range(10)]
         self._notes = {}
         self._filename = "note"
 
@@ -89,7 +89,7 @@ class GlobalNotes:
         if self._notes:
             return self._notes
 
-        for html in self._htmls:
+        for html in self.htmls:
             data = open(os.path.join(config.ABO_DOWNLOAD_DIR, html), "r").read()
             soup = bs4.BeautifulSoup(data, 'html5lib')
             root = xl.parse(str(soup)).root

@@ -11,16 +11,11 @@ import bs4
 
 import xl
 
-try:
-    import user_config as config
-except ImportError:
-    import config as config
+import config
 
-#import abo
 import abo.kn
-import abo.note
-
 from abo import sn, mn, dn, an
+from share import note
 
 # _headers = {'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.135 Safari/537.36"}
 
@@ -125,8 +120,8 @@ def get_paths(e: xl.Element):
 
 def main(fresh_time, check_mtime):
     session = requests.Session()
-    for module in [abo.note] + [sn, mn, dn, an] + list(abo.kn.all_modules):
-        for filename in module.htmls:
+    for obj in [note.ABOGlobalNotes()] + [sn, mn, dn, an] + list(abo.kn.all_modules):
+        for filename in obj.htmls:
             sync(filename, session, fresh_time, check_mtime)
             for other in get_others(filename):
                 sync(other, session, fresh_time, check_mtime)
