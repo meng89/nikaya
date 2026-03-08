@@ -25,30 +25,30 @@ def xxx(info):
     if info in book_modules.jing_infos or info in book_modules.xiao_infos or info in book_modules.wai_infos:
         background_color = "#4ea455"
         font_color = "#5F005A"
-        series_font_size = "7vw"
-        book_name_font_size = "20vh"
-        translator_font_size = "9vh"
+        series_font_size = "4.8vh"
+        book_name_font_size = "19vh"
+        translator_font_size = "6vh"
 
     elif info in book_modules.lv_infos:
         background_color = "orange"
         font_color = "#073c9f"
-        series_font_size = "7vw"
-        book_name_font_size = "20vh"
-        translator_font_size = "9vh"
+        series_font_size = "4.8vh"
+        book_name_font_size = "19vh"
+        translator_font_size = "6vh"
 
     elif info in book_modules.lun_infos:
         background_color = "#228fbd"
         font_color = "#5c1c01"
-        series_font_size = "7vw"
-        book_name_font_size = "20vh"
-        translator_font_size = "9vh"
+        series_font_size = "4.8vh"
+        book_name_font_size = "19vh"
+        translator_font_size = "6vh"
 
     elif info.name == "漢譯南傳大藏經":
         background_color = "white"
         font_color = "black"
-        series_font_size = "7vw"
-        book_name_font_size = "13vh"
-        translator_font_size = "4vh"
+        series_font_size = "8vh"
+        book_name_font_size = "12.5vh"
+        translator_font_size = "3.8vh"
 
     else:
         raise Exception(info.name)
@@ -106,7 +106,8 @@ def make_hyncdzj_cover_image(cover_dir, info, lang, tag=None, width=1600, height
         if isinstance(lang, SC):
             footer2_list.append("简体版")
         else:
-            footer2_list.append("傳統漢字版")
+            pass
+            #footer2_list.append("傳統漢字版")
 
         footer2 = "　".join(footer2_list)
 
@@ -198,10 +199,10 @@ def make_abo_cover_image(cover_dir, info, lang, width=1600, height=2560, onebook
 
         doc_str = t.substitute(han=lang.c(title_hant),
                                pali=info.pali,
-                               version=lang.han_version,
+                               version=lang.han_version if isinstance(lang, share.SC) else "",
                                translator="莊春江" + lang.c("譯"),
                                # translated=lang.c(translated_date + " 更新"),
-                               created=lang.c(today() + " 製作"),
+                               created=lang.c(today() + "製"),
                                )
 
         cover_xhtml_path = os.path.join(cover_dir, xhtml_filename)
@@ -221,7 +222,7 @@ def make_abo_cover_image(cover_dir, info, lang, width=1600, height=2560, onebook
 def today():
     from datetime import datetime
     import time
-    return datetime.fromtimestamp(time.time()).astimezone().strftime("%Y年%m月%d日")
+    return datetime.fromtimestamp(time.time()).astimezone().strftime("%Y年%-m月%-d日")
 
 
 def read_mtime(data: list):

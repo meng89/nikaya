@@ -15,8 +15,8 @@ from share import new_page_or_not
 from share import note
 
 
-MAIN = "main.tex"
-SUTTAS = "suttas.tex"
+MAIN_TEX = "main.tex"
+SUTTAS_TEX = "suttas.tex"
 
 @dataclasses.dataclass
 class Layout:
@@ -135,8 +135,8 @@ def build_pdf_one_book(translation, cover_dir, full_path, info_datas, translator
         book_info = share.Info(name="漢譯南傳大藏經", pali="Tipiṭaka", translators=tuple(translators))
         _title = lang.c("元亨寺·漢譯南傳大藏經")
         keywords = lang.c("元亨寺、漢譯南傳大藏經")
+        homage = "hyncdzj_homage.tex"
         cover_image_path = ebook_utils.make_hyncdzj_cover_image(cover_dir, book_info, lang, tag, layout.cover_width, layout.cover_height, onebook=True)
-        write_main_tex(work_dir, _title, book_info, keywords, lang, layout, font, "hyncdzj_homage.tex", cover_image_path)
     else:
         modes = ["abo"]
         _write_fanli(work_dir, lang)
@@ -145,11 +145,16 @@ def build_pdf_one_book(translation, cover_dir, full_path, info_datas, translator
         book_info = share.Info(name="漢譯經藏", pali="Sutta Piṭaka", translators=tuple(translators))
         _title = "莊春江·" + lang.c("漢譯經藏")
         keywords = "莊春江、" + lang.c("漢譯經藏")
+        homage = "abo_homage.tex"
         cover_image_path =  ebook_utils.make_abo_cover_image(cover_dir, book_info, lang, layout.cover_width, layout.cover_height, onebook=True)
-        write_main_tex(work_dir, _title, book_info, keywords, lang, layout, font, "abo_homage.tex", cover_image_path)
+
+    if config.ONLY_COVER:
+        exit()
+
+    write_main_tex(work_dir, _title, book_info, keywords, lang, layout, font, homage, cover_image_path)
     write_fontstex(work_dir, lang)
 
-    f = open(os.path.join(work_dir, SUTTAS), "w")
+    f = open(os.path.join(work_dir, SUTTAS_TEX), "w")
 
     def _xyz(_info_datas, _depth=0):
         for _sub in _info_datas:
@@ -186,26 +191,31 @@ def build_pdf(translation, cover_dir, full_path, data, info, lang, layout, font,
         modes = []
         _write_hyncdzj_homage(work_dir, lang)
         _write_readme(translation, epub.README_HYNCDZJ, work_dir, lang)
-        cover_image_path = ebook_utils.make_hyncdzj_cover_image(cover_dir, info, lang, tag, layout.cover_width, layout.cover_height, onebook=True)
+        cover_image_path = ebook_utils.make_hyncdzj_cover_image(cover_dir, info, lang, tag, layout.cover_width, layout.cover_height, onebook=False)
         _catalog = share.get_catalog_by_info(info)
         _title = lang.c("·".join(["元亨寺", "漢譯南傳大藏經"] + _catalog + [info.name]))
         keywords = lang.c("、".join(["元亨寺", "漢譯南傳大藏經"] + _catalog + [info.name]))
-        write_main_tex(work_dir, _title, info, keywords, lang, layout, font, "hyncdzj_homage.tex", cover_image_path)
+        homage = "hyncdzj_homage.tex"
     else:
         modes = ["abo"]
         _write_fanli(work_dir, lang)
         _write_abo_homage(work_dir, lang)
         _write_readme(translation, epub.README_ABO, work_dir, lang)
-        cover_image_path =  ebook_utils.make_abo_cover_image(cover_dir, info, lang, layout.cover_width, layout.cover_height, onebook=True)
+        cover_image_path =  ebook_utils.make_abo_cover_image(cover_dir, info, lang, layout.cover_width, layout.cover_height, onebook=False)
         _catalog = share.get_catalog_by_info(info)
         _title = "莊春江·" + lang.c("·".join(["漢譯經藏"] + _catalog + [info.name]))
         keywords = "莊春江、" + lang.c("、".join(["漢譯經藏"] + _catalog + [info.name]))
-        write_main_tex(work_dir, _title, info, keywords, lang, layout, font, "abo_homage.tex", cover_image_path)
+        homage = "abo_homage.tex"
+
+    if config.ONLY_COVER:
+        exit()
+
+    write_main_tex(work_dir, _title, info, keywords, lang, layout, font, homage, cover_image_path)
     write_fontstex(work_dir, lang)
 
     texhead = TexHead()
     ds_depth = new_page_or_not.get_data_depth(data)
-    f = open(os.path.join(work_dir, SUTTAS), "w")
+    f = open(os.path.join(work_dir, SUTTAS_TEX), "w")
     f.write(texhead.setuphead())
     #for _, obj in data:
     #    write_tree(-1, data, f, info, obj, lang, layouts[layout]["max_hanzi_in_line"], layouts[layout]["max_line_in_page"])
@@ -226,7 +236,7 @@ def complie_pdf(work_dir, out_dir, layout, full_path, modes=None):
     if config.DEBUG:
         mode_list.append("debug")
     all_modes = ",".join(mode_list + modes)
-    compile_cmd = """context --path="{}" "{}"/"{}" --mode={}""".format(work_dir, work_dir, MAIN, all_modes)
+    compile_cmd = """context --path="{}" "{}"/"{}" --mode={}""".format(work_dir, work_dir, MAIN_TEX, all_modes)
 
     stdout_file = open(os.path.join(out_dir, "cmd_stdout"), "w", encoding="utf-8")
     stderr_file = open(os.path.join(out_dir, "cmd_stderr"), "w", encoding="utf-8")
@@ -300,7 +310,7 @@ def write_doc(translation, f, doc, lang):
 
 
 def write_main_tex(work_dir, title, info, keywords, lang, layout, font, homage, cover_image):
-    f = open(os.path.join(work_dir, MAIN), "r+", encoding='utf-8')
+    f = open(os.path.join(work_dir, MAIN_TEX), "r+", encoding='utf-8')
     main_t = f.read()
 
     date = datetime.today().strftime('%Y-%m-%d')

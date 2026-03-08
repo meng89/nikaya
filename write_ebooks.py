@@ -150,7 +150,7 @@ def get_books_modules(books, all_modules):
         return my_modules
 
 
-def main(_help=False, debug=False, translations=None, formats=None, langs=None, books=None, onebook=False, layouts=None, fonts=None):
+def main(_help=False, only_cover=False, debug=False, translations=None, formats=None, langs=None, books=None, onebook=False, layouts=None, fonts=None):
     if translations:
         my_translations = []
         for version in translations.split(","):
@@ -162,6 +162,7 @@ def main(_help=False, debug=False, translations=None, formats=None, langs=None, 
         my_translations = [share.HYNCDZJ, share.ABO]
 
     config.DEBUG = debug
+    config.ONLY_COVER = only_cover
 
     all_formats = ["pdf", "epub"]
     if formats:
@@ -243,7 +244,7 @@ def main(_help=False, debug=False, translations=None, formats=None, langs=None, 
                 cover_dir = os.path.join(temp_td.name, "莊春江_cover")
                 _book_modules = abo
                 collection = "莊春江_" + lang.c("漢譯經藏")
-                coll = "莊"
+                coll = lang.c("莊")
                 my_modules = get_books_modules(books, abo.all_modules)
 
             cover_dirs.add(cover_dir)
@@ -366,12 +367,13 @@ def main(_help=False, debug=False, translations=None, formats=None, langs=None, 
             shutil.make_archive(output_dirname, 'zip', output_dirname)
             #shutil.rmtree(output_dirname)
 
-        for file_name in files:
-            full_file_name = os.path.join(temp_td.name, file_name)
-            zf = zipfile.ZipFile(full_file_name + ".zip", "w")
-            zf.write(full_file_name, arcname=os.path.basename(file_name))
-            zf.close()
-            #os.remove(full_file_name)
+        if not config.ONLY_COVER:
+            for file_name in files:
+                full_file_name = os.path.join(temp_td.name, file_name)
+                zf = zipfile.ZipFile(full_file_name + ".zip", "w")
+                zf.write(full_file_name, arcname=os.path.basename(file_name))
+                zf.close()
+                #os.remove(full_file_name)
 
         for cover_dir in cover_dirs:
             #shutil.rmtree(cover_dir)
@@ -387,20 +389,6 @@ def main(_help=False, debug=False, translations=None, formats=None, langs=None, 
             break
     temp_td.cleanup()
 
-
-def read_args():
-    kwargs = {}
-    for x in sys.argv[1:]:
-        if "=" in x:
-            k, v = x.split("=")
-            kwargs[k] = v
-        else:
-            if x == "help":
-                x = "_help"
-            kwargs[x] = True
-    return kwargs
-
-
 def format_seconds(seconds):
     m, s = divmod(int(seconds), 60)
     h, m = divmod(m, 60)
@@ -413,6 +401,19 @@ def format_seconds(seconds):
     if s > 0 or not parts: parts.append(f"{s}s")
 
     return " ".join(parts)
+
+
+def read_args():
+    kwargs = {}
+    for x in sys.argv[1:]:
+        if "=" in x:
+            k, v = x.split("=")
+            kwargs[k] = v
+        else:
+            if x == "help":
+                x = "_help"
+            kwargs[x] = True
+    return kwargs
 
 
 if __name__ == '__main__':

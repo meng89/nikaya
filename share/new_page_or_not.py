@@ -78,14 +78,6 @@ def merge_or_not(ngs, obj, ds_depth, max_hanzi_in_line=35, max_line_in_page=29):
             return False
 
 
-def get_serial_depth_by_ngs(ngs):
-    depth = 0
-    for (start, end, name) in ngs:
-        if isinstance(start, int):
-            depth += 1
-    return depth
-
-
 # 遍历 data 查找 serial 深度
 def get_data_depth(data):
     max_depth = 0

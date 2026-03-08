@@ -72,6 +72,10 @@ def build_epub_one_book(translation, cover_dir, full_file_name, info_datas, tran
 
         book_info = share.Info(name="漢譯經藏", pali="Sutta Piṭaka", translators=tuple(translators))
         image_path =  ebook_utils.make_abo_cover_image(cover_dir, book_info, lang, onebook=True)
+
+    if config.ONLY_COVER:
+        exit()
+
     _write_cover(epub, image_path, lang)
 
     if translation is share.HYNCDZJ:
@@ -136,6 +140,10 @@ def build_epub(translation, cover_dir, full_path, data, info, lang, tag):
         image_path = ebook_utils.make_hyncdzj_cover_image(cover_dir, info, lang, tag, onebook=False)
     else:
         image_path = ebook_utils.make_abo_cover_image(cover_dir, info, lang, onebook=False)
+
+    if config.ONLY_COVER:
+        exit()
+
     _write_cover(epub, image_path, lang)
 
     if translation is share.HYNCDZJ:
@@ -211,7 +219,6 @@ def or_kong(x):
 
 def write_tree(translation, info, ds_depth, p_ngs, ngs, obj, root_depth, doc_files, marks, notes, lang, marks_and_headings, depth, id_count, doc_path, html, body, doc_depth=None):
     sub_marks = marks
-
     if ngs:
         mark, heading = make_mh(info, ngs, obj, marks, depth, id_count, lang)
         marks_and_headings.append((mark, heading))
@@ -542,45 +549,74 @@ def xml_es_to_html(es: ES, root, notes: share.note.Notes, doc_depth, lang) -> ES
     return new_es
 
 
-def get_blanks(obj, p):
+_real_length_cache = []
+def get_real_length(obj):
+    for _obj, real_length in _real_length_cache:
+        if _obj is obj:
+            return real_length
+
     real_length_max = 0
     for x in obj.kids:
         if isinstance(x, xl.Element) and x.tag == "j":
-            for _p in x.kids:
-                length = count_length(_p)
-                before = get_before(obj, _p)
+            for p in x.kids:
+                length = count_length(p)
+                before = get_before(obj, p)
                 real_length = length + before
                 real_length_max = max(real_length, real_length_max)
+    _real_length_cache.append((obj, real_length_max))
+    return real_length_max
 
+
+def get_blanks(obj, p):
+    real_length_max = get_real_length(obj)
     before = get_before(obj, p)
     length = count_length(p)
     after = real_length_max - before - length
     return "　" * before, "　" * after
 
-def get_before(obj, p):
-    before_max = 0
-    for x in obj.kids:
-        if isinstance(x, xl.Element) and x.tag == "j":
-            for _p in x.kids:
-                before = count_before(_p)
-                before_max = max(before, before_max)
 
+def get_before(obj, p):
+    before_max = get_obj_max_berore(obj)
     before = count_before(p)
     return before_max - before
 
+_cache_before_max = []
+def get_obj_max_berore(obj):
+    for _obj, before_max in _cache_before_max:
+        if _obj is obj:
+            return before_max
+    before_max = 0
+    for x in obj.kids:
+        if isinstance(x, xl.Element) and x.tag == "j":
+            for p in x.kids:
+                before = count_before(p)
+                before_max = max(before, before_max or 0)
+    _cache_before_max.append((obj, before_max))
+    return before_max
+
+
+_cache_count_length = []
 def count_length(p):
-    long = 0
+    for _p, length in _cache_count_length:
+        if _p is p:
+            return length
+
+    length = 0
     for e in p.kids:
         if isinstance(e, xl.Element) and e.tag.startswith("t"):
-            long += 1
+            length += 1
         elif isinstance(e, str):
-            long += len(e)
+            length += len(e)
         else:
             raise Exception("Unknown element type: {}".format(repr(e)))
-    return long
+    return length
 
-
+_cache_count_before = []
 def count_before(p):
+    for _p, count in _cache_count_before:
+        if _p is p:
+            return count
+
     x = 0
     for e in p.kids:
         if isinstance(e, xl.Element) and e.tag.startswith("t"):
@@ -590,7 +626,9 @@ def count_before(p):
                 if c == "「":
                     x += 1
                 else:
+                    _cache_count_before.append((p, x))
                     return x
+    _cache_count_before.append((p, x))
     return x
 
 

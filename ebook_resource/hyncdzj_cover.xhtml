@@ -45,14 +45,24 @@
 
             display: grid;
             grid-template-columns: 2fr 4fr 2fr;
-            grid-template-rows: 13fr 1fr;
+            grid-template-rows: 0.5fr 14fr 1fr;
+        }
+
+        .top_in_top{
+            /* display: grid; */
+            margin: 0px;
+            font-family: "$footer_font_name";
+            grid-column-start: 1;
+            grid-column-end: 4;
+            grid-row-start: 1;
+            grid-row-end: 2;
         }
 
         .series_c {
             grid-column-start: 1;
             grid-column-end: 2;
-            grid-row-start: 1;
-            grid-row-end: 2;
+            grid-row-start: 2;
+            grid-row-end: 3;
 
             display: grid;
             align-items: start;
@@ -63,7 +73,6 @@
         }
         .series {
             margin: 2vw;
-
             writing-mode: vertical-lr;
             font-size: $series_font_size;
             /* font-size: 7vw; */
@@ -73,8 +82,8 @@
         .book_name_c {
             grid-column-start: 2;
             grid-column-end: 3;
-            grid-row-start: 1;
-            grid-row-end: 2;
+            grid-row-start: 2;
+            grid-row-end: 3;
 
             display: grid;
             align-items: center;
@@ -97,8 +106,8 @@
         .translator_c {
             grid-column-start: 3;
             grid-column-end: 4;
-            grid-row-start: 1;
-            grid-row-end: 2;
+            grid-row-start: 2;
+            grid-row-end: 3;
 
             display: grid;
             writing-mode: vertical-rl;
@@ -123,8 +132,8 @@
             font-family: "$footer_font_name";
             grid-column-start: 1;
             grid-column-end: 4;
-            grid-row-start: 2;
-            grid-row-end: 3;
+            grid-row-start: 3;
+            grid-row-end: 4;
 
             display: grid;
             align-items: center;
@@ -154,6 +163,8 @@
 <div class="middle" />
 
 <div class="top">
+    <div class="top_in_top" />
+
     <div class="series_c">
         <span class="series">$series</span>
     </div>

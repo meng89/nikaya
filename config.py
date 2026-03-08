@@ -50,3 +50,4 @@ XMLP5A_DIR = "/mnt/data/projects/xml-p5a/"
 WINDOW_HEIGHT_OFFSET = 86
 
 DEBUG = False
+ONLY_COVER = False
