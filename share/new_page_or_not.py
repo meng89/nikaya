@@ -1,11 +1,3 @@
-import math
-
-import xl
-
-from . import utils
-from share import tag_str
-
-
 """
 增支部前面的那些都是篇幅小的经，而且相关，如果每个这样的小经都是占用一个页面，翻页受累
 长部这样的大篇幅经文，如果一个页面里一篇的经文的尾部连上后一篇经文的标题，看着难受
@@ -24,6 +16,13 @@ from share import tag_str
 4. 无编号书籍的情况
      检查子级的类型是xml的数量是否有大于 1，如果大于 1 说明子级是经，接下来就按照 3 的判断方法。
 """
+
+import math
+
+import xl
+
+from . import utils
+from share import tag_str
 
 
 def merge_or_not(ngs, obj, ds_depth, max_hanzi_in_line=35, max_line_in_page=29):

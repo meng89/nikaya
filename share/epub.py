@@ -213,18 +213,14 @@ def or_kong(x):
     return x or "—"
 
 
-"""
-经的上级标题需要写入第一个经里。
-"""
-
 def write_tree(translation, info, ds_depth, p_ngs, ngs, obj, root_depth, doc_files, marks, notes, lang, marks_and_headings, depth, id_count, doc_path, html, body, doc_depth=None):
     sub_marks = marks
     if ngs:
         mark, heading = make_mh(info, ngs, obj, marks, depth, id_count, lang)
         marks_and_headings.append((mark, heading))
         sub_marks = mark.kids
-    # 在第一个需要合并的经之前的节点创建 doc
 
+    # 在第一个需要合并的经之前的节点创建 doc
     if doc_path is None:
         merge_or_not = new_page_or_not.merge_or_not(ngs, obj, ds_depth)
         # 下级如果没有分页，此级就要合并
@@ -232,9 +228,11 @@ def write_tree(translation, info, ds_depth, p_ngs, ngs, obj, root_depth, doc_fil
             doc_depth = root_depth + depth
             doc_path, html, body = write_docs(doc_files, p_ngs + ngs, doc_depth, lang, info)
 
+    # 这里不一定会创建 doc, 但是如果这里有 doc, 那么可以把之前的 mark_and_headings 写入。
+    # 但完全没必要在这里写入，因为可以在 sub 为 xml 的时候，在 write_doc 里写入
+
     for sub_id_count, (namegroup, sub) in enumerate(obj, 1):
         s_ngs = ngs + [namegroup]
-
         if isinstance(sub, xl.Element):
             write_doc(info, p_ngs, s_ngs, root_depth, sub, doc_files, sub_marks, notes, lang,
                       marks_and_headings, depth + 1, sub_id_count, doc_path, body, doc_depth)
@@ -280,9 +278,10 @@ def write_docs(doc_files, ngs, depth, lang, info):
     doc_files[doc_path] = html
     return doc_path, html, body
 
+
 def write_marks_and_headings(marks_and_headings, body, doc_path):
-    for index, (m, h) in enumerate(marks_and_headings):
-        body.kids.insert(index, h)
+    for m, h in marks_and_headings:
+        body.kids.append(h)
         m.href = "{}#{}".format(doc_path, h.attrs["id"])
     marks_and_headings.clear()
 
