@@ -736,7 +736,7 @@ HOMAGE_LINE = [
 
 def _write_homage_hyncdzj(epub, lang):
     doc_path = "homage.xhtml"
-    html, body = make_doc(0, lang, lang.c("禮敬偈"))
+    html, body = make_doc(0, lang, lang.c("歸敬偈"))
     body.attrs["class"] = "hyncdzj_homage"
 
     for line in HOMAGE_LINE:
@@ -746,7 +746,7 @@ def _write_homage_hyncdzj(epub, lang):
     htmlstr = xl.Xml(root=html).to_str(do_pretty=True, dont_do_tags=["p"])
     epub.userfiles[doc_path] = htmlstr
     epub.spine.append(doc_path)
-    epub.mark.kids.append(epubpacker.Mark(lang.c("禮敬偈"), doc_path))
+    epub.mark.kids.append(epubpacker.Mark(lang.c("歸敬偈"), doc_path))
 
 
 
