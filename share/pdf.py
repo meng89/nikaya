@@ -526,7 +526,8 @@ def xml_to_tex(es, doc, lang, translation):
 
                 else:
                     assert translation is share.ABO
-                    s += "\\PDFhighlight[莊春江][{{{}}}]{{{}}}".format(_note, text)
+                    s += "\\PDFhighlight[莊春江][{" + _note + "}]{ " + text + "}"
+                    #s += "\\PDFhighlight[莊春江][{{{}}}]{{{}}}".format(_note, lang.c(text))
                     #s += "\\high{{\\tfxx \\PDFhighlight[原始注解][{{{}}}]{{{}}}}}".format(_note, text or "㊟")
                 #s += "\\high{\\tfxx \\PDFhighlight[原始注解][{" + _note + "}]{" + (text or "㊟") + "}}"
 
@@ -538,17 +539,7 @@ def xml_to_tex(es, doc, lang, translation):
                 abo_gn = note.get_abo_global_notes()
                 n_kids = abo_gn.get_es(m_g.group(1))
                 n_es = xml_to_tex(n_kids, doc, lang, translation)
-                s += "\\PDFhighlight[莊春江][{{{}}}]{{{}}}".format(n_es, text)
-
-            elif m_t and False:
-                text = None
-                if e.kids:
-                    assert (len(e.kids) == 1 and isinstance(e.kids[0], str))
-                    text = e.kids[0]
-                n_kids = epub.get_note_by_key(doc, m_t.group(1))
-                _note = es_to_text(n_kids)
-                #s += "\\high{{\\tfxx \\PDFhighlight[原始注解][{{{}}}]{{{}}}}}".format(_note, text or "㊟")
-                s += "\\high{\\tfxx \\PDFhighlight[原始注解][{" + _note + "}]{" + (text or "㊟") + "}}"
+                s += "\\PDFhighlight[莊春江][{" + lang.c(n_es) + "}]{ " + text + "}"
 
             elif e.tag == "p":
                 s += xml_to_tex(e.kids, doc, lang, translation)
