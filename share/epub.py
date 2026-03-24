@@ -43,10 +43,16 @@ def create_epub(translation, title, collection, translators, identifier, lang, p
     return epub
 
 
-def write_doc_files(doc_files, epub):
-    for path, xml in doc_files.items():
-        xml: xl.Xml
-        epub.userfiles[path] = xml.to_str(do_pretty=True,
+def write_doc_files(doc_files, epub, lang):
+    for path, root in doc_files.items():
+
+        bodys = root.find_kids("body")
+        assert len(bodys) == 1
+        body = bodys[0]
+        end_mark = xl.Element("div", {"class": "end_mark"})
+        end_mark.kids.append("—————— {}尾 ——————".format(lang.c("頁")))
+        body.kids.append(end_mark)
+        epub.userfiles[path] = root.to_str(do_pretty=True,
                                           dont_do_tags=["title", "h1", "h2", "h3", "h4", "h5", "h6", "h7", "a", "span",
                                                         "p"])
         epub.spine.append(path)
@@ -110,7 +116,7 @@ def build_epub_one_book(translation, cover_dir, full_file_name, info_datas, tran
     _xyz(info_datas, epub.mark.kids)
 
     write_css(epub, lang)
-    write_doc_files(doc_files, epub)
+    write_doc_files(doc_files, epub, lang)
     write_note_files(notes, epub, lang)
 
     if translation is share.HYNCDZJ:
@@ -161,7 +167,7 @@ def build_epub(translation, cover_dir, full_path, data, info, lang, tag):
     ds_depth = new_page_or_not.get_data_depth(data)
     write_tree(translation, info, ds_depth, [], [], data, -1, doc_files, epub.mark.kids, notes, lang, [], 0, 1, None, None, None)
 
-    write_doc_files(doc_files, epub)
+    write_doc_files(doc_files, epub, lang)
     write_note_files(notes, epub, lang)
 
     if translation is share.HYNCDZJ:

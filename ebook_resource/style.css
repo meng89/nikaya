@@ -24,7 +24,7 @@ body > * {
     margin-bottom: 0em;
 }
 
-h1, h2, h3, h4, h5, h6, h7 {
+h1, h2, h3, h4, h5, h6, h7, .end_mark {
     display: block; /* for h7.. */
     font-family: "Source Sans 3", "Source Sans 4", "Noto Sans", /* Linux */
                  "DejaVu Sans", /* Linux 兜底 */
@@ -165,4 +165,13 @@ body.abo_homage > p {
 
 body.fanli > p, body.readme > p {
     text-indent: 0em;
+}
+
+.end_mark {
+  text-align: center;
+  margin-top: 3em;
+  /* font-size: 1.15em; */
+  color: gray;
+  padding-bottom: 0.5em;
+  font-style: italic;
 }
