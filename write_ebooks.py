@@ -243,7 +243,7 @@ def main(_help=False, only_cover=False, debug=False, translations=None, formats=
                 assert translation is share.ABO
                 cover_dir = os.path.join(temp_td.name, "莊春江_cover")
                 _book_modules = abo
-                collection = "莊春江_" + lang.c("漢譯經藏")
+                collection = lang.c("莊春江_漢譯經藏")
                 coll = lang.c("莊")
                 my_modules = get_books_modules(books, abo.all_modules)
 

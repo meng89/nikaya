@@ -25,3 +25,15 @@ def trans_e(e: xl.Element, f):
         if isinstance(sub, xl.Element):
             new_e.kids.append(trans_e(sub, f))
     return new_e
+
+
+def trans_es(es:list, f):
+    new_es = []
+    for e in es:
+        if isinstance(e, str):
+            new_es.append(f(e))
+        elif isinstance(e, xl.Element):
+            new_es.append(trans_e(e, f))
+        else:
+            raise Exception(e)
+    return new_es

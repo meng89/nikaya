@@ -11,6 +11,7 @@ import epubpacker
 import xl
 
 import config
+import hyncdzj
 import share
 from . import ebook_utils
 import share.note
@@ -41,6 +42,7 @@ def create_epub(translation, title, collection, translators, identifier, lang, p
         epub.meta.others.append(xl.Element("meta", {"refines": "#c01", "property": "group-position"}, [position]))
     return epub
 
+
 def write_doc_files(doc_files, epub):
     for path, xml in doc_files.items():
         xml: xl.Xml
@@ -49,10 +51,11 @@ def write_doc_files(doc_files, epub):
                                                         "p"])
         epub.spine.append(path)
 
-def write_note_spile(notes, epub, lang):
+
+def write_note_files(notes, epub, lang):
     for title, path, page in notes.get_pages(lang):
         epub.userfiles[path] = page
-        epub.spine.append(path)
+        # epub.spine.append(path)
 
 
 def build_epub_one_book(translation, cover_dir, full_file_name, info_datas, translators, lang, tag):
@@ -107,8 +110,8 @@ def build_epub_one_book(translation, cover_dir, full_file_name, info_datas, tran
     _xyz(info_datas, epub.mark.kids)
 
     write_css(epub, lang)
-    write_note_spile(notes, epub, lang)
     write_doc_files(doc_files, epub)
+    write_note_files(notes, epub, lang)
 
     if translation is share.HYNCDZJ:
         _write_readme(README_HYNCDZJ, epub, notes, lang)
@@ -158,15 +161,8 @@ def build_epub(translation, cover_dir, full_path, data, info, lang, tag):
     ds_depth = new_page_or_not.get_data_depth(data)
     write_tree(translation, info, ds_depth, [], [], data, -1, doc_files, epub.mark.kids, notes, lang, [], 0, 1, None, None, None)
 
-    for path, xml in doc_files.items():
-        xml: xl.Xml
-        epub.userfiles[path] = xml.to_str(do_pretty=True,
-                                          dont_do_tags=["title", "h1", "h2", "h3", "h4", "h5", "h6", "h7", "a", "span", "p"])
-        epub.spine.append(path)
-
-    for title, path, page in notes.get_pages(lang):
-        epub.userfiles[path] = page
-        epub.spine.append(path)
+    write_doc_files(doc_files, epub)
+    write_note_files(notes, epub, lang)
 
     if translation is share.HYNCDZJ:
         _write_readme(README_HYNCDZJ, epub, notes, lang)
@@ -486,7 +482,7 @@ def xml_es_to_html(es: ES, root, notes: share.note.Notes, doc_depth, lang) -> ES
                 abo_gn = share.note.get_abo_global_notes()
                 a = xl.Element("a", attrs={"epub:type": "noteref"})
                 n_kids = abo_gn.get_es(m_g.group(1))
-                link = notes.add_note(n_kids)
+                link = notes.add_note(hyncdzj.trans_es(n_kids, lang.c))
                 a.attrs["href"] = "../" * doc_depth + link
                 a.kids.extend(xml_es_to_html(e.kids, root, notes, doc_depth, lang))
                 new_es.append(a)
@@ -797,9 +793,6 @@ def _write_fanli(epub, lang):
     epub.spine.append(doc_path)
     epub.mark.kids.append(epubpacker.Mark("凡例", doc_path))
 
-
-_releases_link = "https://github.com/meng89/hyncdzj/releases"
-_releases_e = xl.Element("a", {"href": _releases_link}, [_releases_link])
 
 _jianguoyun_link = "https://www.jianguoyun.com/p/DbBOkGwQnbmtChjWkpIGIAA"
 _jianguoyun_e = xl.Element("a", {"href": _jianguoyun_link}, [_jianguoyun_link])
