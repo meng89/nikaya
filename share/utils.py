@@ -1,8 +1,6 @@
 from typing import NewType
 
 
-
-
 import re
 import copy
 from datetime import datetime

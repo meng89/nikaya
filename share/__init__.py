@@ -256,7 +256,10 @@ class TC(Lang):
 
 class SC(Lang):
     def __init__(self):
-        self._converter = opencc.OpenCC('tw2sp.json')
+        # tw2sp.json 台灣正體 到 簡體（含中國大陸常用詞彙）建立会变成创建，多此一举。
+        # t2s.json OpenCC 標準繁體 到 簡體
+        # tw2s.json 台灣正體 到 簡體
+        self._converter = opencc.OpenCC('tw2s.json')
 
     def c(self, s):
         if s:
